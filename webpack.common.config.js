@@ -11,14 +11,17 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loader: ['babel-loader?' + JSON.stringify({
+                    cacheDirectory: true,
+                    presets: ['es2015', 'react']
+                }), 'eslint-loader'],
       }
     ],
   },
 
-  plugins: [
-    new webpack.EnvironmentPlugin([
-      'NODE_ENV',
-    ]),
-  ],
+  // plugins: [
+  //   new webpack.EnvironmentPlugin([
+  //     'NODE_ENV',
+  //   ]),
+  // ],
 };

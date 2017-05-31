@@ -6,7 +6,7 @@ module.exports = merge(baseConfig, {
 
   devServer: {
     inline: true,
-    contentBase: 'src',
+    contentBase: __dirname + '/build/',
     port: '8080',
   },
 

@@ -7,7 +7,7 @@ const baseConfig = require('./webapck.common.config.js')
 
 module.exports = merge(baseConfig, {
   output: {
-    path: path.join(__dirname, '/public'),
+    path: path.join(__dirname, '/build'),
     filename: '[name].bundle.[chunkhash].js',
   },
 
