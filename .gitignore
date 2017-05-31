@@ -56,3 +56,6 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# Webstorm project configuration files
+**/.idea
