@@ -8,8 +8,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "set NODE_ENV=production&&webpack -p --config webpack.prod.config.js",
-    "build:server": "babel ./server --out-dir build/",
-    "start:prod": "set NODE_ENV=production&&node ./build/server.js",
+    "build:server": "babel ./server --out-dir dist/",
+    "start:prod": "set NODE_ENV=production&&node ./dist/server.js",
     "start:ui": "webpack-dev-server --config webpack.dev.config.js --inline",
     "start": "set NODE_ENV=development && nodemon --exec babel-node --presets es2015 ./server/server.js --watch ./server"
   },
