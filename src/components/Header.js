@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -7,13 +5,13 @@ import { Link } from 'react-router-dom';
 class Header extends Component {
 
     static propTypes = {
-        onLogout: PropTypes.func
+        onLogout: PropTypes.func,
     }
 
     static defaultProps = {
-        onLogout: () => { 
+        onLogout: () => {
             console.error('logout function not defined');
-        }
+        },
     }
 
     constructor(props) {
@@ -26,28 +24,28 @@ class Header extends Component {
                 <i className="material-icons">lock_open</i>
             </a>
         );
-        
+
         return (
             <header id="header">
                 <div className="mui-appbar mui--appbar-line-height">
                     <div className="mui-container-fluid">
                         <a className="sidedrawer-toggle mui--visible-xs-inline-block mui--visible-sm-inline-block js-show-sidedrawer">
-                            <i className="icon-menu"></i>
+                            <i className="icon-menu" />
                         </a>
                         <a className="sidedrawer-toggle mui--hidden-xs mui--hidden-sm js-hide-sidedrawer">
-                            <i className="icon-menu"></i>
+                            <i className="icon-menu" />
                         </a>
                         <span className="mui--text-title mui--hidden-xs-inline-block">ThingStar</span>
                         <span className="mui--pull-right">
                             {logoutButton}
                             <a className="sidedrawer-toggle mui--visible-xs">
-                                <i className="icon-github"></i>
+                                <i className="icon-github" />
                             </a>
                             <a className="sidedrawer-toggle mui--visible-xs">
-                                <i className="icon-facebook"></i>
+                                <i className="icon-facebook" />
                             </a>
                             <a className="sidedrawer-toggle mui--visible-xs">
-                                <i className="icon-twitter"></i>
+                                <i className="icon-twitter" />
                             </a>
                         </span>
                     </div>

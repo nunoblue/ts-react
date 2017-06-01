@@ -1,6 +1,4 @@
-'use strict';
-
-import React,{ Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -36,33 +34,24 @@ class App extends Component {
                 // console.log(text);
             }).catch((error) => {
                 // console.log(error);
-                let $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
-                Materialize.toast($toastContent, 2000);
+                // const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
+                // Materialize.toast($toastContent, 2000);
             });
         }).catch((error) => {
-            let $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
+            const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
             Materialize.toast($toastContent, 2000);
             // console.log(error);
         });
     }
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     if(nextProps.validate.statusMessage === 'SUCCESS' ||
-    //     nextProps.validate.statusMessage === 'FAILURE')  {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
-
     render() {
-        let validate = this.props.status.validate;
+        const validate = this.props.status.validate;
         return (
             <Router>
                 <div id="container">
-                    <Route exact path="/" render={() => {
-                        return !validate ? <Redirect to="/login" /> : <Redirect to="/home" />
-                    }}/>
+                    <Route
+                      exact path="/" render={() => !validate ? <Redirect to="/login" /> : <Redirect to="/home" />}
+                    />
                     <Switch>
                         <Route path="/login" component={Login} />
                         <Layout history={history}>
@@ -77,22 +66,14 @@ class App extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        status: state.authentication.status,
-        validate: state.authentication.validate
-    };
-};
+const mapStateToProps = state => ({
+    status: state.authentication.status,
+    validate: state.authentication.validate,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        refreshJwtRequest: () => {
-            return dispatch(actions.refreshJwtRequest());
-        },
-        validateJwtToken: () => {
-            return dispatch(actions.validateJwtToken(true));
-        }
-    };
-};
+const mapDispatchToProps = dispatch => ({
+    refreshJwtRequest: () => dispatch(actions.refreshJwtRequest()),
+    validateJwtToken: () => dispatch(actions.validateJwtToken(true)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

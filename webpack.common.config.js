@@ -1,5 +1,3 @@
-'use strict';
-
 const webpack = require('webpack');
 const path = require('path');
 
@@ -22,6 +20,15 @@ module.exports = {
 //   },
     module: {
         rules: [
+            // {
+            //     test: /\.js?$/, // both .js and .jsx
+            //     loader: 'eslint-loader',
+            //     include: path.resolve(process.cwd(), 'src'),
+            //     enforce: 'pre',
+            //     options: {
+            //         fix: true,
+            //     }
+            // },
             {
                 test: /\.js$/,
                 loader: 'babel-loader',

@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -8,65 +6,58 @@ class Authentication extends Component {
     static propTypes = {
         mode: PropTypes.bool,
         onLogin: PropTypes.func,
-        onRegister: PropTypes.func
+        onRegister: PropTypes.func,
     }
 
     static defaultProps = {
         mode: true,
-        onLogin: (id, pw) => {
-            console.error("login function not defined");
+        onLogin: () => {
         },
-        onRegister: (id, pw) => {
-            console.error("register function not defined");
-        }
+        onRegister: () => {
+        },
     }
 
     state = {
         username: '',
-        password: ''
+        password: '',
     }
 
-    constructor(props) {
-        super(props);
-        
-    }
-    
     handleChange = (e) => {
-        let nextState = {};
+        const nextState = {};
         nextState[e.target.name] = e.target.value;
         this.setState(nextState);
     }
 
     handleLogin = () => {
-        let id = this.state.username;
-        let pw = this.state.password;
+        const id = this.state.username;
+        const pw = this.state.password;
 
         this.props.onLogin(id, pw).then((success) => {
-            if(!success) {
+            if (!success) {
                 this.setState({
-                    password: ''
-                })
+                    password: '',
+                });
             }
-        })
+        });
     }
 
     handleRegister = () => {
-        let id = this.state.username;
-        let pw = this.state.password;
+        const id = this.state.username;
+        const pw = this.state.password;
 
         this.props.onRegister(id, pw).then((result) => {
-            if(!result) {
+            if (!result) {
                 this.setState({
                     username: '',
-                    password: ''
+                    password: '',
                 });
             }
-        })
+        });
     }
 
     handleKeyPress = (e) => {
-        if(e.charCode == 13) {
-            if(this.props.mode) {
+        if (e.charCode === 13) {
+            if (this.props.mode) {
                 this.handleLogin();
             } else {
                 this.handleRegister();
@@ -80,25 +71,27 @@ class Authentication extends Component {
                 <div className="input-field col s12 username">
                     <label>Username</label>
                     <input
-                    name="username"
-                    type="text"
-                    className="validate"
-                    onChange={this.handleChange}
-                    value={this.state.username}/>
+                      name="username"
+                      type="text"
+                      className="validate"
+                      onChange={this.handleChange}
+                      value={this.state.username}
+                    />
                 </div>
                 <div className="input-field col s12">
                     <label>Password</label>
                     <input
-                    name="password"
-                    type="password"
-                    className="validate"
-                    onChange={this.handleChange}
-                    value={this.state.password}
-                    onKeyPress={this.handleKeyPress}/>
+                      name="password"
+                      type="password"
+                      className="validate"
+                      onChange={this.handleChange}
+                      value={this.state.password}
+                      onKeyPress={this.handleKeyPress}
+                    />
                 </div>
             </div>
         );
-        
+
         const loginView = (
             <div>
                 <div className="card-content">
@@ -133,7 +126,7 @@ class Authentication extends Component {
             <div className="auth">
                 <div className="card">
                     <div className="header blue white-text center">
-                        <div className="card-content">{this.props.mode ? "LOGIN" : "REGISTER"}</div>
+                        <div className="card-content">{this.props.mode ? 'LOGIN' : 'REGISTER'}</div>
                     </div>
                     {this.props.mode ? loginView : registerView }
                 </div>

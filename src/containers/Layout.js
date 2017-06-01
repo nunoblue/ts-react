@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
@@ -17,6 +15,7 @@ import * as actions from '../actions/authentication';
 class Layout extends Component {
 
     handleLogout = () => {
+        console.log(this.props);
         this.props.logoutRequest();
         Materialize.toast('Good Bye!', 2000);
         this.props.location.pathname = '/login';
@@ -24,17 +23,19 @@ class Layout extends Component {
     }
 
     render() {
-        let statusMessage = this.props.validate.statusMessage;
-        if(statusMessage === 'FAILURE') {
-            return <Redirect to="/login" />
+        const statusMessage = this.props.validate.statusMessage;
+        console.log(statusMessage);
+        if (statusMessage === 'FAILURE') {
+            return <Redirect to="/login" />;
         }
         return (
             <div id="container">
                 <SideBar />
-                <Header 
-                    onLogout={this.handleLogout}/>
+                <Header
+                  onLogout={this.handleLogout}
+                />
                 <div id="content-wrapper">
-                    <div className="mui--appbar-height"></div>
+                    <div className="mui--appbar-height" />
                     {this.props.children}
                 </div>
                 <Footer />
@@ -43,22 +44,14 @@ class Layout extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        status: state.authentication.status,
-        validate: state.authentication.validate
-    };
-};
+const mapStateToProps = state => ({
+    status: state.authentication.status,
+    validate: state.authentication.validate,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        logoutRequest: () => {
-            return dispatch(actions.logoutRequest());
-        },
-        validateJwtToken: () => {
-            return dispatch(actions.validateJwtToken(true));
-        }
-    };
-};
+const mapDispatchToProps = dispatch => ({
+    logoutRequest: () => dispatch(actions.logoutRequest()),
+    validateJwtToken: () => dispatch(actions.validateJwtToken(true)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Layout);

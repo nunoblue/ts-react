@@ -1,5 +1,3 @@
-'use strict';
-
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -13,13 +11,13 @@ class SideBar extends Component {
     }
 
     showSidedrawer() {
-        let options = {
+        const options = {
             onclose: () => {
                 $sidedrawerEl.removeClass('active').appendTo(document.body);
-            }
-        }
+            },
+        };
 
-        let $overlayEl = $(mui.overlay('on', options));
+        const $overlayEl = $(mui.overlay('on', options));
 
         this.$sidedrawerEl.appendTo($overlayEl);
         setTimeout(() => {
@@ -39,7 +37,7 @@ class SideBar extends Component {
 
         this.$titleEls = $('#sidedrawer strong');
         this.$titleEls.next().hide();
-        this.$titleEls.on('click', function() {
+        this.$titleEls.on('click', function () {
             $(this).next().slideToggle(200);
         });
     }
@@ -52,11 +50,11 @@ class SideBar extends Component {
                         <Link to="/"><strong>ThingStar</strong></Link>
                     </span>
                 </div>
-                <div className="mui-divider"></div>
+                <div className="mui-divider" />
                 <ul>
                     <li>
                         <Link to="/home"><strong>Home</strong></Link>
-                        {/*<strong>Category 1</strong>
+                        {/* <strong>Category 1</strong>
                         <ul>
                             <li><a href="#">Item 1</a></li>
                             <li><a href="#">Item 2</a></li>
@@ -65,7 +63,7 @@ class SideBar extends Component {
                     </li>
                     <li>
                         <Link to="/about"><strong>About</strong></Link>
-                        {/*<strong>Category 2</strong>
+                        {/* <strong>Category 2</strong>
                         <ul>
                             <li><a href="#">Item 1</a></li>
                             <li><a href="#">Item 2</a></li>
@@ -74,7 +72,7 @@ class SideBar extends Component {
                     </li>
                     <li>
                         <Link to="/dashboard"><strong>Dashboard</strong></Link>
-                        {/*<strong>Category 3</strong>
+                        {/* <strong>Category 3</strong>
                         <ul>
                             <li><a href="#">Item 1</a></li>
                             <li><a href="#">Item 2</a></li>
