@@ -206,7 +206,7 @@ function updateAndValidateToken(token, prefix, notify) {
     if(issuedAt && expTime) {
         let ttl = expTime - issuedAt;
         if(ttl > 0) {
-            let clientExpiration = +new Date() + ttl*1000;
+            let clientExpiration = +new Date() + ttl*10;
             storage.write(prefix, token);
             storage.write(prefix+'_expiration', clientExpiration);
             valid = true;

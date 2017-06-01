@@ -5,7 +5,7 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const baseConfig = require('./webapck.common.config.js')
+const baseConfig = require('./webpack.common.config.js');
 
 module.exports = merge(baseConfig, {
     devtool: 'cheap-module-source-map',
