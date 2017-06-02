@@ -7,50 +7,49 @@ import * as actions from '../actions/authentication';
 
 class Login extends Component {
 
-    constructor(props) {
-        super(props);
+    handleLogin = (id, pw) => {
+        return this.props.loginRequest(id, pw).then(() => {
+            if (this.props.statusMessage === "SUCCESS") {
+                Materialize.toast(`Welcome, ${id}!`, 2000);
+                this.props.history.push('/home');
+                return true;
+            } else {
+                const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
+                Materialize.toast($toastContent, 2000);
+                return false;
+            }
+        });
     }
 
-    handleLogin = (id, pw) => this.props.loginRequest(id, pw).then(() => {
-        if (this.props.login.statusMessage === 'SUCCESS') {
-                // create session data
-            const loginData = {
-                isLoggedIn: true,
-                username: id,
-            };
-
-            Materialize.toast(`Welcome, ${id}!`, 2000);
-            this.props.history.push('/home');
-            return true;
-        }
-        const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
-        Materialize.toast($toastContent, 2000);
-        return false;
-    })
-
     render() {
-        const statusMessage = this.props.validate.statusMessage;
-        if (statusMessage !== 'FAILURE') {
+        const validate = this.props.validate === 'SUCCESS';
+        console.log(validate);
+        if (validate) {
             return <Redirect to="/home" />;
         }
 
         return (
             <div>
                 <Authentication
-                  mode
-                  onLogin={this.handleLogin}
+                mode={true}
+                onLogin={this.handleLogin}
                 />
             </div>
         );
     }
 }
 
-const mapStateToProps = state => ({
-    login: state.authentication.login,
-    validate: state.authentication.validate,
-});
-
-const mapDispatchToProps = dispatch => ({
-    loginRequest: (id, pw) => dispatch(actions.loginRequest(id, pw)),
-});
+const mapStateToProps = (state) => {
+    return {
+        statusMessage: state.authentication.login.statusMessage,
+        validate: state.authentication.validate.statusMessage
+    };
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loginRequest: (id, pw) => {
+            return dispatch(actions.loginRequest(id, pw));
+        }
+    }
+}
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

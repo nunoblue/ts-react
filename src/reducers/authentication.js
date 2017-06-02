@@ -33,9 +33,6 @@ export default function authentication(state = initialState, action) {
             login: {
                 statusMessage: { $set: 'SUCCESS' },
             },
-            validate: {
-                statusMessage: { $set: 'SUCCESS' },
-            },
             status: {
                 validate: { $set: true },
                 isLoggedIn: { $set: true },

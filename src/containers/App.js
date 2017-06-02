@@ -27,7 +27,7 @@ class App extends Component {
         super(props);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.validateJwtToken().then((text) => {
             // console.log(text);
             this.props.refreshJwtRequest().then((text) => {
@@ -45,7 +45,8 @@ class App extends Component {
     }
 
     render() {
-        const validate = this.props.status.validate;
+        const validate = this.props.status.validate && this.props.status.isLoggedIn;
+
         return (
             <Router>
                 <div id="container">
@@ -53,8 +54,8 @@ class App extends Component {
                       exact path="/" render={() => !validate ? <Redirect to="/login" /> : <Redirect to="/home" />}
                     />
                     <Switch>
-                        <Route path="/login" component={Login} />
-                        <Layout history={history}>
+                        <Route path="/login" component={Login}/>
+                        <Layout history={history} validate={validate}>
                             <Route path="/home" component={Home} />
                             <Route path="/about" component={About} />
                             <Route path="/dashboard" component={Dashboard} />
@@ -66,14 +67,21 @@ class App extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    status: state.authentication.status,
-    validate: state.authentication.validate,
-});
+const mapStateToProps = state => {
+    return {
+        status: state.authentication.status,
+    }
+};
 
-const mapDispatchToProps = dispatch => ({
-    refreshJwtRequest: () => dispatch(actions.refreshJwtRequest()),
-    validateJwtToken: () => dispatch(actions.validateJwtToken(true)),
-});
+const mapDispatchToProps = (dispatch) => {
+    return {
+        refreshJwtRequest: () => {
+            return dispatch(actions.refreshJwtRequest())
+        },
+        validateJwtToken: () => {
+            return dispatch(actions.validateJwtToken(true))
+        }
+    }
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -14,8 +14,18 @@ import * as actions from '../actions/authentication';
 
 class Layout extends Component {
 
+    componentDidUpdate(prevProps, prevState) {
+        let validate = this.props.isJwtTokenValid();
+        if(!validate) {
+            this.props.refreshJwtRequest().then((response) => {
+                console.log(response);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    }
+
     handleLogout = () => {
-        console.log(this.props);
         this.props.logoutRequest();
         Materialize.toast('Good Bye!', 2000);
         this.props.location.pathname = '/login';
@@ -23,11 +33,12 @@ class Layout extends Component {
     }
 
     render() {
-        const statusMessage = this.props.validate.statusMessage;
-        console.log(statusMessage);
-        if (statusMessage === 'FAILURE') {
+        const validate = this.props.validate;
+        const statusMessage = this.props.statusMessage;
+        if (!validate && statusMessage == 'FAILURE') {
             return <Redirect to="/login" />;
         }
+
         return (
             <div id="container">
                 <SideBar />
@@ -44,14 +55,23 @@ class Layout extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    status: state.authentication.status,
-    validate: state.authentication.validate,
-});
+const mapStateToProps = (state) => {
+    return {
+        status: state.authentication.status,
+        statusMessage: state.authentication.validate.statusMessage
+    }
+};
 
-const mapDispatchToProps = dispatch => ({
-    logoutRequest: () => dispatch(actions.logoutRequest()),
-    validateJwtToken: () => dispatch(actions.validateJwtToken(true)),
-});
+const mapDispatchToProps = dispatch => {
+    return {
+        logoutRequest: () => {
+            return dispatch(actions.logoutRequest())
+        },
+        refreshJwtRequest: () => {
+            return dispatch(actions.refreshJwtRequest())
+        },
+        isJwtTokenValid: actions.isJwtTokenValid
+    }
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Layout);

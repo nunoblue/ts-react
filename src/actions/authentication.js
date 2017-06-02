@@ -33,6 +33,8 @@ export function loginRequest(username, password) {
         }).then((response) => {
             dispatch(loginSuccess(username, response));
         }).catch((error) => {
+            // const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
+            // Materialize.toast($toastContent, 2000);
             dispatch(loginFailure());
         });
     };
@@ -48,7 +50,6 @@ export function loginSuccess(username, response) {
     const token = response.data.token;
     const refreshToken = response.data.refreshToken;
     setUserFromJwtToken(token, refreshToken, false, false);
-
     return {
         type: AUTH_LOGIN_SUCCESS,
         username,
@@ -64,7 +65,6 @@ export function loginFailure() {
 /* REGISTER */
 export function registerRequest(username, password) {
     return (dispatch) => {
-        // Inform Register API is starting
         dispatch(register());
 
         return axios.post('/api/account/signup', { username, password })
@@ -98,7 +98,6 @@ export function registerFailure(error) {
 /* GET STATUS */
 export function refreshJwtRequest() {
     return (dispatch) => {
-        dispatch(getRefresh());
         return new Promise((resolve, reject) => {
             const refreshToken = storage.read('refresh_token');
             const refreshTokenValid = isTokenValid('refresh_token');
@@ -125,7 +124,7 @@ export function refreshJwtRequest() {
 
 export function validateJwtToken(doRefresh) {
     return dispatch => new Promise((resolve, reject) => {
-        if (!isJwtTokenValid()) {
+        if (!isTokenValid('jwt_token')) {
             if (doRefresh) {
                 resolve('request refresh');
             } else {
@@ -212,7 +211,7 @@ function updateAndValidateToken(token, prefix, notify) {
     }
 }
 
-function isJwtTokenValid() {
+export function isJwtTokenValid() {
     return isTokenValid('jwt_token');
 }
 
