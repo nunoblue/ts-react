@@ -95,7 +95,7 @@
     console.log(b); // ReferenceError
     ```
 
-  **[↑ 목차로 이동](#목차)**
+  **[↑ 목차로 이동](#Javascript 목차)**
 
 
   ## 오브젝트(Objects)
@@ -193,7 +193,7 @@
     };
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#Javascript 목차)**
 
 ## 배열(Arrays)
 
