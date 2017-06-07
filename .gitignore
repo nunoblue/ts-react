@@ -59,3 +59,9 @@ typings/
 
 # Webstorm project configuration files
 **/.idea
+
+# React Asset
+!/public
+/public/*
+!/public/assets/
+!/public/images/
