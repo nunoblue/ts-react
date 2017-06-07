@@ -61,6 +61,7 @@ typings/
 **/.idea
 
 # React Asset
-#/public/
-#!/public/assets/
-#!/public/images/
+!/public
+/public/*
+!/public/assets/
+!/public/images/
