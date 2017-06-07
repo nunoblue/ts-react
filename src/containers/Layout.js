@@ -14,6 +14,10 @@ import * as actions from '../actions/authentication';
 
 class Layout extends Component {
 
+    componentDidMount() {
+        console.log('Layout Render');
+    }
+
     componentDidUpdate(prevProps, prevState) {
         let validate = this.props.isJwtTokenValid();
         if(!validate) {

@@ -13,6 +13,7 @@ import Home from '../components/Home';
 import Layout from './Layout';
 import Login from './Login';
 import Register from './Register';
+import Devices from './Devices';
 
 // const About = asyncComponent(() => import('../components/About').then(module => module.default), {name: 'About'});
 // const Dashboard = asyncComponent(() => import('../components/Dashboard').then(module => module.default), {name: 'Dashboard'});
@@ -58,6 +59,7 @@ class App extends Component {
                         <Layout history={history} validate={validate}>
                             <Route path="/home" component={Home} />
                             <Route path="/about" component={About} />
+                            <Route path="/devices" component={Devices} />
                             <Route path="/dashboard" component={Dashboard} />
                         </Layout>
                     </Switch>

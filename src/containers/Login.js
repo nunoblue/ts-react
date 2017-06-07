@@ -23,7 +23,6 @@ class Login extends Component {
 
     render() {
         const validate = this.props.validate === 'SUCCESS';
-        console.log(validate);
         if (validate) {
             return <Redirect to="/home" />;
         }

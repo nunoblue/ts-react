@@ -13,12 +13,15 @@ import App from './containers/App';
 import rootReducer from './reducers';
 
 injectTapEventPlugin();
-const enhancer = applyMiddleware(thunkMiddleware); // 함수를 dispatch()하게 해줌
-let reduxDevtool;
+
+let store;
+let enhancer = applyMiddleware(thunkMiddleware);
 if(process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()) {
-    reduxDevtool = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(); // Chrome Extension Redux Devtools
+    let reduxDevtool = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(); // Chrome Extension Redux Devtools
+    store = createStore(rootReducer, compose(enhancer, reduxDevtool));
+} else {
+    store = createStore(rootReducer, enhancer);
 }
-const store = createStore(rootReducer, compose(enhancer, reduxDevtool));
 
 const rootElement = document.getElementById('root');
 const render = (Component) => {

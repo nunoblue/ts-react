@@ -9,7 +9,6 @@ import {
     AUTH_GET_STATUS_SUCCESS,
     AUTH_GET_STATUS_FAILURE,
     AUTH_LOGOUT,
-
 } from './ActionTypes';
 
 import axios from 'axios';
@@ -109,7 +108,7 @@ export function refreshJwtRequest() {
                     refreshToken,
                 };
                 axios.post('http://localhost:8080/api/auth/token', JSON.stringify(refreshTokenRequest), {
-                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 }).then((response) => {
                     dispatch(getRefreshSuccess(response));
                     resolve(response.status);
@@ -203,7 +202,7 @@ function updateAndValidateToken(token, prefix, notify) {
     if (issuedAt && expTime) {
         const ttl = expTime - issuedAt;
         if (ttl > 0) {
-            const clientExpiration = +new Date() + ttl * 10;
+            const clientExpiration = +new Date() + ttl * 1000;
             storage.write(prefix, token);
             storage.write(`${prefix}_expiration`, clientExpiration);
             valid = true;
