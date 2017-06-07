@@ -29,6 +29,8 @@ class App extends Component {
     }
 
     componentDidMount() {
+        console.log('App Render');
+        
         this.props.validateJwtToken().then((text) => {
             // console.log(text);
             this.props.refreshJwtRequest().then((text) => {

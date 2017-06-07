@@ -7,6 +7,10 @@ import * as actions from '../actions/authentication';
 
 class Login extends Component {
 
+    componentDidMount() {
+        console.log('Login Render');
+    }
+
     handleLogin = (id, pw) => {
         return this.props.loginRequest(id, pw).then(() => {
             if (this.props.statusMessage === "SUCCESS") {

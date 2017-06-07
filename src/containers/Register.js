@@ -10,6 +10,10 @@ class Register extends Component {
         super(props);
     }
 
+    componentDidMount() {
+        console.log('Register Render');
+    }
+
     handleRegister = (id, pw) => this.props.registerRequest(id, pw).then(
             () => {
                 if (this.props.status === 'SUCCESS') {
