@@ -1,8 +1,6 @@
-[원문:https://github.com/airbnb/javascript](https://github.com/airbnb/javascript)
-
 # NKIA Javascript/React Style Guide
 ** 본 스타일 가이드는 ES2015(ES6) 기준입니다. **
-*※ Based on Airbnb JavaScript Stytle Guide*
+*※ [Based on Airbnb JavaScript Stytle Guide](https://github.com/airbnb/javascript)*
 
 ## Javascript 목차
 
@@ -65,7 +63,6 @@
     ```
 
   - [1.2](#1.2) <a name='1.2'></a> 참조를 재할당 해야한다면 `var` 대신 `let` 을 사용하십시오.
-
   > `var`는 함수스코프인데 비하여, `let`은 블록스코프이기 때문에 변수스코프에 대해 명확해집니다.
 
     ```javascript
@@ -95,7 +92,7 @@
     console.log(b); // ReferenceError
     ```
 
-  **[↑ 목차로 이동](#Javascript-목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
   ## 오브젝트(Objects)
@@ -110,7 +107,7 @@
     const item = {};
     ```
 
-  - [2.2](#2.2) <a name='3.2'></a> 코드가 브라우저상의 스크립트로 실행될때 [예약어](http://es5.github.io/#x7.6.1)를 키로 이용하지 마십시오. IE8에서 작동하지 않습니다. [More info](https://github.com/airbnb/javascript/issues/61) 하지만 ES6 모듈안이나 서버사이드에서는 이용가능합니다.
+  - [2.2](#2.2) <a name='2.2'></a> 코드가 브라우저상의 스크립트로 실행될때 [예약어](http://es5.github.io/#x7.6.1)를 키로 이용하지 마십시오. IE8에서 작동하지 않습니다. [More info](https://github.com/airbnb/javascript/issues/61) 하지만 ES6 모듈안이나 서버사이드에서는 이용가능합니다.
 
     ```javascript
     // bad
@@ -193,7 +190,7 @@
     };
     ```
 
-**[↑ 목차로 이동](#Javascript-목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 ## 배열(Arrays)
 
@@ -243,7 +240,7 @@
     const nodes = Array.from(foo);
     ```
 
-**[↑ 목차로 이동](#Javascript-목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 ## 구조화대입(Destructuring)
 
@@ -312,11 +309,11 @@
     ```
 
 
-  **[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
   ## 문자열(Strings)
 
-  - [5.1](#5.1) <a name='6.1'></a> 문자열에는 홑따옴표 `''` 를 사용해 주십시오.
+  - [5.1](#5.1) <a name='5.1'></a> 문자열에는 홑따옴표 `''` 를 사용해 주십시오.
 
     ```javascript
     // bad
@@ -368,7 +365,7 @@
     ```
   - [5.5](#5.5) <a name='5.5'></a> 절대로 `eval()` 을 이용하지 마십시오. 이것은 많은 취약점을 만들기 때문입니다.
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
 ## 함수(Functions)
@@ -523,7 +520,7 @@
   var subtract = Function('a', 'b', 'return a - b');
   ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 ## Arrow함수(Arrow Functions)
 
@@ -599,7 +596,7 @@
     [1, 2, 3].reduce((y, x) => x + y);
     ```
 
-  **[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#목차)**
 
 
   ## Classes & Constructors
@@ -710,7 +707,7 @@
     }
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
 ## 모듈(Modules)
@@ -846,7 +843,7 @@
     };
   ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
 ## 프로퍼티(Properties)
@@ -881,7 +878,7 @@
     const isJedi = getProp('jedi');
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
 ## 변수(Variables)
@@ -991,7 +988,7 @@
     }
     ```
 
-  **[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
   ## 호이스팅(Hoisting)
@@ -1084,7 +1081,7 @@
 
   - 자세한 내용은 링크를 참조하세요. [JavaScript Scoping & Hoisting](http://www.adequatelygood.com/2010/2/JavaScript-Scoping-and-Hoisting/) by [Ben Cherry](http://www.adequatelygood.com/).
 
-  **[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
   ## 조건식과 등가식(Comparison Operators & Equality)
@@ -1133,7 +1130,7 @@
 
   - [14.4](#14.4) <a name='14.4'></a> 더 자세한건 이쪽을 참고하세요. [Truth Equality and JavaScript](http://javascriptweblog.wordpress.com/2011/02/07/truth-equality-and-javascript/#more-2108) by Angus Croll.
 
-  **[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
   ## 블록(Blocks)
@@ -1184,7 +1181,7 @@
     ```
 
 
-  **[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
   ## 코멘트(Comments)
@@ -1287,7 +1284,7 @@
     }
     ```
 
-  **[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
   ## 공백(Whitespace)
@@ -1361,7 +1358,7 @@
     }
     ```
 
-  - [17.4](#17.4) <a name='18.4'></a> 연산자 사이에는 스페이스를 넣어 주십시오.
+  - [17.4](#17.4) <a name='17.4'></a> 연산자 사이에는 스페이스를 넣어 주십시오.
 
     ```javascript
     // bad
@@ -1560,7 +1557,7 @@
     console.log(foo[0]);
     ```
 
-  - [1.11](#17.11) <a name='17.11'></a> 중괄호({})의 안쪽에 스페이스를 추가해 주십시오.
+  - [17.11](#17.11) <a name='17.11'></a> 중괄호({})의 안쪽에 스페이스를 추가해 주십시오.
 
     ```javascript
     // bad
@@ -1570,11 +1567,11 @@
     const foo = { clark: 'kent' };
     ```
 
-  **[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
   ## 콤마(Commas)
 
-  - [18.1](#18.1) <a name='19.1'></a> 문장 앞에 콤마는 **사용하지 않습니다.**
+  - [18.1](#18.1) <a name='18.1'></a> 문장 앞에 콤마는 **사용하지 않습니다.**
 
     ```javascript
     // bad
@@ -1651,7 +1648,7 @@
     ];
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
 ## 세미콜론(Semicolons)
@@ -1681,7 +1678,7 @@
 
     [즉시함수 세미콜린에 대한 자세한 내용은 여기를 참조하세요](http://stackoverflow.com/questions/7365172/semicolon-before-self-invoking-function/7365214%237365214).
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
 ## 형변환과 강제(Type Casting & Coercion)
@@ -1764,12 +1761,12 @@
     const hasAge = !!age;
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
 ## 명명규칙(Naming Conventions)
 
-  - [21.1](#21.1) <a name='22.1'></a> 한글자 이름은 사용하지 않습니다. 이름에 의도가 드러나게 명명합니다.
+  - [21.1](#21.1) <a name='21.1'></a> 한글자 이름은 사용하지 않습니다. 이름에 의도가 드러나게 명명합니다.
 
     ```javascript
     // bad
@@ -1899,7 +1896,7 @@
     ```
 
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
 ## 접근자(Accessors)
@@ -1955,7 +1952,7 @@
     }
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
 ## 이벤트(Events)
@@ -2053,7 +2050,7 @@
     $sidebar.find('ul').hide();
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#javascript-목차)**
 
 
 ## 기본규칙
@@ -2063,7 +2060,7 @@
   - 항상 JSX 구문을 사용한다.
   - 만약 JSX를 이용해 앱을 개발 중이라면 `React.createElement` 구문을 사용하지 않는다.
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## Class vs `React.createClass` vs stateless
 
@@ -2108,7 +2105,7 @@
     }
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 명명규칙
 
@@ -2169,7 +2166,7 @@
   }
   ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 선언
 
@@ -2187,7 +2184,7 @@
     }
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 정렬
 
@@ -2216,7 +2213,7 @@
     </Foo>
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 따옴표
 
@@ -2239,7 +2236,7 @@
     <Foo style={{ left: '20px' }} />
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 띄어쓰기
 
@@ -2270,7 +2267,7 @@
     <Foo bar={baz} />
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 속성
 
@@ -2377,7 +2374,7 @@
   ))}
   ```
   
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 참조
 
@@ -2395,7 +2392,7 @@
   />
   ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 괄호
 
@@ -2425,7 +2422,7 @@
     }
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 태그
 
@@ -2454,7 +2451,7 @@
     />
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 메소드
 
@@ -2545,7 +2542,7 @@
     }
     ```
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## 순서
 
@@ -2621,7 +2618,7 @@
   1. *선택적인 렌더 메소드* 예시. `renderNavigation()` 혹은 `renderProfilePicture()`
   1. `render`
 
-**[↑ 목차로 이동](#목차)**
+**[↑ 목차로 이동](#react-목차)**
 
 ## `isMounted`
 
@@ -2630,3 +2627,6 @@
   > 왜? `isMounted` 은 [안티 패턴이고,][anti-pattern] ES6 클래스 문법에 적용할 수 없을 뿐더러, 공식적으로 사라지게 될 예정이다.
 
   [anti-pattern]: https://facebook.github.io/react/blog/2015/12/16/ismounted-antipattern.html
+  
+  
+**[↑ 목차로 이동](#react-목차)**
