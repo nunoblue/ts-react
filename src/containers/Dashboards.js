@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import Card from '../components/Card';
 
-class Dashboard extends Component {
+import * as actions from '../actions/dashboards';
+
+class Dashboards extends Component {
+
+    state = {
+        limit: 30,
+        textSearch: ''
+    }
 
     constructor(props) {
         super(props);
@@ -9,34 +18,46 @@ class Dashboard extends Component {
 
     componentDidMount() {
         console.log('Dashboards Render');
+        let limit = this.state.limit;
+        let textSearch = this.state.textSearch;
+        this.props.getDashboardsRequest(limit, textSearch);
+    }
+
+    components = () => {
+        return (
+            this.props.data.map((data, index) => {
+                let title = data.title;
+                return (
+                    <div key={index} className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet">
+                        <Card title={title} />
+                    </div>
+                );
+            })
+        );
     }
 
     render() {
         return (
-            <div className="mui-container-fluid">
-                <div className="mdl-grid">
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                    <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet"><Card /></div>
-                </div>
-                <div className="mdl-grid">
-                    <div className="mdl-cell mdl-cell--12-col col-centered">
-                        <button className="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect">
-                            <i className="material-icons">add</i>
-                        </button>
-                    </div>
-                </div>
+            <div className="mdl-grid">
+                {this.components()}
             </div>
         );
     }
 }
 
-export default Dashboard;
+const mapStateToProps = (state) => {
+    return {
+        statusMessage: state.dashboards.statusMessage,
+        data: state.dashboards.data
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getDashboardsRequest: (limit, textSearch) => {
+            return dispatch(actions.getDashboardsRequest(limit, textSearch));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboards);

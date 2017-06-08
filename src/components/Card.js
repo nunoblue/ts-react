@@ -6,15 +6,20 @@ import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNaviga
 import Paper from 'material-ui/Paper';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 
-const recentsIcon = <FontIcon className="material-icons">restore</FontIcon>;
-const favoritesIcon = <FontIcon className="material-icons">favorite</FontIcon>;
-const nearbyIcon = <IconLocationOn />;
+const assignmentReturnIcon = <FontIcon className="material-icons">assignment_return</FontIcon>;
+const securityIcon = <FontIcon className="material-icons">security</FontIcon>;
+const deleteIcon = <FontIcon className="material-icons">delete</FontIcon>;
+const shareIcon = <FontIcon className="material-icons">share</FontIcon>;
 
 class Card extends Component {
     static propTypes = {
+        title: PropTypes.string,
+        description:  PropTypes.string
     }
 
     static defaultProps = {
+        title: '',
+        description: ''
     }
 
     state = {
@@ -35,40 +40,36 @@ class Card extends Component {
         return (
             <div className="demo-card-wide mdl-card mdl-shadow--2dp">
                 <div className="mdl-card__title">
-                    <Avatar className="mdl-card-avatar" src="/images/sgoh.jpg" />
-                    <h2 className="mdl-card__title-text">Welcome</h2>
-                </div>
-                <div className="mdl-card__media">
-                    <img src="/images/wood.jpg" style={{ width: '100%' }} />
+                    <h2 className="mdl-card__title-text">{this.props.title}</h2>
                 </div>
                 <div className="mdl-card__supporting-text">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris sagittis pellentesque lacus eleifend lacinia...
+                    {this.props.description}
                 </div>
                 <div className="mdl-card__actions mdl-card--border">
                     <BottomNavigation selectedIndex={this.state.selectedIndex}>
                         <BottomNavigationItem
-                          label="Recents"
-                          icon={recentsIcon}
+                          label="Public"
+                          icon={shareIcon}
                           onTouchTap={() => this.select(0)}
                         />
                         <BottomNavigationItem
-                          label="Favorites"
-                          icon={favoritesIcon}
+                          label="Customer"
+                          icon={assignmentReturnIcon}
+                          onTouchTap={() => this.select(0)}
+                        />
+                        <BottomNavigationItem
+                          label="Credential"
+                          icon={securityIcon}
                           onTouchTap={() => this.select(1)}
                         />
                         <BottomNavigationItem
-                          label="Nearby"
-                          icon={nearbyIcon}
+                          label="Delete"
+                          icon={deleteIcon}
                           onTouchTap={() => this.select(2)}
                         />
                     </BottomNavigation>
                 </div>
-                <div className="mdl-card__menu">
-                    <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                        <i className="material-icons">share</i>
-                    </button>
-                </div>
+                
             </div>
         );
     }

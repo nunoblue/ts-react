@@ -16,29 +16,29 @@ import config from '../config';
 const apServer = config.apServer;
 const DEVICE_URL = `${apServer}/api/tenant/devices`;
 
-export function getDevicesRequest(limit, textSearch) {
-    return (dispatch) => new Promise((resolve, reject) => {
+export const getDevicesRequest = (limit, textSearch) =>  {
+    return (dispatch) =>  {
+        dispatch(getDevices());
+
         let params = {
             limit: limit,
             textSearch: textSearch
         }
 
-        axios.get(DEVICE_URL, {
+        return axios.get(DEVICE_URL, {
+            params: params,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
             },
-            params: params,
         }).then((response) => {
             dispatch(getDevicesSuccess(response.data.data));
-            resolve(response);
         }).catch((error) => {
             dispatch(getDevicesFailure());
-            reject(error);
         });
-    })
-}
+    };
+};
 
 function getDevices() {
     return {

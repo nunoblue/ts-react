@@ -18,9 +18,7 @@ class Layout extends Component {
     componentDidUpdate(prevProps, prevState) {
         let validate = this.props.isJwtTokenValid();
         if(!validate) {
-            this.props.refreshJwtRequest().then((response) => {
-                console.log(response);
-            }).catch((error) => {
+            this.props.refreshJwtRequest().catch((error) => {
                 console.log(error);
             });
         }
@@ -48,7 +46,16 @@ class Layout extends Component {
                 />
                 <div id="content-wrapper">
                     <div className="mui--appbar-height" />
-                    {this.props.children}
+                    <div className="mui-container-fluid">
+                        {this.props.children}
+                        <div className="mdl-grid">
+                            <div className="mdl-cell mdl-cell--12-col col-centered">
+                                <button className="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect">
+                                    <i className="material-icons">add</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <Footer />
             </div>
