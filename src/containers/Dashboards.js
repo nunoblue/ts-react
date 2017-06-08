@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import Card from './Card';
-import Layout from '../containers/Layout';
+import Card from '../components/Card';
 
 class Dashboard extends Component {
 
     constructor(props) {
         super(props);
+    }
+
+    componentDidMount() {
+        console.log('Dashboards Render');
     }
 
     render() {

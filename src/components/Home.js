@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import Layout from '../containers/Layout';
 
 class Home extends Component {
+
+    componentDidMount() {
+        console.log('Home Render');
+    }
 
     render() {
         return (

@@ -5,14 +5,17 @@ import { connect } from 'react-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
 
 import asyncComponent from '../components/AsyncComponent';
-import About from '../components/About';
-import Dashboard from '../components/Dashboard';
 import NoMatch from '../components/NoMatch';
 import Home from '../components/Home';
 
 import Layout from './Layout';
 import Login from './Login';
 import Register from './Register';
+import Plugins from './Plugins';
+import Rules from './Rules';
+import Customers from './Customers';
+import Widgets from './Widgets';
+import Dashboards from './Dashboards';
 import Devices from './Devices';
 
 // const About = asyncComponent(() => import('../components/About').then(module => module.default), {name: 'About'});
@@ -30,7 +33,7 @@ class App extends Component {
 
     componentDidMount() {
         console.log('App Render');
-        
+
         this.props.validateJwtToken().then((text) => {
             // console.log(text);
             this.props.refreshJwtRequest().then((text) => {
@@ -60,9 +63,12 @@ class App extends Component {
                         <Route path="/login" component={Login}/>
                         <Layout history={history} validate={validate}>
                             <Route path="/home" component={Home} />
-                            <Route path="/about" component={About} />
+                            <Route path="/plugins" component={Plugins} />
+                            <Route path="/rules" component={Rules} />
+                            <Route path="/customers" component={Customers} />
                             <Route path="/devices" component={Devices} />
-                            <Route path="/dashboard" component={Dashboard} />
+                            <Route path="/widgets" component={Widgets} />
+                            <Route path="/dashboards" component={Dashboards} />
                         </Layout>
                     </Switch>
                 </div>

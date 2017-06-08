@@ -62,7 +62,25 @@ class SideBar extends Component {
                         </ul>*/}
                     </li>
                     <li>
-                        <Link to="/about"><strong>About</strong></Link>
+                        <Link to="/plugins"><strong>Plguin</strong></Link>
+                        {/* <strong>Category 2</strong>
+                        <ul>
+                            <li><a href="#">Item 1</a></li>
+                            <li><a href="#">Item 2</a></li>
+                            <li><a href="#">Item 3</a></li>
+                        </ul>*/}
+                    </li>
+                    <li>
+                        <Link to="/rules"><strong>Rule</strong></Link>
+                        {/* <strong>Category 2</strong>
+                        <ul>
+                            <li><a href="#">Item 1</a></li>
+                            <li><a href="#">Item 2</a></li>
+                            <li><a href="#">Item 3</a></li>
+                        </ul>*/}
+                    </li>
+                    <li>
+                        <Link to="/customers"><strong>Customer</strong></Link>
                         {/* <strong>Category 2</strong>
                         <ul>
                             <li><a href="#">Item 1</a></li>
@@ -80,7 +98,16 @@ class SideBar extends Component {
                         </ul>*/}
                     </li>
                     <li>
-                        <Link to="/dashboard"><strong>Dashboard</strong></Link>
+                        <Link to="/widgets"><strong>Widget</strong></Link>
+                        {/* <strong>Category 3</strong>
+                        <ul>
+                            <li><a href="#">Item 1</a></li>
+                            <li><a href="#">Item 2</a></li>
+                            <li><a href="#">Item 3</a></li>
+                        </ul>*/}
+                    </li>
+                    <li>
+                        <Link to="/dashboards"><strong>Dashboard</strong></Link>
                         {/* <strong>Category 3</strong>
                         <ul>
                             <li><a href="#">Item 1</a></li>

@@ -6,9 +6,6 @@ import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 import Footer from '../components/Footer';
 import asyncComponent from '../components/AsyncComponent';
-import About from '../components/About';
-import Dashboard from '../components/Dashboard';
-import NoMatch from '../components/NoMatch';
 
 import * as actions from '../actions/authentication';
 
