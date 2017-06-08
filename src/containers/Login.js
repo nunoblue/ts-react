@@ -34,8 +34,8 @@ class Login extends Component {
         return (
             <div>
                 <Authentication
-                mode={true}
-                onLogin={this.handleLogin}
+                    mode={true}
+                    onLogin={this.handleLogin}
                 />
             </div>
         );

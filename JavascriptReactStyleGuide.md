@@ -28,6 +28,8 @@
   1. [억세서(Accessors)](#억세서accessors)
   1. [이벤트(Events)](#이벤트events)
   1. [jQuery](#jquery)
+  1. [비동기 처리(Promise)](#비동기-처리promise)
+  1. [비동기 통신(Axios)](#비동기-통신axios)
 
 ## React 목차
 
@@ -2052,6 +2054,96 @@
 
 **[↑ 목차로 이동](#javascript-목차)**
 
+## 비동기 처리(Promise)
+  - [25.1](#25.1) <a name='25.1'></a> 비동기 작업을 수행하거나 함수의 결과를 콜백으로 리턴하는 경우에는 Promise 패턴을 사용합니다. 
+   
+   ```javascript
+    // Declare Promise
+    const newPromise = function (param) {
+      return new Promise(function (resolve, reject) {
+        if (param) {             // if param is true,
+          // resolved 
+          resolve("Resolved");
+        } else {                 // param is false,     
+          // rejected
+          reject(Error("Rejected!!"));
+        }
+      }, 3000);
+    };
+   
+    // Execute Promise
+    newPromise(result)
+      .then(function (text) {
+        // Success
+        console.log(text);
+      }, function (error) {
+        // Failure
+        console.error(error);
+      }
+    );
+
+   ```
+   
+   - [25.2](#25.2) <a name='25.2'></a> Promise의 Syntactic Sugar인 async/await 문법은 현재는 사용하지 않습니다.
+
+**[↑ 목차로 이동](#javascript-목차)** 
+
+## 비동기 통신(Axios)
+  - [26.1](#26.1) <a name='26.1'></a> 서버로의 Request 또는 REST API 호출시에는 Axios 라이브러리를 사용합니다.
+  
+  ```javascript
+      // Make a request for a user with a given ID
+     axios.get('/user?ID=12345')
+       .then(function (response) {
+         console.log(response);
+       })
+       .catch(function (error) {
+         console.log(error);
+       });
+      
+      // Optionally the request above could also be done as
+     axios.get('/user', {
+        params: {
+          ID: 12345
+        }
+       })
+       .then(function (response) {
+         console.log(response);
+       })
+       .catch(function (error) {
+         console.log(error);
+       });
+      
+     // Post Request
+     axios.post('/user', {
+         firstName: 'Fred',
+         lastName: 'Flintstone'
+       })
+       .then(function (response) {
+         console.log(response);
+       })
+       .catch(function (error) {
+         console.log(error);
+       });
+     
+  ```
+
+  - [26.2](#26.2) <a name='26.2'></a> - 동시에 여러 개의 Request를 보내어 결과를 취합하는 경우 axios의 all 메소드를 사용합니다.
+  ```javascript
+     function getUserAccount() {
+       return axios.get('/user/12345');
+     }
+      
+     function getUserPermissions() {
+       return axios.get('/user/12345/permissions');
+     }
+      
+     axios.all([getUserAccount(), getUserPermissions()])
+       .then(axios.spread(function (acct, perms) {
+         // Both requests are now complete
+       }));
+  ```
+**[↑ 목차로 이동](#javascript-목차)**
 
 ## 기본규칙
 

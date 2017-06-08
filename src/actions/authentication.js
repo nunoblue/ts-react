@@ -1,3 +1,7 @@
+import axios from 'axios';
+import storage from 'store/storages/localStorage';
+import jwtDecode from 'jwt-decode';
+
 import {
     AUTH_LOGIN,
     AUTH_LOGIN_SUCCESS,
@@ -11,13 +15,15 @@ import {
     AUTH_LOGOUT,
 } from './ActionTypes';
 
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-import jwtDecode from 'jwt-decode';
+import config from '../config';
 
 /*= ===========================================================================
     authentication
 ==============================================================================*/
+
+const apServer = config.apServer;
+const LOGIN_URL = `${apServer}/api/auth/login`;
+const TOKEN_URL = `${apServer}/api/auth/token`;
 
 /* LOGIN */
 export function loginRequest(username, password) {
@@ -27,7 +33,7 @@ export function loginRequest(username, password) {
             username,
             password,
         };
-        return axios.post('http://localhost:8080/api/auth/login', JSON.stringify(loginData), {
+        return axios.post(LOGIN_URL, JSON.stringify(loginData), {
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         }).then((response) => {
             dispatch(loginSuccess(username, response));
@@ -107,7 +113,7 @@ export function refreshJwtRequest() {
                 const refreshTokenRequest = {
                     refreshToken,
                 };
-                axios.post('http://localhost:8080/api/auth/token', JSON.stringify(refreshTokenRequest), {
+                axios.post(TOKEN_URL, JSON.stringify(refreshTokenRequest), {
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 }).then((response) => {
                     dispatch(getRefreshSuccess(response));

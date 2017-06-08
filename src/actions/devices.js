@@ -1,3 +1,7 @@
+import axios from 'axios';
+import storage from 'store/storages/localStorage';
+// import jwtDecode from 'jwt-decode';
+
 import {
     TENANT_DEVICES,
     TENANT_DEVICES_SUCCESS,
@@ -7,9 +11,10 @@ import {
 
 // import { isJwtTokenValid } from './authentication';
 
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-import jwtDecode from 'jwt-decode';
+import config from '../config';
+
+const apServer = config.apServer;
+const DEVICE_URL = `${apServer}/api/tenant/devices`;
 
 export function getDevicesRequest(limit, textSearch) {
     return (dispatch) => new Promise((resolve, reject) => {
@@ -18,11 +23,11 @@ export function getDevicesRequest(limit, textSearch) {
             textSearch: textSearch
         }
 
-        axios.get('http://localhost:8080/api/tenant/devices', {
+        axios.get(DEVICE_URL, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'X-Authorization': 'Bearer ' + storage.read('jwt_token')
+                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
             },
             params: params,
         }).then((response) => {
