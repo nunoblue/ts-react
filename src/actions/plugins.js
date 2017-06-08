@@ -18,8 +18,8 @@ export const getPluginsRequest = () =>  {
 
         return axios.get(PLUGINS_URL, {
             headers: {
-                'X-Authorization': 'Bearer ' + storage.read('jwt_token')
-            }
+                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+            },
         }).then((response) => {
             dispatch(getPluginsSuccess(response.data));
         }).catch((error) => {

@@ -18,8 +18,8 @@ export const getWidgetsRequest = () =>  {
 
         return axios.get(WIDGETS_URL, {
             headers: {
-                'X-Authorization': 'Bearer ' + storage.read('jwt_token')
-            }
+                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+            },
         }).then((response) => {
             dispatch(getWidgetsSuccess(response.data));
         }).catch((error) => {

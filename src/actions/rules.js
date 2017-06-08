@@ -18,8 +18,8 @@ export const getRulesRequest = () =>  {
 
         return axios.get(RULES_URL, {
             headers: {
-                'X-Authorization': 'Bearer ' + storage.read('jwt_token')
-            }
+                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+            },
         }).then((response) => {
             dispatch(getRulesSuccess(response.data));
         }).catch((error) => {

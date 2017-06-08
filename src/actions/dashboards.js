@@ -25,10 +25,8 @@ export const getDashboardsRequest = (limit, textSearch) =>  {
         return axios.get(DASHBOARDS_URL, {
             params: params,
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-Authorization': 'Bearer ' + storage.read('jwt_token')
-            }
+                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+            },
         }).then((response) => {
             dispatch(getDashboardsSuccess(response.data.data));
         }).catch((error) => {

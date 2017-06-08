@@ -25,8 +25,6 @@ export const getDevicesRequest = (limit, textSearch) =>  {
         return axios.get(DEVICES_URL, {
             params: params,
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
                 'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
             },
         }).then((response) => {
