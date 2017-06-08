@@ -203,7 +203,7 @@ function updateAndValidateToken(token, prefix, notify) {
     if (issuedAt && expTime) {
         const ttl = expTime - issuedAt;
         if (ttl > 0) {
-            const clientExpiration = +new Date() + ttl * 10;
+            const clientExpiration = +new Date() + ttl * 1000;
             storage.write(prefix, token);
             storage.write(`${prefix}_expiration`, clientExpiration);
             valid = true;

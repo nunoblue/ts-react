@@ -1,3 +1,6 @@
+import axios from 'axios';
+import storage from 'store/storages/localStorage';
+
 import { 
     TENANT_DASHBOARDS,
     TENANT_DASHBOARDS_SUCCESS,
@@ -5,9 +8,10 @@ import {
 
  } from './ActionTypes';
 
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-import jwtDecode from 'jwt-decode';
+import config from '../config';
+
+const apServer = config.apServer;
+const DASHBOARDS_URL = `${apServer}/api/tenant/dashboards`;
 
 export const getDashboardsRequest = (limit, textSearch) =>  {
     return (dispatch) => {
@@ -18,7 +22,7 @@ export const getDashboardsRequest = (limit, textSearch) =>  {
             textSearch: textSearch
         }
 
-        return axios.get('http://localhost:8080/api/tenant/dashboards', {
+        return axios.get(DASHBOARDS_URL, {
             params: params,
             headers: {
                 'Content-Type': 'application/json',

@@ -1,17 +1,22 @@
+import axios from 'axios';
+import storage from 'store/storages/localStorage';
+
 import {  
     API_WIDGETS,
     API_WIDGETS_SUCCESS,
     API_WIDGETS_FAILURE
 } from './ActionTypes';
 
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
+import config from '../config';
+
+const apServer = config.apServer;
+const WIDGETS_URL = `${apServer}/api/widgetsBundles`;
 
 export const getWidgetsRequest = () =>  {
     return (dispatch) => {
         dispatch(getWidgets());
 
-        return axios.get('http://localhost:8080/api/widgetsBundles', {
+        return axios.get(WIDGETS_URL, {
             headers: {
                 'X-Authorization': 'Bearer ' + storage.read('jwt_token')
             }

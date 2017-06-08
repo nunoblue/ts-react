@@ -1,18 +1,22 @@
+import axios from 'axios';
+import storage from 'store/storages/localStorage';
+
 import { 
     API_PLUGINS,
     API_PLUGINS_SUCCESS,
     API_PLUGINS_FAILURE
 } from './ActionTypes';
 
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-import jwtDecode from 'jwt-decode';
+import config from '../config';
+
+const apServer = config.apServer;
+const PLUGINS_URL = `${apServer}/api/plugins`;
 
 export const getPluginsRequest = () =>  {
     return (dispatch) => {
         dispatch(getPlugins());
 
-        return axios.get('http://localhost:8080/api/plugins', {
+        return axios.get(PLUGINS_URL, {
             headers: {
                 'X-Authorization': 'Bearer ' + storage.read('jwt_token')
             }

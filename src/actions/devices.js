@@ -1,6 +1,5 @@
 import axios from 'axios';
 import storage from 'store/storages/localStorage';
-// import jwtDecode from 'jwt-decode';
 
 import {
     TENANT_DEVICES,
@@ -9,12 +8,10 @@ import {
 
 } from './ActionTypes';
 
-// import { isJwtTokenValid } from './authentication';
-
 import config from '../config';
 
 const apServer = config.apServer;
-const DEVICE_URL = `${apServer}/api/tenant/devices`;
+const DEVICES_URL = `${apServer}/api/tenant/devices`;
 
 export const getDevicesRequest = (limit, textSearch) =>  {
     return (dispatch) =>  {
@@ -25,7 +22,7 @@ export const getDevicesRequest = (limit, textSearch) =>  {
             textSearch: textSearch
         }
 
-        return axios.get(DEVICE_URL, {
+        return axios.get(DEVICES_URL, {
             params: params,
             headers: {
                 'Content-Type': 'application/json',
