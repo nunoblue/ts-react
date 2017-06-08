@@ -36,13 +36,7 @@ class App extends Component {
 
         this.props.validateJwtToken().then((text) => {
             // console.log(text);
-            this.props.refreshJwtRequest().then((text) => {
-                // console.log(text);
-            }).catch((error) => {
-                // console.log(error);
-                // const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
-                // Materialize.toast($toastContent, 2000);
-            });
+            this.props.refreshJwtRequest();
         }).catch((error) => {
             const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
             Materialize.toast($toastContent, 2000);

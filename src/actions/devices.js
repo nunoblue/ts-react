@@ -11,29 +11,29 @@ import axios from 'axios';
 import storage from 'store/storages/localStorage';
 import jwtDecode from 'jwt-decode';
 
-export function getDevicesRequest(limit, textSearch) {
-    return (dispatch) => new Promise((resolve, reject) => {
+export const getDevicesRequest = (limit, textSearch) =>  {
+    return (dispatch) =>  {
+        dispatch(getDevices());
+
         let params = {
             limit: limit,
             textSearch: textSearch
         }
 
-        axios.get('http://localhost:8080/api/tenant/devices', {
+        return axios.get('http://localhost:8080/api/tenant/devices', {
+            params: params,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'X-Authorization': 'Bearer ' + storage.read('jwt_token')
-            },
-            params: params,
+            }
         }).then((response) => {
             dispatch(getDevicesSuccess(response.data.data));
-            resolve(response);
         }).catch((error) => {
             dispatch(getDevicesFailure());
-            reject(error);
         });
-    })
-}
+    };
+};
 
 function getDevices() {
     return {

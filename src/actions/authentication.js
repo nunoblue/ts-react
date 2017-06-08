@@ -97,29 +97,24 @@ export function registerFailure(error) {
 /* GET STATUS */
 export function refreshJwtRequest() {
     return (dispatch) => {
-        return new Promise((resolve, reject) => {
-            const refreshToken = storage.read('refresh_token');
-            const refreshTokenValid = isTokenValid('refresh_token');
-            if (!refreshTokenValid) {
+        const refreshToken = storage.read('refresh_token');
+        const refreshTokenValid = isTokenValid('refresh_token');
+        if (!refreshTokenValid) {
+            dispatch(getRefreshFailure());
+        } else {
+            const refreshTokenRequest = {
+                refreshToken,
+            };
+            return axios.post('http://localhost:8080/api/auth/token', JSON.stringify(refreshTokenRequest), {
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            }).then((response) => {
+                dispatch(getRefreshSuccess(response));
+            }).catch((error) => {
                 dispatch(getRefreshFailure());
-                reject('refresh error');
-            } else {
-                const refreshTokenRequest = {
-                    refreshToken,
-                };
-                axios.post('http://localhost:8080/api/auth/token', JSON.stringify(refreshTokenRequest), {
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                }).then((response) => {
-                    dispatch(getRefreshSuccess(response));
-                    resolve(response.status);
-                }).catch((error) => {
-                    dispatch(getRefreshFailure());
-                    reject(error);
-                });
-            }
-        });
+            });
+        }
     };
-}
+};
 
 export function validateJwtToken(doRefresh) {
     return dispatch => new Promise((resolve, reject) => {

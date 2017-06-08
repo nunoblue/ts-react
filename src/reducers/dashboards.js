@@ -1,33 +1,33 @@
 import { 
-    TENANT_DEVICES,
-    TENANT_DEVICES_SUCCESS,
-    TENANT_DEVICES_FAILURE
+    TENANT_DASHBOARDS,
+    TENANT_DASHBOARDS_SUCCESS,
+    TENANT_DASHBOARDS_FAILURE
  } from '../actions/ActionTypes';
-import update from 'react-addons-update';
+ import update from 'react-addons-update';
 
-const initialState = {
-    statusMessage: 'INIT',
-    data: []
-};
+ const initialState = {
+     statusMessage: 'INIT',
+     data: []
+ }
 
-export default function devices(state = initialState, action) {
+export default function dashboards(state = initialState, action) {
     switch(action.type) {
-        case TENANT_DEVICES: 
+        case TENANT_DASHBOARDS:
             return update(state, {
                 statusMessage: {
                     $set: 'WAITING'
                 }
             });
-        case TENANT_DEVICES_SUCCESS:
+        case TENANT_DASHBOARDS_SUCCESS:
             return update(state, {
                 statusMessage: {
-                    $set: 'SUCCESS'
+                    $set: 'SUCCESS',
                 },
                 data: {
                     $set: action.data
                 }
             });
-        case TENANT_DEVICES_FAILURE:
+        case TENANT_DASHBOARDS_FAILURE:
             return update(state, {
                 statusMessage: {
                     $set: 'FAILURE'
@@ -36,4 +36,5 @@ export default function devices(state = initialState, action) {
         default:
             return state;
     }
-}
+};
+

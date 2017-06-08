@@ -1,84 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Table } from 'antd';
+import Card from '../components/Card';
 
 import * as actions from '../actions/devices';
-
-const dataSource = [
-    {
-        key: '1',
-        name: 'Mike',
-        gateway: 32,
-        description: '10 Downing Street'
-    }, 
-    {
-        key: '2',
-        name: 'John',
-        gateway: 42,
-        description: '10 Downing Street'
-    }
-];
-
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-    }, 
-    {
-        title: 'Gateway',
-        dataIndex: 'gateway',
-        key: 'gateway',
-    }, 
-    {
-        title: 'Description',
-        dataIndex: 'description',
-        key: 'description',
-    }
-];
 
 class Devices extends Component {
     state = {
         limit: 30,
         textSearch: '',
-        dataSource: []
     }
 
     constructor(props) {
         super(props);
-        this.dataSource = dataSource;
-        this.columns = columns;
     }
 
     componentDidMount() {
         console.log('Devices Render');
         let limit = this.state.limit;
         let textSearch = this.state.textSearch;
-        this.props.getDevicesRequest(limit, textSearch).then((response) => {
-            if(this.props.statusMessage == 'SUCCESS') {
-                var newData;
-                let newDataSource = response.data.data.map((data, index) => {
-                    newData = {
-                        key: index,
-                        uuid: data.id.id,
-                        name: data.name,
-                        gateway: data.additionalInfo ? (data.additionalInfo.gateway ? ''+data.additionalInfo.gateway : 'false') : 'false',
-                        description: data.additionalInfo ? (data.additionalInfo.description ? data.additionalInfo.description : '') : ''
-                    }
-                    return newData;
-                })                
-                this.setState({dataSource: newDataSource});
-            }
-        }).catch((error) => {
-            console.log(error);
-        });
+        this.props.getDevicesRequest(limit, textSearch);
+    }
+
+    components = () => {
+        return (
+            this.props.data.map((data, index) => {
+                let name = data.name;
+                let description = data.additionalInfo ? (data.additionalInfo.description ? data.additionalInfo.description : '') : '';
+                return (
+                    <div key={index} className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet">
+                        <Card title={name} description={description}/>
+                    </div>
+                );
+            })
+        );
     }
 
     render() {
         return (
-            <div className="mui-container-fluid">
-                <Table dataSource={this.state.dataSource} columns={columns} />
+            <div className="mdl-grid">
+                {this.components()}
             </div>
         );
     }
@@ -86,7 +47,8 @@ class Devices extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        statusMessage: state.devices.statusMessage
+        statusMessage: state.devices.statusMessage,
+        data: state.devices.data
     }
 }
 
