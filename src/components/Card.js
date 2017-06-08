@@ -38,38 +38,39 @@ class Card extends Component {
 
     render() {
         return (
-            <div className="demo-card-wide mdl-card mdl-shadow--2dp">
-                <div className="mdl-card__title">
-                    <h2 className="mdl-card__title-text">{this.props.title}</h2>
+            <div className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet">
+                <div className="demo-card-wide mdl-card mdl-shadow--2dp">
+                    <div className="mdl-card__title">
+                        <h2 className="mdl-card__title-text">{this.props.title}</h2>
+                    </div>
+                    <div className="mdl-card__supporting-text">
+                        {this.props.description}
+                    </div>
+                    <div className="mdl-card__actions mdl-card--border">
+                        <BottomNavigation selectedIndex={this.state.selectedIndex}>
+                            <BottomNavigationItem
+                            label="Public"
+                            icon={shareIcon}
+                            onTouchTap={() => this.select(0)}
+                            />
+                            <BottomNavigationItem
+                            label="Customer"
+                            icon={assignmentReturnIcon}
+                            onTouchTap={() => this.select(0)}
+                            />
+                            <BottomNavigationItem
+                            label="Credential"
+                            icon={securityIcon}
+                            onTouchTap={() => this.select(1)}
+                            />
+                            <BottomNavigationItem
+                            label="Delete"
+                            icon={deleteIcon}
+                            onTouchTap={() => this.select(2)}
+                            />
+                        </BottomNavigation>
+                    </div>
                 </div>
-                <div className="mdl-card__supporting-text">
-                    {this.props.description}
-                </div>
-                <div className="mdl-card__actions mdl-card--border">
-                    <BottomNavigation selectedIndex={this.state.selectedIndex}>
-                        <BottomNavigationItem
-                          label="Public"
-                          icon={shareIcon}
-                          onTouchTap={() => this.select(0)}
-                        />
-                        <BottomNavigationItem
-                          label="Customer"
-                          icon={assignmentReturnIcon}
-                          onTouchTap={() => this.select(0)}
-                        />
-                        <BottomNavigationItem
-                          label="Credential"
-                          icon={securityIcon}
-                          onTouchTap={() => this.select(1)}
-                        />
-                        <BottomNavigationItem
-                          label="Delete"
-                          icon={deleteIcon}
-                          onTouchTap={() => this.select(2)}
-                        />
-                    </BottomNavigation>
-                </div>
-                
             </div>
         );
     }
