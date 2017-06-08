@@ -12,15 +12,15 @@ class Rules extends Component {
     }
 
     components = () => {
-        return (
-            this.props.data.map((data, index) => {
-                let name = data.name;
-                let state = data.state;
-                return (
-                    <Card key={index} title={name} description={state} />
-                )
-            })
-        )
+        const components = this.props.data.map((data) => {
+            const name = data.name;
+            const state = data.state;
+            const id = data.id.id;
+            return (
+                <Card key={id} title={name} description={state} />
+            );
+        });
+        return components;
     }
 
     render() {
@@ -35,16 +35,14 @@ class Rules extends Component {
 const mapStateToProps = (state) => {
     return {
         statusMessage: state.rules.statusMessage,
-        data: state.rules.data
-    }
-}
+        data: state.rules.data,
+    };
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getRulesRequest: () => {
-            return dispatch(actions.getRulesRequest());
-        }
-    }
-}
+        getRulesRequest: () => dispatch(actions.getRulesRequest()),
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Rules);

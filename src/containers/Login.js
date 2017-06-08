@@ -12,8 +12,8 @@ class Login extends Component {
     }
 
     handleLogin = (id, pw) => {
-        return this.props.loginRequest(id, pw).then(() => {
-            if (this.props.statusMessage === "SUCCESS") {
+        const request = this.props.loginRequest(id, pw).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
                 Materialize.toast(`Welcome, ${id}!`, 2000);
                 this.props.history.push('/home');
                 return true;
@@ -23,6 +23,7 @@ class Login extends Component {
                 return false;
             }
         });
+        return request;
     }
 
     render() {
@@ -34,8 +35,8 @@ class Login extends Component {
         return (
             <div>
                 <Authentication
-                    mode={true}
-                    onLogin={this.handleLogin}
+                mode={true}
+                onLogin={this.handleLogin}
                 />
             </div>
         );
@@ -45,14 +46,12 @@ class Login extends Component {
 const mapStateToProps = (state) => {
     return {
         statusMessage: state.authentication.login.statusMessage,
-        validate: state.authentication.validate.statusMessage
+        validate: state.authentication.validate.statusMessage,
     };
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-        loginRequest: (id, pw) => {
-            return dispatch(actions.loginRequest(id, pw));
-        }
-    }
-}
+        loginRequest: (id, pw) => dispatch(actions.loginRequest(id, pw)),
+    };
+};
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 import Footer from '../components/Footer';
-import asyncComponent from '../components/AsyncComponent';
 
 import * as actions from '../actions/authentication';
 
@@ -16,8 +15,8 @@ class Layout extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        let validate = this.props.isJwtTokenValid();
-        if(!validate) {
+        const validate = this.props.isJwtTokenValid();
+        if (!validate) {
             this.props.refreshJwtRequest().catch((error) => {
                 const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
                 Materialize.toast($toastContent, 2000);
@@ -35,7 +34,7 @@ class Layout extends Component {
     render() {
         const validate = this.props.validate;
         const statusMessage = this.props.statusMessage;
-        if (!validate && statusMessage == 'FAILURE') {
+        if (!validate && statusMessage === 'FAILURE') {
             return <Redirect to="/login" />;
         }
 
@@ -67,20 +66,16 @@ class Layout extends Component {
 const mapStateToProps = (state) => {
     return {
         status: state.authentication.status,
-        statusMessage: state.authentication.validate.statusMessage
-    }
+        statusMessage: state.authentication.validate.statusMessage,
+    };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        logoutRequest: () => {
-            return dispatch(actions.logoutRequest())
-        },
-        refreshJwtRequest: () => {
-            return dispatch(actions.refreshJwtRequest())
-        },
-        isJwtTokenValid: actions.isJwtTokenValid
-    }
+        logoutRequest: () => dispatch(actions.logoutRequest()),
+        refreshJwtRequest: () => dispatch(actions.refreshJwtRequest()),
+        isJwtTokenValid: actions.isJwtTokenValid,
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Layout);

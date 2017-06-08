@@ -12,14 +12,14 @@ class Widgets extends Component {
     }
 
     components = () => {
-        return (
-            this.props.data.map((data, index) => {
-                let title = data.title;
-                return (
-                    <Card key={index} title={title} />
-                );
-            })
-        )
+        const components = this.props.data.map((data) => {
+            const title = data.title;
+            const id = data.id.id;
+            return (
+                <Card key={id} title={title} />
+            );
+        });
+        return components;
     }
 
     render() {
@@ -34,16 +34,14 @@ class Widgets extends Component {
 const mapStateToProps = (state) => {
     return {
         statusMessage: state.widgets.statusMessage,
-        data: state.widgets.data
-    }
-}
+        data: state.widgets.data,
+    };
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getWidgetsRequest: () => {
-            return dispatch(actions.getWidgetsRequest());
-        }
-    }
-}
+        getWidgetsRequest: () => dispatch(actions.getWidgetsRequest()),
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Widgets);

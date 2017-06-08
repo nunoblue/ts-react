@@ -13,15 +13,15 @@ class Plugins extends Component {
     }
 
     components = () => {
-        return (
-            this.props.data.map((data, index) => {
-                let name = data.name;
-                let state = data.state;
-                return (
-                    <Card key={index} title={name} description={state} />
-                );
-            })
-        );
+        const components = this.props.data.map((data) => {
+            const name = data.name;
+            const state = data.state;
+            const id = data.id.id;
+            return (
+                <Card key={id} title={name} description={state} />
+            );
+        });
+        return components;
     }
 
     render() {
@@ -36,16 +36,14 @@ class Plugins extends Component {
 const mapStateToProps = (state) => {
     return {
         statusMessage: state.plugins.statusMessage,
-        data: state.plugins.data
-    }
-}
+        data: state.plugins.data,
+    };
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getPluginsRequest: () => {
-            return dispatch(actions.getPluginsRequest());
-        }
-    }
-}
+        getPluginsRequest: () => dispatch(actions.getPluginsRequest()),
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Plugins);

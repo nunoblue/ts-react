@@ -1,37 +1,38 @@
-import {  
+import update from 'react-addons-update';
+
+import {
     API_WIDGETS,
     API_WIDGETS_SUCCESS,
-    API_WIDGETS_FAILURE
+    API_WIDGETS_FAILURE,
 } from '../actions/ActionTypes';
-import update from 'react-addons-update';
 
 const initialState = {
     statusMessage: 'INIT',
-    data: []
-}
+    data: [],
+};
 
 export default function widgets(state = initialState, action) {
-    switch(action.type) {
+    switch (action.type) {
         case API_WIDGETS:
             return update(state, {
                 statusMessage: {
-                    $set: 'WAITING'
-                }
+                    $set: 'WAITING',
+                },
             });
         case API_WIDGETS_SUCCESS:
             return update(state, {
                 statusMessage: {
-                    $set: 'SUCCESS'
+                    $set: 'SUCCESS',
                 },
                 data: {
-                    $set: action.data
-                }
+                    $set: action.data,
+                },
             });
         case API_WIDGETS_FAILURE:
             return update(state, {
                 statusMessage: {
-                    $set: 'FAILURE'
-                }
+                    $set: 'FAILURE',
+                },
             });
         default:
             return state;

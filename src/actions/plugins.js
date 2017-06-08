@@ -1,10 +1,10 @@
 import axios from 'axios';
 import storage from 'store/storages/localStorage';
 
-import { 
+import {
     API_PLUGINS,
     API_PLUGINS_SUCCESS,
-    API_PLUGINS_FAILURE
+    API_PLUGINS_FAILURE,
 } from './ActionTypes';
 
 import config from '../config';
@@ -12,37 +12,36 @@ import config from '../config';
 const apServer = config.apServer;
 const PLUGINS_URL = `${apServer}/api/plugins`;
 
-export const getPluginsRequest = () =>  {
-    return (dispatch) => {
-        dispatch(getPlugins());
-
-        return axios.get(PLUGINS_URL, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
-            dispatch(getPluginsSuccess(response.data));
-        }).catch((error) => {
-            dispatch(getPluginsFailure());
-        })
-    }
-};
-
 function getPlugins() {
     return {
-        type: API_PLUGINS
-    }
+        type: API_PLUGINS,
+    };
 }
 
 function getPluginsSuccess(data) {
     return {
         type: API_PLUGINS_SUCCESS,
-        data: data
-    }
+        data,
+    };
 }
 
 function getPluginsFailure() {
     return {
-        type: API_PLUGINS_FAILURE
-    }
+        type: API_PLUGINS_FAILURE,
+    };
 }
+
+export const getPluginsRequest = () => (dispatch) => {
+    dispatch(getPlugins());
+
+    return axios.get(PLUGINS_URL, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(getPluginsSuccess(response.data));
+    }).catch((error) => {
+        dispatch(getPluginsFailure());
+    });
+};
+

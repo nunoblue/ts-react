@@ -9,29 +9,25 @@ class Dashboards extends Component {
 
     state = {
         limit: 30,
-        textSearch: ''
-    }
-
-    constructor(props) {
-        super(props);
+        textSearch: '',
     }
 
     componentDidMount() {
         console.log('Dashboards Render');
-        let limit = this.state.limit;
-        let textSearch = this.state.textSearch;
+        const limit = this.state.limit;
+        const textSearch = this.state.textSearch;
         this.props.getDashboardsRequest(limit, textSearch);
     }
 
     components = () => {
-        return (
-            this.props.data.map((data, index) => {
-                let title = data.title;
-                return (
-                    <Card key={index} title={title} />
-                );
-            })
-        );
+        const components = this.props.data.map((data) => {
+            const title = data.title;
+            const id = data.id.id;
+            return (
+                <Card key={id} title={title} />
+            );
+        });
+        return components;
     }
 
     render() {
@@ -46,16 +42,14 @@ class Dashboards extends Component {
 const mapStateToProps = (state) => {
     return {
         statusMessage: state.dashboards.statusMessage,
-        data: state.dashboards.data
-    }
-}
+        data: state.dashboards.data,
+    };
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getDashboardsRequest: (limit, textSearch) => {
-            return dispatch(actions.getDashboardsRequest(limit, textSearch));
-        }
-    }
-}
+        getDashboardsRequest: (limit, textSearch) => dispatch(actions.getDashboardsRequest(limit, textSearch)),
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboards);

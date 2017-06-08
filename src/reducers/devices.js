@@ -1,37 +1,38 @@
-import { 
+import update from 'react-addons-update';
+
+import {
     TENANT_DEVICES,
     TENANT_DEVICES_SUCCESS,
-    TENANT_DEVICES_FAILURE
+    TENANT_DEVICES_FAILURE,
  } from '../actions/ActionTypes';
-import update from 'react-addons-update';
 
 const initialState = {
     statusMessage: 'INIT',
-    data: []
+    data: [],
 };
 
 export default function devices(state = initialState, action) {
-    switch(action.type) {
-        case TENANT_DEVICES: 
+    switch (action.type) {
+        case TENANT_DEVICES:
             return update(state, {
                 statusMessage: {
-                    $set: 'WAITING'
-                }
+                    $set: 'WAITING',
+                },
             });
         case TENANT_DEVICES_SUCCESS:
             return update(state, {
                 statusMessage: {
-                    $set: 'SUCCESS'
+                    $set: 'SUCCESS',
                 },
                 data: {
-                    $set: action.data
-                }
+                    $set: action.data,
+                },
             });
         case TENANT_DEVICES_FAILURE:
             return update(state, {
                 statusMessage: {
-                    $set: 'FAILURE'
-                }
+                    $set: 'FAILURE',
+                },
             });
         default:
             return state;
