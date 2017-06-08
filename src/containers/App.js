@@ -33,14 +33,12 @@ class App extends Component {
 
     componentDidMount() {
         console.log('App Render');
-
         this.props.validateJwtToken().then((text) => {
             // console.log(text);
             this.props.refreshJwtRequest();
         }).catch((error) => {
             const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
             Materialize.toast($toastContent, 2000);
-            // console.log(error);
         });
     }
 

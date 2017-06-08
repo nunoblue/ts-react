@@ -28,9 +28,7 @@ class Devices extends Component {
                 let name = data.name;
                 let description = data.additionalInfo ? (data.additionalInfo.description ? data.additionalInfo.description : '') : '';
                 return (
-                    <div key={index} className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet">
-                        <Card title={name} description={description}/>
-                    </div>
+                    <Card key={index} title={name} description={description}/>
                 );
             })
         );

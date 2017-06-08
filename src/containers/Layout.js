@@ -19,7 +19,8 @@ class Layout extends Component {
         let validate = this.props.isJwtTokenValid();
         if(!validate) {
             this.props.refreshJwtRequest().catch((error) => {
-                console.log(error);
+                const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
+                Materialize.toast($toastContent, 2000);
             });
         }
     }

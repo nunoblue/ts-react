@@ -28,9 +28,7 @@ class Dashboards extends Component {
             this.props.data.map((data, index) => {
                 let title = data.title;
                 return (
-                    <div key={index} className="mdl-cell mdl-cell--3-col mdl-cell--6-col-phone mdl-cell--4-col-tablet">
-                        <Card title={title} />
-                    </div>
+                    <Card key={index} title={title} />
                 );
             })
         );

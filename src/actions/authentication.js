@@ -26,7 +26,7 @@ const LOGIN_URL = `${apServer}/api/auth/login`;
 const TOKEN_URL = `${apServer}/api/auth/token`;
 
 /* LOGIN */
-export function loginRequest(username, password) {
+export const loginRequest = (username, password) => {
     return (dispatch) => {
         dispatch(login());
         const loginData = {
@@ -45,13 +45,13 @@ export function loginRequest(username, password) {
     };
 }
 
-export function login() {
+function login() {
     return {
         type: AUTH_LOGIN,
     };
 }
 
-export function loginSuccess(username, response) {
+function loginSuccess(username, response) {
     const token = response.data.token;
     const refreshToken = response.data.refreshToken;
     setUserFromJwtToken(token, refreshToken, false, false);
@@ -61,14 +61,14 @@ export function loginSuccess(username, response) {
     };
 }
 
-export function loginFailure() {
+function loginFailure() {
     return {
         type: AUTH_LOGIN_FAILURE,
     };
 }
 
 /* REGISTER */
-export function registerRequest(username, password) {
+export const registerRequest = (username, password) => {
     return (dispatch) => {
         dispatch(register());
 
@@ -81,19 +81,19 @@ export function registerRequest(username, password) {
     };
 }
 
-export function register() {
+function register() {
     return {
         type: AUTH_REGISTER,
     };
 }
 
-export function registerSuccess() {
+function registerSuccess() {
     return {
         type: AUTH_REGISTER_SUCCESS,
     };
 }
 
-export function registerFailure(error) {
+function registerFailure(error) {
     return {
         type: AUTH_REGISTER_FAILURE,
         error,
@@ -101,7 +101,7 @@ export function registerFailure(error) {
 }
 
 /* GET STATUS */
-export function refreshJwtRequest() {
+export const refreshJwtRequest = () => {
     return (dispatch) => {
         const refreshToken = storage.read('refresh_token');
         const refreshTokenValid = isTokenValid('refresh_token');
@@ -122,7 +122,7 @@ export function refreshJwtRequest() {
     };
 };
 
-export function validateJwtToken(doRefresh) {
+export const validateJwtToken = (doRefresh) => {
     return dispatch => new Promise((resolve, reject) => {
         if (!isTokenValid('jwt_token')) {
             if (doRefresh) {
@@ -137,13 +137,13 @@ export function validateJwtToken(doRefresh) {
     });
 }
 
-export function getRefresh() {
+function getRefresh() {
     return {
         type: AUTH_GET_STATUS,
     };
 }
 
-export function getRefreshSuccess(response) {
+function getRefreshSuccess(response) {
     if (response) {
         const token = response.data.token;
         const refreshToken = response.data.refreshToken;
@@ -155,20 +155,20 @@ export function getRefreshSuccess(response) {
     };
 }
 
-export function getRefreshFailure() {
+function getRefreshFailure() {
     clearJwtToken(false);
     return {
         type: AUTH_GET_STATUS_FAILURE,
     };
 }
 
-export function logoutRequest() {
+export const logoutRequest = () => {
     return (dispatch) => {
         dispatch(getRefreshFailure());
     };
 }
 
-export function logout() {
+function logout() {
     clearJwtToken(true);
     return {
         type: AUTH_LOGOUT,
@@ -203,7 +203,7 @@ function updateAndValidateToken(token, prefix, notify) {
     if (issuedAt && expTime) {
         const ttl = expTime - issuedAt;
         if (ttl > 0) {
-            const clientExpiration = +new Date() + ttl * 1000;
+            const clientExpiration = +new Date() + ttl * 10;
             storage.write(prefix, token);
             storage.write(`${prefix}_expiration`, clientExpiration);
             valid = true;
@@ -211,7 +211,7 @@ function updateAndValidateToken(token, prefix, notify) {
     }
 }
 
-export function isJwtTokenValid() {
+export const isJwtTokenValid = () => {
     return isTokenValid('jwt_token');
 }
 
