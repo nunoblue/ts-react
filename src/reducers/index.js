@@ -6,7 +6,7 @@ import dashboards from './dashboards';
 import plugins from './plugins';
 import rules from './rules';
 import widgets from './widgets';
-
+import customers from './customers';
 
 export default combineReducers({
     authentication,
@@ -15,4 +15,5 @@ export default combineReducers({
     plugins,
     rules,
     widgets,
+    customers,
 });
