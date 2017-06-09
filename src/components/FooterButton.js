@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Tooltip } from 'antd';
 
-class Button extends Component {
+class FooterButton extends Component {
     static propTypes = {
         content: PropTypes.string,
         iconClassName: PropTypes.string,
@@ -17,12 +17,14 @@ class Button extends Component {
     render() {
         return (
             <Tooltip title={this.props.content}>
-                <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect mdl-button--colored">
-                    <i className="material-icons">{this.props.iconClassName}</i>
-                </button>
+                <div id="add" className="footer-buttons">
+                    <button className="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                        <i className="material-icons">{this.props.iconClassName}</i>
+                    </button>
+                </div>
             </Tooltip>
         );
     }
 }
 
-export default Button;
+export default FooterButton;

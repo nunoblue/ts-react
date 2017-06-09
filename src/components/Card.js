@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Button from './Button';
+
 class Card extends Component {
     static propTypes = {
         title: PropTypes.string,
         description: PropTypes.string,
+        buttonTooltip: PropTypes.string,
     }
 
     static defaultProps = {
         title: '',
         description: '',
+        buttonTooltip: '',
     }
 
     state = {
@@ -34,18 +38,10 @@ class Card extends Component {
                     </div>
                     <div className="mdl-card__actions mdl-card--border">
                         <span className="mui--pull-right">
-                            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                                <i className="material-icons">share</i>
-                            </button>
-                            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                                <i className="material-icons">assignment_return</i>
-                            </button>
-                            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                                <i className="material-icons">security</i>
-                            </button>
-                            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                                <i className="material-icons">delete</i>
-                            </button>
+                            <Button content="dashboard.make-public" iconClassName="share" />
+                            <Button content="Customer Select" iconClassName="assignment_return" />
+                            <Button content="Credential Management" iconClassName="security" />
+                            <Button content={this.props.buttonTooltip} iconClassName="delete" />
                         </span>
                     </div>
                 </div>

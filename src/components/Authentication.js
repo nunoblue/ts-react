@@ -29,17 +29,17 @@ class Authentication extends Component {
     }
 
     handleLogin = () => {
-        let id = this.state.username;
-        let pw = this.state.password;
+        const id = this.state.username;
+        const pw = this.state.password;
 
         this.props.onLogin(id, pw).then((success) => {
-            if(!success) {
+            if (!success) {
                 console.log('test1');
                 this.setState({
-                    password: ''
-                })
+                    password: '',
+                });
             }
-        })
+        });
     }
 
     handleRegister = () => {

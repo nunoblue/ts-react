@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Card from '../components/Card';
-import Button from '../components/Button';
+import FooterButton from '../components/FooterButton';
 
 import * as actions from '../actions/customers';
 
@@ -28,7 +28,7 @@ class Customers extends Component {
             const description = data.additionalInfo ? (data.additionalInfo.description || '') : '';
             const id = data.id.id;
             return (
-                <Card key={id} title={title} description={description} />
+                <Card key={id} title={title} description={description} buttonTooltip="Customer Delete" />
             );
         });
 
@@ -39,7 +39,7 @@ class Customers extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
-                <Button content="Customer Add" />
+                <FooterButton content="Customer Add" iconClassName="add" />
             </div>
         );
     }

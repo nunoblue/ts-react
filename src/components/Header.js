@@ -34,15 +34,6 @@ class Header extends Component {
                         <span className="mui--text-title mui--hidden-xs-inline-block">ThingStar</span>
                         <span className="mui--pull-right">
                             {logoutButton}
-                            <a className="sidedrawer-toggle mui--visible-xs">
-                                <i className="icon-github" />
-                            </a>
-                            <a className="sidedrawer-toggle mui--visible-xs">
-                                <i className="icon-facebook" />
-                            </a>
-                            <a className="sidedrawer-toggle mui--visible-xs">
-                                <i className="icon-twitter" />
-                            </a>
                         </span>
                     </div>
                 </div>
