@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import * as actions from '../actions/rules';
 import Card from '../components/Card';
+import Button from '../components/Button';
+
+import * as actions from '../actions/rules';
 
 class Rules extends Component {
 
@@ -12,6 +14,7 @@ class Rules extends Component {
     }
 
     components = () => {
+        console.log(this.props.data);
         const components = this.props.data.map((data) => {
             const name = data.name;
             const state = data.state;
@@ -27,6 +30,7 @@ class Rules extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
+                <Button content="Rule Add" />
             </div>
         );
     }

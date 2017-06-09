@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Avatar from 'material-ui/Avatar';
 import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
-import Paper from 'material-ui/Paper';
-import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
-
-const assignmentReturnIcon = <FontIcon className="material-icons">assignment_return</FontIcon>;
-const securityIcon = <FontIcon className="material-icons">security</FontIcon>;
-const deleteIcon = <FontIcon className="material-icons">delete</FontIcon>;
-const shareIcon = <FontIcon className="material-icons">share</FontIcon>;
 
 class Card extends Component {
     static propTypes = {
@@ -43,28 +35,20 @@ class Card extends Component {
                         {this.props.description}
                     </div>
                     <div className="mdl-card__actions mdl-card--border">
-                        <BottomNavigation selectedIndex={this.state.selectedIndex}>
-                            <BottomNavigationItem
-                            label="Public"
-                            icon={shareIcon}
-                            onTouchTap={() => this.select(0)}
-                            />
-                            <BottomNavigationItem
-                            label="Customer"
-                            icon={assignmentReturnIcon}
-                            onTouchTap={() => this.select(0)}
-                            />
-                            <BottomNavigationItem
-                            label="Credential"
-                            icon={securityIcon}
-                            onTouchTap={() => this.select(1)}
-                            />
-                            <BottomNavigationItem
-                            label="Delete"
-                            icon={deleteIcon}
-                            onTouchTap={() => this.select(2)}
-                            />
-                        </BottomNavigation>
+                        <span className="mui--pull-right">
+                            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                                <i className="material-icons">share</i>
+                            </button>
+                            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                                <i className="material-icons">assignment_return</i>
+                            </button>
+                            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                                <i className="material-icons">security</i>
+                            </button>
+                            <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                                <i className="material-icons">delete</i>
+                            </button>
+                        </span>
                     </div>
                 </div>
             </div>

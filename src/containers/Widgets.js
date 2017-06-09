@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import * as actions from '../actions/widgets';
 import Card from '../components/Card';
+import Button from '../components/Button';
+
+import * as actions from '../actions/widgets';
 
 class Widgets extends Component {
 
@@ -26,6 +28,7 @@ class Widgets extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
+                <Button content="Widget Add" />
             </div>
         );
     }

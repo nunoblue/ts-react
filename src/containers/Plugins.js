@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import * as actions from '../actions/plugins';
-
 import Card from '../components/Card';
+import Button from '../components/Button';
+
+import * as actions from '../actions/plugins';
 
 class Plugins extends Component {
 
@@ -28,6 +29,7 @@ class Plugins extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
+                <Button content="Plugin Add" />
             </div>
         );
     }
