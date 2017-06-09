@@ -12,6 +12,8 @@ React 개발환경을 위한 자료
 ## ES6 참조자료
 - [ES6 Cheetsheet](https://github.com/DrkSephy/es6-cheatsheet/blob/master/README_ko.md)
 
+## React 개발 도구
+- [React-Redux Devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
 ## 라이브러리
 - [Axios](https://github.com/mzabriskie/axios) - Ajax 통신 라이브러리
 
