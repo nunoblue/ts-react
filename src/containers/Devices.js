@@ -11,27 +11,24 @@ class Devices extends Component {
         textSearch: '',
     }
 
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
         console.log('Devices Render');
-        let limit = this.state.limit;
-        let textSearch = this.state.textSearch;
+        const limit = this.state.limit;
+        const textSearch = this.state.textSearch;
         this.props.getDevicesRequest(limit, textSearch);
     }
 
     components = () => {
-        return (
-            this.props.data.map((data, index) => {
-                let name = data.name;
-                let description = data.additionalInfo ? (data.additionalInfo.description ? data.additionalInfo.description : '') : '';
-                return (
-                    <Card key={index} title={name} description={description}/>
-                );
-            })
-        );
+        const components = this.props.data.map((data) => {
+            const name = data.name;
+            const description = data.additionalInfo ? (data.additionalInfo.description || '') : '';
+            const id = data.id.id;
+            return (
+                <Card key={id} title={name} description={description} />
+            );
+        });
+
+        return components;
     }
 
     render() {
@@ -46,16 +43,14 @@ class Devices extends Component {
 const mapStateToProps = (state) => {
     return {
         statusMessage: state.devices.statusMessage,
-        data: state.devices.data
-    }
-}
+        data: state.devices.data,
+    };
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getDevicesRequest: (limit, textSearch) => {
-            return dispatch(actions.getDevicesRequest(limit, textSearch));
-        }
-    }
-}
+        getDevicesRequest: (limit, textSearch) => dispatch(actions.getDevicesRequest(limit, textSearch)),
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Devices);

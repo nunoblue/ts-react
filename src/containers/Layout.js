@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
-import Footer from '../components/Footer';
-import asyncComponent from '../components/AsyncComponent';
 
 import * as actions from '../actions/authentication';
 
@@ -16,8 +14,8 @@ class Layout extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        let validate = this.props.isJwtTokenValid();
-        if(!validate) {
+        const validate = this.props.isJwtTokenValid();
+        if (!validate) {
             this.props.refreshJwtRequest().catch((error) => {
                 const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
                 Materialize.toast($toastContent, 2000);
@@ -32,11 +30,21 @@ class Layout extends Component {
         this.props.history.push('/login');
     }
 
+    pathValidate = () => {
+        const validate = this.props.children.some(element => element.props.path === this.props.location.pathname);
+        return validate;
+    }
+
     render() {
         const validate = this.props.validate;
         const statusMessage = this.props.statusMessage;
-        if (!validate && statusMessage == 'FAILURE') {
+        
+        if (!validate && statusMessage === 'FAILURE') {
             return <Redirect to="/login" />;
+        }
+
+        if (!this.pathValidate()) {
+            return <Redirect to="/home" />;
         }
 
         return (
@@ -49,16 +57,8 @@ class Layout extends Component {
                     <div className="mui--appbar-height" />
                     <div className="mui-container-fluid">
                         {this.props.children}
-                        <div className="mdl-grid">
-                            <div className="mdl-cell mdl-cell--12-col col-centered">
-                                <button className="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect">
-                                    <i className="material-icons">add</i>
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <Footer />
             </div>
         );
     }
@@ -67,20 +67,16 @@ class Layout extends Component {
 const mapStateToProps = (state) => {
     return {
         status: state.authentication.status,
-        statusMessage: state.authentication.validate.statusMessage
-    }
+        statusMessage: state.authentication.validate.statusMessage,
+    };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        logoutRequest: () => {
-            return dispatch(actions.logoutRequest())
-        },
-        refreshJwtRequest: () => {
-            return dispatch(actions.refreshJwtRequest())
-        },
-        isJwtTokenValid: actions.isJwtTokenValid
-    }
+        logoutRequest: () => dispatch(actions.logoutRequest()),
+        refreshJwtRequest: () => dispatch(actions.refreshJwtRequest()),
+        isJwtTokenValid: actions.isJwtTokenValid,
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Layout);

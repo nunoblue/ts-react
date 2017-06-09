@@ -1,37 +1,38 @@
-import {  
+import update from 'react-addons-update';
+
+import {
     API_RULES,
     API_RULES_SUCCESS,
-    API_RULES_FAILURE
+    API_RULES_FAILURE,
 } from '../actions/ActionTypes';
-import update from 'react-addons-update';
 
 const initialState = {
     statusMessage: 'INIT',
-    data: []
-}
+    data: [],
+};
 
 export default function rules(state = initialState, action) {
-    switch(action.type) {
+    switch (action.type) {
         case API_RULES:
             return update(state, {
                 statusMessage: {
-                    $set: 'WAITING'
-                }
+                    $set: 'WAITING',
+                },
             });
         case API_RULES_SUCCESS:
             return update(state, {
                 statusMessage: {
-                    $set: 'SUCCESS'
+                    $set: 'SUCCESS',
                 },
                 data: {
-                    $set: action.data
-                }
+                    $set: action.data,
+                },
             });
         case API_RULES_FAILURE:
             return update(state, {
                 statusMessage: {
-                    $set: 'FAILURE'
-                }
+                    $set: 'FAILURE',
+                },
             });
         default:
             return state;

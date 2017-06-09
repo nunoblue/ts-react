@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
@@ -10,7 +9,6 @@ import Home from '../components/Home';
 
 import Layout from './Layout';
 import Login from './Login';
-import Register from './Register';
 import Plugins from './Plugins';
 import Rules from './Rules';
 import Customers from './Customers';
@@ -26,10 +24,6 @@ import * as actions from '../actions/authentication';
 const history = createBrowserHistory();
 
 class App extends Component {
-
-    constructor(props) {
-        super(props);
-    }
 
     componentDidMount() {
         console.log('App Render');
@@ -48,11 +42,9 @@ class App extends Component {
         return (
             <Router>
                 <div id="container">
-                    <Route
-                      exact path="/" render={() => !validate ? <Redirect to="/login" /> : <Redirect to="/home" />}
-                    />
+                    <Route exact path="/" render={() => (!validate ? <Redirect to="/login" /> : <Redirect to="/home" />)} />
                     <Switch>
-                        <Route path="/login" component={Login}/>
+                        <Route path="/login" component={Login} />
                         <Layout history={history} validate={validate}>
                             <Route path="/home" component={Home} />
                             <Route path="/plugins" component={Plugins} />
@@ -69,21 +61,17 @@ class App extends Component {
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         status: state.authentication.status,
-    }
+    };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        refreshJwtRequest: () => {
-            return dispatch(actions.refreshJwtRequest())
-        },
-        validateJwtToken: () => {
-            return dispatch(actions.validateJwtToken(true))
-        }
-    }
+        refreshJwtRequest: () => dispatch(actions.refreshJwtRequest()),
+        validateJwtToken: () => dispatch(actions.validateJwtToken(true)),
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

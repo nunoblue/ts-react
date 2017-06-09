@@ -14,10 +14,6 @@ class Header extends Component {
         },
     }
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const logoutButton = (
             <a className="sidedrawer-toggle mui--visible-xs" onClick={this.props.onLogout}>

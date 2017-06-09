@@ -65,3 +65,6 @@ typings/
 /public/*
 !/public/assets/
 !/public/images/
+
+# VS Code Setting Ignore
+.vscode
