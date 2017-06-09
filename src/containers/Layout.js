@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom';
 
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
-import Footer from '../components/Footer';
 
 import * as actions from '../actions/authentication';
 
@@ -31,11 +30,21 @@ class Layout extends Component {
         this.props.history.push('/login');
     }
 
+    pathValidate = () => {
+        const validate = this.props.children.some(element => element.props.path === this.props.location.pathname);
+        return validate;
+    }
+
     render() {
         const validate = this.props.validate;
         const statusMessage = this.props.statusMessage;
+        
         if (!validate && statusMessage === 'FAILURE') {
             return <Redirect to="/login" />;
+        }
+
+        if (!this.pathValidate()) {
+            return <Redirect to="/home" />;
         }
 
         return (
@@ -48,16 +57,8 @@ class Layout extends Component {
                     <div className="mui--appbar-height" />
                     <div className="mui-container-fluid">
                         {this.props.children}
-                        <div className="mdl-grid">
-                            <div className="mdl-cell mdl-cell--12-col col-centered">
-                                <button className="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect">
-                                    <i className="material-icons">add</i>
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <Footer />
             </div>
         );
     }

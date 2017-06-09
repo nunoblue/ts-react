@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import Button from '../components/Button';
 import Card from '../components/Card';
 
 import * as actions from '../actions/dashboards';
@@ -34,6 +35,7 @@ class Dashboards extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
+                <Button content="Dashboard Add" />
             </div>
         );
     }

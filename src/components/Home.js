@@ -8,7 +8,7 @@ class Home extends Component {
 
     render() {
         return (
-            <div className="mui-container-fluid">
+            <div className="mdl-grid">
                 Home!!
             </div>
         );

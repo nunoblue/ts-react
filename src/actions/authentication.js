@@ -25,7 +25,6 @@ const apServer = config.apServer;
 const LOGIN_URL = `${apServer}/api/auth/login`;
 const TOKEN_URL = `${apServer}/api/auth/token`;
 
-
 function updateAndValidateToken(token, prefix, notify) {
     let valid = false;
     const tokenData = jwtDecode(token);

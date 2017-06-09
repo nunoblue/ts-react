@@ -14,21 +14,17 @@ const shareIcon = <FontIcon className="material-icons">share</FontIcon>;
 class Card extends Component {
     static propTypes = {
         title: PropTypes.string,
-        description:  PropTypes.string
+        description: PropTypes.string,
     }
 
     static defaultProps = {
         title: '',
-        description: ''
+        description: '',
     }
 
     state = {
         selectedIndex: 0,
     };
-
-    constructor(props) {
-        super(props);
-    }
 
     select(index) {
         this.setState({

@@ -42,15 +42,10 @@ class App extends Component {
         return (
             <Router>
                 <div id="container">
-                    <Route
-                      exact
-                      path="/"
-                      render={() => (!validate ? <Redirect to="/login" /> : <Redirect to="/home" />)}
-                    />
+                    <Route exact path="/" render={() => (!validate ? <Redirect to="/login" /> : <Redirect to="/home" />)} />
                     <Switch>
                         <Route path="/login" component={Login} />
                         <Layout history={history} validate={validate}>
-                            <Route render={() => (<Redirect to="/home" />)} />
                             <Route path="/home" component={Home} />
                             <Route path="/plugins" component={Plugins} />
                             <Route path="/rules" component={Rules} />
