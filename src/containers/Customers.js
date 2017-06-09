@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Card from '../components/Card';
+import Button from '../components/Button';
 
 import * as actions from '../actions/customers';
 
@@ -22,21 +23,23 @@ class Customers extends Component {
     }
 
     components = () => {
-        return (
-            this.props.data.map((data, index) => {
-                const title = data.title;
-                const description = data.additionalInfo ? (data.additionalInfo.description || '') : '';
-                return (
-                    <Card key={index} title={title} description={description} />
-                );
-            })
-        );
+        const components = this.props.data.map((data) => {
+            const title = data.title;
+            const description = data.additionalInfo ? (data.additionalInfo.description || '') : '';
+            const id = data.id.id;
+            return (
+                <Card key={id} title={title} description={description} />
+            );
+        });
+
+        return components;
     }
 
     render() {
         return (
             <div className="mdl-grid">
                 {this.components()}
+                <Button content="Customer Add" />
             </div>
         );
     }

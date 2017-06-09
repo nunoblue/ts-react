@@ -14,7 +14,6 @@ class Rules extends Component {
     }
 
     components = () => {
-        console.log(this.props.data);
         const components = this.props.data.map((data) => {
             const name = data.name;
             const state = data.state;
