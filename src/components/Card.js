@@ -1,25 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Avatar from 'material-ui/Avatar';
-import FontIcon from 'material-ui/FontIcon';
-import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
-import Paper from 'material-ui/Paper';
-import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 
-const assignmentReturnIcon = <FontIcon className="material-icons">assignment_return</FontIcon>;
-const securityIcon = <FontIcon className="material-icons">security</FontIcon>;
-const deleteIcon = <FontIcon className="material-icons">delete</FontIcon>;
-const shareIcon = <FontIcon className="material-icons">share</FontIcon>;
+import Button from './Button';
 
 class Card extends Component {
     static propTypes = {
         title: PropTypes.string,
         description: PropTypes.string,
+        buttonTooltip: PropTypes.string,
     }
 
     static defaultProps = {
         title: '',
         description: '',
+        buttonTooltip: '',
     }
 
     state = {
@@ -43,28 +37,12 @@ class Card extends Component {
                         {this.props.description}
                     </div>
                     <div className="mdl-card__actions mdl-card--border">
-                        <BottomNavigation selectedIndex={this.state.selectedIndex}>
-                            <BottomNavigationItem
-                            label="Public"
-                            icon={shareIcon}
-                            onTouchTap={() => this.select(0)}
-                            />
-                            <BottomNavigationItem
-                            label="Customer"
-                            icon={assignmentReturnIcon}
-                            onTouchTap={() => this.select(0)}
-                            />
-                            <BottomNavigationItem
-                            label="Credential"
-                            icon={securityIcon}
-                            onTouchTap={() => this.select(1)}
-                            />
-                            <BottomNavigationItem
-                            label="Delete"
-                            icon={deleteIcon}
-                            onTouchTap={() => this.select(2)}
-                            />
-                        </BottomNavigation>
+                        <span className="mui--pull-right">
+                            <Button content="dashboard.make-public" iconClassName="share" />
+                            <Button content="Customer Select" iconClassName="assignment_return" />
+                            <Button content="Credential Management" iconClassName="security" />
+                            <Button content={this.props.buttonTooltip} iconClassName="delete" />
+                        </span>
                     </div>
                 </div>
             </div>

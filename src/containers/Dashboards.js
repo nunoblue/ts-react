@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Button from '../components/Button';
+import FooterButton from '../components/FooterButton';
 import Card from '../components/Card';
 
 import * as actions from '../actions/dashboards';
@@ -25,7 +25,7 @@ class Dashboards extends Component {
             const title = data.title;
             const id = data.id.id;
             return (
-                <Card key={id} title={title} />
+                <Card key={id} title={title} buttonTooltip="Dashboard Delete" />
             );
         });
         return components;
@@ -35,7 +35,7 @@ class Dashboards extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
-                <Button content="Dashboard Add" />
+                <FooterButton content="Dashboard Add" iconClassName="add" />
             </div>
         );
     }

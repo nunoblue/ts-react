@@ -4,13 +4,32 @@ import storage from 'store/storages/localStorage';
 import {
     API_CUSTOMERS,
     API_CUSTOMERS_SUCCESS,
-    API_CUSTOMERS_FAILURE
-    } from './ActionTypes';
+    API_CUSTOMERS_FAILURE,
+} from './ActionTypes';
 
 import config from '../config';
 
 const apServer = config.apServer;
 const CUSTOMERS_URL = `${apServer}/api/customers`;
+
+function getCustomers() {
+    return {
+        type: API_CUSTOMERS,
+    };
+}
+
+function getCustomersSuccess(data) {
+    return {
+        type: API_CUSTOMERS_SUCCESS,
+        data,
+    };
+}
+
+function getCustomersFailure() {
+    return {
+        type: API_CUSTOMERS_FAILURE,
+    };
+}
 
 export const getCustomersRequest = (limit, textSearch) => {
     return (dispatch) => {
@@ -35,22 +54,3 @@ export const getCustomersRequest = (limit, textSearch) => {
         });
     };
 };
-
-function getCustomers() {
-    return {
-        type: API_CUSTOMERS,
-    };
-}
-
-function getCustomersSuccess(data) {
-    return {
-        type: API_CUSTOMERS_SUCCESS,
-        data,
-    };
-}
-
-function getCustomersFailure() {
-    return {
-        type: API_CUSTOMERS_FAILURE,
-    };
-}

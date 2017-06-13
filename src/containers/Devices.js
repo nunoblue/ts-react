@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Card from '../components/Card';
+import FooterButton from '../components/FooterButton';
 
 import * as actions from '../actions/devices';
 
@@ -24,7 +25,7 @@ class Devices extends Component {
             const description = data.additionalInfo ? (data.additionalInfo.description || '') : '';
             const id = data.id.id;
             return (
-                <Card key={id} title={name} description={description} />
+                <Card key={id} title={name} description={description} buttonTooltip="Device Delete" />
             );
         });
 
@@ -35,6 +36,7 @@ class Devices extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
+                <FooterButton content="Device Add" iconClassName="add" />
             </div>
         );
     }

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import * as actions from '../actions/plugins';
-
 import Card from '../components/Card';
+import FooterButton from '../components/FooterButton';
+
+import * as actions from '../actions/plugins';
 
 class Plugins extends Component {
 
@@ -18,7 +19,7 @@ class Plugins extends Component {
             const state = data.state;
             const id = data.id.id;
             return (
-                <Card key={id} title={name} description={state} />
+                <Card key={id} title={name} description={state} buttonTooltip="Plugin Delete" />
             );
         });
         return components;
@@ -28,6 +29,7 @@ class Plugins extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
+                <FooterButton content="Plugin Add" iconClassName="add" />
             </div>
         );
     }

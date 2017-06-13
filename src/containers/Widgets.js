@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import * as actions from '../actions/widgets';
 import Card from '../components/Card';
+import FooterButton from '../components/FooterButton';
+
+import * as actions from '../actions/widgets';
 
 class Widgets extends Component {
 
@@ -16,7 +18,7 @@ class Widgets extends Component {
             const title = data.title;
             const id = data.id.id;
             return (
-                <Card key={id} title={title} />
+                <Card key={id} title={title} buttonTooltip="Widget Delete" />
             );
         });
         return components;
@@ -26,6 +28,7 @@ class Widgets extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
+                <FooterButton content="Widget Add" iconClassName="add" />
             </div>
         );
     }
