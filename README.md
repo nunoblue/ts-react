@@ -3,7 +3,8 @@ React 개발환경을 위한 자료
 
 
 ## React 참조자료
-- [React Redux Starter Kit](https://github.com/davezuko/react-redux-starter-kit) - React, Redux 기반 스타터 킷 **
+- [React Redux Starter Kit](https://github.com/davezuko/react-redux-starter-kit) - React, Redux 기반 스타터 킷
+- [Redux 문서](https://dobbit.github.io/redux/)
 
 ## Webpack 참조자료
 - [웹팩입문자를 위한 튜토리얼 파트1 - 웹팩 입문](https://github.com/AriaFallah/WebpackTutorial/tree/master/ko-arahansa/part1)
