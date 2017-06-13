@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Card from '../components/Card';
-import FooterButton from '../components/FooterButton';
+import CardButton from '../components/CardButton';
 
 import * as actions from '../actions/devices';
 
@@ -36,7 +36,7 @@ class Devices extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
-                <FooterButton content="Device Add" iconClassName="add" />
+                <CardButton content="Device Add" iconClassName="add" />
             </div>
         );
     }
