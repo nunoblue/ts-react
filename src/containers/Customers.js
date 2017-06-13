@@ -23,11 +23,11 @@ class Customers extends Component {
 
     components = () => {
         return (
-            this.props.data.map((data, index) => {
+            this.props.data.map((data) => {
                 const title = data.title;
                 const description = data.additionalInfo ? (data.additionalInfo.description || '') : '';
                 return (
-                    <Card key={index} title={title} description={description} />
+                    <Card title={title} description={description} />
                 );
             })
         );
