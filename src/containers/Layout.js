@@ -16,10 +16,7 @@ class Layout extends Component {
     componentDidUpdate(prevProps, prevState) {
         const validate = this.props.isJwtTokenValid();
         if (!validate) {
-            this.props.refreshJwtRequest().catch((error) => {
-                const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
-                Materialize.toast($toastContent, 2000);
-            });
+            this.props.refreshJwtRequest();
         }
     }
 
