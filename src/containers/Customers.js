@@ -51,14 +51,14 @@ const mapStateToProps = (state) => {
         statusMessage: state.customers.statusMessage,
         data: state.customers.data,
     };
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
         getCustomersRequest: (limit, textSearch) => {
             return dispatch(actions.getCustomersRequest(limit, textSearch));
-        }
+        },
     };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Customers);
