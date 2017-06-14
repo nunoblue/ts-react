@@ -56,26 +56,26 @@ Thingstar UI 개발환경 구축
 └── webpack.common.prod.js     # 운영 모드 Webpack 설정
 ```
 
-### React 참조자료
-- [React Redux Starter Kit](https://github.com/davezuko/react-redux-starter-kit) - React, Redux 기반 스타터 킷
+## React 참조자료
+- [React 공식 페이지](https://facebook.github.io/react/)
+- [React Routing](https://github.com/ReactTraining/react-router)
 - [Redux 문서](https://dobbit.github.io/redux/)
+- [React Redux Starter Kit](https://github.com/davezuko/react-redux-starter-kit) - React, Redux 기반 스타터 킷
 
-### Webpack 참조자료
+## Webpack 참조자료
+- [Webpack 공식 페이지](https://webpack.github.io/)
 - [웹팩입문자를 위한 튜토리얼 파트1 - 웹팩 입문](https://github.com/AriaFallah/WebpackTutorial/tree/master/ko-arahansa/part1)
 - [웹팩입문자를 위한 튜토리얼 파트2 - 웹팩 입문](https://github.com/AriaFallah/WebpackTutorial/tree/master/ko-arahansa/part2)
 
-#### ES6 참조자료
+## ES6 참조자료
 - [ES6 Cheetsheet](https://github.com/DrkSephy/es6-cheatsheet/blob/master/README_ko.md)
 - [ES6 Exploring](http://exploringjs.com/es6/) ES6 기술문서
 - [ES6 Console](https://es6console.com/) - 버전별 ECMAScript 코드 테스트 및 변환
 
-#### React 개발 도구
+## React 개발 도구
 React 기반 구현시 크롬의 개발 도구
 - [React Devtools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)
 - [React-Redux Devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
-
-## 라이브러리
-- [Axios](https://github.com/mzabriskie/axios) - Ajax 통신 라이브러리
 
 ## 라이브러리
 - [Axios](https://github.com/mzabriskie/axios) - Ajax 통신 라이브러리
