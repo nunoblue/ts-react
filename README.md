@@ -33,7 +33,6 @@ Thingstar UI 개발환경 구축
 
 ## 프로젝트 구조
 ```
-.
 ├── less                       # Style 정의를 위한 less 파일
 ├── node_modules               # 설치된 Node 모듈
 ├── public                     # 빌드 배포본
@@ -71,13 +70,19 @@ Thingstar UI 개발환경 구축
 - [ES6 Console](https://es6console.com/) - 버전별 ECMAScript 코드 테스트 및 변환
 
 #### React 개발 도구
+React 기반 구현시 크롬의 개발 도구
+- [React Devtools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)
 - [React-Redux Devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
 
 ## 라이브러리
 - [Axios](https://github.com/mzabriskie/axios) - Ajax 통신 라이브러리
 
+## 라이브러리
+- [Axios](https://github.com/mzabriskie/axios) - Ajax 통신 라이브러리
+
 ## 코드 품질
-- [AirBnB React StyleGuide](https://github.com/airbnb/javascript/tree/master/react)
+ESLint를 사용하여 Javascript 및 React의 코드 품질을 관리합니다.
+- [Thingstar Javascript/React 스타일 가이드](JavascriptReactStyleGuide.md)
 
 ## 향후 고려대상 라이브러리
-- [Wix React Template](https://github.com/wix/react-templates)
+- [Wix React Template](https://github.com/wix/react-templates) - 디자인과 코드의 분리가 가능한 템플릿 기반의 React 라이브러리
