@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Card from '../components/Card';
-import FooterButton from '../components/FooterButton';
+import CardButton from '../components/CardButton';
 
 import * as actions from '../actions/customers';
 
@@ -17,6 +17,7 @@ class Customers extends Component {
     }
 
     componentDidMount() {
+        console.log('Customers Render');
         const limit = this.state.limit;
         const textSearch = this.state.textSearch;
         this.props.getCustomersRequest(limit, textSearch);
@@ -39,7 +40,7 @@ class Customers extends Component {
         return (
             <div className="mdl-grid">
                 {this.components()}
-                <FooterButton content="Customer Add" iconClassName="add" />
+                <CardButton content="Customer Add" iconClassName="add" />
             </div>
         );
     }
@@ -50,14 +51,14 @@ const mapStateToProps = (state) => {
         statusMessage: state.customers.statusMessage,
         data: state.customers.data,
     };
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
         getCustomersRequest: (limit, textSearch) => {
             return dispatch(actions.getCustomersRequest(limit, textSearch));
-        }
+        },
     };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Customers);

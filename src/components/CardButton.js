@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Tooltip } from 'antd';
 
-class FooterButton extends Component {
+class CardButton extends Component {
     static propTypes = {
         content: PropTypes.string,
         iconClassName: PropTypes.string,
@@ -27,4 +27,4 @@ class FooterButton extends Component {
     }
 }
 
-export default FooterButton;
+export default CardButton;
