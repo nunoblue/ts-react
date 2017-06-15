@@ -1,0 +1,3884 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>JavascriptReactStyleGuide.html</title>
+  <meta name="generator" content="Haroopad 0.13.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>div.oembedall-githubrepos{border:1px solid #DDD;border-radius:4px;list-style-type:none;margin:0 0 10px;padding:8px 10px 0;font:13.34px/1.4 helvetica,arial,freesans,clean,sans-serif;width:452px;background-color:#fff}div.oembedall-githubrepos .oembedall-body{background:-moz-linear-gradient(center top,#FAFAFA,#EFEFEF);background:-webkit-gradient(linear,left top,left bottom,from(#FAFAFA),to(#EFEFEF));border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-top:1px solid #EEE;margin-left:-10px;margin-top:8px;padding:5px 10px;width:100%}div.oembedall-githubrepos h3{font-size:14px;margin:0;padding-left:18px;white-space:nowrap}div.oembedall-githubrepos p.oembedall-description{color:#444;font-size:12px;margin:0 0 3px}div.oembedall-githubrepos p.oembedall-updated-at{color:#888;font-size:11px;margin:0}div.oembedall-githubrepos ul.oembedall-repo-stats{border:none;float:right;font-size:11px;font-weight:700;padding-left:15px;position:relative;z-index:5;margin:0}div.oembedall-githubrepos ul.oembedall-repo-stats li{border:none;color:#666;display:inline-block;list-style-type:none;margin:0!important}div.oembedall-githubrepos ul.oembedall-repo-stats li a{background-color:transparent;border:none;color:#666!important;background-position:5px -2px;background-repeat:no-repeat;border-left:1px solid #DDD;display:inline-block;height:21px;line-height:21px;padding:0 5px 0 23px}div.oembedall-githubrepos ul.oembedall-repo-stats li:first-child a{border-left:medium none;margin-right:-3px}div.oembedall-githubrepos ul.oembedall-repo-stats li a:hover{background:5px -27px no-repeat #4183C4;color:#FFF!important;text-decoration:none}div.oembedall-githubrepos ul.oembedall-repo-stats li:first-child a:hover{border-bottom-left-radius:3px;border-top-left-radius:3px}ul.oembedall-repo-stats li:last-child a:hover{border-bottom-right-radius:3px;border-top-right-radius:3px}span.oembedall-closehide{background-color:#aaa;border-radius:2px;cursor:pointer;margin-right:3px}div.oembedall-container{margin-top:5px;text-align:left}.oembedall-ljuser{font-weight:700}.oembedall-ljuser img{vertical-align:bottom;border:0;padding-right:1px}.oembedall-stoqembed{border-bottom:1px dotted #999;float:left;overflow:hidden;width:730px;line-height:1;background:#FFF;color:#000;font-family:Arial,Liberation Sans,DejaVu Sans,sans-serif;font-size:80%;text-align:left;margin:0;padding:0}.oembedall-stoqembed a{color:#07C;text-decoration:none;margin:0;padding:0}.oembedall-stoqembed a:hover{text-decoration:underline}.oembedall-stoqembed a:visited{color:#4A6B82}.oembedall-stoqembed h3{font-family:Trebuchet MS,Liberation Sans,DejaVu Sans,sans-serif;font-size:130%;font-weight:700;margin:0;padding:0}.oembedall-stoqembed .oembedall-reputation-score{color:#444;font-size:120%;font-weight:700;margin-right:2px}.oembedall-stoqembed .oembedall-user-info{height:35px;width:185px}.oembedall-stoqembed .oembedall-user-info .oembedall-user-gravatar32{float:left;height:32px;width:32px}.oembedall-stoqembed .oembedall-user-info .oembedall-user-details{float:left;margin-left:5px;overflow:hidden;white-space:nowrap;width:145px}.oembedall-stoqembed .oembedall-question-hyperlink{font-weight:700}.oembedall-stoqembed .oembedall-stats{background:#EEE;margin:0 0 0 7px;padding:4px 7px 6px;width:58px}.oembedall-stoqembed .oembedall-statscontainer{float:left;margin-right:8px;width:86px}.oembedall-stoqembed .oembedall-votes{color:#555;padding:0 0 7px;text-align:center}.oembedall-stoqembed .oembedall-vote-count-post{font-size:240%;color:#808185;display:block;font-weight:700}.oembedall-stoqembed .oembedall-views{color:#999;padding-top:4px;text-align:center}.oembedall-stoqembed .oembedall-status{margin-top:-3px;padding:4px 0;text-align:center;background:#75845C;color:#FFF}.oembedall-stoqembed .oembedall-status strong{color:#FFF;display:block;font-size:140%}.oembedall-stoqembed .oembedall-summary{float:left;width:635px}.oembedall-stoqembed .oembedall-excerpt{line-height:1.2;margin:0;padding:0 0 5px}.oembedall-stoqembed .oembedall-tags{float:left;line-height:18px}.oembedall-stoqembed .oembedall-tags a:hover{text-decoration:none}.oembedall-stoqembed .oembedall-post-tag{background-color:#E0EAF1;border-bottom:1px solid #3E6D8E;border-right:1px solid #7F9FB6;color:#3E6D8E;font-size:90%;line-height:2.4;margin:2px 2px 2px 0;padding:3px 4px;text-decoration:none;white-space:nowrap}.oembedall-stoqembed .oembedall-post-tag:hover{background-color:#3E6D8E;border-bottom:1px solid #37607D;border-right:1px solid #37607D;color:#E0EAF1}.oembedall-stoqembed .oembedall-fr{float:right}.oembedall-stoqembed .oembedall-statsarrow{background-image:url(http://cdn.sstatic.net/stackoverflow/img/sprites.png?v=3);background-repeat:no-repeat;overflow:hidden;background-position:0 -435px;float:right;height:13px;margin-top:12px;width:7px}.oembedall-facebook1{border:1px solid #1A3C6C;padding:0;font:13.34px/1.4 verdana;width:500px}.oembedall-facebook2{background-color:#627add}.oembedall-facebook2 a{color:#e8e8e8;text-decoration:none}.oembedall-facebookBody{background-color:#fff;vertical-align:top;padding:5px}.oembedall-facebookBody .contents{display:inline-block;width:100%}.oembedall-facebookBody div img{float:left;margin-right:5px}div.oembedall-lanyard{-webkit-box-shadow:none;-webkit-transition-delay:0s;-webkit-transition-duration:.4000000059604645s;-webkit-transition-property:width;-webkit-transition-timing-function:cubic-bezier(0.42,0,.58,1);background-attachment:scroll;background-clip:border-box;background-color:transparent;background-image:none;background-origin:padding-box;border-width:0;box-shadow:none;color:#112644;display:block;float:left;font-family:'Trebuchet MS',Trebuchet,sans-serif;font-size:16px;height:253px;line-height:19px;margin:0;max-width:none;min-height:0;outline:#112644 0;overflow-x:visible;overflow-y:visible;padding:0;position:relative;text-align:left;vertical-align:baseline;width:804px}div.oembedall-lanyard .tagline{font-size:1.5em}div.oembedall-lanyard .wrapper{overflow:hidden;clear:both}div.oembedall-lanyard .split{float:left;display:inline}div.oembedall-lanyard .prominent-place .flag:active,div.oembedall-lanyard .prominent-place .flag:focus,div.oembedall-lanyard .prominent-place .flag:hover,div.oembedall-lanyard .prominent-place .flag:link,div.oembedall-lanyard .prominent-place .flag:visited{float:left;display:block;width:48px;height:48px;position:relative;top:-5px;margin-right:10px}div.oembedall-lanyard .place-context{font-size:.889em}div.oembedall-lanyard .prominent-place .sub-place{display:block}div.oembedall-lanyard .prominent-place{font-size:1.125em;line-height:1.1em;font-weight:400}div.oembedall-lanyard .main-date{color:#8CB4E0;font-weight:700;line-height:1.1}div.oembedall-lanyard .first{width:48.57%;margin:0 0 0 2.857%}.mermaid .label{color:#333}.node circle,.node polygon,.node rect{fill:#cde498;stroke:#13540c;stroke-width:1px}.edgePath .path{stroke:green;stroke-width:1.5px}.cluster rect{fill:#cdffb2;rx:40;stroke:#6eaa49;stroke-width:1px}.cluster text{fill:#333}.actor{stroke:#13540c;fill:#cde498}text.actor{fill:#000;stroke:none}.actor-line{stroke:grey}.messageLine0{stroke-width:1.5;stroke-dasharray:"2 2";marker-end:"url(#arrowhead)";stroke:#333}.messageLine1{stroke-width:1.5;stroke-dasharray:"2 2";stroke:#333}#arrowhead{fill:#333}#crosshead path{fill:#333!important;stroke:#333!important}.messageText{fill:#333;stroke:none}.labelBox{stroke:#326932;fill:#cde498}.labelText,.loopText{fill:#000;stroke:none}.loopLine{stroke-width:2;stroke-dasharray:"2 2";marker-end:"url(#arrowhead)";stroke:#326932}.note{stroke:#6eaa49;fill:#fff5ad}.noteText{fill:#000;stroke:none;font-family:'trebuchet ms',verdana,arial;font-size:14px}.section{stroke:none;opacity:.2}.section0,.section2{fill:#6eaa49}.section1,.section3{fill:#fff;opacity:.2}.sectionTitle0,.sectionTitle1,.sectionTitle2,.sectionTitle3{fill:#333}.sectionTitle{text-anchor:start;font-size:11px;text-height:14px}.grid .tick{stroke:lightgrey;opacity:.3;shape-rendering:crispEdges}.grid path{stroke-width:0}.today{fill:none;stroke:red;stroke-width:2px}.task{stroke-width:2}.taskText{text-anchor:middle;font-size:11px}.taskTextOutsideRight{fill:#000;text-anchor:start;font-size:11px}.taskTextOutsideLeft{fill:#000;text-anchor:end;font-size:11px}.taskText0,.taskText1,.taskText2,.taskText3{fill:#fff}.task0,.task1,.task2,.task3{fill:#487e3a;stroke:#13540c}.taskTextOutside0,.taskTextOutside1,.taskTextOutside2,.taskTextOutside3{fill:#000}.active0,.active1,.active2,.active3{fill:#cde498;stroke:#13540c}.activeText0,.activeText1,.activeText2,.activeText3{fill:#000!important}.done0,.done1,.done2,.done3{stroke:grey;fill:lightgrey;stroke-width:2}.doneText0,.doneText1,.doneText2,.doneText3{fill:#000!important}.crit0,.crit1,.crit2,.crit3{stroke:#f88;fill:red;stroke-width:2}.activeCrit0,.activeCrit1,.activeCrit2,.activeCrit3{stroke:#f88;fill:#cde498;stroke-width:2}.doneCrit0,.doneCrit1,.doneCrit2,.doneCrit3{stroke:#f88;fill:lightgrey;stroke-width:2;cursor:pointer;shape-rendering:crispEdges}.activeCritText0,.activeCritText1,.activeCritText2,.activeCritText3,.doneCritText0,.doneCritText1,.doneCritText2,.doneCritText3{fill:#000!important}.titleText{text-anchor:middle;font-size:18px;fill:#000}text{font-family:'trebuchet ms',verdana,arial;font-size:14px}html{height:100%}body{margin:0!important;padding:5px 20px 26px!important;background-color:#fff;font-family:"Lucida Grande","Segoe UI","Apple SD Gothic Neo","Malgun Gothic","Lucida Sans Unicode",Helvetica,Arial,sans-serif;font-size:.9em;overflow-x:hidden;overflow-y:auto}br,h1,h2,h3,h4,h5,h6{clear:both}hr.page{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x;border:0;height:3px;padding:0}hr.underscore{border-top-style:dashed!important}body >:first-child{margin-top:0!important}img.plugin{box-shadow:0 1px 3px rgba(0,0,0,.1);border-radius:3px}iframe{border:0}figure{-webkit-margin-before:0;-webkit-margin-after:0;-webkit-margin-start:0;-webkit-margin-end:0}kbd{border:1px solid #aaa;-moz-border-radius:2px;-webkit-border-radius:2px;border-radius:2px;-moz-box-shadow:1px 2px 2px #ddd;-webkit-box-shadow:1px 2px 2px #ddd;box-shadow:1px 2px 2px #ddd;background-color:#f9f9f9;background-image:-moz-linear-gradient(top,#eee,#f9f9f9,#eee);background-image:-o-linear-gradient(top,#eee,#f9f9f9,#eee);background-image:-webkit-linear-gradient(top,#eee,#f9f9f9,#eee);background-image:linear-gradient(top,#eee,#f9f9f9,#eee);padding:1px 3px;font-family:inherit;font-size:.85em}.oembeded .oembed_photo{display:inline-block}img[data-echo]{margin:25px 0;width:100px;height:100px;background:url(../img/ajax.gif) center center no-repeat #fff}.spinner{display:inline-block;width:10px;height:10px;margin-bottom:-.1em;border:2px solid rgba(0,0,0,.5);border-top-color:transparent;border-radius:100%;-webkit-animation:spin 1s infinite linear;animation:spin 1s infinite linear}.spinner:after{content:'';display:block;width:0;height:0;position:absolute;top:-6px;left:0;border:4px solid transparent;border-bottom-color:rgba(0,0,0,.5);-webkit-transform:rotate(45deg);transform:rotate(45deg)}@-webkit-keyframes spin{to{-webkit-transform:rotate(360deg)}}@keyframes spin{to{transform:rotate(360deg)}}p.toc{margin:0!important}p.toc ul{padding-left:10px}p.toc>ul{padding:10px;margin:0 10px;display:inline-block;border:1px solid #ededed;border-radius:5px}p.toc li,p.toc ul{list-style-type:none}p.toc li{width:100%;padding:0;overflow:hidden}p.toc li a::after{content:"."}p.toc li a:before{content:"• "}p.toc h5{text-transform:uppercase}p.toc .title{float:left;padding-right:3px}p.toc .number{margin:0;float:right;padding-left:3px;background:#fff;display:none}input.task-list-item{margin-left:-1.62em}.markdown{font-family:"Hiragino Sans GB","Microsoft YaHei",STHeiti,SimSun,"Lucida Grande","Lucida Sans Unicode","Lucida Sans",'Segoe UI',AppleSDGothicNeo-Medium,'Malgun Gothic',Verdana,Tahoma,sans-serif;padding:20px}.markdown a{text-decoration:none;vertical-align:baseline}.markdown a:hover{text-decoration:underline}.markdown h1{font-size:2.2em;font-weight:700;margin:1.5em 0 1em}.markdown h2{font-size:1.8em;font-weight:700;margin:1.275em 0 .85em}.markdown h3{font-size:1.6em;font-weight:700;margin:1.125em 0 .75em}.markdown h4{font-size:1.4em;font-weight:700;margin:.99em 0 .66em}.markdown h5{font-size:1.2em;font-weight:700;margin:.855em 0 .57em}.markdown h6{font-size:1em;font-weight:700;margin:.75em 0 .5em}.markdown h1+p,.markdown h1:first-child,.markdown h2+p,.markdown h2:first-child,.markdown h3+p,.markdown h3:first-child,.markdown h4+p,.markdown h4:first-child,.markdown h5+p,.markdown h5:first-child,.markdown h6+p,.markdown h6:first-child{margin-top:0}.markdown hr{border:1px solid #ccc}.markdown p{margin:1em 0;word-wrap:break-word}.markdown ol{list-style-type:decimal}.markdown li{display:list-item;line-height:1.4em}.markdown blockquote{margin:1em 20px}.markdown blockquote>:first-child{margin-top:0}.markdown blockquote>:last-child{margin-bottom:0}.markdown blockquote cite:before{content:'\2014 \00A0'}.markdown .code{border-radius:3px;word-wrap:break-word}.markdown pre{border-radius:3px;word-wrap:break-word;border:1px solid #ccc;overflow:auto;padding:.5em}.markdown pre code{border:0;display:block}.markdown pre>code{font-family:Consolas,Inconsolata,Courier,monospace;font-weight:700;white-space:pre;margin:0}.markdown code{border-radius:3px;word-wrap:break-word;border:1px solid #ccc;padding:0 5px;margin:0 2px}.markdown img{max-width:100%}.markdown mark{color:#000;background-color:#fcf8e3}.markdown table{padding:0;border-collapse:collapse;border-spacing:0;margin-bottom:16px}.markdown table tr td,.markdown table tr th{border:1px solid #ccc;margin:0;padding:6px 13px}.markdown table tr th{font-weight:700}.markdown table tr th>:first-child{margin-top:0}.markdown table tr th>:last-child{margin-bottom:0}.markdown table tr td>:first-child{margin-top:0}.markdown table tr td>:last-child{margin-bottom:0}.github{padding:20px;font-family:"Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei",STHeiti,SimSun,"Segoe UI",AppleSDGothicNeo-Medium,'Malgun Gothic',Arial,freesans,sans-serif;font-size:15px;background:#fff;line-height:1.6;-webkit-font-smoothing:antialiased}.github a{color:#3269a0}.github a:hover{color:#4183c4}.github h2{border-bottom:1px solid #e6e6e6;line-height:1.6}.github h6{color:#777}.github hr{border:1px solid #e6e6e6}.github pre>code{font-size:.9em;font-family:Consolas,Inconsolata,Courier,monospace}.github blockquote>code,.github h1>code,.github h2>code,.github h3>code,.github h4>code,.github h5>code,.github h6>code,.github li>code,.github p>code,.github td>code{background-color:rgba(0,0,0,.07);font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;font-size:85%;padding:.2em .5em;border:0}.github blockquote{border-left:4px solid #e6e6e6;padding:0 15px;font-style:italic}.github table{background-color:#fafafa}.github table tr td,.github table tr th{border:1px solid #e6e6e6}.github table tr:nth-child(2n){background-color:#f2f2f2}.hljs{display:block;overflow-x:auto;padding:.5em;background:#fdf6e3;color:#657b83;-webkit-text-size-adjust:none}.diff .hljs-header,.hljs-comment,.hljs-doctype,.hljs-javadoc,.hljs-pi,.lisp .hljs-string{color:#93a1a1}.css .hljs-tag,.hljs-addition,.hljs-keyword,.hljs-request,.hljs-status,.hljs-winutils,.method,.nginx .hljs-title{color:#859900}.hljs-command,.hljs-dartdoc,.hljs-hexcolor,.hljs-link_url,.hljs-number,.hljs-phpdoc,.hljs-regexp,.hljs-rules .hljs-value,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#2aa198}.css .hljs-function,.hljs-built_in,.hljs-chunk,.hljs-decorator,.hljs-id,.hljs-identifier,.hljs-localvars,.hljs-title,.vhdl .hljs-literal{color:#268bd2}.hljs-attribute,.hljs-class .hljs-title,.hljs-constant,.hljs-link_reference,.hljs-parent,.hljs-type,.hljs-variable,.lisp .hljs-body,.smalltalk .hljs-number{color:#b58900}.css .hljs-pseudo,.diff .hljs-change,.hljs-attr_selector,.hljs-cdata,.hljs-header,.hljs-pragma,.hljs-preprocessor,.hljs-preprocessor .hljs-keyword,.hljs-shebang,.hljs-special,.hljs-subst,.hljs-symbol,.hljs-symbol .hljs-string{color:#cb4b16}.hljs-deletion,.hljs-important{color:#dc322f}.hljs-link_label{color:#6c71c4}.tex .hljs-formula{background:#eee8d5}.MathJax_Hover_Frame{border-radius:.25em;-webkit-border-radius:.25em;-moz-border-radius:.25em;-khtml-border-radius:.25em;box-shadow:0 0 15px #83A;-webkit-box-shadow:0 0 15px #83A;-moz-box-shadow:0 0 15px #83A;-khtml-box-shadow:0 0 15px #83A;border:1px solid #A6D!important;display:inline-block;position:absolute}.MathJax_Hover_Arrow{position:absolute;width:15px;height:11px;cursor:pointer}#MathJax_About{position:fixed;left:50%;width:auto;text-align:center;border:3px outset;padding:1em 2em;background-color:#DDD;color:#000;cursor:default;font-family:message-box;font-size:120%;font-style:normal;text-indent:0;text-transform:none;line-height:normal;letter-spacing:normal;word-spacing:normal;word-wrap:normal;white-space:nowrap;float:none;z-index:201;border-radius:15px;-webkit-border-radius:15px;-moz-border-radius:15px;-khtml-border-radius:15px;box-shadow:0 10px 20px gray;-webkit-box-shadow:0 10px 20px gray;-moz-box-shadow:0 10px 20px gray;-khtml-box-shadow:0 10px 20px gray;filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}.MathJax_Menu{position:absolute;background-color:#fff;color:#000;width:auto;padding:2px;border:1px solid #CCC;margin:0;cursor:default;font:menu;text-align:left;text-indent:0;text-transform:none;line-height:normal;letter-spacing:normal;word-spacing:normal;word-wrap:normal;white-space:nowrap;float:none;z-index:201;box-shadow:0 10px 20px gray;-webkit-box-shadow:0 10px 20px gray;-moz-box-shadow:0 10px 20px gray;-khtml-box-shadow:0 10px 20px gray;filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}.MathJax_MenuItem{padding:2px 2em;background:0 0}.MathJax_MenuArrow{position:absolute;right:.5em;color:#666}.MathJax_MenuActive .MathJax_MenuArrow{color:#fff}.MathJax_MenuArrow.RTL{left:.5em;right:auto}.MathJax_MenuCheck{position:absolute;left:.7em}.MathJax_MenuCheck.RTL{right:.7em;left:auto}.MathJax_MenuRadioCheck{position:absolute;left:1em}.MathJax_MenuRadioCheck.RTL{right:1em;left:auto}.MathJax_MenuLabel{padding:2px 2em 4px 1.33em;font-style:italic}.MathJax_MenuRule{border-top:1px solid #CCC;margin:4px 1px 0}.MathJax_MenuDisabled{color:GrayText}.MathJax_MenuActive{background-color:Highlight;color:HighlightText}.MathJax_Menu_Close{position:absolute;width:31px;height:31px;top:-15px;left:-15px}#MathJax_Zoom{position:absolute;background-color:#F0F0F0;overflow:auto;display:block;z-index:301;padding:.5em;border:1px solid #000;margin:0;font-weight:400;font-style:normal;text-align:left;text-indent:0;text-transform:none;line-height:normal;letter-spacing:normal;word-spacing:normal;word-wrap:normal;white-space:nowrap;float:none;box-shadow:5px 5px 15px #AAA;-webkit-box-shadow:5px 5px 15px #AAA;-moz-box-shadow:5px 5px 15px #AAA;-khtml-box-shadow:5px 5px 15px #AAA;filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}#MathJax_ZoomOverlay{position:absolute;left:0;top:0;z-index:300;display:inline-block;width:100%;height:100%;border:0;padding:0;margin:0;background-color:#fff;opacity:0;filter:alpha(opacity=0)}#MathJax_ZoomFrame{position:relative;display:inline-block;height:0;width:0}#MathJax_ZoomEventTrap{position:absolute;left:0;top:0;z-index:302;display:inline-block;border:0;padding:0;margin:0;background-color:#fff;opacity:0;filter:alpha(opacity=0)}.MathJax_Preview{color:#888}#MathJax_Message{position:fixed;left:1px;bottom:2px;background-color:#E6E6E6;border:1px solid #959595;margin:0;padding:2px 8px;z-index:102;color:#000;font-size:80%;width:auto;white-space:nowrap}#MathJax_MSIE_Frame{position:absolute;top:0;left:0;width:0;z-index:101;border:0;margin:0;padding:0}.MathJax_Error{color:#C00;font-style:italic}footer{position:fixed;font-size:.8em;text-align:right;bottom:0;margin-left:-25px;height:20px;width:100%}</style>
+</head>
+<body class="markdown github">
+<h1 id="nkia-javascript/react-style-guide"><a name="nkia-javascript/react-style-guide" href="#nkia-javascript/react-style-guide"></a>NKIA Javascript/React Style Guide</h1><p><strong> 본 스타일 가이드는 ES2015(ES6) 기준입니다. </strong><br><em>※ <a href="https://github.com/airbnb/javascript">Based on Airbnb JavaScript Stytle Guide</a></em></p><h2 id="javascript-목차"><a name="javascript-목차" href="#javascript-목차"></a>Javascript 목차</h2><ol>
+<li><a href="#참조references">참조(References)</a></li><li><a href="#오브젝트objects">오브젝트(Objects)</a></li><li><a href="#배열arrays">배열(Arrays)</a></li><li><a href="#구조화대입destructuring">구조화대입(Destructuring)</a></li><li><a href="#문자열strings">문자열(Strings)</a></li><li><a href="#함수functions">함수(Functions)</a></li><li><a href="#arrow함수arrow-functions">Arrow함수(Arrow Functions)</a></li><li><a href="#classes--constructors">Classes &amp; Constructors</a></li><li><a href="#모듈modules">모듈(Modules)</a></li><li><a href="#이터레이터와-제너레이터iterators-and-generators">이터레이터와 제너레이터(Iterators and Generators)</a></li><li><a href="#프로퍼티properties">프로퍼티(Properties)</a></li><li><a href="#변수variables">변수(Variables)</a></li><li><a href="#hoisting">Hoisting</a></li><li><a href="#조건식과-등가식comparison-operators--equality">조건식과 등가식(Comparison Operators &amp; Equality)</a></li><li><a href="#블록blocks">블록(Blocks)</a></li><li><a href="#코멘트comments">코멘트(Comments)</a></li><li><a href="#공백whitespace">공백(Whitespace)</a></li><li><a href="#콤마commas">콤마(Commas)</a></li><li><a href="#세미콜론semicolons">세미콜론(Semicolons)</a></li><li><a href="#형변환과-강제type-casting--coercion">형변환과 강제(Type Casting &amp; Coercion)</a></li><li><a href="#명명규칙naming-conventions">명명규칙(Naming Conventions)</a></li><li><a href="#억세서accessors">억세서(Accessors)</a></li><li><a href="#이벤트events">이벤트(Events)</a></li><li><a href="#jquery">jQuery</a></li><li><a href="#비동기-처리promise">비동기 처리(Promise)</a></li><li><a href="#비동기-통신axios">비동기 통신(Axios)</a></li></ol><h2 id="react-목차"><a name="react-목차" href="#react-목차"></a>React 목차</h2><ol>
+<li><a href="#기본규칙">기본규칙</a></li><li><a href="#class-vs-reactcreateclass-vs-stateless">Class vs <code>React.createClass</code> vs stateless</a></li><li><a href="#명명규칙">명명규칙</a></li><li><a href="#선언">선언</a></li><li><a href="#정렬">정렬</a></li><li><a href="#따옴표">따옴표</a></li><li><a href="#띄어쓰기">띄어쓰기</a></li><li><a href="#속성">속성</a></li><li><a href="#참조">참조</a></li><li><a href="#괄호">괄호</a></li><li><a href="#태그">태그</a></li><li><a href="#메소드">메소드</a></li><li><a href="#순서">순서</a></li><li><a href="#ismounted"><code>isMounted</code></a></li></ol><h2 id="참조(references)"><a name="참조(references)" href="#참조(references)"></a>참조(References)</h2><ul>
+<li><p><a href="#1.1">1.1</a> <a name="1.1"></a> 모든 참조에 대해서 <code>const</code> 를 사용하고, <code>var</code> 를 사용하지 마십시오.</p>
+<blockquote>
+<p>참조를 재할당 할 수 없으므로, 버그로 이어지고 이해하기 어려운 코드가 되는것을 방지합니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+var a = 1;
+var b = 2;
+
+// good
+const a = 1;
+const b = 2;
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">var</span> b = <span class="hljs-number">2</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> a = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">const</span> b = <span class="hljs-number">2</span>;
+</code></pre>
+</li><li><p><a href="#1.2">1.2</a> <a name="1.2"></a> 참조를 재할당 해야한다면 <code>var</code> 대신 <code>let</code> 을 사용하십시오.</p>
+<blockquote>
+<p><code>var</code>는 함수스코프인데 비하여, <code>let</code>은 블록스코프이기 때문에 변수스코프에 대해 명확해집니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+var count = 1;
+if (true) {
+  count += 1;
+}
+
+// good, use the let.
+let count = 1;
+if (true) {
+  count += 1;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">var</span> count = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) {
+  count += <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-comment">// good, use the let.</span>
+<span class="hljs-keyword">let</span> count = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) {
+  count += <span class="hljs-number">1</span>;
+}
+</code></pre>
+</li><li><p><a href="#1.3">1.3</a> <a name="1.3"></a> <code>var</code>와 달리 <code>let</code> 과 <code>const</code> 는 같이 블록스코프라는 것을 유념하세요.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// const and let only exist in the blocks they are defined in.
+// const 와 let 은 선언된 블록의 안에서만 존재합니다.
+{
+  let a = 1;
+  const b = 1;
+}
+console.log(a); // ReferenceError
+console.log(b); // ReferenceError
+</code></pre>"><span class="hljs-comment">// const and let only exist in the blocks they are defined in.</span>
+<span class="hljs-comment">// const 와 let 은 선언된 블록의 안에서만 존재합니다.</span>
+{
+  <span class="hljs-keyword">let</span> a = <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">const</span> b = <span class="hljs-number">1</span>;
+}
+<span class="hljs-built_in">console</span>.log(a); <span class="hljs-comment">// ReferenceError</span>
+<span class="hljs-built_in">console</span>.log(b); <span class="hljs-comment">// ReferenceError</span>
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="오브젝트(objects)"><a name="오브젝트(objects)" href="#오브젝트(objects)"></a>오브젝트(Objects)</h2><ul>
+<li><p><a href="#2.1">2.1</a> <a name="2.1"></a> 오브젝트를 작성할때는, 리터럴 구문을 사용하십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const item = new Object();
+
+// good
+const item = {};
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> item = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>();
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> item = {};
+</code></pre>
+</li><li><p><a href="#2.2">2.2</a> <a name="2.2"></a> 코드가 브라우저상의 스크립트로 실행될때 <a href="http://es5.github.io/#x7.6.1">예약어</a>를 키로 이용하지 마십시오. IE8에서 작동하지 않습니다. <a href="https://github.com/airbnb/javascript/issues/61">More info</a> 하지만 ES6 모듈안이나 서버사이드에서는 이용가능합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const superman = {
+  default: { clark: 'kent' },
+  private: true,
+};
+
+// good
+const superman = {
+  defaults: { clark: 'kent' },
+  hidden: true,
+};
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> superman = {
+  <span class="hljs-keyword">default</span>: { clark: <span class="hljs-string">'kent'</span> },
+  private: <span class="hljs-literal">true</span>,
+};
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> superman = {
+  defaults: { clark: <span class="hljs-string">'kent'</span> },
+  hidden: <span class="hljs-literal">true</span>,
+};
+</code></pre>
+</li><li><p><a href="#2.3">2.3</a> <a name="2.3"></a> 예약어 대신 알기쉬운 동의어를 사용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const superman = {
+  class: 'alien',
+};
+
+// bad
+const superman = {
+  klass: 'alien',
+};
+
+// good
+const superman = {
+  type: 'alien',
+};
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> superman = {
+  <span class="hljs-keyword">class</span>: <span class="hljs-string">'alien'</span>,
+};
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> superman = {
+  klass: <span class="hljs-string">'alien'</span>,
+};
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> superman = {
+  type: <span class="hljs-string">'alien'</span>,
+};
+</code></pre>
+<p><a name="es6-object-concise"></a></p>
+</li><li><p><a href="#2.4">2.4</a> <a name="2.4"></a> 프로퍼티의 단축구문을 이용해 주십시오.</p>
+<blockquote>
+<p>기술과 설명이 간결해집니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const lukeSkywalker = 'Luke Skywalker';
+
+// bad
+const obj = {
+  lukeSkywalker: lukeSkywalker,
+};
+
+// good
+const obj = {
+  lukeSkywalker,
+};
+</code></pre>"><span class="hljs-keyword">const</span> lukeSkywalker = <span class="hljs-string">'Luke Skywalker'</span>;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> obj = {
+  lukeSkywalker: lukeSkywalker,
+};
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> obj = {
+  lukeSkywalker,
+};
+</code></pre>
+</li><li><p><a href="#2.5">2.5</a> <a name="2.5"></a> 프로퍼티의 단축구문은 오브젝트 선언의 시작부분에 그룹화 해주십시오.</p>
+<blockquote>
+<p>어떤 프로퍼티가 단축구문을 이용하고 있는지가 알기쉽기 때문입니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const anakinSkywalker = 'Anakin Skywalker';
+const lukeSkywalker = 'Luke Skywalker';
+
+// bad
+const obj = {
+  episodeOne: 1,
+  twoJediWalkIntoACantina: 2,
+  lukeSkywalker,
+  episodeThree: 3,
+  mayTheFourth: 4,
+  anakinSkywalker,
+};
+
+// good
+const obj = {
+  lukeSkywalker,
+  anakinSkywalker,
+  episodeOne: 1,
+  twoJediWalkIntoACantina: 2,
+  episodeThree: 3,
+  mayTheFourth: 4,
+};
+</code></pre>"><span class="hljs-keyword">const</span> anakinSkywalker = <span class="hljs-string">'Anakin Skywalker'</span>;
+<span class="hljs-keyword">const</span> lukeSkywalker = <span class="hljs-string">'Luke Skywalker'</span>;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> obj = {
+  episodeOne: <span class="hljs-number">1</span>,
+  twoJediWalkIntoACantina: <span class="hljs-number">2</span>,
+  lukeSkywalker,
+  episodeThree: <span class="hljs-number">3</span>,
+  mayTheFourth: <span class="hljs-number">4</span>,
+  anakinSkywalker,
+};
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> obj = {
+  lukeSkywalker,
+  anakinSkywalker,
+  episodeOne: <span class="hljs-number">1</span>,
+  twoJediWalkIntoACantina: <span class="hljs-number">2</span>,
+  episodeThree: <span class="hljs-number">3</span>,
+  mayTheFourth: <span class="hljs-number">4</span>,
+};
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="배열(arrays)"><a name="배열(arrays)" href="#배열(arrays)"></a>배열(Arrays)</h2><ul>
+<li><p><a href="#3.1">3.1</a> <a name="3.1"></a> 배열을 작성 할 때는 리터럴 구문을 사용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const items = new Array();
+
+// good
+const items = [];
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> items = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>();
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> items = [];
+</code></pre>
+</li><li><p><a href="#3.2">3.2</a> <a name="3.2"></a> 직접 배열에 항목을 대입하지 말고, Array#push를 이용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const someStack = [];
+
+// bad
+someStack[someStack.length] = 'abracadabra';
+
+// good
+someStack.push('abracadabra');
+</code></pre>"><span class="hljs-keyword">const</span> someStack = [];
+
+<span class="hljs-comment">// bad</span>
+someStack[someStack.length] = <span class="hljs-string">'abracadabra'</span>;
+
+<span class="hljs-comment">// good</span>
+someStack.push(<span class="hljs-string">'abracadabra'</span>);
+</code></pre>
+<p><a name="es6-array-spreads"></a></p>
+</li><li><p><a href="#3.3">3.3</a> <a name="3.3"></a> 배열을 복사할때는 배열의 확장연산자 <code>...</code> 를 이용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const len = items.length;
+const itemsCopy = [];
+let i;
+
+for (i = 0; i &amp;lt; len; i++) {
+  itemsCopy[i] = items[i];
+}
+
+// good
+const itemsCopy = [...items];
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> len = items.length;
+<span class="hljs-keyword">const</span> itemsCopy = [];
+<span class="hljs-keyword">let</span> i;
+
+<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
+  itemsCopy[i] = items[i];
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> itemsCopy = [...items];
+</code></pre>
+</li><li><p><a href="#3.4">3.4</a> <a name="3.4"></a> array-like 오브젝트를 배열로 변환하는 경우는 Array#from을 이용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const foo = document.querySelectorAll('.foo');
+const nodes = Array.from(foo);
+</code></pre>"><span class="hljs-keyword">const</span> foo = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.foo'</span>);
+<span class="hljs-keyword">const</span> nodes = <span class="hljs-built_in">Array</span>.from(foo);
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="구조화대입(destructuring)"><a name="구조화대입(destructuring)" href="#구조화대입(destructuring)"></a>구조화대입(Destructuring)</h2><ul>
+<li><p><a href="#4.1">4.1</a> <a name="4.1"></a> 하나의 오브젝트에서 복수의 프로퍼티를 억세스 할 때는 오브젝트 구조화대입을 이용해 주십시오.</p>
+<blockquote>
+<p>구조화대입을 이용하는 것으로 프로퍼티를 위한 임시적인 참조의 작성을 줄이며, 가독성을 향상시킵니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function getFullName(user) {
+  const firstName = user.firstName;
+  const lastName = user.lastName;
+
+  return `${firstName} ${lastName}`;
+}
+
+// good
+function getFullName(obj) {
+  const { firstName, lastName } = obj;
+  return `${firstName} ${lastName}`;
+}
+
+// best
+function getFullName({ firstName, lastName }) {
+  return `${firstName} ${lastName}`;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getFullName</span><span class="hljs-params">(user)</span> </span>{
+  <span class="hljs-keyword">const</span> firstName = user.firstName;
+  <span class="hljs-keyword">const</span> lastName = user.lastName;
+
+  <span class="hljs-keyword">return</span> `${firstName} ${lastName}`;
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getFullName</span><span class="hljs-params">(obj)</span> </span>{
+  <span class="hljs-keyword">const</span> { firstName, lastName } = obj;
+  <span class="hljs-keyword">return</span> `${firstName} ${lastName}`;
+}
+
+<span class="hljs-comment">// best</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getFullName</span><span class="hljs-params">({ firstName, lastName })</span> </span>{
+  <span class="hljs-keyword">return</span> `${firstName} ${lastName}`;
+}
+</code></pre>
+</li><li><p><a href="#4.2">4.2</a> <a name="4.2"></a> 배열의 구조화대입을 이용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const arr = [1, 2, 3, 4];
+
+// bad
+const first = arr[0];
+const second = arr[1];
+
+// good
+const [first, second] = arr;
+</code></pre>"><span class="hljs-keyword">const</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>];
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> first = arr[<span class="hljs-number">0</span>];
+<span class="hljs-keyword">const</span> second = arr[<span class="hljs-number">1</span>];
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> [first, second] = arr;
+</code></pre>
+</li><li><p><a href="#4.3">4.3</a> <a name="4.3"></a> 복수의 값을 반환하는 경우는 배열의 구조화대입이 아닌 오브젝트의 구조화대입을 이용해 주십시오.</p>
+<blockquote>
+<p>호출처에 영향을 주지않고 새로운 프로퍼티를 추가하거나 순서를 변경할수 있습니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function processInput(input) {
+  // then a miracle occurs
+  // 그리고 기적이 일어납니다.
+  return [left, right, top, bottom];
+}
+
+// the caller needs to think about the order of return data
+// 호출처에서 반환된 데이터의 순서를 고려할 필요가 있습니다.
+const [left, __, top] = processInput(input);
+
+// good
+function processInput(input) {
+  // then a miracle occurs
+  // 그리고 기적이 일어납니다.
+  return { left, right, top, bottom };
+}
+
+// the caller selects only the data they need
+// 호출처에서는 필요한 데이터만 선택하면 됩니다.
+const { left, right } = processInput(input);
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">processInput</span><span class="hljs-params">(input)</span> </span>{
+  <span class="hljs-comment">// then a miracle occurs</span>
+  <span class="hljs-comment">// 그리고 기적이 일어납니다.</span>
+  <span class="hljs-keyword">return</span> [left, right, top, bottom];
+}
+
+<span class="hljs-comment">// the caller needs to think about the order of return data</span>
+<span class="hljs-comment">// 호출처에서 반환된 데이터의 순서를 고려할 필요가 있습니다.</span>
+<span class="hljs-keyword">const</span> [left, __, top] = processInput(input);
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">processInput</span><span class="hljs-params">(input)</span> </span>{
+  <span class="hljs-comment">// then a miracle occurs</span>
+  <span class="hljs-comment">// 그리고 기적이 일어납니다.</span>
+  <span class="hljs-keyword">return</span> { left, right, top, bottom };
+}
+
+<span class="hljs-comment">// the caller selects only the data they need</span>
+<span class="hljs-comment">// 호출처에서는 필요한 데이터만 선택하면 됩니다.</span>
+<span class="hljs-keyword">const</span> { left, right } = processInput(input);
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="문자열(strings)"><a name="문자열(strings)" href="#문자열(strings)"></a>문자열(Strings)</h2><ul>
+<li><p><a href="#5.1">5.1</a> <a name="5.1"></a> 문자열에는 홑따옴표 <code>''</code> 를 사용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const name = &quot;Capt. Janeway&quot;;
+
+// good
+const name = 'Capt. Janeway';
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> name = <span class="hljs-string">"Capt. Janeway"</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> name = <span class="hljs-string">'Capt. Janeway'</span>;
+</code></pre>
+</li><li><p><a href="#5.2">5.2</a> <a name="5.2"></a> 100 문자 이상의 문자열은 문자열 연결(+)을 이용하여 여러 줄에 나뉘어 표현하세요.</p>
+</li><li><p><a href="#5.3">5.3</a> <a name="5.3"></a> 주의: 문자연결을 과용하면 성능에 영향을 미칠 수 있습니다. <a href="http://jsperf.com/ya-string-concat">jsPerf</a> &amp; <a href="https://github.com/airbnb/javascript/issues/40">Discussion</a>.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const errorMessage = 'This is a super long error that was thrown because of Batman. When you stop to think about how Batman had anything to do with this, you would get nowhere fast.';
+
+// bad
+const errorMessage = 'This is a super long error that was thrown because \
+of Batman. When you stop to think about how Batman had anything to do \
+with this, you would get nowhere \
+fast.';
+
+// good
+const errorMessage = 'This is a super long error that was thrown because ' +
+  'of Batman. When you stop to think about how Batman had anything to do ' +
+  'with this, you would get nowhere fast.';
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> errorMessage = <span class="hljs-string">'This is a super long error that was thrown because of Batman. When you stop to think about how Batman had anything to do with this, you would get nowhere fast.'</span>;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> errorMessage = <span class="hljs-string">'This is a super long error that was thrown because \
+of Batman. When you stop to think about how Batman had anything to do \
+with this, you would get nowhere \
+fast.'</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> errorMessage = <span class="hljs-string">'This is a super long error that was thrown because '</span> +
+  <span class="hljs-string">'of Batman. When you stop to think about how Batman had anything to do '</span> +
+  <span class="hljs-string">'with this, you would get nowhere fast.'</span>;
+</code></pre>
+<p><a name="es6-template-literals"></a></p>
+</li><li><p><a href="#5.4">5.4</a> <a name="5.4"></a> 프로그램에서 문자열을 생성하는 경우는 문자열 연결이 아닌 template strings를 이용해 주십시오.</p>
+<blockquote>
+<p>Template strings 는 문자열 보간기능과 적절한 줄바꿈 기능을 갖는 간결한 구문으로 가독성이 좋기 때문입니다. 또한 엔터키를 사용하여 Multi-line 표현이 가능합니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function sayHi(name) {
+  return 'How are you, ' + name + '?';
+}
+
+// bad
+function sayHi(name) {
+  return ['How are you, ', name, '?'].join();
+}
+
+// good
+function sayHi(name) {
+  return `How are you, ${name}?`;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayHi</span><span class="hljs-params">(name)</span> </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-string">'How are you, '</span> + name + <span class="hljs-string">'?'</span>;
+}
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayHi</span><span class="hljs-params">(name)</span> </span>{
+  <span class="hljs-keyword">return</span> [<span class="hljs-string">'How are you, '</span>, name, <span class="hljs-string">'?'</span>].join();
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayHi</span><span class="hljs-params">(name)</span> </span>{
+  <span class="hljs-keyword">return</span> `How are you, ${name}?`;
+}
+</code></pre>
+</li><li><a href="#5.5">5.5</a> <a name="5.5"></a> 절대로 <code>eval()</code> 을 이용하지 마십시오. 이것은 많은 취약점을 만들기 때문입니다.</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="함수(functions)"><a name="함수(functions)" href="#함수(functions)"></a>함수(Functions)</h2><ul>
+<li><p><a href="#6.1">6.1</a> <a name="6.1"></a> 함수식 보다 함수선언을 이용해 주십시오.</p>
+<blockquote>
+<p>왜? 이름이 부여된 함수선언은 콜스택에서 간단하게 확인하는 것이 가능합니다. 또한 함수선언은 함수의 본체가 hoist 되어집니다. 그에 반해 함수식은 참조만이 hoist 되어집니다.<br>이 룰에 의해 함수식의 부분을 항상 <a href="#arrow함수arrow-functions">Arrow함수</a>에서 이용하는것이 가능합니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const foo = function () {
+};
+
+// good
+function foo() {
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> foo = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+};
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+}
+</code></pre>
+</li><li><p><a href="#6.2">6.2</a> <a name="6.2"></a> 함수식(Function Expression)은 다음과 같이 사용하세요.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// immediately-invoked function expression (IIFE)
+// 즉시 실행 함수식(IIFE)
+(() =&amp;gt; {
+  console.log('Welcome to the Internet. Please follow me.');
+})();
+</code></pre>"><span class="hljs-comment">// immediately-invoked function expression (IIFE)</span>
+<span class="hljs-comment">// 즉시 실행 함수식(IIFE)</span>
+(() =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Welcome to the Internet. Please follow me.'</span>);
+})();
+</code></pre>
+</li><li><p><a href="#6.3">6.3</a> <a name="6.3"></a> 함수이외의 블록 (if나 while같은) 안에서 함수를 선언하지 마십시오. 변수에 함수를 대입하는 대신 브라우저들은 그것을 허용하지만 모두가 다르게 해석합니다.</p>
+</li></ul><ul>
+<li><p><a href="#6.4">6.4</a> <a name="6.4"></a> <strong>주의:</strong> ECMA-262 사양에서는 <code>block</code> 은 statements의 일람으로 정의되어 있지만 함수선언은 statements 가 아닙니다. <a href="http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf#page=97">Read ECMA-262’s note on this issue</a>.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+if (currentUser) {
+  function test() {
+    console.log('Nope.');
+  }
+}
+
+// good
+let test;
+if (currentUser) {
+  test = () =&amp;gt; {
+    console.log('Yup.');
+  };
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">if</span> (currentUser) {
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Nope.'</span>);
+  }
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">let</span> test;
+<span class="hljs-keyword">if</span> (currentUser) {
+  test = () =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Yup.'</span>);
+  };
+}
+</code></pre>
+</li><li><p><a href="#6.5">6.5</a> <a name="6.5"></a> 절대 파라메터에 <code>arguments</code> 를 지정하지 마십시오. 이것은 함수스코프에 전해지는  <code>arguments</code> 오브젝트의 참조를 덮어써 버립니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function nope(name, options, arguments) {
+  // ...stuff...
+}
+
+// good
+function yup(name, options, args) {
+  // ...stuff...
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">nope</span><span class="hljs-params">(name, options, arguments)</span> </span>{
+  <span class="hljs-comment">// ...stuff...</span>
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">yup</span><span class="hljs-params">(name, options, args)</span> </span>{
+  <span class="hljs-comment">// ...stuff...</span>
+}
+</code></pre>
+<p><a name="es6-rest"></a></p>
+</li><li><p><a href="#6.6">6.6</a> <a name="6.6"></a> 절대 <code>arguments</code> 를 이용하지 마십시오. 대신에 rest syntax <code>...</code> 를 이용해 주십시오.</p>
+<blockquote>
+<p><code>...</code> 을 이용하는것으로 몇개의 파라메터를 이용하고 싶은가를 확실하게 할 수 있습니다. 더해서 rest 파라메터는 <code>arguments</code> 와 같은 Array-like 오브젝트가 아닌 진짜 Array 입니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function concatenateAll() {
+  const args = Array.prototype.slice.call(arguments);
+  return args.join('');
+}
+
+// good
+function concatenateAll(...args) {
+  return args.join('');
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">concatenateAll</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">const</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>);
+  <span class="hljs-keyword">return</span> args.join(<span class="hljs-string">''</span>);
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">concatenateAll</span><span class="hljs-params">(...args)</span> </span>{
+  <span class="hljs-keyword">return</span> args.join(<span class="hljs-string">''</span>);
+}
+</code></pre>
+<p><a name="es6-default-parameters"></a></p>
+</li><li><p><a href="#6.7">6.7</a> <a name="6.7"></a> 함수의 파라메터를 변이시키는 것보다 default 파라메터를 이용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// really bad
+function handleThings(opts) {
+  // 안돼！함수의 파라메터를 변이시키면 안됩니다.
+  // 만약 opts가 falsy 하다면 바라는데로 오브젝트가 설정됩니다.
+  // 하지만 미묘한 버그를 일으킬지도 모릅니다.
+  opts = opts || {};
+  // ...
+}
+
+// still bad
+function handleThings(opts) {
+  if (opts === void 0) {
+    opts = {};
+  }
+  // ...
+}
+
+// good
+function handleThings(opts = {}) {
+  // ...
+}
+</code></pre>"><span class="hljs-comment">// really bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleThings</span><span class="hljs-params">(opts)</span> </span>{
+  <span class="hljs-comment">// 안돼！함수의 파라메터를 변이시키면 안됩니다.</span>
+  <span class="hljs-comment">// 만약 opts가 falsy 하다면 바라는데로 오브젝트가 설정됩니다.</span>
+  <span class="hljs-comment">// 하지만 미묘한 버그를 일으킬지도 모릅니다.</span>
+  opts = opts || {};
+  <span class="hljs-comment">// ...</span>
+}
+
+<span class="hljs-comment">// still bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleThings</span><span class="hljs-params">(opts)</span> </span>{
+  <span class="hljs-keyword">if</span> (opts === <span class="hljs-keyword">void</span> <span class="hljs-number">0</span>) {
+    opts = {};
+  }
+  <span class="hljs-comment">// ...</span>
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleThings</span><span class="hljs-params">(opts = {})</span> </span>{
+  <span class="hljs-comment">// ...</span>
+}
+</code></pre>
+</li><li><p><a href="#6.8">6.8</a> <a name="6.8"></a> side effect가 있을 default 파라메터의 이용은 피해 주십시오.</p>
+<blockquote>
+<p>혼란을 야기하기 때문입니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>var b = 1;
+// bad
+function count(a = b++) {
+console.log(a);
+}
+count();  // 1
+count();  // 2
+count(3); // 3
+count();  // 3
+</code></pre>"><span class="hljs-keyword">var</span> b = <span class="hljs-number">1</span>;
+<span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">count</span><span class="hljs-params">(a = b++)</span> </span>{
+<span class="hljs-built_in">console</span>.log(a);
+}
+count();  <span class="hljs-comment">// 1</span>
+count();  <span class="hljs-comment">// 2</span>
+count(<span class="hljs-number">3</span>); <span class="hljs-comment">// 3</span>
+count();  <span class="hljs-comment">// 3</span>
+</code></pre>
+</li><li><p><a href="#6.9">6.9</a> <a name="6.9"></a> 항상 default 파라메터는 뒤쪽에 두십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function handleThings(opts = {}, name) {
+  // ...
+}
+
+// good
+function handleThings(name, opts = {}) {
+  // ...
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleThings</span><span class="hljs-params">(opts = {}, name)</span> </span>{
+  <span class="hljs-comment">// ...</span>
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleThings</span><span class="hljs-params">(name, opts = {})</span> </span>{
+  <span class="hljs-comment">// ...</span>
+}
+</code></pre>
+</li><li><p><a href="#6.10">6.10</a> <a name="6.10"></a> 절대 새 함수를 작성하기 위해 Function constructor를 이용하지 마십시오.</p>
+<blockquote>
+<p>Why? Creating a function in this way evaluates a string similarly to eval(), which opens vulnerabilities.</p>
+<p>왜? 이 방법으로 문자열을 평가시켜 새 함수를 작성하는것은 eval() 과 같은 수준의 취약점을 일으킬 수 있습니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+var add = new Function('a', 'b', 'return a + b');
+
+// still bad
+var subtract = Function('a', 'b', 'return a - b');
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">var</span> add = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Function</span>(<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'return a + b'</span>);
+
+<span class="hljs-comment">// still bad</span>
+<span class="hljs-keyword">var</span> subtract = <span class="hljs-built_in">Function</span>(<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'return a - b'</span>);
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="arrow함수(arrow-functions)"><a name="arrow함수(arrow-functions)" href="#arrow함수(arrow-functions)"></a>Arrow함수(Arrow Functions)</h2><ul>
+<li><p><a href="#7.1">7.1</a> <a name="7.1"></a> (무명함수를 전달하는 듯한)함수식을 이용하는 경우 arrow함수 표기를 이용해 주십시오.</p>
+<blockquote>
+<p>arrow함수는 그 context의 <code>this</code> 에서 실행하는 버전의 함수를 작성합니다. 이것은 통상 기대대로 동작 하고, 보다 간결한 구문이기 때문입니다.<br>단, 복잡한 함수에서 로직을 정의한 함수의 바깥으로 이동하고 싶을때는 사용합니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+[1, 2, 3].map(function (x) {
+  const y = x + 1;
+  return x * y;
+});
+
+// good
+[1, 2, 3].map((x) =&amp;gt; {
+  const y = x + 1;
+  return x * y;
+});
+</code></pre>"><span class="hljs-comment">// bad</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(x)</span> </span>{
+  <span class="hljs-keyword">const</span> y = x + <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">return</span> x * y;
+});
+
+<span class="hljs-comment">// good</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map((x) =&gt; {
+  <span class="hljs-keyword">const</span> y = x + <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">return</span> x * y;
+});
+</code></pre>
+</li><li><p><a href="#7.2">7.2</a> <a name="7.2"></a> 함수의 본체가 하나의 식으로 구성된 경우에는 중괄호({})를 생략하고 암시적 return을 이용하는것이 가능합니다. 그 외에는 <code>return</code> 문을 이용해 주십시오.</p>
+<blockquote>
+<p>복수의 함수가 연결된 경우에 읽기 쉬워집니다. 단, Object를 반환할 때에는 <code>return</code>문을 사용하세요.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// good
+[1, 2, 3].map(number =&amp;gt; `A string containing the ${number}.`);
+
+// bad
+[1, 2, 3].map(number =&amp;gt; {
+  const nextNumber = number + 1;
+  `A string containing the ${nextNumber}.`;
+});
+
+// good
+[1, 2, 3].map(number =&amp;gt; {
+  const nextNumber = number + 1;
+  return `A string containing the ${nextNumber}.`;
+});
+</code></pre>"><span class="hljs-comment">// good</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(number =&gt; `A string containing the ${number}.`);
+
+<span class="hljs-comment">// bad</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(number =&gt; {
+  <span class="hljs-keyword">const</span> nextNumber = number + <span class="hljs-number">1</span>;
+  `A string containing the ${nextNumber}.`;
+});
+
+<span class="hljs-comment">// good</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(number =&gt; {
+  <span class="hljs-keyword">const</span> nextNumber = number + <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">return</span> `A string containing the ${nextNumber}.`;
+});
+</code></pre>
+</li><li><p><a href="#7.3">7.3</a> <a name="7.3"></a> 식이 복수행에 걸쳐있을 경우는 가독성을 더욱 좋게하기 위해 소괄호()로 감싸 주십시오.</p>
+<blockquote>
+<p>함수의 개시와 종료부분의 가독성이 좋아집니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="js" data-origin="<pre><code class=&quot;js&quot;>// bad
+[1, 2, 3].map(number =&amp;gt; 'As time went by, the string containing the ' +
+  `${number} became much longer. So we needed to break it over multiple ` +
+  'lines.'
+);
+
+// good
+[1, 2, 3].map(number =&amp;gt; (
+  `As time went by, the string containing the ${number} became much ` +
+  'longer. So we needed to break it over multiple lines.'
+));
+</code></pre>"><span class="hljs-comment">// bad</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(number =&gt; <span class="hljs-string">'As time went by, the string containing the '</span> +
+  `${number} became much longer. So we needed to <span class="hljs-keyword">break</span> it over multiple ` +
+  <span class="hljs-string">'lines.'</span>
+);
+
+<span class="hljs-comment">// good</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(number =&gt; (
+  `As time went by, the string containing the ${number} became much ` +
+  <span class="hljs-string">'longer. So we needed to break it over multiple lines.'</span>
+));
+</code></pre>
+</li><li><p><a href="#7.4">7.4</a> <a name="7.4"></a> 함수의 인수가 하나인 경우 소괄호()를 생략하는게 가능합니다.</p>
+<blockquote>
+<p>Why? Less visual clutter.</p>
+<p>왜? 별로 보기 어렵지 않기 때문입니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// good
+[1, 2, 3].map(x =&amp;gt; x * x);
+
+// good
+[1, 2, 3].reduce((y, x) =&amp;gt; x + y);
+</code></pre>"><span class="hljs-comment">// good</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(x =&gt; x * x);
+
+<span class="hljs-comment">// good</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].reduce((y, x) =&gt; x + y);
+</code></pre>
+</li></ul><p><strong><a href="#목차">↑ 목차로 이동</a></strong></p><h2 id="classes-&amp;-constructors"><a name="classes-&amp;-constructors" href="#classes-&amp;-constructors"></a>Classes &amp; Constructors</h2><ul>
+<li><p><a href="#8.1">8.1</a> <a name="9.1"></a> <code>prototype</code> 을 직접 조작하는것을 피하고 항상 <code>class</code> 를 이용해 주십시오.</p>
+<blockquote>
+<p><code>class</code> 구문은 간결하고 의미를 알기 쉽기 때문입니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function Queue(contents = []) {
+  this._queue = [...contents];
+}
+Queue.prototype.pop = function() {
+  const value = this._queue[0];
+  this._queue.splice(0, 1);
+  return value;
+}
+
+// good
+class Queue {
+  constructor(contents = []) {
+    this._queue = [...contents];
+  }
+  pop() {
+    const value = this._queue[0];
+    this._queue.splice(0, 1);
+    return value;
+  }
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Queue</span><span class="hljs-params">(contents = [])</span> </span>{
+  <span class="hljs-keyword">this</span>._queue = [...contents];
+}
+Queue.prototype.pop = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">const</span> value = <span class="hljs-keyword">this</span>._queue[<span class="hljs-number">0</span>];
+  <span class="hljs-keyword">this</span>._queue.splice(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+  <span class="hljs-keyword">return</span> value;
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">class</span> Queue {
+  constructor(contents = []) {
+    <span class="hljs-keyword">this</span>._queue = [...contents];
+  }
+  pop() {
+    <span class="hljs-keyword">const</span> value = <span class="hljs-keyword">this</span>._queue[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">this</span>._queue.splice(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> value;
+  }
+}
+</code></pre>
+</li><li><p><a href="#8.2">8.2</a> <a name="8.2"></a> 상속은 <code>extends</code> 를 이용해 주십시오.</p>
+<blockquote>
+<p><code>instanceof</code> 를 파괴하지 않고 프로토타입 상속을 하기 위해 빌트인 된 방법이기 때문입니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const inherits = require('inherits');
+function PeekableQueue(contents) {
+  Queue.apply(this, contents);
+}
+inherits(PeekableQueue, Queue);
+PeekableQueue.prototype.peek = function() {
+  return this._queue[0];
+}
+
+// good
+class PeekableQueue extends Queue {
+  peek() {
+    return this._queue[0];
+  }
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> inherits = <span class="hljs-built_in">require</span>(<span class="hljs-string">'inherits'</span>);
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PeekableQueue</span><span class="hljs-params">(contents)</span> </span>{
+  Queue.apply(<span class="hljs-keyword">this</span>, contents);
+}
+inherits(PeekableQueue, Queue);
+PeekableQueue.prototype.peek = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._queue[<span class="hljs-number">0</span>];
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">class</span> PeekableQueue extends Queue {
+  peek() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._queue[<span class="hljs-number">0</span>];
+  }
+}
+</code></pre>
+</li><li><p><a href="#8.3">8.3</a> <a name="8.3"></a> 메소드의 반환값으로 <code>this</code> 를 반환하는 것으로 메소드채이닝을 할 수 있습니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+Jedi.prototype.jump = function() {
+  this.jumping = true;
+  return true;
+};
+
+Jedi.prototype.setHeight = function(height) {
+  this.height = height;
+};
+
+const luke = new Jedi();
+luke.jump(); // =&amp;gt; true
+luke.setHeight(20); // =&amp;gt; undefined
+
+// good
+class Jedi {
+  jump() {
+    this.jumping = true;
+    return this;
+  }
+
+  setHeight(height) {
+    this.height = height;
+    return this;
+  }
+}
+
+const luke = new Jedi();
+
+luke.jump()
+  .setHeight(20);
+</code></pre>"><span class="hljs-comment">// bad</span>
+Jedi.prototype.jump = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">this</span>.jumping = <span class="hljs-literal">true</span>;
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+};
+
+Jedi.prototype.setHeight = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(height)</span> </span>{
+  <span class="hljs-keyword">this</span>.height = height;
+};
+
+<span class="hljs-keyword">const</span> luke = <span class="hljs-keyword">new</span> Jedi();
+luke.jump(); <span class="hljs-comment">// =&gt; true</span>
+luke.setHeight(<span class="hljs-number">20</span>); <span class="hljs-comment">// =&gt; undefined</span>
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">class</span> Jedi {
+  jump() {
+    <span class="hljs-keyword">this</span>.jumping = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  }
+
+  setHeight(height) {
+    <span class="hljs-keyword">this</span>.height = height;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  }
+}
+
+<span class="hljs-keyword">const</span> luke = <span class="hljs-keyword">new</span> Jedi();
+
+luke.jump()
+  .setHeight(<span class="hljs-number">20</span>);
+</code></pre>
+</li></ul><ul>
+<li><p><a href="#8.4">8.4</a> <a name="8.4"></a> toString()을 작성할 때 올바르게 동작하는지와 side effect 가 없는지 확인해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>class Jedi {
+  constructor(options = {}) {
+    this.name = options.name || 'no name';
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  toString() {
+    return `Jedi - ${this.getName()}`;
+  }
+}
+</code></pre>"><span class="hljs-keyword">class</span> Jedi {
+  constructor(options = {}) {
+    <span class="hljs-keyword">this</span>.name = options.name || <span class="hljs-string">'no name'</span>;
+  }
+
+  getName() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name;
+  }
+
+  toString() {
+    <span class="hljs-keyword">return</span> `Jedi - ${<span class="hljs-keyword">this</span>.getName()}`;
+  }
+}
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="모듈(modules)"><a name="모듈(modules)" href="#모듈(modules)"></a>모듈(Modules)</h2><ul>
+<li><p><a href="#9.1">9.1</a> <a name="9.1"></a> 비표준 모듈시스템이 아닌 항상 (<code>import</code>/<code>export</code>) 를 꼭 이용해 주십시오. 이렇게 함으로써 선호하는 모듈시스템에 언제라도 옮겨가는게 가능해 집니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const AirbnbStyleGuide = require('./AirbnbStyleGuide');
+module.exports = AirbnbStyleGuide.es6;
+
+// ok
+import AirbnbStyleGuide from './AirbnbStyleGuide';
+export default AirbnbStyleGuide.es6;
+
+// best
+import { es6 } from './AirbnbStyleGuide';
+export default es6;
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> AirbnbStyleGuide = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./AirbnbStyleGuide'</span>);
+<span class="hljs-built_in">module</span>.exports = AirbnbStyleGuide.es6;
+
+<span class="hljs-comment">// ok</span>
+import AirbnbStyleGuide from <span class="hljs-string">'./AirbnbStyleGuide'</span>;
+export <span class="hljs-keyword">default</span> AirbnbStyleGuide.es6;
+
+<span class="hljs-comment">// best</span>
+import { es6 } from <span class="hljs-string">'./AirbnbStyleGuide'</span>;
+export <span class="hljs-keyword">default</span> es6;
+</code></pre>
+</li><li><p><a href="#9.2">9.2</a> <a name="9.2"></a> wildcard import 는 사용하지 않습니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+import * as AirbnbStyleGuide from './AirbnbStyleGuide';
+
+// good
+import AirbnbStyleGuide from './AirbnbStyleGuide';
+</code></pre>"><span class="hljs-comment">// bad</span>
+import * as AirbnbStyleGuide from <span class="hljs-string">'./AirbnbStyleGuide'</span>;
+
+<span class="hljs-comment">// good</span>
+import AirbnbStyleGuide from <span class="hljs-string">'./AirbnbStyleGuide'</span>;
+</code></pre>
+</li><li><p><a href="#9.3">9.3</a> <a name="9.3"></a> import 문으로부터 직접 export 하는것은 사용하지 않습니다.</p>
+<blockquote>
+<p>한줄짜리는 간결하지만 import 와 export 방법을 명확히 한가지로 해서 일관성을 갖는 것이 가능합니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+// filename es6.js
+export { es6 as default } from './airbnbStyleGuide';
+
+// good
+// filename es6.js
+import { es6 } from './AirbnbStyleGuide';
+export default es6;
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-comment">// filename es6.js</span>
+export { es6 as <span class="hljs-keyword">default</span> } from <span class="hljs-string">'./airbnbStyleGuide'</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-comment">// filename es6.js</span>
+import { es6 } from <span class="hljs-string">'./AirbnbStyleGuide'</span>;
+export <span class="hljs-keyword">default</span> es6;
+</code></pre>
+<p><strong><a href="#목차">↑ 목차로 이동</a></strong></p>
+<h2 id="이터레이터와-제너레이터(iterators-and-generators)"><a name="이터레이터와-제너레이터(iterators-and-generators)" href="#이터레이터와-제너레이터(iterators-and-generators)"></a>이터레이터와 제너레이터(Iterators and Generators)</h2>
+</li><li><p><a href="#10.1">10.1</a> <a name="10.1"></a> iterators를 이용하지 마십시오. <code>for-of</code> 루프 대신에 <code>map()</code> 과 <code>reduce()</code> 와 같은 JavaScript 고급함수(higher-order functions)를 이용해 주십시오.</p>
+<blockquote>
+<p>고급함수는 immutable(불변)룰을 적용합니다. side effect에 대해 추측하는거보다 값을 반환하는 순수 함수를 다루는게 간단하기 때문입니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const numbers = [1, 2, 3, 4, 5];
+
+// bad
+let sum = 0;
+for (let num of numbers) {
+  sum += num;
+}
+
+sum === 15;
+
+// good
+let sum = 0;
+numbers.forEach((num) =&amp;gt; sum += num);
+sum === 15;
+
+// best (use the functional force)
+const sum = numbers.reduce((total, num) =&amp;gt; total + num, 0);
+sum === 15;
+</code></pre>"><span class="hljs-keyword">const</span> numbers = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>];
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">let</span> sum = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> num of numbers) {
+  sum += num;
+}
+
+sum === <span class="hljs-number">15</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">let</span> sum = <span class="hljs-number">0</span>;
+numbers.forEach((num) =&gt; sum += num);
+sum === <span class="hljs-number">15</span>;
+
+<span class="hljs-comment">// best (use the functional force)</span>
+<span class="hljs-keyword">const</span> sum = numbers.reduce((total, num) =&gt; total + num, <span class="hljs-number">0</span>);
+sum === <span class="hljs-number">15</span>;
+</code></pre>
+</li><li><p><a href="#10.2">10.2</a> <a name="10.2"></a> 현시점에서는 generators는 이용하지 마십시오.</p>
+<blockquote>
+<p>ES5로 잘 transpile 되지 않습니다.</p>
+</blockquote>
+</li><li><p><a href="#10.3">10.3</a> <a name="10.3"></a> 어쩔 수 없이 Generator를 사용해야 한다면 eslint의 generator-star-spacing 룰을 따르세요.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>  // bad
+function * foo() {
+  // ...
+}
+
+// bad
+const bar = function * () {
+  // ...
+};
+
+// bad
+const baz = function *() {
+  // ...
+};
+
+// bad
+const quux = function*() {
+  // ...
+};
+
+// bad
+function*foo() {
+  // ...
+}
+
+// bad
+function *foo() {
+  // ...
+}
+
+// very bad
+function
+*
+foo() {
+  // ...
+}
+
+// very bad
+const wat = function
+*
+() {
+  // ...
+};
+
+// good
+function* foo() {
+  // ...
+}
+
+// good
+const foo = function* () {
+  // ...
+};
+</code></pre>">  <span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...</span>
+}
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> bar = <span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...</span>
+};
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> baz = <span class="hljs-function"><span class="hljs-keyword">function</span> *<span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...</span>
+};
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> quux = <span class="hljs-function"><span class="hljs-keyword">function</span>*<span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...</span>
+};
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span>*<span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...</span>
+}
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> *<span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...</span>
+}
+
+<span class="hljs-comment">// very bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span>
+*
+<span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...</span>
+}
+
+<span class="hljs-comment">// very bad</span>
+<span class="hljs-keyword">const</span> wat = <span class="hljs-function"><span class="hljs-keyword">function</span>
+*
+<span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...</span>
+};
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...</span>
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> foo = <span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...</span>
+};
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="프로퍼티(properties)"><a name="프로퍼티(properties)" href="#프로퍼티(properties)"></a>프로퍼티(Properties)</h2><ul>
+<li><p><a href="#11.1">11.1</a> <a name="11.1"></a> 프로퍼티에 억세스하는 경우는 점 <code>.</code> 을 사용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const luke = {
+  jedi: true,
+  age: 28,
+};
+
+// bad
+const isJedi = luke['jedi'];
+
+// good
+const isJedi = luke.jedi;
+</code></pre>"><span class="hljs-keyword">const</span> luke = {
+  jedi: <span class="hljs-literal">true</span>,
+  age: <span class="hljs-number">28</span>,
+};
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> isJedi = luke[<span class="hljs-string">'jedi'</span>];
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> isJedi = luke.jedi;
+</code></pre>
+</li><li><p><a href="#11.2">11.2</a> <a name="11.2"></a> 변수를 사용해 프로퍼티에 억세스하는 경우는 대괄호 <code>[]</code> 를 사용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const luke = {
+  jedi: true,
+  age: 28,
+};
+
+function getProp(prop) {
+  return luke[prop];
+}
+
+const isJedi = getProp('jedi');
+</code></pre>"><span class="hljs-keyword">const</span> luke = {
+  jedi: <span class="hljs-literal">true</span>,
+  age: <span class="hljs-number">28</span>,
+};
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getProp</span><span class="hljs-params">(prop)</span> </span>{
+  <span class="hljs-keyword">return</span> luke[prop];
+}
+
+<span class="hljs-keyword">const</span> isJedi = getProp(<span class="hljs-string">'jedi'</span>);
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="변수(variables)"><a name="변수(variables)" href="#변수(variables)"></a>변수(Variables)</h2><ul>
+<li><p><a href="#12.1">12.1</a> <a name="12.1"></a> 변수를 선언 할 때는 항상 <code>const</code> 를 사용해 주십시오. 그렇게 하지 않으면 글로벌 변수로 선언됩니다. 글로벌 namespace 를 오염시키지 않도록 캡틴플래닛도 경고하고 있습니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+superPower = new SuperPower();
+
+// good
+const superPower = new SuperPower();
+</code></pre>"><span class="hljs-comment">// bad</span>
+superPower = <span class="hljs-keyword">new</span> SuperPower();
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> superPower = <span class="hljs-keyword">new</span> SuperPower();
+</code></pre>
+</li><li><p><a href="#12.2">12.2</a> <a name="12.2"></a> 하나의 변수선언에 대해 하나의 <code>const</code> 를 이용해 주십시오.</p>
+<blockquote>
+<p>왜? 이 방법의 경우, 간단히 새 변수를 추가하는게 가능합니다. 또한 <code>,</code> 를 <code>;</code> 로 바꿔버리는 것에 대해 걱정할 필요가 없습니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const items = getItems(),
+    goSportsTeam = true,
+    dragonball = 'z';
+
+// bad
+// (compare to above, and try to spot the mistake)
+const items = getItems(),
+    goSportsTeam = true;
+    dragonball = 'z';
+
+// good
+const items = getItems();
+const goSportsTeam = true;
+const dragonball = 'z';
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> items = getItems(),
+    goSportsTeam = <span class="hljs-literal">true</span>,
+    dragonball = <span class="hljs-string">'z'</span>;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-comment">// (compare to above, and try to spot the mistake)</span>
+<span class="hljs-keyword">const</span> items = getItems(),
+    goSportsTeam = <span class="hljs-literal">true</span>;
+    dragonball = <span class="hljs-string">'z'</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> items = getItems();
+<span class="hljs-keyword">const</span> goSportsTeam = <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">const</span> dragonball = <span class="hljs-string">'z'</span>;
+</code></pre>
+</li><li><p><a href="#12.3">12.3</a> <a name="12.3"></a> 우선 <code>const</code> 를 그룹화하고 다음에 <code>let</code> 을 그룹화 해주십시오.</p>
+<blockquote>
+<p>이전에 할당한 변수에 대해 나중에 새 변수를 추가하는 경우에 유용합니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+let i, len, dragonball,
+    items = getItems(),
+    goSportsTeam = true;
+
+// bad
+let i;
+const items = getItems();
+let dragonball;
+const goSportsTeam = true;
+let len;
+
+// good
+const goSportsTeam = true;
+const items = getItems();
+let dragonball;
+let i;
+let length;
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">let</span> i, len, dragonball,
+    items = getItems(),
+    goSportsTeam = <span class="hljs-literal">true</span>;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">let</span> i;
+<span class="hljs-keyword">const</span> items = getItems();
+<span class="hljs-keyword">let</span> dragonball;
+<span class="hljs-keyword">const</span> goSportsTeam = <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">let</span> len;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> goSportsTeam = <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">const</span> items = getItems();
+<span class="hljs-keyword">let</span> dragonball;
+<span class="hljs-keyword">let</span> i;
+<span class="hljs-keyword">let</span> length;
+</code></pre>
+</li><li><p><a href="#12.4">12.4</a> <a name="12.4"></a> 변수를 할당할때는 필요하고 합리적인 장소에 두시기 바랍니다.</p>
+<blockquote>
+<p>왜? <code>let</code> 과 <code>const</code> 는 블록스코프이기 때문입니다. 함수스코프가 아닙니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// good
+function() {
+  test();
+  console.log('doing stuff..');
+
+  //..other stuff..
+
+  const name = getName();
+
+  if (name === 'test') {
+    return false;
+  }
+
+  return name;
+}
+
+// bad - unnecessary function call
+// 필요없는 함수 호출
+function(hasName) {
+  const name = getName();
+
+  if (!hasName) {
+    return false;
+  }
+
+  this.setFirstName(name);
+
+  return true;
+}
+
+// good
+function(hasName) {
+  if (!hasName) {
+    return false;
+  }
+
+  const name = getName();
+  this.setFirstName(name);
+
+  return true;
+}
+</code></pre>"><span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  test();
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'doing stuff..'</span>);
+
+  <span class="hljs-comment">//..other stuff..</span>
+
+  <span class="hljs-keyword">const</span> name = getName();
+
+  <span class="hljs-keyword">if</span> (name === <span class="hljs-string">'test'</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+  }
+
+  <span class="hljs-keyword">return</span> name;
+}
+
+<span class="hljs-comment">// bad - unnecessary function call</span>
+<span class="hljs-comment">// 필요없는 함수 호출</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(hasName)</span> </span>{
+  <span class="hljs-keyword">const</span> name = getName();
+
+  <span class="hljs-keyword">if</span> (!hasName) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+  }
+
+  <span class="hljs-keyword">this</span>.setFirstName(name);
+
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(hasName)</span> </span>{
+  <span class="hljs-keyword">if</span> (!hasName) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+  }
+
+  <span class="hljs-keyword">const</span> name = getName();
+  <span class="hljs-keyword">this</span>.setFirstName(name);
+
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+}
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="호이스팅(hoisting)"><a name="호이스팅(hoisting)" href="#호이스팅(hoisting)"></a>호이스팅(Hoisting)</h2><ul>
+<li><p><a href="#13.1">13.1</a> <a name="13.1"></a> <code>var</code> 선언은 할당이 없이 스코프의 선두에 hoist 됩니다. <code>const</code> 와 <code>let</code> 선언은<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#Temporal_dead_zone_and_errors_with_let">Temporal Dead Zones (TDZ)</a> 라고 불리는 새로운 컨셉의 혜택을 받고 있습니다. 이것은 <a href="http://es-discourse.com/t/why-typeof-is-no-longer-safe/15">왜 typeof 는 더이상 안전하지 않은가</a>를  알고있는 것이 중요합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// (notDefined 가 글로벌변수에 존재하지 않는다고 판정한 경우.)
+// 당연히 에러가 발생합니다.
+function example() {
+  console.log(notDefined); // =&amp;gt; throws a ReferenceError
+}
+
+// 그 변수를 참조하는 코드의 뒤에서 그 변수를 선언한 경우
+// 변수가 hoist 된 상태에서 동작합니다..
+// 주의：`true` 라는 값 자체는 hoist 되지 않습니다.
+function example() {
+  console.log(declaredButNotAssigned); // =&amp;gt; undefined
+  var declaredButNotAssigned = true;
+}
+
+// 인터프리터는 변수선언을 스코프의 선두에 hoist 합니다.
+// 위의 예는 다음과 같이 다시 쓸수 있습니다.
+function example() {
+  let declaredButNotAssigned;
+  console.log(declaredButNotAssigned); // =&amp;gt; undefined
+  declaredButNotAssigned = true;
+}
+
+// const 와 let 을 이용한 경우
+function example() {
+  console.log(declaredButNotAssigned); // =&amp;gt; throws a ReferenceError
+  console.log(typeof declaredButNotAssigned); // =&amp;gt; throws a ReferenceError
+  const declaredButNotAssigned = true;
+}
+</code></pre>"><span class="hljs-comment">// (notDefined 가 글로벌변수에 존재하지 않는다고 판정한 경우.)</span>
+<span class="hljs-comment">// 당연히 에러가 발생합니다.</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">example</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(notDefined); <span class="hljs-comment">// =&gt; throws a ReferenceError</span>
+}
+
+<span class="hljs-comment">// 그 변수를 참조하는 코드의 뒤에서 그 변수를 선언한 경우</span>
+<span class="hljs-comment">// 변수가 hoist 된 상태에서 동작합니다..</span>
+<span class="hljs-comment">// 주의：`true` 라는 값 자체는 hoist 되지 않습니다.</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">example</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(declaredButNotAssigned); <span class="hljs-comment">// =&gt; undefined</span>
+  <span class="hljs-keyword">var</span> declaredButNotAssigned = <span class="hljs-literal">true</span>;
+}
+
+<span class="hljs-comment">// 인터프리터는 변수선언을 스코프의 선두에 hoist 합니다.</span>
+<span class="hljs-comment">// 위의 예는 다음과 같이 다시 쓸수 있습니다.</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">example</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">let</span> declaredButNotAssigned;
+  <span class="hljs-built_in">console</span>.log(declaredButNotAssigned); <span class="hljs-comment">// =&gt; undefined</span>
+  declaredButNotAssigned = <span class="hljs-literal">true</span>;
+}
+
+<span class="hljs-comment">// const 와 let 을 이용한 경우</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">example</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(declaredButNotAssigned); <span class="hljs-comment">// =&gt; throws a ReferenceError</span>
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">typeof</span> declaredButNotAssigned); <span class="hljs-comment">// =&gt; throws a ReferenceError</span>
+  <span class="hljs-keyword">const</span> declaredButNotAssigned = <span class="hljs-literal">true</span>;
+}
+</code></pre>
+</li><li><p><a href="#13.2">13.2</a> <a name="13.2"></a> 익명함수의 경우 함수가 할당되기 전의 변수가 hoist 됩니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>function example() {
+  console.log(anonymous); // =&amp;gt; undefined
+
+  anonymous(); // =&amp;gt; TypeError anonymous is not a function
+
+  var anonymous = function() {
+    console.log('anonymous function expression');
+  };
+}
+</code></pre>"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">example</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(anonymous); <span class="hljs-comment">// =&gt; undefined</span>
+
+  anonymous(); <span class="hljs-comment">// =&gt; TypeError anonymous is not a function</span>
+
+  <span class="hljs-keyword">var</span> anonymous = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'anonymous function expression'</span>);
+  };
+}
+</code></pre>
+</li><li><p><a href="#13.3">13.3</a> <a name="13.3"></a> 명명함수의 경우도 똑같이 변수가 hoist 됩니다. 함수명이나 함수본체는 hoist 되지 않습니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>function example() {
+  console.log(named); // =&amp;gt; undefined
+
+  named(); // =&amp;gt; TypeError named is not a function
+
+  superPower(); // =&amp;gt; ReferenceError superPower is not defined
+
+  var named = function superPower() {
+    console.log('Flying');
+  };
+}
+
+// 함수명과 변수명이 같은 경우도 같은 현상이 발생합니다.
+function example() {
+  console.log(named); // =&amp;gt; undefined
+
+  named(); // =&amp;gt; TypeError named is not a function
+
+  var named = function named() {
+    console.log('named');
+  }
+}
+</code></pre>"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">example</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(named); <span class="hljs-comment">// =&gt; undefined</span>
+
+  named(); <span class="hljs-comment">// =&gt; TypeError named is not a function</span>
+
+  superPower(); <span class="hljs-comment">// =&gt; ReferenceError superPower is not defined</span>
+
+  <span class="hljs-keyword">var</span> named = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">superPower</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Flying'</span>);
+  };
+}
+
+<span class="hljs-comment">// 함수명과 변수명이 같은 경우도 같은 현상이 발생합니다.</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">example</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(named); <span class="hljs-comment">// =&gt; undefined</span>
+
+  named(); <span class="hljs-comment">// =&gt; TypeError named is not a function</span>
+
+  <span class="hljs-keyword">var</span> named = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">named</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'named'</span>);
+  }
+}
+</code></pre>
+</li><li><p><a href="#13.4">13.4</a> <a name="13.4"></a> 함수선언은 함수명과 함수본체가 hoist 됩니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>function example() {
+  superPower(); // =&amp;gt; Flying
+
+  function superPower() {
+    console.log('Flying');
+  }
+}
+</code></pre>"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">example</span><span class="hljs-params">()</span> </span>{
+  superPower(); <span class="hljs-comment">// =&gt; Flying</span>
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">superPower</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Flying'</span>);
+  }
+}
+</code></pre>
+</li><li><p>자세한 내용은 링크를 참조하세요. <a href="http://www.adequatelygood.com/2010/2/JavaScript-Scoping-and-Hoisting/">JavaScript Scoping &amp; Hoisting</a> by <a href="http://www.adequatelygood.com/">Ben Cherry</a>.</p>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="조건식과-등가식(comparison-operators-&amp;-equality)"><a name="조건식과-등가식(comparison-operators-&amp;-equality)" href="#조건식과-등가식(comparison-operators-&amp;-equality)"></a>조건식과 등가식(Comparison Operators &amp; Equality)</h2><ul>
+<li><p><a href="#14.1">14.1</a> <a name="14.1"></a> <code>==</code> 이나 <code>!=</code> 보다 <code>===</code> 와 <code>!==</code> 을 사용하세요.</p>
+</li><li><p><a href="#14.2">14.2</a> <a name="14.2"></a> <code>if</code> 문과 같은 조건식은 <code>ToBoolean</code> 메소드에 의해 강제 형변환으로 평가되어 항상 아래와 같은 룰을 따릅니다.</p>
+<ul>
+<li><strong>오브젝트</strong> 는 <strong>true</strong> 로 평가됩니다.</li><li><strong>undefined</strong> 는 <strong>false</strong> 로 평가됩니다.</li><li><strong>null</strong> 은 <strong>false</strong> 로 평가됩니다.</li><li><strong>부울값</strong> 은 <strong>boolean형의 값</strong> 으로 평가됩니다.</li><li><strong>수치</strong> 는 <strong>true</strong> 로 평가됩니다. 하지만 <strong>+0, -0, or NaN</strong> 의 경우는 <strong>false</strong> 입니다.</li><li><strong>문자열</strong> 은 <strong>true</strong> 로 평가됩니다. 하지만 빈문자 <code>''</code> 의 경우는 <strong>false</strong> 입니다.</li></ul>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>if ([0]) {
+  // true
+  // An array is an object, objects evaluate to true
+  // 배열은 오브젝트이므로 true 로 평가됩니다.
+}
+</code></pre>"><span class="hljs-keyword">if</span> ([<span class="hljs-number">0</span>]) {
+  <span class="hljs-comment">// true</span>
+  <span class="hljs-comment">// An array is an object, objects evaluate to true</span>
+  <span class="hljs-comment">// 배열은 오브젝트이므로 true 로 평가됩니다.</span>
+}
+</code></pre>
+</li><li><p><a href="#14.3">14.3</a> <a name="14.3"></a> 단축형을 사용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+if (name !== '') {
+  // ...stuff...
+}
+
+// good
+if (name) {
+  // ...stuff...
+}
+
+// bad
+if (collection.length &amp;gt; 0) {
+  // ...stuff...
+}
+
+// good
+if (collection.length) {
+  // ...stuff...
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">if</span> (name !== <span class="hljs-string">''</span>) {
+  <span class="hljs-comment">// ...stuff...</span>
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (name) {
+  <span class="hljs-comment">// ...stuff...</span>
+}
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">if</span> (collection.length &gt; <span class="hljs-number">0</span>) {
+  <span class="hljs-comment">// ...stuff...</span>
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (collection.length) {
+  <span class="hljs-comment">// ...stuff...</span>
+}
+</code></pre>
+</li><li><p><a href="#14.4">14.4</a> <a name="14.4"></a> 더 자세한건 이쪽을 참고하세요. <a href="http://javascriptweblog.wordpress.com/2011/02/07/truth-equality-and-javascript/#more-2108">Truth Equality and JavaScript</a> by Angus Croll.</p>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="블록(blocks)"><a name="블록(blocks)" href="#블록(blocks)"></a>블록(Blocks)</h2><ul>
+<li><p><a href="#15.1">15.1</a> <a name="15.1"></a> 복수행의 블록에는 중괄호 ({}) 를 사용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+if (test)
+  return false;
+
+// good
+if (test) return false;
+
+// good
+if (test) {
+  return false;
+}
+
+// bad
+function() { return false; }
+
+// good
+function() {
+  return false;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">if</span> (test)
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (test) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (test) {
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>; }
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+</code></pre>
+</li><li><p><a href="#15.2">15.2</a> <a name="15.2"></a> 복수행 블록의 <code>if</code> 와 <code>else</code> 를 이용하는 경우 <code>else</code> 는 <code>if</code> 블록 끝의 중괄호(})와 같은 행에 위치시켜 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+if (test) {
+  thing1();
+  thing2();
+}
+else {
+  thing3();
+}
+
+// good
+if (test) {
+  thing1();
+  thing2();
+} else {
+  thing3();
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">if</span> (test) {
+  thing1();
+  thing2();
+}
+<span class="hljs-keyword">else</span> {
+  thing3();
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (test) {
+  thing1();
+  thing2();
+} <span class="hljs-keyword">else</span> {
+  thing3();
+}
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="코멘트(comments)"><a name="코멘트(comments)" href="#코멘트(comments)"></a>코멘트(Comments)</h2><ul>
+<li><p><a href="#16.1">16.1</a> <a name="16.1"></a> 복수행의 코멘트는 <code>/** ... */</code> 을 사용합니다. 그 안에는 설명과 모든 파라메터, 반환값에 대해 형이나 값을 기술해주세요.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+// make() returns a new element
+// based on the passed in tag name
+//
+// @param {String} tag
+// @return {Element} element
+function make(tag) {
+
+  // ...stuff...
+
+  return element;
+}
+
+// good
+/**
+ * make() returns a new element
+ * based on the passed in tag name
+ *
+ * @param {String} tag
+ * @return {Element} element
+ */
+function make(tag) {
+
+  // ...stuff...
+
+  return element;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-comment">// make() returns a new element</span>
+<span class="hljs-comment">// based on the passed in tag name</span>
+<span class="hljs-comment">//</span>
+<span class="hljs-comment">// @param {String} tag</span>
+<span class="hljs-comment">// @return {Element} element</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">make</span><span class="hljs-params">(tag)</span> </span>{
+
+  <span class="hljs-comment">// ...stuff...</span>
+
+  <span class="hljs-keyword">return</span> element;
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-comment">/**
+ * make() returns a new element
+ * based on the passed in tag name
+ *
+ * @param {String} tag
+ * @return {Element} element
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">make</span><span class="hljs-params">(tag)</span> </span>{
+
+  <span class="hljs-comment">// ...stuff...</span>
+
+  <span class="hljs-keyword">return</span> element;
+}
+</code></pre>
+</li><li><p><a href="#16.2">16.2</a> <a name="16.2"></a> 단일행 코멘트에는 <code>//</code> 을 사용합니다. 코멘트를 추가하고 싶은 코드의 상부에 배치해주세요. 또한, 코멘트의 앞에 빈행을 넣어 주세요.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const active = true;  // is current tab
+
+// good
+// is current tab
+const active = true;
+
+// bad
+function getType() {
+  console.log('fetching type...');
+  // set the default type to 'no type'
+  const type = this._type || 'no type';
+
+  return type;
+}
+
+// good
+function getType() {
+  console.log('fetching type...');
+
+  // set the default type to 'no type'
+  const type = this._type || 'no type';
+
+  return type;
+}
+
+// also good
+function getType() {
+  // set the default type to 'no type'
+  const type = this._type || 'no type';
+
+  return type;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> active = <span class="hljs-literal">true</span>;  <span class="hljs-comment">// is current tab</span>
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-comment">// is current tab</span>
+<span class="hljs-keyword">const</span> active = <span class="hljs-literal">true</span>;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getType</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'fetching type...'</span>);
+  <span class="hljs-comment">// set the default type to 'no type'</span>
+  <span class="hljs-keyword">const</span> type = <span class="hljs-keyword">this</span>._type || <span class="hljs-string">'no type'</span>;
+
+  <span class="hljs-keyword">return</span> type;
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getType</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'fetching type...'</span>);
+
+  <span class="hljs-comment">// set the default type to 'no type'</span>
+  <span class="hljs-keyword">const</span> type = <span class="hljs-keyword">this</span>._type || <span class="hljs-string">'no type'</span>;
+
+  <span class="hljs-keyword">return</span> type;
+}
+
+<span class="hljs-comment">// also good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getType</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// set the default type to 'no type'</span>
+  <span class="hljs-keyword">const</span> type = <span class="hljs-keyword">this</span>._type || <span class="hljs-string">'no type'</span>;
+
+  <span class="hljs-keyword">return</span> type;
+}
+</code></pre>
+</li><li><p><a href="#16.3">16.3</a> <a name="16.3"></a> 문제를 지적하고 재고를 촉구하는 경우나 문제의 해결책을 제안하는 경우 등, 코멘트의 앞에  <code>FIXME</code> 나 <code>TODO</code> 를 붙이는 것으로 다른 개발자의 빠른 이해를 도울수 있습니다. 이런것들은 어떤 액션을 따른다는 의미로 통상의 코멘트와는 다릅니다. 액션이라는 것은 <code>FIXME -- 해결이 필요</code> 또는 <code>TODO -- 구현이 필요</code> 를 뜻합니다.</p>
+</li><li><p><a href="#16.4">16.4</a> <a name="16.4"></a> 문제에 대한 주석으로써 <code>// FIXME:</code> 를 사용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>class Calculator extends Abacus {
+  constructor() {
+    super();
+
+    // FIXME: 글로벌변수를 사용해서는 안됨.
+    total = 0;
+  }
+}
+</code></pre>"><span class="hljs-keyword">class</span> Calculator extends Abacus {
+  constructor() {
+    super();
+
+    <span class="hljs-comment">// FIXME: 글로벌변수를 사용해서는 안됨.</span>
+    total = <span class="hljs-number">0</span>;
+  }
+}
+</code></pre>
+</li><li><p><a href="#16.5">16.5</a> <a name="16.5"></a> 문제의 해결책에 대한 주석으로 <code>// TODO:</code> 를 사용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>class Calculator extends Abacus {
+  constructor() {
+    super();
+
+    // TODO: total 은 옵션 파라메터로 설정해야함.
+    this.total = 0;
+  }
+}
+</code></pre>"><span class="hljs-keyword">class</span> Calculator extends Abacus {
+  constructor() {
+    super();
+
+    <span class="hljs-comment">// TODO: total 은 옵션 파라메터로 설정해야함.</span>
+    <span class="hljs-keyword">this</span>.total = <span class="hljs-number">0</span>;
+  }
+}
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="공백(whitespace)"><a name="공백(whitespace)" href="#공백(whitespace)"></a>공백(Whitespace)</h2><ul>
+<li><p><a href="#17.1">17.1</a> <a name="17.1"></a> 탭에는 스페이스 4개를 설정해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function() {
+∙const name;
+}
+
+// bad
+function() {
+∙∙const name;
+}
+
+// good
+function() {
+∙∙∙∙const name;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+∙<span class="hljs-keyword">const</span> name;
+}
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+∙∙<span class="hljs-keyword">const</span> name;
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+∙∙∙∙<span class="hljs-keyword">const</span> name;
+}
+</code></pre>
+</li><li><p><a href="#17.2">17.2</a> <a name="17.2"></a> 주요 중괄호 ({}) 앞에는 스페이스를 1개 넣어 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function test(){
+  console.log('test');
+}
+
+// good
+function test() {
+  console.log('test');
+}
+
+// bad
+dog.set('attr',{
+  age: '1 year',
+  breed: 'Bernese Mountain Dog',
+});
+
+// good
+dog.set('attr', {
+  age: '1 year',
+  breed: 'Bernese Mountain Dog',
+});
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test'</span>);
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test'</span>);
+}
+
+<span class="hljs-comment">// bad</span>
+dog.set(<span class="hljs-string">'attr'</span>,{
+  age: <span class="hljs-string">'1 year'</span>,
+  breed: <span class="hljs-string">'Bernese Mountain Dog'</span>,
+});
+
+<span class="hljs-comment">// good</span>
+dog.set(<span class="hljs-string">'attr'</span>, {
+  age: <span class="hljs-string">'1 year'</span>,
+  breed: <span class="hljs-string">'Bernese Mountain Dog'</span>,
+});
+</code></pre>
+</li><li><p><a href="#17.3">17.3</a> <a name="17.3"></a> 제어구문 (<code>if</code> 문이나 <code>while</code> 문 등) 의 소괄호 (()) 앞에는 스페이스를 1개 넣어 주세요. 함수선언이나 함수호출시 인수리스트의 앞에는 스페이스를 넣지 마세요..</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+if(isJedi) {
+  fight ();
+}
+
+// good
+if (isJedi) {
+  fight();
+}
+
+// bad
+function fight () {
+  console.log ('Swooosh!');
+}
+
+// good
+function fight() {
+  console.log('Swooosh!');
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">if</span>(isJedi) {
+  fight ();
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (isJedi) {
+  fight();
+}
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fight</span> <span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log (<span class="hljs-string">'Swooosh!'</span>);
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fight</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Swooosh!'</span>);
+}
+</code></pre>
+</li><li><p><a href="#17.4">17.4</a> <a name="17.4"></a> 연산자 사이에는 스페이스를 넣어 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const x=y+5;
+
+// good
+const x = y + 5;
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> x=y+<span class="hljs-number">5</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> x = y + <span class="hljs-number">5</span>;
+</code></pre>
+</li><li><p><a href="#17.5">17.5</a> <a name="17.5"></a> 파일 끝에는 개행문자를 1개 넣어 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+(function(global) {
+  // ...stuff...
+})(this);
+</code></pre>"><span class="hljs-comment">// bad</span>
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(global)</span> </span>{
+  <span class="hljs-comment">// ...stuff...</span>
+})(<span class="hljs-keyword">this</span>);
+</code></pre>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+(function(global) {
+  // ...stuff...
+})(this);↵
+↵
+</code></pre>"><span class="hljs-comment">// bad</span>
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(global)</span> </span>{
+  <span class="hljs-comment">// ...stuff...</span>
+})(<span class="hljs-keyword">this</span>);↵
+↵
+</code></pre>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// good
+(function(global) {
+  // ...stuff...
+})(this);↵
+</code></pre>"><span class="hljs-comment">// good</span>
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(global)</span> </span>{
+  <span class="hljs-comment">// ...stuff...</span>
+})(<span class="hljs-keyword">this</span>);↵
+</code></pre>
+</li></ul><ul>
+<li><p><a href="#17.6">17.6</a> <a name="17.6"></a> 길게 메소드를 채이닝하는 경우는 인덴트를 이용해 주십시오. 행이 새로운 문이 아닌 메소드 호출인 것을 강조하기 위해서 선두에 점 (.) 을 배치해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+$('#items').find('.selected').highlight().end().find('.open').updateCount();
+
+// bad
+$('#items').
+  find('.selected').
+    highlight().
+    end().
+  find('.open').
+    updateCount();
+
+// good
+$('#items')
+  .find('.selected')
+    .highlight()
+    .end()
+  .find('.open')
+    .updateCount();
+
+// bad
+const leds = stage.selectAll('.led').data(data).enter().append('svg:svg').class('led', true)
+    .attr('width', (radius + margin) * 2).append('svg:g')
+    .attr('transform', 'translate(' + (radius + margin) + ',' + (radius + margin) + ')')
+    .call(tron.led);
+
+// good
+const leds = stage.selectAll('.led')
+    .data(data)
+  .enter().append('svg:svg')
+    .classed('led', true)
+    .attr('width', (radius + margin) * 2)
+  .append('svg:g')
+    .attr('transform', 'translate(' + (radius + margin) + ',' + (radius + margin) + ')')
+    .call(tron.led);
+</code></pre>"><span class="hljs-comment">// bad</span>
+$(<span class="hljs-string">'#items'</span>).find(<span class="hljs-string">'.selected'</span>).highlight().end().find(<span class="hljs-string">'.open'</span>).updateCount();
+
+<span class="hljs-comment">// bad</span>
+$(<span class="hljs-string">'#items'</span>).
+  find(<span class="hljs-string">'.selected'</span>).
+    highlight().
+    end().
+  find(<span class="hljs-string">'.open'</span>).
+    updateCount();
+
+<span class="hljs-comment">// good</span>
+$(<span class="hljs-string">'#items'</span>)
+  .find(<span class="hljs-string">'.selected'</span>)
+    .highlight()
+    .end()
+  .find(<span class="hljs-string">'.open'</span>)
+    .updateCount();
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> leds = stage.selectAll(<span class="hljs-string">'.led'</span>).data(data).enter().append(<span class="hljs-string">'svg:svg'</span>).class(<span class="hljs-string">'led'</span>, <span class="hljs-literal">true</span>)
+    .attr(<span class="hljs-string">'width'</span>, (radius + margin) * <span class="hljs-number">2</span>).append(<span class="hljs-string">'svg:g'</span>)
+    .attr(<span class="hljs-string">'transform'</span>, <span class="hljs-string">'translate('</span> + (radius + margin) + <span class="hljs-string">','</span> + (radius + margin) + <span class="hljs-string">')'</span>)
+    .call(tron.led);
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> leds = stage.selectAll(<span class="hljs-string">'.led'</span>)
+    .data(data)
+  .enter().append(<span class="hljs-string">'svg:svg'</span>)
+    .classed(<span class="hljs-string">'led'</span>, <span class="hljs-literal">true</span>)
+    .attr(<span class="hljs-string">'width'</span>, (radius + margin) * <span class="hljs-number">2</span>)
+  .append(<span class="hljs-string">'svg:g'</span>)
+    .attr(<span class="hljs-string">'transform'</span>, <span class="hljs-string">'translate('</span> + (radius + margin) + <span class="hljs-string">','</span> + (radius + margin) + <span class="hljs-string">')'</span>)
+    .call(tron.led);
+</code></pre>
+</li><li><p><a href="#17.7">17.7</a> <a name="17.7"></a> 문의 앞과 블록의 뒤에는 빈행을 남겨 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+if (foo) {
+  return bar;
+}
+return baz;
+
+// good
+if (foo) {
+  return bar;
+}
+
+return baz;
+
+// bad
+const obj = {
+  foo() {
+  },
+  bar() {
+  },
+};
+return obj;
+
+// good
+const obj = {
+  foo() {
+  },
+
+  bar() {
+  },
+};
+
+return obj;
+
+// bad
+const arr = [
+  function foo() {
+  },
+  function bar() {
+  },
+];
+return arr;
+
+// good
+const arr = [
+  function foo() {
+  },
+
+  function bar() {
+  },
+];
+
+return arr;
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">if</span> (foo) {
+  <span class="hljs-keyword">return</span> bar;
+}
+<span class="hljs-keyword">return</span> baz;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (foo) {
+  <span class="hljs-keyword">return</span> bar;
+}
+
+<span class="hljs-keyword">return</span> baz;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> obj = {
+  foo() {
+  },
+  bar() {
+  },
+};
+<span class="hljs-keyword">return</span> obj;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> obj = {
+  foo() {
+  },
+
+  bar() {
+  },
+};
+
+<span class="hljs-keyword">return</span> obj;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> arr = [
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+  },
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span> </span>{
+  },
+];
+<span class="hljs-keyword">return</span> arr;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> arr = [
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+  },
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span> </span>{
+  },
+];
+
+<span class="hljs-keyword">return</span> arr;
+</code></pre>
+</li><li><p><a href="#17.8">17.8</a> <a name="17.8"></a> 블록에 빈행을 끼워 넣지 마십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function bar() {
+
+  console.log(foo);
+
+}
+
+// also bad
+if (baz) {
+
+  console.log(qux);
+} else {
+  console.log(foo);
+
+}
+
+// good
+function bar() {
+  console.log(foo);
+}
+
+// good
+if (baz) {
+  console.log(qux);
+} else {
+  console.log(foo);
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span> </span>{
+
+  <span class="hljs-built_in">console</span>.log(foo);
+
+}
+
+<span class="hljs-comment">// also bad</span>
+<span class="hljs-keyword">if</span> (baz) {
+
+  <span class="hljs-built_in">console</span>.log(qux);
+} <span class="hljs-keyword">else</span> {
+  <span class="hljs-built_in">console</span>.log(foo);
+
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">console</span>.log(foo);
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (baz) {
+  <span class="hljs-built_in">console</span>.log(qux);
+} <span class="hljs-keyword">else</span> {
+  <span class="hljs-built_in">console</span>.log(foo);
+}
+</code></pre>
+</li><li><p><a href="#17.9">17.9</a> <a name="17.9"></a> 소괄호()의 안쪽에 스페이스를 추가하지 마십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function bar( foo ) {
+  return foo;
+}
+
+// good
+function bar(foo) {
+  return foo;
+}
+
+// bad
+if ( foo ) {
+  console.log(foo);
+}
+
+// good
+if (foo) {
+  console.log(foo);
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span><span class="hljs-params">( foo )</span> </span>{
+  <span class="hljs-keyword">return</span> foo;
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span><span class="hljs-params">(foo)</span> </span>{
+  <span class="hljs-keyword">return</span> foo;
+}
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">if</span> ( foo ) {
+  <span class="hljs-built_in">console</span>.log(foo);
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (foo) {
+  <span class="hljs-built_in">console</span>.log(foo);
+}
+</code></pre>
+</li><li><p><a href="#17.10">17.10</a> <a name="17.10"></a> 대괄호([])의 안쪽에 스페이스를 추가하지 마십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const foo = [ 1, 2, 3 ];
+console.log(foo[ 0 ]);
+
+// good
+const foo = [1, 2, 3];
+console.log(foo[0]);
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> foo = [ <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span> ];
+<span class="hljs-built_in">console</span>.log(foo[ <span class="hljs-number">0</span> ]);
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> foo = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];
+<span class="hljs-built_in">console</span>.log(foo[<span class="hljs-number">0</span>]);
+</code></pre>
+</li><li><p><a href="#17.11">17.11</a> <a name="17.11"></a> 중괄호({})의 안쪽에 스페이스를 추가해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const foo = {clark: 'kent'};
+
+// good
+const foo = { clark: 'kent' };
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> foo = {clark: <span class="hljs-string">'kent'</span>};
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> foo = { clark: <span class="hljs-string">'kent'</span> };
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="콤마(commas)"><a name="콤마(commas)" href="#콤마(commas)"></a>콤마(Commas)</h2><ul>
+<li><p><a href="#18.1">18.1</a> <a name="18.1"></a> 문장 앞에 콤마는 <strong>사용하지 않습니다.</strong></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const story = [
+    once
+  , upon
+  , aTime
+];
+
+// good
+const story = [
+  once,
+  upon,
+  aTime,
+];
+
+// bad
+const hero = {
+    firstName: 'Ada'
+  , lastName: 'Lovelace'
+  , birthYear: 1815
+  , superPower: 'computers'
+};
+
+// good
+const hero = {
+  firstName: 'Ada',
+  lastName: 'Lovelace',
+  birthYear: 1815,
+  superPower: 'computers',
+};
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> story = [
+    once
+  , upon
+  , aTime
+];
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> story = [
+  once,
+  upon,
+  aTime,
+];
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> hero = {
+    firstName: <span class="hljs-string">'Ada'</span>
+  , lastName: <span class="hljs-string">'Lovelace'</span>
+  , birthYear: <span class="hljs-number">1815</span>
+  , superPower: <span class="hljs-string">'computers'</span>
+};
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> hero = {
+  firstName: <span class="hljs-string">'Ada'</span>,
+  lastName: <span class="hljs-string">'Lovelace'</span>,
+  birthYear: <span class="hljs-number">1815</span>,
+  superPower: <span class="hljs-string">'computers'</span>,
+};
+</code></pre>
+</li><li><p><a href="#18.2">18.2</a> <a name="18.2"></a> 객체, 배열 아이템의 마지막 항목 끝에 콤마를 <strong>사용합니다.</strong></p>
+<blockquote>
+<p>이것은 깨끗한 git의 diffs 로 이어집니다. 또한 Babel과 같은 트랜스파일러는 transpile 하는 사이에 쓸데없는 끝의 콤마를 제거합니다. 이것은 레거시브라우저에서의 <a href="./README.md#commas">불필요한 콤마 문제</a>를 고민할 필요가 없다는것을 의미합니다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad - git diff without trailing comma
+const hero = {
+     firstName: 'Florence',
+-    lastName: 'Nightingale'
++    lastName: 'Nightingale',
++    inventorOf: ['coxcomb graph', 'modern nursing']
+};
+
+// good - git diff with trailing comma
+const hero = {
+     firstName: 'Florence',
+     lastName: 'Nightingale',
++    inventorOf: ['coxcomb chart', 'modern nursing'],
+};
+
+// bad
+const hero = {
+  firstName: 'Dana',
+  lastName: 'Scully'
+};
+
+const heroes = [
+  'Batman',
+  'Superman'
+];
+
+// good
+const hero = {
+  firstName: 'Dana',
+  lastName: 'Scully',
+};
+
+const heroes = [
+  'Batman',
+  'Superman',
+];
+</code></pre>"><span class="hljs-comment">// bad - git diff without trailing comma</span>
+<span class="hljs-keyword">const</span> hero = {
+     firstName: <span class="hljs-string">'Florence'</span>,
+-    lastName: <span class="hljs-string">'Nightingale'</span>
++    lastName: <span class="hljs-string">'Nightingale'</span>,
++    inventorOf: [<span class="hljs-string">'coxcomb graph'</span>, <span class="hljs-string">'modern nursing'</span>]
+};
+
+<span class="hljs-comment">// good - git diff with trailing comma</span>
+<span class="hljs-keyword">const</span> hero = {
+     firstName: <span class="hljs-string">'Florence'</span>,
+     lastName: <span class="hljs-string">'Nightingale'</span>,
++    inventorOf: [<span class="hljs-string">'coxcomb chart'</span>, <span class="hljs-string">'modern nursing'</span>],
+};
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> hero = {
+  firstName: <span class="hljs-string">'Dana'</span>,
+  lastName: <span class="hljs-string">'Scully'</span>
+};
+
+<span class="hljs-keyword">const</span> heroes = [
+  <span class="hljs-string">'Batman'</span>,
+  <span class="hljs-string">'Superman'</span>
+];
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> hero = {
+  firstName: <span class="hljs-string">'Dana'</span>,
+  lastName: <span class="hljs-string">'Scully'</span>,
+};
+
+<span class="hljs-keyword">const</span> heroes = [
+  <span class="hljs-string">'Batman'</span>,
+  <span class="hljs-string">'Superman'</span>,
+];
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="세미콜론(semicolons)"><a name="세미콜론(semicolons)" href="#세미콜론(semicolons)"></a>세미콜론(Semicolons)</h2><ul>
+<li><p><a href="#19.1">19.1</a> <a name="19.1"></a> 문장의 마지막에는 반드시 세미콜론을 <strong>써줍니다</strong></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+(function() {
+  const name = 'Skywalker'
+  return name
+})()
+
+// good
+(() =&amp;gt; {
+  const name = 'Skywalker';
+  return name;
+})();
+
+// good (guards against the function becoming an argument when two files with IIFEs are concatenated)
+// good (즉시함수가 연결된 2개의 파일일때 인수가 되는 부분을 보호합니다.
+;(() =&amp;gt; {
+  const name = 'Skywalker';
+  return name;
+})();
+</code></pre>"><span class="hljs-comment">// bad</span>
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">const</span> name = <span class="hljs-string">'Skywalker'</span>
+  <span class="hljs-keyword">return</span> name
+})()
+
+<span class="hljs-comment">// good</span>
+(() =&gt; {
+  <span class="hljs-keyword">const</span> name = <span class="hljs-string">'Skywalker'</span>;
+  <span class="hljs-keyword">return</span> name;
+})();
+
+<span class="hljs-comment">// good (guards against the function becoming an argument when two files with IIFEs are concatenated)</span>
+<span class="hljs-comment">// good (즉시함수가 연결된 2개의 파일일때 인수가 되는 부분을 보호합니다.</span>
+;(() =&gt; {
+  <span class="hljs-keyword">const</span> name = <span class="hljs-string">'Skywalker'</span>;
+  <span class="hljs-keyword">return</span> name;
+})();
+</code></pre>
+<p><a href="http://stackoverflow.com/questions/7365172/semicolon-before-self-invoking-function/7365214%237365214">즉시함수 세미콜린에 대한 자세한 내용은 여기를 참조하세요</a>.</p>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="형변환과-강제(type-casting-&amp;-coercion)"><a name="형변환과-강제(type-casting-&amp;-coercion)" href="#형변환과-강제(type-casting-&amp;-coercion)"></a>형변환과 강제(Type Casting &amp; Coercion)</h2><ul>
+<li><p><a href="#20.1">20.1</a> <a name="20.1"></a> 문장의 앞 부분에서 형의 강제를 행합니다.</p>
+</li><li><p><a href="#20.2">20.2</a> <a name="20.2"></a> String의 경우:</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>//  =&amp;gt; this.reviewScore = 9;
+
+// bad
+const totalScore = this.reviewScore + '';
+
+// good
+const totalScore = String(this.reviewScore);
+</code></pre>"><span class="hljs-comment">//  =&gt; this.reviewScore = 9;</span>
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> totalScore = <span class="hljs-keyword">this</span>.reviewScore + <span class="hljs-string">''</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> totalScore = <span class="hljs-built_in">String</span>(<span class="hljs-keyword">this</span>.reviewScore);
+</code></pre>
+</li><li><p><a href="#20.3">20.3</a> <a name="20.3"></a> Number의 경우: <code>Number</code> 로 형변환하는 경우는 <code>parseInt</code> 를 이용하고, 항상 형변환을 위한 진수를 인수로 넘겨 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const inputValue = '4';
+
+// bad
+const val = new Number(inputValue);
+
+// bad
+const val = +inputValue;
+
+// bad
+const val = inputValue &amp;gt;&amp;gt; 0;
+
+// bad
+const val = parseInt(inputValue);
+
+// good
+const val = Number(inputValue);
+
+// good
+const val = parseInt(inputValue, 10);
+</code></pre>"><span class="hljs-keyword">const</span> inputValue = <span class="hljs-string">'4'</span>;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> val = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Number</span>(inputValue);
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> val = +inputValue;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> val = inputValue &gt;&gt; <span class="hljs-number">0</span>;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> val = <span class="hljs-built_in">parseInt</span>(inputValue);
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> val = <span class="hljs-built_in">Number</span>(inputValue);
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> val = <span class="hljs-built_in">parseInt</span>(inputValue, <span class="hljs-number">10</span>);
+</code></pre>
+</li><li><p><a href="#20.4">20.4</a> <a name="20.4"></a> <code>parseInt</code> 가 bottleneck 이 되어, <a href="http://jsperf.com/coercion-vs-casting/3">성능적인 이유</a>로 Bitshift를 사용할 필요가 있는 경우<br>하려고 했던 것에 대해, 왜(why) 와 무엇(what)의 설명을 코멘트로 해서 남겨 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// good
+/**
+ * parseInt was the reason my code was slow.
+ * Bitshifting the String to coerce it to a
+ * Number made it a lot faster.
+ * parseInt 가 원인으로 느렸음.
+ * Bitshift를 통한 수치로의 문자열 강제 형변환으로
+ * 성능을 개선시킴.
+ */
+const val = inputValue &amp;gt;&amp;gt; 0;
+</code></pre>"><span class="hljs-comment">// good</span>
+<span class="hljs-comment">/**
+ * parseInt was the reason my code was slow.
+ * Bitshifting the String to coerce it to a
+ * Number made it a lot faster.
+ * parseInt 가 원인으로 느렸음.
+ * Bitshift를 통한 수치로의 문자열 강제 형변환으로
+ * 성능을 개선시킴.
+ */</span>
+<span class="hljs-keyword">const</span> val = inputValue &gt;&gt; <span class="hljs-number">0</span>;
+</code></pre>
+</li><li><p><a href="#20.5">20.5</a> <a name="20.5"></a> <strong>주의:</strong> bitshift를 사용하는 경우의 주의사항. 수치는 <a href="http://es5.github.io/#x4.3.19">64비트 값</a>으로 표현되어 있으나 bitshift 연산한 경우는 항상 32비트 integer 로 넘겨집니다.(<a href="http://es5.github.io/#x11.7">소스</a>).<br>32비트 이상의 int 를 bitshift 하는 경우 예상치 못한 현상을 야기할 수 있습니다.(<a href="https://github.com/airbnb/javascript/issues/109">토론</a>) 부호가 포함된 32비트 정수의 최대치는 2,147,483,647 입니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>2147483647 &amp;gt;&amp;gt; 0 //=&amp;gt; 2147483647
+2147483648 &amp;gt;&amp;gt; 0 //=&amp;gt; -2147483648
+2147483649 &amp;gt;&amp;gt; 0 //=&amp;gt; -2147483647
+</code></pre>"><span class="hljs-number">2147483647</span> &gt;&gt; <span class="hljs-number">0</span> <span class="hljs-comment">//=&gt; 2147483647</span>
+<span class="hljs-number">2147483648</span> &gt;&gt; <span class="hljs-number">0</span> <span class="hljs-comment">//=&gt; -2147483648</span>
+<span class="hljs-number">2147483649</span> &gt;&gt; <span class="hljs-number">0</span> <span class="hljs-comment">//=&gt; -2147483647</span>
+</code></pre>
+</li><li><p><a href="#20.6">20.6</a> <a name="20.6"></a> Boolean 경우:</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const age = 0;
+
+// bad
+const hasAge = new Boolean(age);
+
+// good
+const hasAge = Boolean(age);
+
+// good
+const hasAge = !!age;
+</code></pre>"><span class="hljs-keyword">const</span> age = <span class="hljs-number">0</span>;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> hasAge = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Boolean</span>(age);
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> hasAge = <span class="hljs-built_in">Boolean</span>(age);
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> hasAge = !!age;
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="명명규칙(naming-conventions)"><a name="명명규칙(naming-conventions)" href="#명명규칙(naming-conventions)"></a>명명규칙(Naming Conventions)</h2><ul>
+<li><p><a href="#21.1">21.1</a> <a name="21.1"></a> 한글자 이름은 사용하지 않습니다. 이름에 의도가 드러나게 명명합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function q() {
+  // ...stuff...
+}
+
+// good
+function query() {
+  // ..stuff..
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">q</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ...stuff...</span>
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">query</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-comment">// ..stuff..</span>
+}
+</code></pre>
+</li><li><p><a href="#21.2">21.2</a> <a name="21.2"></a> 오브젝트, 함수 그리고 인스턴스에는 camelCase를 사용합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const OBJEcttsssss = {};
+const this_is_my_object = {};
+function c() {}
+
+// good
+const thisIsMyObject = {};
+function thisIsMyFunction() {}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> OBJEcttsssss = {};
+<span class="hljs-keyword">const</span> this_is_my_object = {};
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">c</span><span class="hljs-params">()</span> </span>{}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> thisIsMyObject = {};
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">thisIsMyFunction</span><span class="hljs-params">()</span> </span>{}
+</code></pre>
+</li><li><p><a href="#21.3">21.3</a> <a name="21.3"></a> 클래스나 constructor에는 PascalCase 를 사용합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function user(options) {
+  this.name = options.name;
+}
+
+const bad = new user({
+  name: 'nope',
+});
+
+// good
+class User {
+  constructor(options) {
+    this.name = options.name;
+  }
+}
+
+const good = new User({
+  name: 'yup',
+});
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">user</span><span class="hljs-params">(options)</span> </span>{
+  <span class="hljs-keyword">this</span>.name = options.name;
+}
+
+<span class="hljs-keyword">const</span> bad = <span class="hljs-keyword">new</span> user({
+  name: <span class="hljs-string">'nope'</span>,
+});
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">class</span> User {
+  constructor(options) {
+    <span class="hljs-keyword">this</span>.name = options.name;
+  }
+}
+
+<span class="hljs-keyword">const</span> good = <span class="hljs-keyword">new</span> User({
+  name: <span class="hljs-string">'yup'</span>,
+});
+</code></pre>
+</li><li><p><a href="#21.4">21.4</a> <a name="21.4"></a> private 프로퍼티명은 선두에 언더스코어 <code>_</code> 를 사용합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+this.__firstName__ = 'Panda';
+this.firstName_ = 'Panda';
+
+// good
+this._firstName = 'Panda';
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">this</span>.__firstName__ = <span class="hljs-string">'Panda'</span>;
+<span class="hljs-keyword">this</span>.firstName_ = <span class="hljs-string">'Panda'</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">this</span>._firstName = <span class="hljs-string">'Panda'</span>;
+</code></pre>
+</li><li><p><a href="#21.5">21.5</a> <a name="21.5"></a> <code>this</code> 의 참조를 보존하는 것은 사용하지 않습니다.. arrow함수나 Function#bind를 사용합니다..</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function foo() {
+  const self = this;
+  return function() {
+    console.log(self);
+  };
+}
+
+// bad
+function foo() {
+  const that = this;
+  return function() {
+    console.log(that);
+  };
+}
+
+// good
+function foo() {
+  return () =&amp;gt; {
+    console.log(this);
+  };
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">const</span> self = <span class="hljs-keyword">this</span>;
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">console</span>.log(self);
+  };
+}
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">const</span> that = <span class="hljs-keyword">this</span>;
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-built_in">console</span>.log(that);
+  };
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">return</span> () =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>);
+  };
+}
+</code></pre>
+</li><li><p><a href="#21.6">21.6</a> <a name="21.6"></a> 파일을 1개의 클래스로 export 하는 경우, 파일명은 클래스명과 완전히 일치 시킵니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// file contents
+class CheckBox {
+  // ...
+}
+export default CheckBox;
+
+// in some other file
+// bad
+import CheckBox from './checkBox';
+
+// bad
+import CheckBox from './check_box';
+
+// good
+import CheckBox from './CheckBox';
+</code></pre>"><span class="hljs-comment">// file contents</span>
+<span class="hljs-keyword">class</span> CheckBox {
+  <span class="hljs-comment">// ...</span>
+}
+export <span class="hljs-keyword">default</span> CheckBox;
+
+<span class="hljs-comment">// in some other file</span>
+<span class="hljs-comment">// bad</span>
+import CheckBox from <span class="hljs-string">'./checkBox'</span>;
+
+<span class="hljs-comment">// bad</span>
+import CheckBox from <span class="hljs-string">'./check_box'</span>;
+
+<span class="hljs-comment">// good</span>
+import CheckBox from <span class="hljs-string">'./CheckBox'</span>;
+</code></pre>
+</li><li><p><a href="#21.7">21.7</a> <a name="21.7"></a> Default export가 함수일 경우, camelCase를 이용해 주십시오. 파일명은 함수명과 동일해야 합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>function makeStyleGuide() {
+}
+
+export default makeStyleGuide;
+</code></pre>"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makeStyleGuide</span><span class="hljs-params">()</span> </span>{
+}
+
+export <span class="hljs-keyword">default</span> makeStyleGuide;
+</code></pre>
+</li><li><p><a href="#21.8">21.8</a> <a name="21.8"></a> singleton / function library / 빈오브젝트를 export 하는 경우, PascalCase를 이용해 주십시오.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>const AirbnbStyleGuide = {
+  es6: {
+  }
+};
+
+export default AirbnbStyleGuide;
+</code></pre>"><span class="hljs-keyword">const</span> AirbnbStyleGuide = {
+  es6: {
+  }
+};
+
+export <span class="hljs-keyword">default</span> AirbnbStyleGuide;
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="접근자(accessors)"><a name="접근자(accessors)" href="#접근자(accessors)"></a>접근자(Accessors)</h2><ul>
+<li><p><a href="#22.1">22.1</a> <a name="22.1"></a> 프로퍼티를 위한 접근자 (Accessor) 함수는 필수는 아닙니다.</p>
+</li><li><p><a href="#22.2">22.2</a> <a name="22.2"></a> 접근자 함수가 필요한 경우, <code>getVal()</code> 이나 <code>setVal('hello')</code> 를 사용합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+dragon.age();
+
+// good
+dragon.getAge();
+
+// bad
+dragon.age(25);
+
+// good
+dragon.setAge(25);
+</code></pre>"><span class="hljs-comment">// bad</span>
+dragon.age();
+
+<span class="hljs-comment">// good</span>
+dragon.getAge();
+
+<span class="hljs-comment">// bad</span>
+dragon.age(<span class="hljs-number">25</span>);
+
+<span class="hljs-comment">// good</span>
+dragon.setAge(<span class="hljs-number">25</span>);
+</code></pre>
+</li><li><p><a href="#22.3">22.3</a> <a name="22.3"></a> 프로퍼티가 <code>boolean</code> 인 경우, <code>isVal()</code> 이나 <code>hasVal()</code> 를 사용합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+if (!dragon.age()) {
+  return false;
+}
+
+// good
+if (!dragon.hasAge()) {
+  return false;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">if</span> (!dragon.age()) {
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (!dragon.hasAge()) {
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+</code></pre>
+</li><li><p><a href="#22.4">22.4</a> <a name="22.4"></a> 일관되게 작성한 경우, <code>get()</code> 과 <code>set()</code> 으로 함수를 작성해도 좋습니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>class Jedi {
+  constructor(options = {}) {
+    const lightsaber = options.lightsaber || 'blue';
+    this.set('lightsaber', lightsaber);
+  }
+
+  set(key, val) {
+    this[key] = val;
+  }
+
+  get(key) {
+    return this[key];
+  }
+}
+</code></pre>"><span class="hljs-keyword">class</span> Jedi {
+  constructor(options = {}) {
+    <span class="hljs-keyword">const</span> lightsaber = options.lightsaber || <span class="hljs-string">'blue'</span>;
+    <span class="hljs-keyword">this</span>.set(<span class="hljs-string">'lightsaber'</span>, lightsaber);
+  }
+
+  set(key, val) {
+    <span class="hljs-keyword">this</span>[key] = val;
+  }
+
+  get(key) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>[key];
+  }
+}
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="이벤트(events)"><a name="이벤트(events)" href="#이벤트(events)"></a>이벤트(Events)</h2><ul>
+<li><p><a href="#23.1">23.1</a> <a name="23.1"></a> (DOM이벤트나 Backbone events 와 같은 독자의) 이벤트로 payload의 값을 넘길 경우는 raw값 보다는 해시값을 넘겨 주십시오.<br>이렇게 함으로써, 이후 기여자가 이벤트에 관련한 모든 핸들러를 찾아서 갱신하는 대신 이벤트 payload에 값을 추가하는 것이 가능합니다. 예를들면 아래와 같이</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+$(this).trigger('listingUpdated', listing.id);
+
+...
+
+$(this).on('listingUpdated', function(e, listingId) {
+  // do something with listingId
+});
+</code></pre>"><span class="hljs-comment">// bad</span>
+$(<span class="hljs-keyword">this</span>).trigger(<span class="hljs-string">'listingUpdated'</span>, listing.id);
+
+...
+
+$(<span class="hljs-keyword">this</span>).on(<span class="hljs-string">'listingUpdated'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e, listingId)</span> </span>{
+  <span class="hljs-comment">// do something with listingId</span>
+});
+</code></pre>
+<p>아래가 좀더 좋습니다:</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// good
+$(this).trigger('listingUpdated', { listingId: listing.id });
+
+...
+
+$(this).on('listingUpdated', function(e, data) {
+  // do something with data.listingId
+});
+</code></pre>"><span class="hljs-comment">// good</span>
+$(<span class="hljs-keyword">this</span>).trigger(<span class="hljs-string">'listingUpdated'</span>, { listingId: listing.id });
+
+...
+
+$(<span class="hljs-keyword">this</span>).on(<span class="hljs-string">'listingUpdated'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e, data)</span> </span>{
+  <span class="hljs-comment">// do something with data.listingId</span>
+});
+</code></pre>
+<p><strong><a href="#목차">↑ 목차로 이동</a></strong></p>
+</li></ul><h2 id="jquery"><a name="jquery" href="#jquery"></a>jQuery</h2><ul>
+<li><p><a href="#24.1">24.1</a> <a name="24.1"></a> jQuery오브젝트의 변수는 선두에 <code>$</code> 를 붙입니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const sidebar = $('.sidebar');
+
+// good
+const $sidebar = $('.sidebar');
+
+// good
+const $sidebarBtn = $('.sidebar-btn');
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> sidebar = $(<span class="hljs-string">'.sidebar'</span>);
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> $sidebar = $(<span class="hljs-string">'.sidebar'</span>);
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> $sidebarBtn = $(<span class="hljs-string">'.sidebar-btn'</span>);
+</code></pre>
+</li><li><p><a href="#24.2">24.2</a> <a name="24.2"></a> jQuery의 검색결과를 캐시해서 사용합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+function setSidebar() {
+  $('.sidebar').hide();
+
+  // ...stuff...
+
+  $('.sidebar').css({
+    'background-color': 'pink'
+  });
+}
+
+// good
+function setSidebar() {
+  const $sidebar = $('.sidebar');
+  $sidebar.hide();
+
+  // ...stuff...
+
+  $sidebar.css({
+    'background-color': 'pink'
+  });
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setSidebar</span><span class="hljs-params">()</span> </span>{
+  $(<span class="hljs-string">'.sidebar'</span>).hide();
+
+  <span class="hljs-comment">// ...stuff...</span>
+
+  $(<span class="hljs-string">'.sidebar'</span>).css({
+    <span class="hljs-string">'background-color'</span>: <span class="hljs-string">'pink'</span>
+  });
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setSidebar</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">const</span> $sidebar = $(<span class="hljs-string">'.sidebar'</span>);
+  $sidebar.hide();
+
+  <span class="hljs-comment">// ...stuff...</span>
+
+  $sidebar.css({
+    <span class="hljs-string">'background-color'</span>: <span class="hljs-string">'pink'</span>
+  });
+}
+</code></pre>
+</li><li><p><a href="#24.3">24.3</a> <a name="24.3"></a> DOM 검색에는 <code>$('.sidebar ul')</code> 이나 <code>$('.sidebar &gt; ul')</code> 와 같은 Cascading 을 사용합니다. <a href="http://jsperf.com/jquery-find-vs-context-sel/16">jsPerf</a></p>
+</li><li><p><a href="#24.4">24.4</a> <a name="24.4"></a> 한정된 jQuery 오브젝트 쿼리에는 <code>find</code> 를 사용합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+$('ul', '.sidebar').hide();
+
+// bad
+$('.sidebar').find('ul').hide();
+
+// good
+$('.sidebar ul').hide();
+
+// good
+$('.sidebar &amp;gt; ul').hide();
+
+// good
+$sidebar.find('ul').hide();
+</code></pre>"><span class="hljs-comment">// bad</span>
+$(<span class="hljs-string">'ul'</span>, <span class="hljs-string">'.sidebar'</span>).hide();
+
+<span class="hljs-comment">// bad</span>
+$(<span class="hljs-string">'.sidebar'</span>).find(<span class="hljs-string">'ul'</span>).hide();
+
+<span class="hljs-comment">// good</span>
+$(<span class="hljs-string">'.sidebar ul'</span>).hide();
+
+<span class="hljs-comment">// good</span>
+$(<span class="hljs-string">'.sidebar &gt; ul'</span>).hide();
+
+<span class="hljs-comment">// good</span>
+$sidebar.find(<span class="hljs-string">'ul'</span>).hide();
+</code></pre>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p><h2 id="비동기-처리(promise)"><a name="비동기-처리(promise)" href="#비동기-처리(promise)"></a>비동기 처리(Promise)</h2><ul>
+<li><p><a href="#25.1">25.1</a> <a name="25.1"></a> 비동기 작업을 수행하거나 함수의 결과를 콜백으로 리턴하는 경우에는 Promise 패턴을 사용합니다. </p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// Declare Promise
+const newPromise = function (param) {
+  return new Promise(function (resolve, reject) {
+    if (param) {             // if param is true,
+      // resolved 
+      resolve(&quot;Resolved&quot;);
+    } else {                 // param is false,     
+      // rejected
+      reject(Error(&quot;Rejected!!&quot;));
+    }
+  }, 3000);
+};
+
+// Execute Promise
+newPromise(result)
+  .then(function (text) {
+    // Success
+    console.log(text);
+  }, function (error) {
+    // Failure
+    console.error(error);
+  }
+);
+</code></pre>"><span class="hljs-comment">// Declare Promise</span>
+<span class="hljs-keyword">const</span> newPromise = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(param)</span> </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Promise(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(resolve, reject)</span> </span>{
+    <span class="hljs-keyword">if</span> (param) {             <span class="hljs-comment">// if param is true,</span>
+      <span class="hljs-comment">// resolved </span>
+      resolve(<span class="hljs-string">"Resolved"</span>);
+    } <span class="hljs-keyword">else</span> {                 <span class="hljs-comment">// param is false,     </span>
+      <span class="hljs-comment">// rejected</span>
+      reject(<span class="hljs-built_in">Error</span>(<span class="hljs-string">"Rejected!!"</span>));
+    }
+  }, <span class="hljs-number">3000</span>);
+};
+
+<span class="hljs-comment">// Execute Promise</span>
+newPromise(result)
+  .then(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(text)</span> </span>{
+    <span class="hljs-comment">// Success</span>
+    <span class="hljs-built_in">console</span>.log(text);
+  }, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(error)</span> </span>{
+    <span class="hljs-comment">// Failure</span>
+    <span class="hljs-built_in">console</span>.error(error);
+  }
+);
+</code></pre>
+<ul>
+<li><a href="#25.2">25.2</a> <a name="25.2"></a> Promise의 Syntactic Sugar인 async/await 문법은 현재는 사용하지 않습니다.</li></ul>
+</li></ul><p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong> </p><h2 id="비동기-통신(axios)"><a name="비동기-통신(axios)" href="#비동기-통신(axios)"></a>비동기 통신(Axios)</h2><ul>
+<li><p><a href="#26.1">26.1</a> <a name="26.1"></a> 서버로의 Request 또는 REST API 호출시에는 Axios 라이브러리를 사용합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>  // Make a request for a user with a given ID
+ axios.get('/user?ID=12345')
+   .then(function (response) {
+     console.log(response);
+   })
+   .catch(function (error) {
+     console.log(error);
+   });
+
+  // Optionally the request above could also be done as
+ axios.get('/user', {
+    params: {
+      ID: 12345
+    }
+   })
+   .then(function (response) {
+     console.log(response);
+   })
+   .catch(function (error) {
+     console.log(error);
+   });
+
+ // Post Request
+ axios.post('/user', {
+     firstName: 'Fred',
+     lastName: 'Flintstone'
+   })
+   .then(function (response) {
+     console.log(response);
+   })
+   .catch(function (error) {
+     console.log(error);
+   });
+</code></pre>">  <span class="hljs-comment">// Make a request for a user with a given ID</span>
+ axios.get(<span class="hljs-string">'/user?ID=12345'</span>)
+   .then(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(response)</span> </span>{
+     <span class="hljs-built_in">console</span>.log(response);
+   })
+   .catch(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(error)</span> </span>{
+     <span class="hljs-built_in">console</span>.log(error);
+   });
+
+  <span class="hljs-comment">// Optionally the request above could also be done as</span>
+ axios.get(<span class="hljs-string">'/user'</span>, {
+    params: {
+      ID: <span class="hljs-number">12345</span>
+    }
+   })
+   .then(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(response)</span> </span>{
+     <span class="hljs-built_in">console</span>.log(response);
+   })
+   .catch(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(error)</span> </span>{
+     <span class="hljs-built_in">console</span>.log(error);
+   });
+
+ <span class="hljs-comment">// Post Request</span>
+ axios.post(<span class="hljs-string">'/user'</span>, {
+     firstName: <span class="hljs-string">'Fred'</span>,
+     lastName: <span class="hljs-string">'Flintstone'</span>
+   })
+   .then(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(response)</span> </span>{
+     <span class="hljs-built_in">console</span>.log(response);
+   })
+   .catch(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(error)</span> </span>{
+     <span class="hljs-built_in">console</span>.log(error);
+   });
+</code></pre>
+</li><li><p><a href="#26.2">26.2</a> <a name="26.2"></a> - 동시에 여러 개의 Request를 보내어 결과를 취합하는 경우 axios의 all 메소드를 사용합니다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;> function getUserAccount() {
+   return axios.get('/user/12345');
+ }
+
+ function getUserPermissions() {
+   return axios.get('/user/12345/permissions');
+ }
+
+ axios.all([getUserAccount(), getUserPermissions()])
+   .then(axios.spread(function (acct, perms) {
+     // Both requests are now complete
+   }));
+</code></pre>"> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUserAccount</span><span class="hljs-params">()</span> </span>{
+   <span class="hljs-keyword">return</span> axios.get(<span class="hljs-string">'/user/12345'</span>);
+ }
+
+ <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUserPermissions</span><span class="hljs-params">()</span> </span>{
+   <span class="hljs-keyword">return</span> axios.get(<span class="hljs-string">'/user/12345/permissions'</span>);
+ }
+
+ axios.all([getUserAccount(), getUserPermissions()])
+   .then(axios.spread(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(acct, perms)</span> </span>{
+     <span class="hljs-comment">// Both requests are now complete</span>
+   }));
+</code></pre>
+<p><strong><a href="#javascript-목차">↑ 목차로 이동</a></strong></p>
+</li></ul><h2 id="기본규칙"><a name="기본규칙" href="#기본규칙"></a>기본규칙</h2><ul>
+<li>파일당 하나의 컴포넌트 파일만 포함한다.<ul>
+<li>하지만, 다수의 <a href="https://facebook.github.io/react/docs/reusable-components.html#stateless-functions">Stateless, or Pure, Components</a> 들은 파일에 존재해도 된다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-multi-comp.md#ignorestateless"><code>react/no-multi-comp</code></a>.</li></ul>
+</li><li>항상 JSX 구문을 사용한다.</li><li>만약 JSX를 이용해 앱을 개발 중이라면 <code>React.createElement</code> 구문을 사용하지 않는다.</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="class-vs-`react.createclass`-vs-stateless"><a name="class-vs-`react.createclass`-vs-stateless" href="#class-vs-`react.createclass`-vs-stateless"></a>Class vs <code>React.createClass</code> vs stateless</h2><ul>
+<li><p>만약 소스 안에 state나 refs가 있으면, <code>React.createClass</code> 보다는 <code>class extends React.Component</code> 를 선호하라. 믹스인을 사용해야 하는 특별히 좋은 이유가 있으면 그렇지 않아도 된다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prefer-es6-class.md"><code>react/prefer-es6-class</code></a> <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prefer-stateless-function.md"><code>react/prefer-stateless-function</code></a></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+const Listing = React.createClass({
+  // ...
+  render() {
+    return &amp;lt;div&amp;gt;{this.state.hello}&amp;lt;/div&amp;gt;;
+  }
+});
+
+// good
+class Listing extends React.Component {
+  // ...
+  render() {
+    return &amp;lt;div&amp;gt;{this.state.hello}&amp;lt;/div&amp;gt;;
+  }
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> Listing = React.createClass({
+  <span class="hljs-comment">// ...</span>
+  render() {
+    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>{this.state.hello}<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>;</span>
+  }
+});
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">class</span> Listing extends React.Component {
+  <span class="hljs-comment">// ...</span>
+  render() {
+    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>{this.state.hello}<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>;</span>
+  }
+}
+</code></pre>
+<p>그리고 만약 소스 안에 state나 refs가 없다면, 일반 클래스 방식보다 일반 함수(화살표 함수 아님) 방식을 선호하라.:</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+class Listing extends React.Component {
+  render() {
+    return &amp;lt;div&amp;gt;{this.props.hello}&amp;lt;/div&amp;gt;;
+  }
+}
+
+// bad (익명함수의 형태이므로 함수의 이름을 추론해야하기 때문에 비추천)
+const Listing = ({ hello }) =&amp;gt; (
+  &amp;lt;div&amp;gt;{hello}&amp;lt;/div&amp;gt;
+);
+
+// good
+function Listing({ hello }) {
+  return &amp;lt;div&amp;gt;{hello}&amp;lt;/div&amp;gt;;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">class</span> Listing extends React.Component {
+  render() {
+    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>{this.props.hello}<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>;</span>
+  }
+}
+
+<span class="hljs-comment">// bad (익명함수의 형태이므로 함수의 이름을 추론해야하기 때문에 비추천)</span>
+<span class="hljs-keyword">const</span> Listing = ({ hello }) =&gt; (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>{hello}<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+);
+
+// good
+function Listing({ hello }) {
+  return <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>{hello}<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>;</span>
+}
+</code></pre>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="명명규칙"><a name="명명규칙" href="#명명규칙"></a>명명규칙</h2><ul>
+<li><strong>확장자</strong>: 리엑트 컴포넌트 파일에는 <code>.js</code> 확장자를 사용한다.</li><li><strong>파일 이름</strong>: 파스칼 형식의  이름을 사용한다. E.g., <code>ReservationCard.js</code>.</li><li><p><strong>참조 값 이름</strong>: 인스턴스는 카멜 형식으로, 리엑트 컴포넌트는 파스칼 형식의 이름을 사용한다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-pascal-case.md"><code>react/jsx-pascal-case</code></a></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+import reservationCard from './ReservationCard';
+
+// good
+import ReservationCard from './ReservationCard';
+
+// bad
+const ReservationItem = &amp;lt;ReservationCard /&amp;gt;;
+
+// good
+const reservationItem = &amp;lt;ReservationCard /&amp;gt;;
+</code></pre>"><span class="hljs-comment">// bad</span>
+import reservationCard from <span class="hljs-string">'./ReservationCard'</span>;
+
+<span class="hljs-comment">// good</span>
+import ReservationCard from <span class="hljs-string">'./ReservationCard'</span>;
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> ReservationItem = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">ReservationCard</span> /&gt;</span>;</span>
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> reservationItem = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">ReservationCard</span> /&gt;</span>;</span>
+</code></pre>
+</li><li><p><strong>컴포넌트 이름</strong>: 파일 이름과 동일하게 사용한다. 예를들어, <code>ReservationCard.js</code> 라는 파일 안에는 <code>ReservationCard</code> 라는 이름의 컴포넌트가 있어야 한다. 하지만, 폴더 내 루트 컴포넌트의 경우에는, 파일 이름을 <code>index.js</code> 로 작성하고, 폴더의 이름을 컴포넌트의 이름으로 작성한다.:</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+import Footer from './Footer/Footer';
+
+// bad
+import Footer from './Footer/index';
+
+// good
+import Footer from './Footer';
+</code></pre>"><span class="hljs-comment">// bad</span>
+import Footer from <span class="hljs-string">'./Footer/Footer'</span>;
+
+<span class="hljs-comment">// bad</span>
+import Footer from <span class="hljs-string">'./Footer/index'</span>;
+
+<span class="hljs-comment">// good</span>
+import Footer from <span class="hljs-string">'./Footer'</span>;
+</code></pre>
+</li><li><p><strong>상위 컴포넌트 이름</strong>: 상위 컴포넌트의 displayName 속성 값과 하위 컴포넌트의 displayName 속성 값을 활용하여 새롭게 만들어진 컴포넌트의 이름을 만든다. 예를들어, 상위 컴포넌트 withFoo()에서, Bar 라는 하위 컴포넌트가 인자로 넘어왔을 때, 생성되는 컴포넌트의 displayName 속성 값은 withFoo(Bar)이 된다.</p>
+<blockquote>
+<p>이유? 컴포넌트의 displayName 속성은 개발자 도구나 에러 메세지를 확인하기 위해 사용된다. 이 값을 확실하게 넣어줘야 사람들이 이러한 문제를 겪거나 컴포넌트 간의 관계 파악을 할 때 도움이 된다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+export default function withFoo(WrappedComponent) {
+return function WithFoo(props) {
+  return &amp;lt;WrappedComponent {...props} foo /&amp;gt;;
+}
+}
+
+// good
+export default function withFoo(WrappedComponent) {
+function WithFoo(props) {
+  return &amp;lt;WrappedComponent {...props} foo /&amp;gt;;
+}
+const wrappedComponentName = WrappedComponent.displayName
+  || WrappedComponent.name
+  || 'Component';
+
+WithFoo.displayName = `withFoo(${wrappedComponentName})`;
+return WithFoo;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+export <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">withFoo</span><span class="hljs-params">(WrappedComponent)</span> </span>{
+<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">WithFoo</span><span class="hljs-params">(props)</span> </span>{
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">WrappedComponent</span> {<span class="hljs-attribute">...props</span>} <span class="hljs-attribute">foo</span> /&gt;</span>;</span>
+}
+}
+
+<span class="hljs-comment">// good</span>
+export <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">withFoo</span><span class="hljs-params">(WrappedComponent)</span> </span>{
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">WithFoo</span><span class="hljs-params">(props)</span> </span>{
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">WrappedComponent</span> {<span class="hljs-attribute">...props</span>} <span class="hljs-attribute">foo</span> /&gt;</span>;</span>
+}
+<span class="hljs-keyword">const</span> wrappedComponentName = WrappedComponent.displayName
+  || WrappedComponent.name
+  || <span class="hljs-string">'Component'</span>;
+
+WithFoo.displayName = `withFoo(${wrappedComponentName})`;
+<span class="hljs-keyword">return</span> WithFoo;
+}
+</code></pre>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="선언"><a name="선언" href="#선언"></a>선언</h2><ul>
+<li><p>컴포넌트의 이름을 지을 때 <code>displayName</code> 속성을 사용하지 않는다. 대신에 참조 값으로 컴포넌트의 이름을 짓는다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+export default React.createClass({
+  displayName: 'ReservationCard',
+  // stuff goes here
+});
+
+// good
+export default class ReservationCard extends React.Component {
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+export <span class="hljs-keyword">default</span> React.createClass({
+  displayName: <span class="hljs-string">'ReservationCard'</span>,
+  <span class="hljs-comment">// stuff goes here</span>
+});
+
+<span class="hljs-comment">// good</span>
+export <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> ReservationCard extends React.Component {
+}
+</code></pre>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="정렬"><a name="정렬" href="#정렬"></a>정렬</h2><ul>
+<li><p>JSX 구문을 위해서는 아래의 정렬 방식을 따른다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-closing-bracket-location.md"><code>react/jsx-closing-bracket-location</code></a></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+&amp;lt;Foo superLongParam=&quot;bar&quot;
+     anotherSuperLongParam=&quot;baz&quot; /&amp;gt;
+
+// good
+&amp;lt;Foo
+  superLongParam=&quot;bar&quot;
+  anotherSuperLongParam=&quot;baz&quot;
+/&amp;gt;
+
+// 만약 props가 하나면 같은 줄에 둔다.
+&amp;lt;Foo bar=&quot;bar&quot; /&amp;gt;
+
+// 자식 컴포넌트는 보통 들여쓴다.
+&amp;lt;Foo
+  superLongParam=&quot;bar&quot;
+  anotherSuperLongParam=&quot;baz&quot;
+&amp;gt;
+  &amp;lt;Quux /&amp;gt;
+&amp;lt;/Foo&amp;gt;
+</code></pre>"><span class="hljs-comment">// bad</span>
+&lt;Foo superLongParam=<span class="hljs-string">"bar"</span>
+     anotherSuperLongParam=<span class="hljs-string">"baz"</span> /&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;Foo
+  superLongParam=<span class="hljs-string">"bar"</span>
+  anotherSuperLongParam=<span class="hljs-string">"baz"</span>
+/&gt;
+
+<span class="hljs-comment">// 만약 props가 하나면 같은 줄에 둔다.</span>
+&lt;Foo bar=<span class="hljs-string">"bar"</span> /&gt;
+
+<span class="hljs-comment">// 자식 컴포넌트는 보통 들여쓴다.</span>
+&lt;Foo
+  superLongParam=<span class="hljs-string">"bar"</span>
+  anotherSuperLongParam=<span class="hljs-string">"baz"</span>
+&gt;
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Quux</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">Foo</span>&gt;</span>
+</span></code></pre>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="따옴표"><a name="따옴표" href="#따옴표"></a>따옴표</h2><ul>
+<li><p>JSX 속성값에는 항상 쌍따옴표 (<code>"</code>) 를 사용한다. 하지만 다른 자바스크립트에서는 홑따옴표를 사용한다. eslint: <a href="http://eslint.org/docs/rules/jsx-quotes"><code>jsx-quotes</code></a></p>
+<blockquote>
+<p>왜? JSX 속성은 <a href="http://eslint.org/docs/rules/jsx-quotes">escaped quotes를 가질수 없다.</a>, 그래서 쌍따옴표는 해당 타입에 쉽게 <code>"멈춤 or 그만"</code> 이라는 의미를 심어준다.<br>HTML 속성들도 보통 홑따옴표 대신 쌍따옴표를 사용한다. 그래서 JSX 속성은 이러한 컨벤션을 따라간다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+&amp;lt;Foo bar='bar' /&amp;gt;
+
+// good
+&amp;lt;Foo bar=&quot;bar&quot; /&amp;gt;
+
+// bad
+&amp;lt;Foo style={{ left: &quot;20px&quot; }} /&amp;gt;
+
+// good
+&amp;lt;Foo style={{ left: '20px' }} /&amp;gt;
+</code></pre>"><span class="hljs-comment">// bad</span>
+&lt;Foo bar=<span class="hljs-string">'bar'</span> /&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;Foo bar=<span class="hljs-string">"bar"</span> /&gt;
+
+<span class="hljs-comment">// bad</span>
+&lt;Foo style={{ left: <span class="hljs-string">"20px"</span> }} /&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;Foo style={{ left: <span class="hljs-string">'20px'</span> }} /&gt;
+</code></pre>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="띄어쓰기"><a name="띄어쓰기" href="#띄어쓰기"></a>띄어쓰기</h2><ul>
+<li><p>닫힘 태그에는 항상 한 칸짜리 빈 공간을 가진다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;> // bad
+ &amp;lt;Foo/&amp;gt;
+
+ // very bad
+ &amp;lt;Foo                 /&amp;gt;
+
+ // bad
+ &amp;lt;Foo
+  /&amp;gt;
+
+ // good
+ &amp;lt;Foo /&amp;gt;
+</code></pre>"> <span class="hljs-comment">// bad</span>
+ &lt;Foo/&gt;
+
+ <span class="hljs-comment">// very bad</span>
+ &lt;Foo                 /&gt;
+
+ <span class="hljs-comment">// bad</span>
+ &lt;Foo
+  /&gt;
+
+ <span class="hljs-comment">// good</span>
+ &lt;Foo /&gt;
+</code></pre>
+<ul>
+<li><p>JSX 중괄호에 빈 공간을 덧대지 않는다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-curly-spacing.md"><code>react/jsx-curly-spacing</code></a></p>
+<pre><code class="jsx" data-origin="<pre><code class=&quot;jsx&quot;>// bad
+&amp;lt;Foo bar={ baz } /&amp;gt;
+
+// good
+&amp;lt;Foo bar={baz} /&amp;gt;
+</code></pre>">// bad
+&lt;Foo bar={ baz } /&gt;
+
+// good
+&lt;Foo bar={baz} /&gt;
+</code></pre>
+</li></ul>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="속성"><a name="속성" href="#속성"></a>속성</h2><ul>
+<li><p>속성의 이름은 항상 카멜케이스를 사용한다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;> // bad
+ &amp;lt;Foo
+   UserName=&quot;hello&quot;
+   phone_number={12345678}
+ /&amp;gt;
+
+ // good
+ &amp;lt;Foo
+   userName=&quot;hello&quot;
+   phoneNumber={12345678}
+ /&amp;gt;
+</code></pre>"> <span class="hljs-comment">// bad</span>
+ &lt;Foo
+   UserName=<span class="hljs-string">"hello"</span>
+   phone_number={<span class="hljs-number">12345678</span>}
+ /&gt;
+
+ <span class="hljs-comment">// good</span>
+ &lt;Foo
+   userName=<span class="hljs-string">"hello"</span>
+   phoneNumber={<span class="hljs-number">12345678</span>}
+ /&gt;
+</code></pre>
+<ul>
+<li><p>만약 속성 값이 명확한 <code>true</code> 값이라면 생략한다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-boolean-value.md"><code>react/jsx-boolean-value</code></a></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+&amp;lt;Foo
+ hidden={true}
+/&amp;gt;
+
+// good
+&amp;lt;Foo
+ hidden
+/&amp;gt;
+</code></pre>"><span class="hljs-comment">// bad</span>
+&lt;Foo
+ hidden={<span class="hljs-literal">true</span>}
+/&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;Foo
+ hidden
+/&gt;
+</code></pre>
+</li><li><p><code>&lt;img&gt;</code> 태그에는 항상 <code>alt</code> 속성을 작성한다. 만약 이미지가 표현 가능하다면, <code>alt</code> 값은 빈 문자열이 될 수 있거나 <code>&lt;img&gt;</code>는 반드시 <code>role="presentation"</code> 속성을 가지고 있어야 한다. eslint: <a href="https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/img-has-alt.md"><code>jsx-a11y/img-has-alt</code></a></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+&amp;lt;img src=&quot;hello.jpg&quot; /&amp;gt;
+
+// good
+&amp;lt;img src=&quot;hello.jpg&quot; alt=&quot;Me waving hello&quot; /&amp;gt;
+
+// good
+&amp;lt;img src=&quot;hello.jpg&quot; alt=&quot;&quot; /&amp;gt;
+
+// good
+&amp;lt;img src=&quot;hello.jpg&quot; role=&quot;presentation&quot; /&amp;gt;
+</code></pre>"><span class="hljs-comment">// bad</span>
+&lt;img src=<span class="hljs-string">"hello.jpg"</span> /&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;img src=<span class="hljs-string">"hello.jpg"</span> alt=<span class="hljs-string">"Me waving hello"</span> /&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;img src=<span class="hljs-string">"hello.jpg"</span> alt=<span class="hljs-string">""</span> /&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;img src=<span class="hljs-string">"hello.jpg"</span> role=<span class="hljs-string">"presentation"</span> /&gt;
+</code></pre>
+</li><li><p><code>&lt;img&gt;</code> 태그의 <code>alt</code> 속성 값으로 “image”, “photo”, “picture” 와 같은 단어를 사용하면 안 된다. eslint: <a href="https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/img-redundant-alt.md"><code>jsx-a11y/img-redundant-alt</code></a></p>
+</li></ul>
+<blockquote>
+<p>왜? 스크린리더는 이미 <code>img</code> 태그를 이미지로 인지하고 있기 때문에, alt 속성 값에 반복으로 해당 정보를 포함할 필요가 없다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;> // bad
+ &amp;lt;img src=&quot;hello.jpg&quot; alt=&quot;Picture of me waving hello&quot; /&amp;gt;
+
+ // good
+ &amp;lt;img src=&quot;hello.jpg&quot; alt=&quot;Me waving hello&quot; /&amp;gt;
+</code></pre>"> <span class="hljs-comment">// bad</span>
+ &lt;img src=<span class="hljs-string">"hello.jpg"</span> alt=<span class="hljs-string">"Picture of me waving hello"</span> /&gt;
+
+ <span class="hljs-comment">// good</span>
+ &lt;img src=<span class="hljs-string">"hello.jpg"</span> alt=<span class="hljs-string">"Me waving hello"</span> /&gt;
+</code></pre>
+<ul>
+<li><p>role 속성 값으로는 검증이 가능하고, 추상적이지 않은 값을 사용하라. <a href="https://www.w3.org/TR/wai-aria/roles#role_definitions">ARIA roles</a>. eslint: <a href="https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/aria-role.md"><code>jsx-a11y/aria-role</code></a></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad - not an ARIA role
+&amp;lt;div role=&quot;datepicker&quot; /&amp;gt;
+
+// bad - abstract ARIA role
+&amp;lt;div role=&quot;range&quot; /&amp;gt;
+
+// good
+&amp;lt;div role=&quot;button&quot; /&amp;gt;
+</code></pre>"><span class="hljs-comment">// bad - not an ARIA role</span>
+&lt;div role=<span class="hljs-string">"datepicker"</span> /&gt;
+
+<span class="hljs-comment">// bad - abstract ARIA role</span>
+&lt;div role=<span class="hljs-string">"range"</span> /&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;div role=<span class="hljs-string">"button"</span> /&gt;
+</code></pre>
+</li><li><p>엘리먼트에 <code>accessKey</code> 속성을 사용하면 안 된다. eslint: <a href="https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/no-access-key.md"><code>jsx-a11y/no-access-key</code></a></p>
+</li></ul>
+<blockquote>
+<p>왜? 키보드 단축값을 사용하는 스크린 리더 유저와 일반 키보드 유저간의 일관성이 없어져서 접근성을 복잡하게 만들기 때문이다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+&amp;lt;div accessKey=&quot;h&quot; /&amp;gt;
+
+// good
+&amp;lt;div /&amp;gt;
+</code></pre>"><span class="hljs-comment">// bad</span>
+&lt;div accessKey=<span class="hljs-string">"h"</span> /&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;div /&gt;
+</code></pre>
+<ul>
+<li>배열의 인덱스를 <code>key</code> 속성 값으로 사용하는 것을 피하고, 유니크한 ID 값을 사용하라. (<a href="https://medium.com/@robinpokorny/index-as-a-key-is-an-anti-pattern-e0349aece318">why?</a>)</li></ul>
+<pre><code class="jsx" data-origin="<pre><code class=&quot;jsx&quot;>// javascript
+{todos.map((todo, index) =&amp;gt;
+ &amp;lt;Todo
+   {...todo}
+   key={index}
+ /&amp;gt;
+)}
+
+// good
+{todos.map(todo =&amp;gt; (
+ &amp;lt;Todo
+   {...todo}
+   key={todo.id}
+ /&amp;gt;
+))}
+</code></pre>">// javascript
+{todos.map((todo, index) =&gt;
+ &lt;Todo
+   {...todo}
+   key={index}
+ /&gt;
+)}
+
+// good
+{todos.map(todo =&gt; (
+ &lt;Todo
+   {...todo}
+   key={todo.id}
+ /&gt;
+))}
+</code></pre>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="참조"><a name="참조" href="#참조"></a>참조</h2><ul>
+<li><p>항상 참조 콜백 함수를 사용하라. eslint: react/no-string-refs</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+&amp;lt;Foo
+ ref=&quot;myRef&quot;
+/&amp;gt;
+
+// good
+&amp;lt;Foo
+ ref={(ref) =&amp;gt; this.myRef = ref}
+/&amp;gt;
+</code></pre>"><span class="hljs-comment">// bad</span>
+&lt;Foo
+ ref=<span class="hljs-string">"myRef"</span>
+/&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;Foo
+ ref={(ref) =&gt; <span class="hljs-keyword">this</span>.myRef = ref}
+/&gt;
+</code></pre>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="괄호"><a name="괄호" href="#괄호"></a>괄호</h2><ul>
+<li><p>만약 JSX 태그가 두 줄 이상으로 늘어난다면 괄호로 감싸야 한다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/wrap-multilines.md"><code>react/wrap-multilines</code></a></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+render() {
+  return &amp;lt;MyComponent className=&quot;long body&quot; foo=&quot;bar&quot;&amp;gt;
+           &amp;lt;MyChild /&amp;gt;
+         &amp;lt;/MyComponent&amp;gt;;
+}
+
+// good
+render() {
+  return (
+    &amp;lt;MyComponent className=&quot;long body&quot; foo=&quot;bar&quot;&amp;gt;
+      &amp;lt;MyChild /&amp;gt;
+    &amp;lt;/MyComponent&amp;gt;
+  );
+}
+
+// good, 한 줄이라면 괜찮다.
+render() {
+  const body = &amp;lt;div&amp;gt;hello&amp;lt;/div&amp;gt;;
+  return &amp;lt;MyComponent&amp;gt;{body}&amp;lt;/MyComponent&amp;gt;;
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+render() {
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">MyComponent</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"long body"</span> <span class="hljs-attribute">foo</span>=<span class="hljs-value">"bar"</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-title">MyChild</span> /&gt;</span>
+         <span class="hljs-tag">&lt;/<span class="hljs-title">MyComponent</span>&gt;</span>;</span>
+}
+
+<span class="hljs-comment">// good</span>
+render() {
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">MyComponent</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"long body"</span> <span class="hljs-attribute">foo</span>=<span class="hljs-value">"bar"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">MyChild</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">MyComponent</span>&gt;</span>
+  );
+}
+
+// good, 한 줄이라면 괜찮다.
+render() {
+  const body = <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>hello<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>;</span>
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">MyComponent</span>&gt;</span>{body}<span class="hljs-tag">&lt;/<span class="hljs-title">MyComponent</span>&gt;</span>;</span>
+}
+</code></pre>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="태그"><a name="태그" href="#태그"></a>태그</h2><ul>
+<li><p>자식 컴포넌트가 없으면 항상 닫힘 태그를 사용한다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/self-closing-comp.md"><code>react/self-closing-comp</code></a></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+&amp;lt;Foo className=&quot;stuff&quot;&amp;gt;&amp;lt;/Foo&amp;gt;
+
+// good
+&amp;lt;Foo className=&quot;stuff&quot; /&amp;gt;
+</code></pre>"><span class="hljs-comment">// bad</span>
+&lt;Foo className=<span class="hljs-string">"stuff"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">Foo</span>&gt;</span>
+
+// good
+<span class="hljs-tag">&lt;<span class="hljs-title">Foo</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"stuff"</span> /&gt;</span>
+</span></code></pre>
+</li><li><p>만약 컴포넌트가 다수의 속성을 가졌다면, 닫힘 태그는 새로운 줄에 작성한다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-closing-bracket-location.md"><code>react/jsx-closing-bracket-location</code></a></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+&amp;lt;Foo
+  bar=&quot;bar&quot;
+  baz=&quot;baz&quot; /&amp;gt;
+
+// good
+&amp;lt;Foo
+  bar=&quot;bar&quot;
+  baz=&quot;baz&quot;
+/&amp;gt;
+</code></pre>"><span class="hljs-comment">// bad</span>
+&lt;Foo
+  bar=<span class="hljs-string">"bar"</span>
+  baz=<span class="hljs-string">"baz"</span> /&gt;
+
+<span class="hljs-comment">// good</span>
+&lt;Foo
+  bar=<span class="hljs-string">"bar"</span>
+  baz=<span class="hljs-string">"baz"</span>
+/&gt;
+</code></pre>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="메소드"><a name="메소드" href="#메소드"></a>메소드</h2><ul>
+<li><p>지역 변수를 둘러싸기 위해서는 화살표 함수를 사용해라.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>function ItemList(props) {
+  return (
+    &amp;lt;ul&amp;gt;
+      {props.items.map((item, index) =&amp;gt; (
+        &amp;lt;Item
+          key={item.key}
+          onClick={() =&amp;gt; doSomethingWith(item.name, index)}
+        /&amp;gt;
+      ))}
+    &amp;lt;/ul&amp;gt;
+  );
+}
+</code></pre>"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ItemList</span><span class="hljs-params">(props)</span> </span>{
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">ul</span>&gt;</span>
+      {props.items.map((item, index) =&gt; (
+        <span class="hljs-tag">&lt;<span class="hljs-title">Item</span>
+          <span class="hljs-attribute">key</span>=<span class="hljs-value">{item.key}</span>
+          <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{()</span> =&gt;</span> doSomethingWith(item.name, index)}
+        /&gt;
+      ))}
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
+  );
+}
+</span></code></pre>
+</li><li><p>render 메소드에 사용되는 이벤트 핸들러는 생성자에 바인드 해라. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-bind.md"><code>react/jsx-no-bind</code></a></p>
+<blockquote>
+<p>왜? render 메소드 내에서 bind를 사용하게게 될 경우에는 새로운 렌더링마다 새로운 함수가 생성되기 때문이다.</p>
+</blockquote>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+class extends React.Component {
+  onClickDiv() {
+    // do stuff
+  }
+
+  render() {
+    return &amp;lt;div onClick={this.onClickDiv.bind(this)} /&amp;gt;
+  }
+}
+
+// good
+class extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onClickDiv = this.onClickDiv.bind(this);
+  }
+
+  onClickDiv() {
+    // do stuff
+  }
+
+  render() {
+    return &amp;lt;div onClick={this.onClickDiv} /&amp;gt;
+  }
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">class</span> extends React.Component {
+  onClickDiv() {
+    <span class="hljs-comment">// do stuff</span>
+  }
+
+  render() {
+    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{this.onClickDiv.bind(this)}</span> /&gt;</span>
+  }
+}
+
+// good
+class extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onClickDiv = this.onClickDiv.bind(this);
+  }
+
+  onClickDiv() {
+    // do stuff
+  }
+
+  render() {
+    return <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{this.onClickDiv}</span> /&gt;</span>
+  }
+}
+</span></code></pre>
+</li><li><p>리엑트 컴포넌트의 내부 메소드를 위해 언더바 문자를 사용하면 안 된다.</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+React.createClass({
+  _onClickSubmit() {
+    // do stuff
+  },
+
+  // other stuff
+});
+
+// good
+class extends React.Component {
+  onClickSubmit() {
+    // do stuff
+  }
+
+  // other stuff
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+React.createClass({
+  _onClickSubmit() {
+    <span class="hljs-comment">// do stuff</span>
+  },
+
+  <span class="hljs-comment">// other stuff</span>
+});
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">class</span> extends React.Component {
+  onClickSubmit() {
+    <span class="hljs-comment">// do stuff</span>
+  }
+
+  <span class="hljs-comment">// other stuff</span>
+}
+</code></pre>
+</li><li><p><code>render</code> 메소드에서는 값을 리턴해야 한다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/pull/502"><code>require-render-return</code></a></p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>// bad
+render() {
+  (&amp;lt;div /&amp;gt;);
+}
+
+// good
+render() {
+  return (&amp;lt;div /&amp;gt;);
+}
+</code></pre>"><span class="hljs-comment">// bad</span>
+render() {
+  (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> /&gt;</span>);
+}
+
+// good
+render() {
+  return (<span class="hljs-tag">&lt;<span class="hljs-title">div</span> /&gt;</span>);
+}
+</span></code></pre>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="순서"><a name="순서" href="#순서"></a>순서</h2><ul>
+<li><code>class extends React.Component</code> 를 위한 순서:</li></ul><ol>
+<li>선택적인 <code>static</code> 메소드</li><li><code>constructor</code></li><li><code>getChildContext</code></li><li><code>componentWillMount</code></li><li><code>componentDidMount</code></li><li><code>componentWillReceiveProps</code></li><li><code>shouldComponentUpdate</code></li><li><code>componentWillUpdate</code></li><li><code>componentDidUpdate</code></li><li><code>componentWillUnmount</code></li><li><em>클릭 핸들러나 이벤트 핸들러</em> like <code>onClickSubmit()</code> or <code>onChangeDescription()</code></li><li><em><code>render</code>를 위한 게터 메소드</em> like <code>getSelectReason()</code> or <code>getFooterContent()</code></li><li><em>선택적인 렌더 메소드</em> like <code>renderNavigation()</code> or <code>renderProfilePicture()</code></li><li><code>render</code></li></ol><ul>
+<li><p><code>propTypes</code>, <code>defaultProps</code>, <code>contextTypes</code>, etc… 를 정의하는 방법</p>
+<pre class="javascript hljs"><code class="javascript" data-origin="<pre><code class=&quot;javascript&quot;>import React, { PropTypes } from 'react';
+
+const propTypes = {
+  id: PropTypes.number.isRequired,
+  url: PropTypes.string.isRequired,
+  text: PropTypes.string,
+};
+
+const defaultProps = {
+  text: 'Hello World',
+};
+
+class Link extends React.Component {
+  static methodsAreOk() {
+    return true;
+  }
+
+  render() {
+    return &amp;lt;a href={this.props.url} data-id={this.props.id}&amp;gt;{this.props.text}&amp;lt;/a&amp;gt;
+  }
+}
+
+Link.propTypes = propTypes;
+Link.defaultProps = defaultProps;
+
+export default Link;
+</code></pre>">import React, { PropTypes } from <span class="hljs-string">'react'</span>;
+
+<span class="hljs-keyword">const</span> propTypes = {
+  id: PropTypes.number.isRequired,
+  url: PropTypes.string.isRequired,
+  text: PropTypes.string,
+};
+
+<span class="hljs-keyword">const</span> defaultProps = {
+  text: <span class="hljs-string">'Hello World'</span>,
+};
+
+<span class="hljs-keyword">class</span> Link extends React.Component {
+  static methodsAreOk() {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  }
+
+  render() {
+    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">{this.props.url}</span> <span class="hljs-attribute">data-id</span>=<span class="hljs-value">{this.props.id}</span>&gt;</span>{this.props.text}<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+  }
+}
+
+Link.propTypes = propTypes;
+Link.defaultProps = defaultProps;
+
+export default Link;
+</span></code></pre>
+</li><li><p><code>React.createClass</code> 를 위한 순서: eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/sort-comp.md"><code>react/sort-comp</code></a></p>
+</li></ul><ol>
+<li><code>displayName</code></li><li><code>propTypes</code></li><li><code>contextTypes</code></li><li><code>childContextTypes</code></li><li><code>mixins</code></li><li><code>statics</code></li><li><code>defaultProps</code></li><li><code>getDefaultProps</code></li><li><code>getInitialState</code></li><li><code>getChildContext</code></li><li><code>componentWillMount</code></li><li><code>componentDidMount</code></li><li><code>componentWillReceiveProps</code></li><li><code>shouldComponentUpdate</code></li><li><code>componentWillUpdate</code></li><li><code>componentDidUpdate</code></li><li><code>componentWillUnmount</code></li><li><em>클릭 핸들러나 이벤트 핸들러</em> 예시. <code>onClickSubmit()</code> 혹은 <code>onChangeDescription()</code></li><li><em><code>render</code>를 위한 게터 메소드</em> 예시. <code>getSelectReason()</code> 혹은 <code>getFooterContent()</code></li><li><em>선택적인 렌더 메소드</em> 예시. <code>renderNavigation()</code> 혹은 <code>renderProfilePicture()</code></li><li><code>render</code></li></ol><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p><h2 id="`ismounted`"><a name="`ismounted`" href="#`ismounted`"></a><code>isMounted</code></h2><ul>
+<li><p><code>isMounted</code> 를 사용하면 안 된다. eslint: <a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-is-mounted.md"><code>react/no-is-mounted</code></a></p>
+<blockquote>
+<p>왜? <code>isMounted</code> 은 <a href="https://facebook.github.io/react/blog/2015/12/16/ismounted-antipattern.html">안티 패턴이고,</a> ES6 클래스 문법에 적용할 수 없을 뿐더러, 공식적으로 사라지게 될 예정이다.</p>
+</blockquote>
+</li></ul><p><strong><a href="#react-목차">↑ 목차로 이동</a></strong></p>
+
+<footer style="position:fixed; font-size:.8em; text-align:right; bottom:0px; margin-left:-25px; height:20px; width:100%;">generated by <a href="http://pad.haroopress.com" target="_blank">haroopad</a></footer>
+</body>
+</html>
