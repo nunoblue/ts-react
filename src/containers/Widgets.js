@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Row } from 'antd';
 
-import Card from '../components/Card';
+import CustomCard from '../components/CustomCard';
 import CardButton from '../components/CardButton';
 
 import * as actions from '../actions/widgets';
@@ -18,7 +19,7 @@ class Widgets extends Component {
             const title = data.title;
             const id = data.id.id;
             return (
-                <Card key={id} title={title} buttonTooltip="Widget Delete" />
+                <CustomCard key={id} title={title} buttonTooltip="Widget Delete" />
             );
         });
         return components;
@@ -26,10 +27,10 @@ class Widgets extends Component {
 
     render() {
         return (
-            <div className="mdl-grid">
+            <Row>
                 {this.components()}
                 <CardButton content="Widget Add" iconClassName="add" />
-            </div>
+            </Row>
         );
     }
 }

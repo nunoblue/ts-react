@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Tooltip } from 'antd';
+import { Tooltip, Icon } from 'antd';
 
 class Button extends Component {
     static propTypes = {
@@ -17,9 +17,7 @@ class Button extends Component {
     render() {
         return (
             <Tooltip title={this.props.content}>
-                <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect mdl-button--colored">
-                    <i className="material-icons">{this.props.iconClassName}</i>
-                </button>
+                    <Icon type="plus-circle" />
             </Tooltip>
         );
     }

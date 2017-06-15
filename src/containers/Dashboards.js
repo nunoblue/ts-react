@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Row } from 'antd';
 
 import CardButton from '../components/CardButton';
-import Card from '../components/Card';
+import CustomCard from '../components/CustomCard';
 
 import * as actions from '../actions/dashboards';
 
@@ -25,7 +26,7 @@ class Dashboards extends Component {
             const title = data.title;
             const id = data.id.id;
             return (
-                <Card key={id} title={title} buttonTooltip="Dashboard Delete" />
+                <CustomCard key={id} title={title} buttonTooltip="Dashboard Delete" />
             );
         });
         return components;
@@ -33,10 +34,10 @@ class Dashboards extends Component {
 
     render() {
         return (
-            <div className="mdl-grid">
+            <Row>
                 {this.components()}
                 <CardButton content="Dashboard Add" iconClassName="add" />
-            </div>
+            </Row>
         );
     }
 }

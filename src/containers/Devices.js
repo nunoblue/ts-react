@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Row } from 'antd';
 
-import Card from '../components/Card';
+import CustomCard from '../components/CustomCard';
 import CardButton from '../components/CardButton';
 
 import * as actions from '../actions/devices';
@@ -25,7 +26,7 @@ class Devices extends Component {
             const description = data.additionalInfo ? (data.additionalInfo.description || '') : '';
             const id = data.id.id;
             return (
-                <Card key={id} title={name} description={description} buttonTooltip="Device Delete" />
+                <CustomCard key={id} title={name} description={description} buttonTooltip="Device Delete" />
             );
         });
 
@@ -34,10 +35,10 @@ class Devices extends Component {
 
     render() {
         return (
-            <div className="mdl-grid">
+            <Row>
                 {this.components()}
                 <CardButton content="Device Add" iconClassName="add" />
-            </div>
+            </Row>
         );
     }
 }

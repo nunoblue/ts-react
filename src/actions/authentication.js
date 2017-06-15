@@ -203,7 +203,7 @@ export const refreshJwtRequest = () => (dispatch) => {
 };
 
 export const validateJwtToken = (doRefresh) => {
-    return dispatch => new Promise((resolve, reject) => {
+    const promise = dispatch => new Promise((resolve, reject) => {
         if (!isTokenValid('jwt_token')) {
             if (doRefresh) {
                 resolve('request refresh');
@@ -215,7 +215,8 @@ export const validateJwtToken = (doRefresh) => {
             dispatch(getRefreshSuccess());
         }
     });
-}
+    return promise;
+};
 
 export const logoutRequest = () => (dispatch) => {
     dispatch(getRefreshFailure());

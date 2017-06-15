@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
+import { Layout } from 'antd';
 
 import asyncComponent from '../components/AsyncComponent';
 import NoMatch from '../components/NoMatch';
 import Home from '../components/Home';
 
-import Layout from './Layout';
+import Main from './Main';
 import Login from './Login';
 import Plugins from './Plugins';
 import Rules from './Rules';
@@ -31,21 +32,19 @@ class App extends Component {
             // console.log(text);
             this.props.refreshJwtRequest();
         }).catch((error) => {
-            const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
-            Materialize.toast($toastContent, 2000);
+            console.log(error);
         });
     }
 
     render() {
         const validate = this.props.status.validate && this.props.status.isLoggedIn;
-
         return (
             <Router>
-                <div id="container">
+                <Layout style={{ height: '100vh' }}>
                     <Route exact path="/" render={() => (!validate ? <Redirect to="/login" /> : <Redirect to="/home" />)} />
                     <Switch>
                         <Route path="/login" component={Login} />
-                        <Layout history={history} validate={validate}>
+                        <Main history={history} validate={validate}>
                             <Route path="/home" component={Home} />
                             <Route path="/plugins" component={Plugins} />
                             <Route path="/rules" component={Rules} />
@@ -53,9 +52,9 @@ class App extends Component {
                             <Route path="/devices" component={Devices} />
                             <Route path="/widgets" component={Widgets} />
                             <Route path="/dashboards" component={Dashboards} />
-                        </Layout>
+                        </Main>
                     </Switch>
-                </div>
+                </Layout>
             </Router>
         );
     }

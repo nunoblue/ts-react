@@ -14,14 +14,10 @@ class Login extends Component {
     handleLogin = (id, pw) => {
         const request = this.props.loginRequest(id, pw).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
-                Materialize.toast(`Welcome, ${id}!`, 2000);
                 this.props.history.push('/home');
                 return true;
-            } else {
-                const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
-                Materialize.toast($toastContent, 2000);
-                return false;
             }
+            return false;
         });
         return request;
     }
