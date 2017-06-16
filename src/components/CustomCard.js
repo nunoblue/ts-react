@@ -30,7 +30,7 @@ class CustomCard extends Component {
     render() {
         return (
             <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                <Card title={this.props.title} >
+                <Card title={this.props.title} style={{ minHeight: 160 }}>
                     {this.props.description}
                 </Card>
             </Col>

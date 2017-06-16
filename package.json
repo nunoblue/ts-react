@@ -16,13 +16,14 @@
   "dependencies": {
     "antd": "^2.10.4",
     "axios": "^0.16.1",
+    "jwt-decode": "^2.2.0",
+    "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.1.1",
     "redux": "^3.6.0",
-    "store": "^2.0.4",
-    "jwt-decode": "^2.2.0"
+    "store": "^2.0.4"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
