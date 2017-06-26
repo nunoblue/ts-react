@@ -170,6 +170,10 @@ class Devices extends Component {
     }
 
     render() {
+        const options = this.props.types.map((obj) => {
+            return obj.type;
+        });
+
         return (
             <Row>
                 {this.components()}
@@ -183,7 +187,7 @@ class Devices extends Component {
                     />
                     <CustomButton tooltipTitle="디바이스 추가" className="custom-card-button" iconClassName="plus" onClick={this.openCreateDevice} size="large" />
                 </div>
-                <AddDeviceModal ref={(c) => { this.createModal = c; }} onCreate={this.handleCreateDevice} onHideModal={this.hideCreateDevice} />
+                <AddDeviceModal ref={(c) => { this.createModal = c; }} onCreate={this.handleCreateDevice} onHideModal={this.hideCreateDevice} options={options} />
             </Row>
         );
     }
@@ -194,6 +198,7 @@ const mapStateToProps = (state) => {
         statusMessage: state.devices.statusMessage,
         data: state.devices.data,
         errorMessage: state.devices.errorMessage,
+        types: state.devices.types,
     };
 };
 

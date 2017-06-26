@@ -8,11 +8,11 @@ import {
     API_DELETE_DASHBOARD_SUCCESS,
 } from '../actions/ActionTypes';
 
- const initialState = {
-     statusMessage: 'INIT',
-     data: [],
-     errorMessage: 'NONE',
- };
+const initialState = {
+    statusMessage: 'INIT',
+    data: [],
+    errorMessage: 'NONE',
+};
 
 export default function dashboards(state = initialState, action) {
     switch (action.type) {

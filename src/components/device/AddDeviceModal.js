@@ -23,7 +23,7 @@ class AddDeviceModal extends Component {
             okText="추가"
             cancelText="취소"
             >
-                <AddDeviceForm ref={(c) => { this.form = c; }} onPressEnter={this.handleCreate} />
+                <AddDeviceForm ref={(c) => { this.form = c; }} onPressEnter={this.handleCreate} options={this.props.options} />
             </CustomModal>
         );
     }
