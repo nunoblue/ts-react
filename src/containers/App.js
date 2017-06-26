@@ -17,6 +17,8 @@ import Widgets from './Widgets';
 import Dashboards from './Dashboards';
 import Devices from './Devices';
 
+import '../../less/app.less';
+
 // const About = asyncComponent(() => import('../components/About').then(module => module.default), {name: 'About'});
 // const Dashboard = asyncComponent(() => import('../components/Dashboard').then(module => module.default), {name: 'Dashboard'});
 // const NoMatch = asyncComponent(() => import('../components/NoMatch').then(module => module.default), {name: 'NoMatch'});

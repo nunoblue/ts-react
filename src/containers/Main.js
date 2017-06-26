@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
-import { Layout } from 'antd';
+import { Layout, Row, Col, Switch } from 'antd';
 
 import MenuList from '../components/MenuList';
 import Title from '../components/Title';
@@ -12,6 +12,7 @@ class Main extends Component {
     state = {
         collapsed: false,
         triggerIcon: false,
+        changeContent: false,
     };
 
     componentDidMount() {
@@ -42,6 +43,12 @@ class Main extends Component {
         });
     }
 
+    changeContent = (checked) => {
+        this.setState({
+            changeContent: checked,
+        });
+    }
+
     render() {
         const validate = this.props.validate;
         const statusMessage = this.props.statusMessage;
@@ -55,6 +62,12 @@ class Main extends Component {
         if (this.sider) {
             matches = this.sider.mql.matches;
         }
+
+        const childrenWithProps = React.Children.map(this.props.children, (child) => {
+            return React.cloneElement(child, { changeContent: this.state.changeContent });
+        }, this);
+
+        // console.log(childrenWithProps);
         return (
             <Layout>
                 <Layout.Sider
@@ -79,7 +92,12 @@ class Main extends Component {
                     matches={matches}
                     />
                     <Layout.Content className="code-box-demo">
-                        {this.props.children}
+                        <Row>
+                            <Col span="2">
+                                <Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
+                            </Col>
+                        </Row>
+                        {childrenWithProps}
                     </Layout.Content>
                 </Layout>
             </Layout>

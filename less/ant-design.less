@@ -26,6 +26,18 @@ body {
     padding: 16px 8px 0px 8px;
 }
 
+.code-box-demo .current-card {
+    opacity: .5;
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+.code-box-demo .ant-btn-circle.ant-btn-lg {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+}
+
 .auth .card {
     width: 400px;
     margin: 0 auto;
@@ -92,6 +104,7 @@ body {
     right: 40px;
     bottom: 40px;
     z-index: 2;
+    display: flex;
 }
 
 .trigger {
@@ -108,4 +121,26 @@ body {
 
 .nav-text { 
     margin-left: 16px;
+}
+
+.code-box-demo {
+    .ant-card-body {
+        padding: 8px;
+    }
+}
+
+.custom-card-content {
+    display: block;
+    height: 80px;
+}
+
+.custom-card-bottom {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-end;
+    align-self: flex-end;
+}
+
+.custom-card-button {
+    margin: 8px;
 }

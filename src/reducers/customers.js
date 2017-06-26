@@ -3,12 +3,15 @@ import update from 'react-addons-update';
 import {
     API_CUSTOMERS,
     API_CUSTOMERS_SUCCESS,
-    API_CUSTOMERS_FAILURE
+    API_CUSTOMERS_FAILURE,
+    API_SAVE_CUSTOMER_SUCCESS,
+    API_DELETE_CUSTOMER_SUCCESS,
 } from '../actions/ActionTypes';
 
 const initialState = {
     statusMessage: 'INIT',
     data: [],
+    erorrMessage: 'NONE',
 };
 
 const customers = (state = initialState, action) => {
@@ -34,6 +37,21 @@ const customers = (state = initialState, action) => {
             return update(state, {
                 statusMessage: {
                     $set: 'FAILURE',
+                },
+                errorMessage: {
+                    $set: action.errorMessage,
+                },
+            });
+        case API_SAVE_CUSTOMER_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_DELETE_CUSTOMER_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
                 },
             });
 

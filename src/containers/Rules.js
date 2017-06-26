@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row } from 'antd';
 
-import CustomCard from '../components/CustomCard';
-import CardButton from '../components/CardButton';
+import CustomCard from '../components/common/CustomCard';
+import CustomButton from '../components/common/CustomButton';
 
 import * as actions from '../actions/rules';
 
@@ -20,7 +20,7 @@ class Rules extends Component {
             const state = data.state;
             const id = data.id.id;
             return (
-                <CustomCard key={id} title={name} description={state} buttonTooltip="Rule Delete" />
+                <CustomCard key={id} title={name} content={state} buttonTooltip="Rule Delete" />
             );
         });
         return components;
@@ -30,7 +30,7 @@ class Rules extends Component {
         return (
             <Row>
                 {this.components()}
-                <CardButton content="Rule Add" iconClassName="add" />
+                <CustomButton tooltipTitle="Rule Add" iconClassName="plus" />
             </Row>
         );
     }

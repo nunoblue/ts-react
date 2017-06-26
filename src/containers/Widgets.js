@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row } from 'antd';
 
-import CustomCard from '../components/CustomCard';
-import CardButton from '../components/CardButton';
+import CustomCard from '../components/common/CustomCard';
+import CustomButton from '../components/common/CustomButton';
 
 import * as actions from '../actions/widgets';
 
@@ -29,7 +29,7 @@ class Widgets extends Component {
         return (
             <Row>
                 {this.components()}
-                <CardButton content="Widget Add" iconClassName="add" />
+                <CustomButton tooltipTitle="Widget Add" iconClassName="plus" />
             </Row>
         );
     }

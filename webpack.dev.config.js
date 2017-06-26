@@ -14,8 +14,8 @@ module.exports = merge(baseConfig, {
             'react-hot-loader/patch',
             'webpack-dev-server/client?http://localhost:'+devPort,
             'webpack/hot/only-dev-server',
-            path.resolve(__dirname, 'src/index.js')
-        ]
+            path.resolve(__dirname, 'src/index.js'),
+        ],
     },
 
     output: {
