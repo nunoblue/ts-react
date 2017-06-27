@@ -3,16 +3,13 @@ import { connect } from 'react-redux';
 import { Row, Modal, notification } from 'antd';
 
 import CustomButton from '../components/common/CustomButton';
-import CustomModal from '../components/common/CustomModal';
 import CustomCheckbox from '../components/common/CustomCheckbox';
 import CustomCard from '../components/common/CustomCard';
-import AddDashboardForm from '../components/dashboard/AddDashboardForm';
 import AddDashboardModal from '../components/dashboard/AddDashboardModal';
 
 import * as actions from '../actions/dashboards';
 
 class Dashboards extends Component {
-
     state = {
         limit: 30,
         textSearch: '',
@@ -22,7 +19,9 @@ class Dashboards extends Component {
 
     componentDidMount() {
         console.log('Dashboards Render');
-        this.refershDashboardRequest();
+        if (Object.keys(this.props.currentUser).length !== 0) {
+            this.refershDashboardRequest(this.props.currentUser);
+        }
     }
 
     components = () => {
@@ -49,7 +48,7 @@ class Dashboards extends Component {
             checkedIdArray: [],
             checkedCount: 0,
         });
-        this.props.getDashboardsRequest(limit, textSearch);
+        this.props.getDashboardsRequest(limit, textSearch, this.props.currentUser);
     }
 
     handleChecked = (e) => {
@@ -94,25 +93,13 @@ class Dashboards extends Component {
         });
     }
 
-    openCreateDashboard = () => {
-        this.createModal.modal.onShow();
+    openAddDashboardModal = () => {
+        this.addModal.modal.onShow();
     }
 
-    openModifyDashboard = (title, dashboardId) => {
-        this.modifyModal.onShow();
-        this.modifyForm.setFieldsValue({
-            title,
-        });
-    }
-
-    hideCreateDashboard = () => {
-        this.createModal.form.resetFields();
-        this.createModal.modal.onHide();
-    }
-
-    hideModifyDashboard = () => {
-        this.modifyForm.resetFields();
-        this.modifyModal.onHide();
+    hideAddDashboardModal = () => {
+        this.addModal.form.resetFields();
+        this.addModal.modal.onHide();
     }
 
     handleDeleteDashboard = (dashboardId) => {
@@ -131,8 +118,8 @@ class Dashboards extends Component {
         });
     }
 
-    handleCreateDashboard = () => {
-        const form = this.createModal.form;
+    handleSaveDashboard = () => {
+        const form = this.addModal.form;
         form.validateFields((err, values) => {
             if (err) {
                 return false;
@@ -140,28 +127,11 @@ class Dashboards extends Component {
             this.props.saveDashboardRequest(values).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
                     this.refershDashboardRequest();
-                    form.resetFields();
-                    this.createModal.modal.onHide();
+                    this.hideAddDashboardModal();
                 } else {
                     notification.error({
                         message: this.props.errorMessage,
                     });
-                }
-            });
-        });
-    }
-
-    handleModifyDashboard = () => {
-        const modifyForm = this.modifyForm;
-        modifyForm.validateFields((err, values) => {
-            if (err) {
-                return false;
-            }
-            this.props.saveDashboardRequest(values).then(() => {
-                if (this.props.statusMessage === 'SUCCESS') {
-                    this.refershDashboardRequest();
-                    modifyForm.resetFields();
-                    this.modifyModal.onHide();
                 }
             });
         });
@@ -175,13 +145,14 @@ class Dashboards extends Component {
                     <CustomButton
                     isUsed={this.state.checkedCount !== 0}
                     tooltipTitle={`대시보드 ${this.state.checkedCount}개 삭제`}
-                    className="custom-card-button" iconClassName="delete"
+                    className="custom-card-button"
+                    iconClassName="delete"
                     onClick={this.handleDeleteConfirm}
                     size="large"
                     />
-                    <CustomButton tooltipTitle="대시보드 추가" className="custom-card-button" iconClassName="plus" onClick={this.openCreateDashboard} size="large" />
+                    <CustomButton tooltipTitle="대시보드 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDashboardModal} size="large" />
                 </div>
-                <AddDashboardModal ref={(c) => { this.createModal = c; }} onCreate={this.handleCreateDashboard} onHideModal={this.hideCreateDashboard} />
+                <AddDashboardModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveDashboard} onCancel={this.hideAddDashboardModal} />
             </Row>
         );
     }
@@ -192,13 +163,14 @@ const mapStateToProps = (state) => {
         statusMessage: state.dashboards.statusMessage,
         data: state.dashboards.data,
         errorMessage: state.dashboards.errorMessage,
+        currentUser: state.authentication.currentUser,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getDashboardsRequest: (limit, textSearch) => {
-            return dispatch(actions.getDashboardsRequest(limit, textSearch));
+        getDashboardsRequest: (limit, textSearch, currentUser) => {
+            return dispatch(actions.getDashboardsRequest(limit, textSearch, currentUser));
         },
         saveDashboardRequest: (dashboard) => {
             return dispatch(actions.saveDashboardRequest(dashboard));

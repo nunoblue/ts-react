@@ -5,25 +5,17 @@ import AddDeviceForm from './AddDeviceForm';
 
 class AddDeviceModal extends Component {
 
-    handleCreate = () => {
-        this.props.onCreate();
-    }
-
-    handleHideModal = () => {
-        this.props.onHideModal();
-    }
-
     render() {
         return (
             <CustomModal
             ref={(c) => { this.modal = c; }}
             title="디바이스 추가"
-            onOk={this.handleCreate}
-            onCancel={this.handleHideModal}
+            onOk={this.props.onSave}
+            onCancel={this.props.onCancel}
             okText="추가"
             cancelText="취소"
             >
-                <AddDeviceForm ref={(c) => { this.form = c; }} onPressEnter={this.handleCreate} options={this.props.options} />
+                <AddDeviceForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} options={this.props.options} />
             </CustomModal>
         );
     }

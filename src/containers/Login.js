@@ -13,8 +13,12 @@ class Login extends Component {
 
     handleLogin = (id, pw) => {
         const request = this.props.loginRequest(id, pw).then(() => {
-            if (this.props.statusMessage === 'SUCCESS') {
-                this.props.history.push('/home');
+            if (this.props.login.statusMessage === 'SUCCESS') {
+                this.props.getUserRequest().then(() => {
+                    if (this.props.validate.statusMessage === 'SUCCESS') {
+                        this.props.history.push('/home');
+                    }
+                });
                 return true;
             }
             return false;
@@ -23,7 +27,7 @@ class Login extends Component {
     }
 
     render() {
-        const validate = this.props.validate === 'SUCCESS';
+        const validate = this.props.validate.statusMessage === 'SUCCESS';
         if (validate) {
             return <Redirect to="/home" />;
         }
@@ -41,13 +45,16 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        statusMessage: state.authentication.login.statusMessage,
-        validate: state.authentication.validate.statusMessage,
+        login: state.authentication.login,
+        validate: state.authentication.validate,
     };
 };
 const mapDispatchToProps = (dispatch) => {
     return {
         loginRequest: (id, pw) => dispatch(actions.loginRequest(id, pw)),
+        getUserRequest: () => {
+            return dispatch(actions.getUserRequest());
+        },
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

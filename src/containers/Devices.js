@@ -3,11 +3,10 @@ import { connect } from 'react-redux';
 import { Row, Modal, notification } from 'antd';
 
 import CustomButton from '../components/common/CustomButton';
-import CustomModal from '../components/common/CustomModal';
 import CustomCheckbox from '../components/common/CustomCheckbox';
 import CustomCard from '../components/common/CustomCard';
-import AddDeviceForm from '../components/device/AddDeviceForm';
 import AddDeviceModal from '../components/device/AddDeviceModal';
+import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
 
 import * as actions from '../actions/devices';
 
@@ -21,7 +20,9 @@ class Devices extends Component {
 
     componentDidMount() {
         console.log('Devices Render');
-        this.refershDeviceRequest();
+        if (Object.keys(this.props.currentUser).length !== 0) {
+            this.refershDeviceRequest(this.props.currentUser);
+        }
     }
 
     components = () => {
@@ -30,27 +31,27 @@ class Devices extends Component {
             const type = data.type;
             const id = data.id.id;
             const modalConfirmAction = this.handleDeleteConfirm.bind(this, name, id);
+            const credentialsModal = this.openCredentials.bind(this, id);
             return (
-                <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{name}</CustomCheckbox>} content={type}>
-                    <CustomButton className="custom-card-button" iconClassName="user-add" tooltipTitle="디바이스 공유" />
+                <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{name}</CustomCheckbox>} content={type.toUpperCase()}>
+                    <CustomButton className="custom-card-button" iconClassName="user-add" tooltipTitle="asdf 공유" />
                     <CustomButton className="custom-card-button" iconClassName="tablet" tooltipTitle="커스터머 할당" />
-                    <CustomButton className="custom-card-button" iconClassName="layout" tooltipTitle="크리덴셜 관리" />
+                    <CustomButton className="custom-card-button" iconClassName="layout" onClick={credentialsModal} tooltipTitle="크리덴셜 관리" />
                     <CustomButton className="custom-card-button" iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="디바이스 삭제" />
                 </CustomCard>
             );
         });
-
         return components;
     }
 
-    refershDeviceRequest = () => {
+    refershDeviceRequest = (currentUser) => {
         const limit = this.state.limit;
         const textSearch = this.state.textSearch;
         this.setState({
             checkedIdArray: [],
             checkedCount: 0,
         });
-        this.props.getDevicesRequest(limit, textSearch);
+        this.props.getDevicesRequest(limit, textSearch, currentUser);
         this.props.getDeviceTypesRequest();
     }
 
@@ -96,25 +97,27 @@ class Devices extends Component {
         });
     }
 
-    openCreateDevice = () => {
-        this.createModal.modal.onShow();
+    openAddDeviceModal = () => {
+        this.addModal.modal.onShow();
     }
 
-    openModifyDevice = (title, id) => {
-        this.modifyModal.onShow();
-        this.modifyForm.setFieldsValue({
-            title,
+    hideAddDeviceModal = () => {
+        this.addModal.form.resetFields();
+        this.addModal.modal.onHide();
+    }
+
+    openCredentials = (id) => {
+        this.props.getDeviceCredentialsRequest(id).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.credentialsModal.modal.onShow();
+                this.credentialsModal.changeValue(this.props.credentials);
+            }
         });
     }
 
-    hideCreateDevice = () => {
-        this.createModal.form.resetFields();
-        this.createModal.modal.onHide();
-    }
-
-    hideModifyDevice = () => {
-        this.modifyForm.resetFields();
-        this.modifyModal.onHide();
+    hideCredentials = () => {
+        this.credentialsModal.form.resetFields();
+        this.credentialsModal.modal.onHide();
     }
 
     handleDeleteDevice = (id) => {
@@ -133,8 +136,8 @@ class Devices extends Component {
         });
     }
 
-    handleCreateDevice = () => {
-        const form = this.createModal.form;
+    handleSaveDevice = () => {
+        const form = this.addModal.form;
         form.validateFields((err, values) => {
             if (err) {
                 return false;
@@ -142,8 +145,7 @@ class Devices extends Component {
             this.props.saveDeviceRequest(values).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
                     this.refershDeviceRequest();
-                    form.resetFields();
-                    this.createModal.modal.onHide();
+                    this.hideAddDeviceModal();
                 } else {
                     notification.error({
                         message: this.props.errorMessage,
@@ -153,17 +155,32 @@ class Devices extends Component {
         });
     }
 
-    handleModifyDevice = () => {
-        const modifyForm = this.modifyForm;
-        modifyForm.validateFields((err, values) => {
+    handleSaveCredentials = () => {
+        const form = this.credentialsModal.form;
+        form.validateFields((err, values) => {
             if (err) {
                 return false;
             }
-            this.props.saveDeviceRequest(values).then(() => {
+
+            let data;
+            if (values.type === 'ACCESS_TOKEN') {
+                data = {
+                    credentialsType: values.type,
+                    credentialsId: values.accessToken,
+                    credentialsValue: null,
+                };
+            } else {
+                data = {
+                    credentialsType: values.type,
+                    credentialsValue: values.rsaPublicKey,
+                };
+            }
+            const credentials = $.extend(true, this.props.credentials, data);
+
+            this.props.saveDeviceCredentialsRequest(credentials).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
-                    this.refershDeviceRequest();
-                    modifyForm.resetFields();
-                    this.modifyModal.onHide();
+                    // this.refershDeviceRequest();
+                    this.hideCredentials();
                 }
             });
         });
@@ -173,7 +190,6 @@ class Devices extends Component {
         const options = this.props.types.map((obj) => {
             return obj.type;
         });
-
         return (
             <Row>
                 {this.components()}
@@ -181,13 +197,24 @@ class Devices extends Component {
                     <CustomButton
                     isUsed={this.state.checkedCount !== 0}
                     tooltipTitle={`디바이스 ${this.state.checkedCount}개 삭제`}
-                    className="custom-card-button" iconClassName="delete"
+                    className="custom-card-button"
+                    iconClassName="delete"
                     onClick={this.handleDeleteConfirm}
                     size="large"
                     />
-                    <CustomButton tooltipTitle="디바이스 추가" className="custom-card-button" iconClassName="plus" onClick={this.openCreateDevice} size="large" />
+                    <CustomButton tooltipTitle="디바이스 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDeviceModal} size="large" />
                 </div>
-                <AddDeviceModal ref={(c) => { this.createModal = c; }} onCreate={this.handleCreateDevice} onHideModal={this.hideCreateDevice} options={options} />
+                <AddDeviceModal
+                ref={(c) => { this.addModal = c; }}
+                onSave={this.handleSaveDevice}
+                onCancel={this.hideAddDeviceModal}
+                options={options}
+                />
+                <DeviceCredentialsModal
+                ref={(c) => { this.credentialsModal = c; }}
+                onSave={this.handleSaveCredentials}
+                onCancel={this.hideCredentials}
+                />
             </Row>
         );
     }
@@ -199,16 +226,21 @@ const mapStateToProps = (state) => {
         data: state.devices.data,
         errorMessage: state.devices.errorMessage,
         types: state.devices.types,
+        credentials: state.devices.credentials,
+        currentUser: state.authentication.currentUser,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getDevicesRequest: (limit, textSearch) => {
-            return dispatch(actions.getDevicesRequest(limit, textSearch));
+        getDevicesRequest: (limit, textSearch, currentUser) => {
+            return dispatch(actions.getDevicesRequest(limit, textSearch, currentUser));
         },
         getDeviceTypesRequest: () => {
             return dispatch(actions.getDeviceTypesRequest());
+        },
+        getDeviceCredentialsRequest: (deviceId) => {
+            return dispatch(actions.getDeviceCredentialsRequest(deviceId));
         },
         saveDeviceRequest: (device) => {
             return dispatch(actions.saveDeviceRequest(device));
@@ -218,6 +250,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         multipleDeleteDeviceRequest: (deviceIdArray) => {
             return dispatch(actions.multipleDeleteDeviceRequest(deviceIdArray));
+        },
+        saveDeviceCredentialsRequest: (credentials) => {
+            return dispatch(actions.saveDeviceCredentialsRequest(credentials));
         },
     };
 };

@@ -18,7 +18,7 @@ class CustomButton extends Component {
     }
 
     render() {
-        let component = <span />;
+        let component = null;
         if (this.props.isUsed) {
             component = (
                 <Tooltip title={this.props.tooltipTitle}>

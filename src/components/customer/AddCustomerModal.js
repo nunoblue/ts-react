@@ -5,25 +5,17 @@ import AddCustomerForm from './AddCustomerForm';
 
 class AddCustomerModal extends Component {
 
-    handleCreate = () => {
-        this.props.onCreate();
-    }
-
-    handleHideModal = () => {
-        this.props.onHideModal();
-    }
-
     render() {
         return (
             <CustomModal
             ref={(c) => { this.modal = c; }}
             title="커스터머 추가"
-            onOk={this.handleCreate}
-            onCancel={this.handleHideModal}
+            onOk={this.props.onSave}
+            onCancel={this.props.onCancel}
             okText="추가"
             cancelText="취소"
             >
-                <AddCustomerForm ref={(c) => { this.form = c; }} onPressEnter={this.handleCreate} />
+                <AddCustomerForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} />
             </CustomModal>
         );
     }

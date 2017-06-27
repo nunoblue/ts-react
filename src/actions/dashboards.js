@@ -12,7 +12,8 @@ import {
 import config from '../config';
 
 const apServer = config.apServer;
-const DASHBOARDS_URL = `${apServer}/api/tenant/dashboards`;
+const TENANT_DASHBOARDS_URL = `${apServer}/api/tenant/dashboards`;
+const CUSTOMER_DASHBOARDS_URL = `${apServer}/api/customer`;
 const SAVE_DASHBOARD_URL = `${apServer}/api/dashboard`;
 const DELETE_DASHBOARD_URL = `${apServer}/api/dashboard`;
 
@@ -48,10 +49,21 @@ function deleteDashboardSuccess() {
     };
 }
 
-export const getDashboardsRequest = (limit, textSearch) => (dispatch) => {
+export const getDashboardsRequest = (limit, textSearch, currentUser) => (dispatch) => {
     dispatch(getDashboards());
-
-    return axios.get(DASHBOARDS_URL, {
+    if (currentUser.authority === 'TENANT_ADMIN') {
+        return axios.get(TENANT_DASHBOARDS_URL, {
+            params: { limit, textSearch },
+            headers: {
+                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+            },
+        }).then((response) => {
+            dispatch(getDashboardsSuccess(response.data.data));
+        }).catch((error) => {
+            dispatch(getDashboardsFailure(error.response.data.message));
+        });
+    }
+    return axios.get(`${CUSTOMER_DASHBOARDS_URL}/${currentUser.customerId.id}/dashboards`, {
         params: { limit, textSearch },
         headers: {
             'X-Authorization': `Bearer ${storage.read('jwt_token')}`,

@@ -34,7 +34,6 @@ class Authentication extends Component {
 
         this.props.onLogin(id, pw).then((success) => {
             if (!success) {
-                console.log('test1');
                 this.setState({
                     password: '',
                 });

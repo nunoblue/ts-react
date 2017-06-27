@@ -7,6 +7,7 @@ import {
     API_SAVE_DEVICE_SUCCESS,
     API_DELETE_DEVICE_SUCCESS,
     API_DEVICE_TYPES,
+    API_DEVICE_CREDENTIALS,
  } from '../actions/ActionTypes';
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
     data: [],
     errorMessage: 'NONE',
     types: [],
+    credentials: {},
 };
 
 export default function devices(state = initialState, action) {
@@ -61,6 +63,15 @@ export default function devices(state = initialState, action) {
                 },
                 types: {
                     $set: action.types,
+                },
+            });
+        case API_DEVICE_CREDENTIALS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+                credentials: {
+                    $set: action.credentials,
                 },
             });
         default:

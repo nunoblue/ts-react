@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
-import { Layout } from 'antd';
+import { Layout, Row, Col, Switch as AntSwitch } from 'antd';
 
 import asyncComponent from '../components/AsyncComponent';
 import NoMatch from '../components/NoMatch';
@@ -28,32 +28,54 @@ const history = createBrowserHistory();
 
 class App extends Component {
 
+    state = {
+        changeContent: false,
+    }
+
     componentDidMount() {
         console.log('App Render');
-        this.props.validateJwtToken().then((text) => {
-            // console.log(text);
+        this.props.validateJwtToken().then(() => {
             this.props.refreshJwtRequest();
         }).catch((error) => {
             console.log(error);
         });
+        this.props.getUserRequest();
+    }
+
+    shouldComponentUpdate(prevProps) {
+        if (Object.keys(prevProps.currentUser).length === 0) {
+            return false;
+        }
+        return true;
+    }
+
+    changeContent = (checked) => {
+        this.setState({
+            changeContent: checked,
+        });
     }
 
     render() {
-        const validate = this.props.status.validate && this.props.status.isLoggedIn;
+        const validation = this.props.validate.statusMessage === 'SUCCESS';
         return (
             <Router>
                 <Layout style={{ height: '100vh' }}>
-                    <Route exact path="/" render={() => (!validate ? <Redirect to="/login" /> : <Redirect to="/home" />)} />
+                    <Route exact path="/" render={() => (!validation ? <Redirect to="/login" /> : <Redirect to="/home" />)} />
                     <Switch>
                         <Route path="/login" component={Login} />
-                        <Main history={history} validate={validate}>
-                            <Route path="/home" component={Home} />
-                            <Route path="/plugins" component={Plugins} />
-                            <Route path="/rules" component={Rules} />
-                            <Route path="/customers" component={Customers} />
-                            <Route path="/devices" component={Devices} />
-                            <Route path="/widgets" component={Widgets} />
-                            <Route path="/dashboards" component={Dashboards} />
+                        <Main history={history} validation={validation}>
+                            <Row>
+                                <Col span="2">
+                                    <AntSwitch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
+                                </Col>
+                            </Row>
+                            <Route path="/home" component={() => (<Home changeContent={this.state.changeContent} />)} />
+                            <Route path="/plugins" component={() => (<Plugins changeContent={this.state.changeContent} />)} />
+                            <Route path="/rules" component={() => (<Rules changeContent={this.state.changeContent} />)} />
+                            <Route path="/customers" component={() => (<Customers changeContent={this.state.changeContent} />)} />
+                            <Route path="/devices" component={() => (<Devices changeContent={this.state.changeContent} />)} />
+                            <Route path="/widgets" component={() => (<Widgets changeContent={this.state.changeContent} />)} />
+                            <Route path="/dashboards" component={() => (<Dashboards changeContent={this.state.changeContent} />)} />
                         </Main>
                     </Switch>
                 </Layout>
@@ -64,7 +86,9 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        status: state.authentication.status,
+        validate: state.authentication.validate,
+        login: state.authentication.login,
+        currentUser: state.authentication.currentUser,
     };
 };
 
@@ -72,6 +96,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         refreshJwtRequest: () => dispatch(actions.refreshJwtRequest()),
         validateJwtToken: () => dispatch(actions.validateJwtToken(true)),
+        getUserRequest: () => {
+            return dispatch(actions.getUserRequest());
+        },
     };
 };
 

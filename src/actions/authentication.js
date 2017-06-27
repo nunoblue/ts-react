@@ -13,6 +13,8 @@ import {
     AUTH_GET_STATUS_SUCCESS,
     AUTH_GET_STATUS_FAILURE,
     AUTH_LOGOUT,
+    API_GET_USER_SUCCESS,
+    API_GET_USER_FAILURE,
 } from './ActionTypes';
 
 import config from '../config';
@@ -24,6 +26,7 @@ import config from '../config';
 const apServer = config.apServer;
 const LOGIN_URL = `${apServer}/api/auth/login`;
 const TOKEN_URL = `${apServer}/api/auth/token`;
+const API_USER_URL = `${apServer}/api/user`;
 
 function updateAndValidateToken(token, prefix, notify) {
     let valid = false;
@@ -47,6 +50,7 @@ function clearTokenData() {
     storage.remove('refresh_token');
     storage.remove('refresh_token_expiration');
 }
+
 function setUserFromJwtToken(jwtToken, refreshToken, notify, doLogout) {
     if (!jwtToken) {
         clearTokenData();
@@ -56,7 +60,6 @@ function setUserFromJwtToken(jwtToken, refreshToken, notify, doLogout) {
     }
 }
 
-
 function clearJwtToken(doLogout) {
     setUserFromJwtToken(null, null, true, doLogout);
 }
@@ -64,22 +67,6 @@ function clearJwtToken(doLogout) {
 function isTokenValid(prefix) {
     const clientExpiration = storage.read(`${prefix}_expiration`);
     return clientExpiration && clientExpiration > +new Date();
-}
-
-function isAuthenticated() {
-    return storage.read('jwt_token');
-}
-
-function getJwtToken() {
-    return storage.read('jwt_token');
-}
-
-function updateAuthorizationHeader(headers) {
-    const jwtToken = storage.read('jwt_token');
-    if (jwtToken) {
-        headers['X-Authorization'] = `Bearer ${jwtToken}`;
-    }
-    return jwtToken;
 }
 
 /**
@@ -107,23 +94,6 @@ function loginFailure() {
     };
 }
 
-export const loginRequest = (username, password) => (dispatch) => {
-    dispatch(login());
-    const loginData = {
-        username,
-        password,
-    };
-    return axios.post(LOGIN_URL, JSON.stringify(loginData), {
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    }).then((response) => {
-        dispatch(loginSuccess(username, response));
-    }).catch((error) => {
-        // const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
-        // Materialize.toast($toastContent, 2000);
-        dispatch(loginFailure());
-    });
-};
-
 function register() {
     return {
         type: AUTH_REGISTER,
@@ -143,17 +113,20 @@ function registerFailure(error) {
     };
 }
 
-/* REGISTER */
-export const registerRequest = (username, password) => (dispatch) => {
-    dispatch(register());
+function getUserSuccess(data) {
+    return {
+        type: API_GET_USER_SUCCESS,
+        currentUser: data,
+    };
+}
 
-    return axios.post('/api/account/signup', { username, password })
-    .then((response) => {
-        dispatch(registerSuccess(response));
-    }).catch((error) => {
-        dispatch(registerFailure(error.response.data.code));
-    });
-};
+function getUserFailure(message) {
+    clearJwtToken(false);
+    return {
+        type: API_GET_USER_FAILURE,
+        errorMessage: message,
+    };
+}
 
 function getRefresh() {
     return {
@@ -173,18 +146,45 @@ function getRefreshSuccess(response) {
     };
 }
 
-function getRefreshFailure() {
+function getRefreshFailure(message) {
     clearJwtToken(false);
     return {
         type: AUTH_GET_STATUS_FAILURE,
+        errorMessage: message,
     };
 }
+
+/* REGISTER */
+export const registerRequest = (username, password) => (dispatch) => {
+    dispatch(register());
+
+    return axios.post('/api/account/signup', { username, password })
+    .then((response) => {
+        dispatch(registerSuccess(response));
+    }).catch((error) => {
+        dispatch(registerFailure(error.response.data.code));
+    });
+};
+
+export const loginRequest = (username, password) => (dispatch) => {
+    dispatch(login());
+    const loginData = {
+        username,
+        password,
+    };
+    return axios.post(LOGIN_URL, JSON.stringify(loginData), {
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    }).then((response) => {
+        dispatch(loginSuccess(username, response));
+    }).catch((error) => {
+        dispatch(loginFailure(error.response.data.message));
+    });
+};
 
 /* GET STATUS */
 export const refreshJwtRequest = () => (dispatch) => {
     const refreshToken = storage.read('refresh_token');
     const refreshTokenValid = isTokenValid('refresh_token');
-
     dispatch(getRefresh());
 
     if (!refreshTokenValid) {
@@ -198,7 +198,7 @@ export const refreshJwtRequest = () => (dispatch) => {
     }).then((response) => {
         dispatch(getRefreshSuccess(response));
     }).catch((error) => {
-        dispatch(getRefreshFailure());
+        dispatch(getRefreshFailure(error.response.data.message));
     });
 };
 
@@ -223,3 +223,32 @@ export const logoutRequest = () => (dispatch) => {
 };
 
 export const isJwtTokenValid = () => isTokenValid('jwt_token');
+
+export const getUserRequest = () => {
+    return (dispatch) => {
+        const token = storage.read('jwt_token');
+        if (!token) {
+            return;
+        }
+        const tokenData = jwtDecode(token);
+        if (tokenData && tokenData.scopes && tokenData.scopes.length > 0) {
+            tokenData.authority = tokenData.scopes[0];
+        } else if (tokenData) {
+            tokenData.authority = 'ANONYMOUS';
+        }
+
+        if (tokenData.isPublic) {
+            
+        } else if (tokenData.userId) {
+            return axios.get(`${API_USER_URL}/${tokenData.userId}`, {
+                headers: {
+                    'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+                },
+            }).then((response) => {
+                dispatch(getUserSuccess(response.data));
+            }).catch((error) => {
+                dispatch(getUserFailure(error.response.data.message));
+            });
+        }
+    };
+};

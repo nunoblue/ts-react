@@ -31,7 +31,6 @@ class Customers extends Component {
             const id = data.id.id;
             const isPublic = data.additionalInfo ? (data.additionalInfo.isPublic || false) : false;
             const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
-            const openModifyCustomer = this.openModifyCustomer.bind(this, title, id);
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{title}</CustomCheckbox>} content={address}>
                     <CustomButton className="custom-card-button" isUsed={!isPublic} iconClassName="user-add" tooltipTitle="커스터머 사용자 관리" />
@@ -44,7 +43,7 @@ class Customers extends Component {
 
         return components;
     }
-    
+
     refershCustomerRequest = () => {
         const limit = this.state.limit;
         const textSearch = this.state.textSearch;
@@ -54,7 +53,7 @@ class Customers extends Component {
         });
         this.props.getCustomersRequest(limit, textSearch);
     }
-    
+
     handleChecked = (e) => {
         const checkedCount = this.state.checkedCount;
         const checkedIdArray = this.state.checkedIdArray;
@@ -97,25 +96,13 @@ class Customers extends Component {
         });
     }
 
-    openCreateCustomer = () => {
-        this.createModal.modal.onShow();
+    openAddCustomerModal = () => {
+        this.addModal.modal.onShow();
     }
 
-    openModifyCustomer = (title, customerId) => {
-        this.modifyModal.onShow();
-        this.modifyForm.setFieldsValue({
-            title,
-        });
-    }
-
-    hideCreateCustomer = () => {
-        this.createModal.form.resetFields();
-        this.createModal.modal.onHide();
-    }
-
-    hideModifyCustomer = () => {
-        this.modifyForm.resetFields();
-        this.modifyModal.onHide();
+    hideAddCustomerModal = () => {
+        this.addModal.form.resetFields();
+        this.addModal.modal.onHide();
     }
 
     handleDeleteCustomer = (customerId) => {
@@ -134,8 +121,8 @@ class Customers extends Component {
         });
     }
 
-    handleCreateCustomer = () => {
-        const form = this.createModal.form;
+    handleSaveCustomer = () => {
+        const form = this.addModal.form;
         form.validateFields((err, values) => {
             if (err) {
                 return false;
@@ -143,28 +130,11 @@ class Customers extends Component {
             this.props.saveCustomerRequest(values).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
                     this.refershCustomerRequest();
-                    form.resetFields();
-                    this.createModal.modal.onHide();
+                    this.hideAddCustomerModal();
                 } else {
                     notification.error({
                         message: this.props.errorMessage,
                     });
-                }
-            });
-        });
-    }
-
-    handleModifyCustomer = () => {
-        const modifyForm = this.modifyForm;
-        modifyForm.validateFields((err, values) => {
-            if (err) {
-                return false;
-            }
-            this.props.saveCustomerRequest(values).then(() => {
-                if (this.props.statusMessage === 'SUCCESS') {
-                    this.refershCustomerRequest();
-                    modifyForm.resetFields();
-                    this.modifyModal.onHide();
                 }
             });
         });
@@ -178,23 +148,14 @@ class Customers extends Component {
                     <CustomButton
                     isUsed={this.state.checkedCount !== 0}
                     tooltipTitle={`커스터머 ${this.state.checkedCount}개 삭제`}
-                    className="custom-card-button" iconClassName="delete"
+                    className="custom-card-button"
+                    iconClassName="delete"
                     onClick={this.handleDeleteConfirm}
                     size="large"
                     />
-                    <CustomButton tooltipTitle="커스터머 추가" className="custom-card-button" iconClassName="plus" onClick={this.openCreateCustomer} size="large" />
+                    <CustomButton tooltipTitle="커스터머 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddCustomerModal} size="large" />
                 </div>
-                <AddCustomerModal ref={(c) => { this.createModal = c; }} onCreate={this.handleCreateCustomer} onHide={this.hideCreateCustomer} />
-                <CustomModal
-                ref={(c) => { this.modifyModal = c; }}
-                title="커스터머 상세정보"
-                onOk={this.handleModifyCustomer}
-                onCancel={this.hideModifyCustomer}
-                okText="변경사항 적용"
-                cancelText="취소"
-                >
-                    <AddCustomerForm ref={(c) => { this.modifyForm = c; }} onPressEnter={this.handleModifyCustomer} />
-                </CustomModal>
+                <AddCustomerModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveCustomer} onCancel={this.hideAddCustomerModal} />
             </Row>
         );
     }
@@ -205,6 +166,7 @@ const mapStateToProps = (state) => {
         statusMessage: state.customers.statusMessage,
         data: state.customers.data,
         errorMessage: state.customers.errorMessage,
+        currentUser: state.authentication.currentUser,
     };
 };
 

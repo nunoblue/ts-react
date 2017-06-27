@@ -40,6 +40,7 @@ const mapStateToProps = (state) => {
     return {
         statusMessage: state.plugins.statusMessage,
         data: state.plugins.data,
+        currentUser: state.authentication.currentUser,
     };
 };
 

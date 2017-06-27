@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
-import { Layout, Row, Col, Switch } from 'antd';
+import { Layout } from 'antd';
 
 import MenuList from '../components/MenuList';
 import Title from '../components/Title';
@@ -11,8 +11,6 @@ class Main extends Component {
 
     state = {
         collapsed: false,
-        triggerIcon: false,
-        changeContent: false,
     };
 
     componentDidMount() {
@@ -43,31 +41,21 @@ class Main extends Component {
         });
     }
 
-    changeContent = (checked) => {
-        this.setState({
-            changeContent: checked,
-        });
-    }
-
     render() {
-        const validate = this.props.validate;
-        const statusMessage = this.props.statusMessage;
-        if (!validate && statusMessage === 'FAILURE') {
+        const validation = this.props.validation;
+        const statusMessage = this.props.validate.statusMessage;
+        if (!validation && statusMessage === 'FAILURE') {
             return <Redirect to="/login" />;
         }
         if (!this.pathValidate()) {
             return <Redirect to="/home" />;
         }
+
         let matches;
         if (this.sider) {
             matches = this.sider.mql.matches;
         }
 
-        const childrenWithProps = React.Children.map(this.props.children, (child) => {
-            return React.cloneElement(child, { changeContent: this.state.changeContent });
-        }, this);
-
-        // console.log(childrenWithProps);
         return (
             <Layout>
                 <Layout.Sider
@@ -81,7 +69,7 @@ class Main extends Component {
                     <div className="main-logo">
                         <Link to="/home">ThingStar</Link>
                     </div>
-                    <MenuList />
+                    <MenuList authority={this.props.currentUser.authority} selectedKey={this.props.location.pathname} />
                 </Layout.Sider>
                 <Layout>
                     <Title
@@ -92,12 +80,7 @@ class Main extends Component {
                     matches={matches}
                     />
                     <Layout.Content className="code-box-demo">
-                        <Row>
-                            <Col span="2">
-                                <Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
-                            </Col>
-                        </Row>
-                        {childrenWithProps}
+                        {this.props.children}
                     </Layout.Content>
                 </Layout>
             </Layout>
@@ -107,7 +90,8 @@ class Main extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        statusMessage: state.authentication.validate.statusMessage,
+        validate: state.authentication.validate,
+        currentUser: state.authentication.currentUser,
     };
 };
 

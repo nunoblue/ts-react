@@ -6,10 +6,6 @@ import * as actions from '../actions/authentication';
 
 class Register extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
         console.log('Register Render');
     }

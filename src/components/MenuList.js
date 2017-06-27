@@ -1,54 +1,65 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Icon } from 'antd';
+import { Menu } from 'antd';
 
-export default class MenuList extends Component {
+const TENANT_ADMIN_MENU = {
+    home: ['home', 'Home'],
+    plugins: ['extension', 'Plugin'],
+    rules: ['settings_ethernet', 'Rule'],
+    customers: ['people', 'Customer'],
+    devices: ['devices_other', 'Device'],
+    widgets: ['widgets', 'Widget'],
+    dashboards: ['dashboard', 'Dashboard'],
+};
+const CUSTOMER_USER_MENU = {
+    home: ['home', 'Home'],
+    devices: ['devices_other', 'Device'],
+    dashboards: ['dashboard', 'Dashboard'],
+};
+class MenuList extends Component {
+
+    shouldComponentUpdate(prevProps, prevState) {
+        if (prevProps.authority === this.props.authority) {
+            return false;
+        }
+
+        return true;
+    }
+
+    components = (authority) => {
+        if (typeof authority === 'undefined') {
+            return null;
+        }
+        const components = authority === 'TENANT_ADMIN' ? Object.keys(TENANT_ADMIN_MENU).map((key) => {
+            return (
+                <Menu.Item key={`/${key}`}>
+                    <Link to={`/${key}`}>
+                        <i className="material-icons margin-right-8 vertical-middle">{TENANT_ADMIN_MENU[key][0]}</i>
+                        <span className="nav-text">{TENANT_ADMIN_MENU[key][1]}</span>
+                    </Link>
+                </Menu.Item>
+            );
+        }) : Object.keys(CUSTOMER_USER_MENU).map((key) => {
+            return (
+                <Menu.Item key={`/${key}`}>
+                    <Link to={`/${key}`}>
+                        <i className="material-icons margin-right-8 vertical-middle">{CUSTOMER_USER_MENU[key][0]}</i>
+                        <span className="nav-text">{TENANT_ADMIN_MENU[key][1]}</span>
+                    </Link>
+                </Menu.Item>
+            );
+        });
+
+        return components;
+    }
     render() {
+        const authority = this.props.authority;
         return (
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                <Menu.Item key="1">
-                    <Link to="/home">
-                        <i className="material-icons margin-right-8 vertical-middle">home</i>
-                        <span className="nav-text">Home</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="2">
-                    <Link to="/plugins">
-                        <i className="material-icons margin-right-8 vertical-middle">extension</i>
-                        <span className="nav-text">Plguin</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="3">
-                    <Link to="/rules">
-                        <i className="material-icons margin-right-8 vertical-middle">settings_ethernet</i>
-                        <span className="nav-text">Rule</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="4">
-                    <Link to="/customers">
-                        <i className="material-icons margin-right-8 vertical-middle">people</i>
-                        <span className="nav-text">Customer</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="5">
-                    <Link to="/devices">
-                        <i className="material-icons margin-right-8 vertical-middle">devices_other</i>
-                        <span className="nav-text">Device</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="6">
-                    <Link to="/widgets">
-                        <i className="material-icons margin-right-8 vertical-middle">widgets</i>
-                        <span className="nav-text">Widget</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="7">
-                    <Link to="/dashboards">
-                        <i className="material-icons margin-right-8 vertical-middle">dashboard</i>
-                        <span className="nav-text">Dashboard</span>
-                    </Link>
-                </Menu.Item>
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={[this.props.selectedKey]}>
+                {this.components(authority)}
             </Menu>
         );
     }
 }
+
+export default MenuList;
