@@ -166,7 +166,6 @@ const mapStateToProps = (state) => {
         statusMessage: state.customers.statusMessage,
         data: state.customers.data,
         errorMessage: state.customers.errorMessage,
-        currentUser: state.authentication.currentUser,
     };
 };
 

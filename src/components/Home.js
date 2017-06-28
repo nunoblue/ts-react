@@ -8,7 +8,7 @@ class Home extends Component {
 
     render() {
         return (
-            <div className="mdl-grid">
+            <div>
                 Home!!
             </div>
         );

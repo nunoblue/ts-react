@@ -32,21 +32,12 @@ class App extends Component {
         changeContent: false,
     }
 
-    componentDidMount() {
+    componentWillMount() {
         console.log('App Render');
         this.props.validateJwtToken().then(() => {
             this.props.refreshJwtRequest();
-        }).catch((error) => {
-            console.log(error);
         });
         this.props.getUserRequest();
-    }
-
-    shouldComponentUpdate(prevProps) {
-        if (Object.keys(prevProps.currentUser).length === 0) {
-            return false;
-        }
-        return true;
     }
 
     changeContent = (checked) => {
@@ -55,28 +46,48 @@ class App extends Component {
         });
     }
 
+    mainRoute = (validation) => {
+        if (validation) {
+            return (
+                <Main history={history}>
+                    <Row>
+                        <Col span="2">
+                            <AntSwitch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
+                        </Col>
+                    </Row>
+                    <Route path="/home" render={() => (<Home changeContent={this.state.changeContent} />)} />
+                    <Route path="/plugins" render={() => (<Plugins changeContent={this.state.changeContent} />)} />
+                    <Route path="/rules" render={() => (<Rules changeContent={this.state.changeContent} />)} />
+                    <Route path="/customers" render={() => (<Customers changeContent={this.state.changeContent} />)} />
+                    <Route path="/devices" render={() => (<Devices changeContent={this.state.changeContent} />)} />
+                    <Route path="/widgets" render={() => (<Widgets changeContent={this.state.changeContent} />)} />
+                    <Route path="/dashboards" render={() => (<Dashboards changeContent={this.state.changeContent} />)} />
+                </Main>
+            );
+        }
+        if (this.props.validate.statusMessage === 'FAILURE' && typeof this.props.currentUser.authority === 'undefined') {
+            return <Redirect to="/login" />;
+        }
+        return null;
+    }
+
     render() {
-        const validation = this.props.validate.statusMessage === 'SUCCESS';
+        const { validate, currentUser } = this.props;
+        const validation = validate.statusMessage === 'SUCCESS' && typeof currentUser.authority !== 'undefined';
         return (
             <Router>
                 <Layout style={{ height: '100vh' }}>
-                    <Route exact path="/" render={() => (!validation ? <Redirect to="/login" /> : <Redirect to="/home" />)} />
+                    <Route exact path="/" render={() => {
+                        if (validation) {
+                            return <Redirect to="/home" />;
+                        } else if (validate.statusMessage === 'FAILURE' && typeof currentUser.authority === 'undefined') {
+                            return <Redirect to="/login" />;
+                        }
+                        return null;
+                    }} />
                     <Switch>
                         <Route path="/login" component={Login} />
-                        <Main history={history} validation={validation}>
-                            <Row>
-                                <Col span="2">
-                                    <AntSwitch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
-                                </Col>
-                            </Row>
-                            <Route path="/home" component={() => (<Home changeContent={this.state.changeContent} />)} />
-                            <Route path="/plugins" component={() => (<Plugins changeContent={this.state.changeContent} />)} />
-                            <Route path="/rules" component={() => (<Rules changeContent={this.state.changeContent} />)} />
-                            <Route path="/customers" component={() => (<Customers changeContent={this.state.changeContent} />)} />
-                            <Route path="/devices" component={() => (<Devices changeContent={this.state.changeContent} />)} />
-                            <Route path="/widgets" component={() => (<Widgets changeContent={this.state.changeContent} />)} />
-                            <Route path="/dashboards" component={() => (<Dashboards changeContent={this.state.changeContent} />)} />
-                        </Main>
+                        {this.mainRoute(validation)}
                     </Switch>
                 </Layout>
             </Router>
@@ -87,7 +98,6 @@ class App extends Component {
 const mapStateToProps = (state) => {
     return {
         validate: state.authentication.validate,
-        login: state.authentication.login,
         currentUser: state.authentication.currentUser,
     };
 };

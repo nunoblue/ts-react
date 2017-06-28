@@ -10,6 +10,7 @@ import AddDashboardModal from '../components/dashboard/AddDashboardModal';
 import * as actions from '../actions/dashboards';
 
 class Dashboards extends Component {
+
     state = {
         limit: 30,
         textSearch: '',
@@ -19,9 +20,7 @@ class Dashboards extends Component {
 
     componentDidMount() {
         console.log('Dashboards Render');
-        if (Object.keys(this.props.currentUser).length !== 0) {
-            this.refershDashboardRequest(this.props.currentUser);
-        }
+        this.refershDashboardRequest(this.props.currentUser);
     }
 
     components = () => {

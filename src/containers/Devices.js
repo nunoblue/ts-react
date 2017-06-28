@@ -20,9 +20,7 @@ class Devices extends Component {
 
     componentDidMount() {
         console.log('Devices Render');
-        if (Object.keys(this.props.currentUser).length !== 0) {
-            this.refershDeviceRequest(this.props.currentUser);
-        }
+        this.refershDeviceRequest(this.props.currentUser);
     }
 
     components = () => {

@@ -7,6 +7,10 @@ import MenuList from '../components/MenuList';
 import Title from '../components/Title';
 import * as actions from '../actions/authentication';
 
+const SYSTEM_PATH = ['/home', '/plugins', '/tanents', '/widgets-bundles', '/settings/general', '/settings/outgoing-mal'];
+const TENANT_PATH = ['/home', '/plugins', '/rules', '/customers', '/devices', '/widgets', '/dashboards'];
+const CUSTOMER_PATH = ['/home', '/devices', '/dashboards'];
+
 class Main extends Component {
 
     state = {
@@ -31,7 +35,20 @@ class Main extends Component {
     }
 
     pathValidate = () => {
-        const validate = this.props.children.some(element => element.props.path === this.props.location.pathname);
+        if (this.props.currentUser.authority === 'TENANT_ADMIN') {
+            const validate = TENANT_PATH.some((element) => {
+                return element === this.props.location.pathname;
+            });
+            return validate;
+        } else if (this.props.currentUser.authority === 'CUSTOMER_USER') {
+            const validate = CUSTOMER_PATH.some((element) => {
+                return element === this.props.location.pathname;
+            });
+            return validate;
+        }
+        const validate = SYSTEM_PATH.some((element) => {
+            return element === this.props.location.pathname;
+        });
         return validate;
     }
 
@@ -42,9 +59,11 @@ class Main extends Component {
     }
 
     render() {
-        const validation = this.props.validation;
-        const statusMessage = this.props.validate.statusMessage;
-        if (!validation && statusMessage === 'FAILURE') {
+        const { validate, currentUser } = this.props;
+        if (!this.props.isRefreshTokenValid()) {
+            return <Redirect to="/login" />;
+        }
+        if (validate.statusMessage === 'FAILURE' && typeof currentUser.authority === 'undefined') {
             return <Redirect to="/login" />;
         }
         if (!this.pathValidate()) {
@@ -100,6 +119,7 @@ const mapDispatchToProps = (dispatch) => {
         logoutRequest: () => dispatch(actions.logoutRequest()),
         refreshJwtRequest: () => dispatch(actions.refreshJwtRequest()),
         isJwtTokenValid: actions.isJwtTokenValid,
+        isRefreshTokenValid: actions.isRefreshTokenValid,
     };
 };
 

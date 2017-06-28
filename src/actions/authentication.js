@@ -78,19 +78,25 @@ function login() {
     };
 }
 
-function loginSuccess(username, response) {
+function loginSuccess(response) {
     const token = response.data.token;
     const refreshToken = response.data.refreshToken;
     setUserFromJwtToken(token, refreshToken, false, false);
     return {
         type: AUTH_LOGIN_SUCCESS,
-        username,
     };
 }
 
 function loginFailure() {
     return {
         type: AUTH_LOGIN_FAILURE,
+    };
+}
+
+function logoutSuccess() {
+    clearJwtToken(false);
+    return {
+        type: AUTH_LOGOUT,
     };
 }
 
@@ -175,7 +181,7 @@ export const loginRequest = (username, password) => (dispatch) => {
     return axios.post(LOGIN_URL, JSON.stringify(loginData), {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     }).then((response) => {
-        dispatch(loginSuccess(username, response));
+        dispatch(loginSuccess(response));
     }).catch((error) => {
         dispatch(loginFailure(error.response.data.message));
     });
@@ -204,6 +210,7 @@ export const refreshJwtRequest = () => (dispatch) => {
 
 export const validateJwtToken = (doRefresh) => {
     const promise = dispatch => new Promise((resolve, reject) => {
+        dispatch(getRefresh());
         if (!isTokenValid('jwt_token')) {
             if (doRefresh) {
                 resolve('request refresh');
@@ -219,10 +226,12 @@ export const validateJwtToken = (doRefresh) => {
 };
 
 export const logoutRequest = () => (dispatch) => {
-    dispatch(getRefreshFailure());
+    dispatch(logoutSuccess());
 };
 
 export const isJwtTokenValid = () => isTokenValid('jwt_token');
+
+export const isRefreshTokenValid = () => isTokenValid('refresh_token');
 
 export const getUserRequest = () => {
     return (dispatch) => {
@@ -247,7 +256,7 @@ export const getUserRequest = () => {
             }).then((response) => {
                 dispatch(getUserSuccess(response.data));
             }).catch((error) => {
-                dispatch(getUserFailure(error.response.data.message));
+                dispatch(getUserFailure(error.response));
             });
         }
     };

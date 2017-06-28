@@ -40,7 +40,6 @@ const mapStateToProps = (state) => {
     return {
         statusMessage: state.rules.statusMessage,
         data: state.rules.data,
-        currentUser: state.authentication.currentUser,
     };
 };
 

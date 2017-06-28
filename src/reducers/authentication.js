@@ -77,7 +77,7 @@ export default function authentication(state = initialState, action) {
             return update(state, {
                 validate: {
                     statusMessage: {
-                        $set: 'INIT',
+                        $set: 'FAILURE',
                     },
                 },
                 login: {
