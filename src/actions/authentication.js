@@ -247,7 +247,7 @@ export const getUserRequest = () => {
         }
 
         if (tokenData.isPublic) {
-            
+
         } else if (tokenData.userId) {
             return axios.get(`${API_USER_URL}/${tokenData.userId}`, {
                 headers: {
@@ -256,7 +256,8 @@ export const getUserRequest = () => {
             }).then((response) => {
                 dispatch(getUserSuccess(response.data));
             }).catch((error) => {
-                dispatch(getUserFailure(error.response));
+                console.log(error.response);
+                dispatch(getUserFailure(error.response.data.message));
             });
         }
     };

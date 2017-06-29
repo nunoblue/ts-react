@@ -3,6 +3,21 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Layout, Breadcrumb, Row, Col, Icon } from 'antd';
 
+const PATH_NAME = {
+    home: ['home', 'Home'],
+    plugins: ['extension', 'Plugin'],
+    rules: ['settings_ethernet', 'Rule'],
+    customers: ['people', 'Customer'],
+    users: ['people', 'User'],
+    devices: ['devices_other', 'Device'],
+    widgets: ['widgets', 'Widget'],
+    dashboards: ['dashboard', 'Dashboard'],
+    tenants: ['people', 'Tenant'],
+    'widgets-bundles': ['widgets', 'Widgets'],
+    'setting/general': ['dashboard', 'System-Setting'],
+    'setting/outgoing-mail': ['dashboard', 'System-Setting'],
+};
+
 class Title extends Component {
 
     static propTypes = {
@@ -18,14 +33,23 @@ class Title extends Component {
     breadCrumb = () => {
         const path = this.props.location.pathname.split('/');
         let components;
-        if (path.length >= 2) {
-            components = <Breadcrumb.Item>{path[1]}</Breadcrumb.Item>;
+        if (path.length <= 2) {
+            components = (
+                <Breadcrumb.Item>
+                    <i className="material-icons margin-right-8 vertical-middle">{PATH_NAME[path[1]][0]}</i>
+                    {PATH_NAME[path[1]][1]}
+                </Breadcrumb.Item>
+            );
         } else {
-            components = path.map((str, index) => {
-                if (str !== '') {
-                    return <Breadcrumb.Item><Link to={`/${path[index]}`}>{str}</Link></Breadcrumb.Item>;
+            components = path.map((str, i) => {
+                if (str !== '' && str.indexOf('-') === -1) {
+                    return (
+                        <Breadcrumb.Item key={str}>
+                            <i className="material-icons margin-right-8 vertical-middle">{PATH_NAME[str][0]}</i>
+                            {(path.length - 1) !== i ? <Link to={`/${path[i]}`}>{PATH_NAME[str][1]}</Link> : PATH_NAME[str][1]}
+                        </Breadcrumb.Item>
+                    );
                 }
-                return null;
             });
         }
 

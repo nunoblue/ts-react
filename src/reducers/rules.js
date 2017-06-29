@@ -9,6 +9,7 @@ import {
 const initialState = {
     statusMessage: 'INIT',
     data: [],
+    errorMessage: 'NONE',
 };
 
 export default function rules(state = initialState, action) {
@@ -32,6 +33,9 @@ export default function rules(state = initialState, action) {
             return update(state, {
                 statusMessage: {
                     $set: 'FAILURE',
+                },
+                errorMessage: {
+                    $set: action.errorMessage,
                 },
             });
         default:

@@ -25,6 +25,7 @@ class CustomButton extends Component {
                     <div className={this.props.className}>
                         <Button shape="circle" type="primary" size={this.props.size} onClick={this.props.onClick}>
                             <Icon type={this.props.iconClassName} />
+                            {this.props.children}
                         </Button>
                     </div>
                 </Tooltip>

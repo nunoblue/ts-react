@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
-import { Modal } from 'antd';
+import { Modal, Button } from 'antd';
 
 export default class CustomModal extends Component {
     static defaultProps = {
@@ -26,6 +25,24 @@ export default class CustomModal extends Component {
         });
     }
 
+    footerComponents = () => {
+        const { footer } = this.props;
+        if (typeof footer === 'undefined' || footer === null) {
+            return ([
+                <Button key="back" size="large" onClick={this.props.onCancel}>
+                    {this.props.cancelText}
+                </Button>,
+                <Button key="submit" type="primary" size="large" onClick={this.props.onOk}>
+                    {this.props.okText}
+                </Button>,
+            ]);
+        }
+
+        return ([
+            footer,
+        ]);
+    }
+
     render() {
         return (
             <div>
@@ -37,6 +54,7 @@ export default class CustomModal extends Component {
                     onOk={this.props.onOk}
                     onCancel={this.props.onCancel}
                     maskClosable={false}
+                    footer={this.footerComponents()}
                 >
                     {this.props.children}
                 </Modal>

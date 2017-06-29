@@ -12,7 +12,7 @@ const DeviceCredentialsForm = Form.create()(
                         getFieldDecorator('accessToken', {
                             initialValue: props.value,
                         })(
-                            <Input onPressEnter={props.onPressEnter} />,
+                            <Input onPressEnter={props.onPressEnter} disabled={props.disabled} />,
                         )
                     }
                 </Form.Item>
@@ -24,7 +24,7 @@ const DeviceCredentialsForm = Form.create()(
                         getFieldDecorator('rsaPublicKey', {
                             initialValue: props.value,
                         })(
-                            <Input type="textarea" onPressEnter={props.onPressEnter} />,
+                            <Input type="textarea" onPressEnter={props.onPressEnter} disabled={props.disabled} />,
                         )
                     }
                 </Form.Item>
@@ -38,7 +38,7 @@ const DeviceCredentialsForm = Form.create()(
                             initialValue: props.type,
                             rules: [{ required: true, message: 'Please select device type!' }],
                         })(
-                            <Select placeholder="Please select a type" onChange={props.onChange}>
+                            <Select placeholder="Please select a type" onChange={props.onChange} disabled={props.disabled}>
                                 <Select.Option value="ACCESS_TOKEN">
                                     {'Access token'}
                                 </Select.Option>

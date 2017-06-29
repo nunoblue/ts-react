@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Row, Modal, notification } from 'antd';
 
 import CustomCard from '../components/common/CustomCard';
 import CustomButton from '../components/common/CustomButton';
-import CustomModal from '../components/common/CustomModal';
 import CustomCheckbox from '../components/common/CustomCheckbox';
 import AddCustomerModal from '../components/customer/AddCustomerModal';
-import AddCustomerForm from '../components/customer/AddCustomerForm';
 
 import * as actions from '../actions/customers';
 
@@ -33,7 +32,9 @@ class Customers extends Component {
             const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{title}</CustomCheckbox>} content={address}>
-                    <CustomButton className="custom-card-button" isUsed={!isPublic} iconClassName="user-add" tooltipTitle="커스터머 사용자 관리" />
+                    <Link to={`/customers/${id}/users`}>
+                        <CustomButton className="custom-card-button" isUsed={!isPublic} iconClassName="user-add" tooltipTitle="커스터머 사용자 관리" />
+                    </Link>
                     <CustomButton className="custom-card-button" iconClassName="tablet" tooltipTitle="커스터머 디바이스 관리" />
                     <CustomButton className="custom-card-button" iconClassName="layout" tooltipTitle="커스터머 대시보드 관리" />
                     <CustomButton className="custom-card-button" isUsed={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="커스터머 디바이스 삭제" />
@@ -51,7 +52,13 @@ class Customers extends Component {
             checkedIdArray: [],
             checkedCount: 0,
         });
-        this.props.getCustomersRequest(limit, textSearch);
+        this.props.getCustomersRequest(limit, textSearch).then(() => {
+            if (this.props.statusMessage !== 'SUCCESS') {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
     }
 
     handleChecked = (e) => {
@@ -109,6 +116,10 @@ class Customers extends Component {
         this.props.deleteCustomerRequest(customerId).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershCustomerRequest();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
             }
         });
     }
@@ -117,6 +128,10 @@ class Customers extends Component {
         this.props.multipleDeleteCustomerRequest(this.state.checkedIdArray).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershCustomerRequest();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
             }
         });
     }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button } from 'antd';
 
 import CustomModal from '../common/CustomModal';
 import DeviceCredentialsForm from './DeviceCredentialsForm';
@@ -38,6 +39,17 @@ class DeviceCredentialsModal extends Component {
         });
     }
 
+    footerComponents = () => {
+        const { authority } = this.props;
+        if (!authority) {
+            return (
+                <Button key="back" size="large" onClick={this.props.onCancel}>
+                    {"취소"}
+                </Button>
+            );
+        }
+    }
+
     render() {
         return (
             <CustomModal
@@ -47,6 +59,7 @@ class DeviceCredentialsModal extends Component {
             onCancel={this.props.onCancel}
             okText="저장"
             cancelText="취소"
+            footer={this.footerComponents()}
             >
                 <DeviceCredentialsForm
                 ref={(c) => { this.form = c; }}
@@ -54,6 +67,7 @@ class DeviceCredentialsModal extends Component {
                 onChange={this.handleSelectChange}
                 type={this.state.credentialsType}
                 value={this.state.credentialsValue}
+                disabled={!this.props.authority}
                 />
             </CustomModal>
         );

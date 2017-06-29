@@ -16,11 +16,19 @@ class Devices extends Component {
         textSearch: '',
         checkedCount: 0,
         checkedIdArray: [],
+        authority: this.props.currentUser.authority === 'TENANT_ADMIN',
     }
 
     componentDidMount() {
         console.log('Devices Render');
-        this.refershDeviceRequest(this.props.currentUser);
+        this.refershDeviceRequest();
+    }
+
+    shouldComponentUpdate(prevProps) {
+        if (prevProps.data === this.props.data) {
+            return false;
+        }
+        return true;
     }
 
     components = () => {
@@ -32,25 +40,37 @@ class Devices extends Component {
             const credentialsModal = this.openCredentials.bind(this, id);
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{name}</CustomCheckbox>} content={type.toUpperCase()}>
-                    <CustomButton className="custom-card-button" iconClassName="user-add" tooltipTitle="asdf 공유" />
-                    <CustomButton className="custom-card-button" iconClassName="tablet" tooltipTitle="커스터머 할당" />
+                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="user-add" tooltipTitle="디바이스 공유" />
+                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="tablet" tooltipTitle="커스터머 할당" />
                     <CustomButton className="custom-card-button" iconClassName="layout" onClick={credentialsModal} tooltipTitle="크리덴셜 관리" />
-                    <CustomButton className="custom-card-button" iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="디바이스 삭제" />
+                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="디바이스 삭제" />
                 </CustomCard>
             );
         });
         return components;
     }
 
-    refershDeviceRequest = (currentUser) => {
+    refershDeviceRequest = () => {
         const limit = this.state.limit;
         const textSearch = this.state.textSearch;
         this.setState({
             checkedIdArray: [],
             checkedCount: 0,
         });
-        this.props.getDevicesRequest(limit, textSearch, currentUser);
-        this.props.getDeviceTypesRequest();
+        this.props.getDevicesRequest(limit, textSearch, this.props.currentUser).then(() => {
+            if (this.props.statusMessage !== 'SUCCESS') {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
+        this.props.getDeviceTypesRequest().then(() => {
+            if (this.props.statusMessage !== 'SUCCESS') {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
     }
 
     handleChecked = (e) => {
@@ -109,6 +129,10 @@ class Devices extends Component {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.credentialsModal.modal.onShow();
                 this.credentialsModal.changeValue(this.props.credentials);
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
             }
         });
     }
@@ -122,6 +146,10 @@ class Devices extends Component {
         this.props.deleteDeviceRequest(id).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershDeviceRequest();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
             }
         });
     }
@@ -130,6 +158,10 @@ class Devices extends Component {
         this.props.multipleDeleteDeviceRequest(this.state.checkedIdArray).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershDeviceRequest();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
             }
         });
     }
@@ -179,6 +211,10 @@ class Devices extends Component {
                 if (this.props.statusMessage === 'SUCCESS') {
                     // this.refershDeviceRequest();
                     this.hideCredentials();
+                } else {
+                    notification.error({
+                        message: this.props.errorMessage,
+                    });
                 }
             });
         });
@@ -200,7 +236,7 @@ class Devices extends Component {
                     onClick={this.handleDeleteConfirm}
                     size="large"
                     />
-                    <CustomButton tooltipTitle="디바이스 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDeviceModal} size="large" />
+                    <CustomButton isUsed={this.state.authority} tooltipTitle="디바이스 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDeviceModal} size="large" />
                 </div>
                 <AddDeviceModal
                 ref={(c) => { this.addModal = c; }}
@@ -212,6 +248,7 @@ class Devices extends Component {
                 ref={(c) => { this.credentialsModal = c; }}
                 onSave={this.handleSaveCredentials}
                 onCancel={this.hideCredentials}
+                authority={this.state.authority}
                 />
             </Row>
         );

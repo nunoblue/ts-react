@@ -10,12 +10,16 @@ import Home from '../components/Home';
 
 import Main from './Main';
 import Login from './Login';
-import Plugins from './Plugins';
-import Rules from './Rules';
-import Customers from './Customers';
-import Widgets from './Widgets';
-import Dashboards from './Dashboards';
-import Devices from './Devices';
+// import Plugins from './Plugins';
+// import Rules from './Rules';
+// import Customers from './Customers';
+// import Widgets from './Widgets';
+// import Dashboards from './Dashboards';
+// import Devices from './Devices';
+// import Users from './Users';
+
+
+import routes from '../routes';
 
 import '../../less/app.less';
 
@@ -46,7 +50,11 @@ class App extends Component {
         });
     }
 
-    mainRoute = (validation) => {
+    routeWithSubRoutes = (route, i) => {
+        return <Route key={i} exact path={route.path} render={props => (<route.component {...props} routes={route.routes} />)} />;
+    }
+
+    mainRoute = (validation, authority) => {
         if (validation) {
             return (
                 <Main history={history}>
@@ -55,13 +63,11 @@ class App extends Component {
                             <AntSwitch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
                         </Col>
                     </Row>
-                    <Route path="/home" render={() => (<Home changeContent={this.state.changeContent} />)} />
-                    <Route path="/plugins" render={() => (<Plugins changeContent={this.state.changeContent} />)} />
-                    <Route path="/rules" render={() => (<Rules changeContent={this.state.changeContent} />)} />
-                    <Route path="/customers" render={() => (<Customers changeContent={this.state.changeContent} />)} />
-                    <Route path="/devices" render={() => (<Devices changeContent={this.state.changeContent} />)} />
-                    <Route path="/widgets" render={() => (<Widgets changeContent={this.state.changeContent} />)} />
-                    <Route path="/dashboards" render={() => (<Dashboards changeContent={this.state.changeContent} />)} />
+                    {
+                        routes(authority).map((route, i) => (
+                            this.routeWithSubRoutes(route, i)
+                        ))
+                    }
                 </Main>
             );
         }
@@ -87,7 +93,7 @@ class App extends Component {
                     }} />
                     <Switch>
                         <Route path="/login" component={Login} />
-                        {this.mainRoute(validation)}
+                        {this.mainRoute(validation, currentUser.authority)}
                     </Switch>
                 </Layout>
             </Router>

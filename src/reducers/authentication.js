@@ -20,6 +20,7 @@ const initialState = {
         statusMessage: 'INIT',
     },
     currentUser: {},
+    errorMessage: 'NONE',
 };
 
 export default function authentication(state = initialState, action) {
@@ -48,6 +49,9 @@ export default function authentication(state = initialState, action) {
                         $set: 'FAILURE',
                     },
                 },
+                errorMessage: {
+                    $set: action.errorMessage,
+                },
             });
         case AUTH_GET_STATUS:
             return update(state, {
@@ -71,6 +75,9 @@ export default function authentication(state = initialState, action) {
                     statusMessage: {
                         $set: 'FAILURE',
                     },
+                },
+                errorMessage: {
+                    $set: action.errorMessage,
                 },
             });
         case AUTH_LOGOUT:
@@ -106,6 +113,9 @@ export default function authentication(state = initialState, action) {
                 },
                 currentUser: {
                     $set: {},
+                },
+                errorMessage: {
+                    $set: action.errorMessage,
                 },
             });
         default:

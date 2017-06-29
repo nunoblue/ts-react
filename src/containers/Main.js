@@ -7,10 +7,6 @@ import MenuList from '../components/MenuList';
 import Title from '../components/Title';
 import * as actions from '../actions/authentication';
 
-const SYSTEM_PATH = ['/home', '/plugins', '/tanents', '/widgets-bundles', '/settings/general', '/settings/outgoing-mal'];
-const TENANT_PATH = ['/home', '/plugins', '/rules', '/customers', '/devices', '/widgets', '/dashboards'];
-const CUSTOMER_PATH = ['/home', '/devices', '/dashboards'];
-
 class Main extends Component {
 
     state = {
@@ -35,19 +31,11 @@ class Main extends Component {
     }
 
     pathValidate = () => {
-        if (this.props.currentUser.authority === 'TENANT_ADMIN') {
-            const validate = TENANT_PATH.some((element) => {
-                return element === this.props.location.pathname;
-            });
-            return validate;
-        } else if (this.props.currentUser.authority === 'CUSTOMER_USER') {
-            const validate = CUSTOMER_PATH.some((element) => {
-                return element === this.props.location.pathname;
-            });
-            return validate;
-        }
-        const validate = SYSTEM_PATH.some((element) => {
-            return element === this.props.location.pathname;
+        const validate = this.props.children[1].some(element => {
+            if (element.props.path.indexOf(':') !== -1) {
+                return true;
+            }
+            return element.props.path === this.props.location.pathname;
         });
         return validate;
     }
@@ -74,7 +62,6 @@ class Main extends Component {
         if (this.sider) {
             matches = this.sider.mql.matches;
         }
-
         return (
             <Layout>
                 <Layout.Sider

@@ -16,6 +16,16 @@ const CUSTOMER_USER_MENU = {
     devices: ['devices_other', 'Device'],
     dashboards: ['dashboard', 'Dashboard'],
 };
+
+const SYS_ADMIN_MENU = {
+    home: ['home', 'Home'],
+    plugins: ['extension', 'Plugin'],
+    rules: ['settings_ethernet', 'Rule'],
+    customers: ['people', 'Tenant'],
+    widgets: ['widgets', 'Widget'],
+    'setting/general': ['dashboard', 'System-Setting'],
+    'setting/outgoing-mail': ['dashboard', 'System-Setting'],
+};
 class MenuList extends Component {
 
     shouldComponentUpdate(prevProps, prevState) {
@@ -30,27 +40,41 @@ class MenuList extends Component {
         if (typeof authority === 'undefined') {
             return null;
         }
-        const components = authority === 'TENANT_ADMIN' ? Object.keys(TENANT_ADMIN_MENU).map((key) => {
-            return (
-                <Menu.Item key={`/${key}`}>
-                    <Link to={`/${key}`}>
-                        <i className="material-icons margin-right-8 vertical-middle">{TENANT_ADMIN_MENU[key][0]}</i>
-                        <span className="nav-text">{TENANT_ADMIN_MENU[key][1]}</span>
-                    </Link>
-                </Menu.Item>
-            );
-        }) : Object.keys(CUSTOMER_USER_MENU).map((key) => {
-            return (
-                <Menu.Item key={`/${key}`}>
-                    <Link to={`/${key}`}>
-                        <i className="material-icons margin-right-8 vertical-middle">{CUSTOMER_USER_MENU[key][0]}</i>
-                        <span className="nav-text">{TENANT_ADMIN_MENU[key][1]}</span>
-                    </Link>
-                </Menu.Item>
-            );
-        });
-
-        return components;
+        switch (authority) {
+            case 'TENANT_ADMIN':
+                return Object.keys(TENANT_ADMIN_MENU).map((key) => {
+                    return (
+                        <Menu.Item key={`/${key}`}>
+                            <Link to={`/${key}`}>
+                                <i className="material-icons margin-right-8 vertical-middle">{TENANT_ADMIN_MENU[key][0]}</i>
+                                <span className="nav-text">{TENANT_ADMIN_MENU[key][1]}</span>
+                            </Link>
+                        </Menu.Item>
+                    );
+                });
+            case 'CUSTOMER_USER':
+                return Object.keys(CUSTOMER_USER_MENU).map((key) => {
+                    return (
+                        <Menu.Item key={`/${key}`}>
+                            <Link to={`/${key}`}>
+                                <i className="material-icons margin-right-8 vertical-middle">{CUSTOMER_USER_MENU[key][0]}</i>
+                                <span className="nav-text">{CUSTOMER_USER_MENU[key][1]}</span>
+                            </Link>
+                        </Menu.Item>
+                    );
+                });
+            default:
+                return Object.keys(SYS_ADMIN_MENU).map((key) => {
+                    return (
+                        <Menu.Item key={`/${key}`}>
+                            <Link to={`/${key}`}>
+                                <i className="material-icons margin-right-8 vertical-middle">{SYS_ADMIN_MENU[key][0]}</i>
+                                <span className="nav-text">{SYS_ADMIN_MENU[key][1]}</span>
+                            </Link>
+                        </Menu.Item>
+                    );
+                });
+        }
     }
     render() {
         const authority = this.props.authority;

@@ -1,9 +1,11 @@
 import update from 'react-addons-update';
 
 import {
-    API_PLUGINS,
-    API_PLUGINS_SUCCESS,
-    API_PLUGINS_FAILURE,
+    API_USERS,
+    API_USERS_SUCCESS,
+    API_USERS_FAILURE,
+    API_SAVE_USERS_SUCCESS,
+    API_DELETE_USERS_SUCCESS,
 } from '../actions/ActionTypes';
 
 const initialState = {
@@ -12,15 +14,15 @@ const initialState = {
     errorMessage: 'NONE',
 };
 
-export default function plugins(state = initialState, action) {
+const users = (state = initialState, action) => {
     switch (action.type) {
-        case API_PLUGINS:
+        case API_USERS:
             return update(state, {
                 statusMessage: {
                     $set: 'WAITING',
                 },
             });
-        case API_PLUGINS_SUCCESS:
+        case API_USERS_SUCCESS:
             return update(state, {
                 statusMessage: {
                     $set: 'SUCCESS',
@@ -29,7 +31,7 @@ export default function plugins(state = initialState, action) {
                     $set: action.data,
                 },
             });
-        case API_PLUGINS_FAILURE:
+        case API_USERS_FAILURE:
             return update(state, {
                 statusMessage: {
                     $set: 'FAILURE',
@@ -38,7 +40,21 @@ export default function plugins(state = initialState, action) {
                     $set: action.errorMessage,
                 },
             });
+        case API_SAVE_USERS_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_DELETE_USERS_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
         default:
             return state;
     }
-}
+};
+
+export default users;

@@ -16,11 +16,19 @@ class Dashboards extends Component {
         textSearch: '',
         checkedCount: 0,
         checkedIdArray: [],
+        authority: this.props.currentUser.authority === 'TENANT_ADMIN',
     }
 
     componentDidMount() {
         console.log('Dashboards Render');
-        this.refershDashboardRequest(this.props.currentUser);
+        this.refershDashboardRequest();
+    }
+
+    shouldComponentUpdate(prevProps) {
+        if (prevProps.data === this.props.data) {
+            return false;
+        }
+        return true;
     }
 
     components = () => {
@@ -31,9 +39,9 @@ class Dashboards extends Component {
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{title}</CustomCheckbox>}>
                     <CustomButton className="custom-card-button" iconClassName="user-add" tooltipTitle="대시보드 상세정보" />
-                    <CustomButton className="custom-card-button" iconClassName="tablet" tooltipTitle="대시보드 공유" />
-                    <CustomButton className="custom-card-button" iconClassName="layout" tooltipTitle="커스터머 선택" />
-                    <CustomButton className="custom-card-button" iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="대시보드 삭제" />
+                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="tablet" tooltipTitle="대시보드 공유" />
+                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="layout" tooltipTitle="커스터머 선택" />
+                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="대시보드 삭제" />
                 </CustomCard>
             );
         });
@@ -47,7 +55,13 @@ class Dashboards extends Component {
             checkedIdArray: [],
             checkedCount: 0,
         });
-        this.props.getDashboardsRequest(limit, textSearch, this.props.currentUser);
+        this.props.getDashboardsRequest(limit, textSearch, this.props.currentUser).then(() => {
+            if (this.props.statusMessage !== 'SUCCESS') {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
     }
 
     handleChecked = (e) => {
@@ -105,6 +119,10 @@ class Dashboards extends Component {
         this.props.deleteDashboardRequest(dashboardId).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershDashboardRequest();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
             }
         });
     }
@@ -113,6 +131,10 @@ class Dashboards extends Component {
         this.props.multipleDeleteDashboardRequest(this.state.checkedIdArray).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershDashboardRequest();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
             }
         });
     }
@@ -149,7 +171,7 @@ class Dashboards extends Component {
                     onClick={this.handleDeleteConfirm}
                     size="large"
                     />
-                    <CustomButton tooltipTitle="대시보드 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDashboardModal} size="large" />
+                    <CustomButton isUsed={this.state.authority} tooltipTitle="대시보드 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDashboardModal} size="large" />
                 </div>
                 <AddDashboardModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveDashboard} onCancel={this.hideAddDashboardModal} />
             </Row>
