@@ -6,6 +6,7 @@ import {
     API_USERS_FAILURE,
     API_SAVE_USERS_SUCCESS,
     API_DELETE_USERS_SUCCESS,
+    CLEAR_USERS,
 } from '../actions/ActionTypes';
 
 const initialState = {
@@ -52,6 +53,8 @@ const users = (state = initialState, action) => {
                     $set: 'SUCCESS',
                 },
             });
+        case CLEAR_USERS:
+            return initialState;
         default:
             return state;
     }

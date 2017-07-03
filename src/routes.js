@@ -6,6 +6,16 @@ import Widgets from './containers/Widgets';
 import Dashboards from './containers/Dashboards';
 import Devices from './containers/Devices';
 import Users from './containers/Users';
+// import asyncComponent from './components/AsyncComponent';
+
+// const Home = asyncComponent(() => import('./components/Home').then(module => module.default), { name: 'Home' });
+// const Plugins = asyncComponent(() => import('./containers/Plugins').then(module => module.default), { name: 'Plugins' });
+// const Rules = asyncComponent(() => import('./containers/Rules').then(module => module.default), { name: 'Rules' });
+// const Customers = asyncComponent(() => import('./containers/Customers').then(module => module.default), { name: 'Customers' });
+// const Dashboards = asyncComponent(() => import('./containers/Dashboards').then(module => module.default), { name: 'Dashboards' });
+// const Widgets = asyncComponent(() => import('./containers/Widgets').then(module => module.default), { name: 'Widgets' });
+// const Devices = asyncComponent(() => import('./containers/Devices').then(module => module.default), { name: 'Devices' });
+// const Users = asyncComponent(() => import('./containers/Users').then(module => module.default), { name: 'Users' });
 
 const TENANT_ADMIN = [
     {
@@ -27,6 +37,14 @@ const TENANT_ADMIN = [
     {
         path: '/customers/:customerId/users',
         component: Users,
+    },
+    {
+        path: '/customers/:customerId/devices',
+        component: Devices,
+    },
+    {
+        path: '/customers/:customerId/dashboards',
+        component: Dashboards,
     },
     {
         path: '/devices',

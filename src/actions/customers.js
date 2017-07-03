@@ -7,6 +7,8 @@ import {
     API_CUSTOMERS_FAILURE,
     API_SAVE_CUSTOMER_SUCCESS,
     API_DELETE_CUSTOMER_SUCCESS,
+    API_CUSTOMERS_SHORT_INFO_SUCCESS,
+    CLEAR_CUSTOMERS,
 } from './ActionTypes';
 
 import config from '../config';
@@ -15,6 +17,7 @@ const apServer = config.apServer;
 const CUSTOMERS_URL = `${apServer}/api/customers`;
 const SAVE_CUSTOMER_URL = `${apServer}/api/customer`;
 const DELETE_CUSTOMER_URL = `${apServer}/api/customer`;
+const SHORT_INFO_URL = `${apServer}/api/customer`;
 
 function getCustomers() {
     return {
@@ -36,6 +39,17 @@ function getCustomersFailure(message) {
     };
 }
 
+function getShortInfoSuccess(data) {
+    const temp = {};
+    data.map((obj) => {
+        Object.assign(temp, { [obj.id]: obj.data });
+    });
+    return {
+        type: API_CUSTOMERS_SHORT_INFO_SUCCESS,
+        shortInfo: temp,
+    };
+}
+
 function saveCustomerSuccess() {
     return {
         type: API_SAVE_CUSTOMER_SUCCESS,
@@ -45,6 +59,12 @@ function saveCustomerSuccess() {
 function deleteCustomerSuccess() {
     return {
         type: API_DELETE_CUSTOMER_SUCCESS,
+    };
+}
+
+function clearCustomersSuccess() {
+    return {
+        type: CLEAR_CUSTOMERS,
     };
 }
 
@@ -66,6 +86,25 @@ export const getCustomersRequest = (limit, textSearch) => {
             dispatch(getCustomersSuccess(response.data.data));
         }).catch((error) => {
             dispatch(getCustomersFailure(error.response.data.message));
+        });
+    };
+};
+
+export const getCustomerShortInfoRequest = (idArray) => {
+    return (dispatch) => {
+        dispatch(getCustomers());
+        return axios.all(idArray.map((id) => {
+            return axios.get(`${SHORT_INFO_URL}/${id}/shortInfo`, {
+                headers: {
+                    'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+                },
+            }).then((response) => {
+                return { data: response.data, id };
+            }).catch((error) => {
+                dispatch(getCustomersFailure(error.response.data.message));
+            });
+        })).then((data) => {
+            dispatch(getShortInfoSuccess(data));
         });
     };
 };
@@ -119,3 +158,6 @@ export const multipleDeleteCustomerRequest = (idArray) => {
     };
 };
 
+export const clearCustomersRequest = () => (dispatch) => {
+    dispatch(clearCustomersSuccess());
+};

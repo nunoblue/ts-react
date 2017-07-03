@@ -4,6 +4,7 @@ import {
     API_RULES,
     API_RULES_SUCCESS,
     API_RULES_FAILURE,
+    CLEAR_RULES,
 } from '../actions/ActionTypes';
 
 const initialState = {
@@ -38,6 +39,8 @@ export default function rules(state = initialState, action) {
                     $set: action.errorMessage,
                 },
             });
+        case CLEAR_RULES:
+            return initialState;
         default:
             return state;
     }

@@ -5,7 +5,14 @@ import { Layout } from 'antd';
 
 import MenuList from '../components/MenuList';
 import Title from '../components/Title';
-import * as actions from '../actions/authentication';
+import * as authentication from '../actions/authentication';
+import * as customers from '../actions/customers';
+import * as devices from '../actions/devices';
+import * as plugins from '../actions/plugins';
+import * as rules from '../actions/rules';
+import * as users from '../actions/users';
+import * as dashboards from '../actions/dashboards';
+import * as widgets from '../actions/widgets';
 
 class Main extends Component {
 
@@ -26,17 +33,27 @@ class Main extends Component {
 
     handleLogout = () => {
         this.props.logoutRequest();
+        this.props.clearCustomersRequest();
+        this.props.clearUsersRequest();
+        this.props.clearPluginsRequest();
+        this.props.clearDashboardsRequest();
+        this.props.clearRulesRequest();
+        this.props.clearWidgetsRequest();
+        this.props.clearDevicesRequest();
         this.props.location.pathname = '/login';
         this.props.history.push('/login');
     }
 
     pathValidate = () => {
         const validate = this.props.children[1].some(element => {
-            if (element.props.path.indexOf(':') !== -1) {
+            if (element.props.path === this.props.location.pathname) {
+                return true;
+            } else if (this.props.location.pathname.indexOf('-') !== -1) {
                 return true;
             }
-            return element.props.path === this.props.location.pathname;
+            return false;
         });
+
         return validate;
     }
 
@@ -103,10 +120,17 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        logoutRequest: () => dispatch(actions.logoutRequest()),
-        refreshJwtRequest: () => dispatch(actions.refreshJwtRequest()),
-        isJwtTokenValid: actions.isJwtTokenValid,
-        isRefreshTokenValid: actions.isRefreshTokenValid,
+        logoutRequest: () => dispatch(authentication.logoutRequest()),
+        refreshJwtRequest: () => dispatch(authentication.refreshJwtRequest()),
+        isJwtTokenValid: authentication.isJwtTokenValid,
+        isRefreshTokenValid: authentication.isRefreshTokenValid,
+        clearCustomersRequest: () => dispatch(customers.clearCustomersRequest()),
+        clearRulesRequest: () => dispatch(rules.clearRulesRequest()),
+        clearUsersRequest: () => dispatch(users.clearUsersRequest()),
+        clearDashboardsRequest: () => dispatch(dashboards.clearDashboardsRequest()),
+        clearDevicesRequest: () => dispatch(devices.clearDevicesRequest()),
+        clearWidgetsRequest: () => dispatch(widgets.clearWidgetsRequest()),
+        clearPluginsRequest: () => dispatch(plugins.clearPluginsRequest()),
     };
 };
 

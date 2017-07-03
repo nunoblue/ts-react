@@ -5,6 +5,7 @@ import {
     API_WIDGETS,
     API_WIDGETS_SUCCESS,
     API_WIDGETS_FAILURE,
+    CLEAR_WIDGETS,
 } from './ActionTypes';
 
 import config from '../config';
@@ -31,6 +32,12 @@ function getWidgetsFailure() {
     };
 }
 
+function clearWidgetsSuccess() {
+    return {
+        type: CLEAR_WIDGETS,
+    };
+}
+
 export const getWidgetsRequest = () => (dispatch) => {
     dispatch(getWidgets());
 
@@ -45,3 +52,6 @@ export const getWidgetsRequest = () => (dispatch) => {
     });
 };
 
+export const clearWidgetsRequest = () => (dispatch) => {
+    dispatch(clearWidgetsSuccess());
+};

@@ -19,23 +19,23 @@ module.exports = merge(baseConfig, {
         path: path.resolve(__dirname, 'public'),
         filename: '[name].[chunkhash:8].js',
         chunkFilename: '[id].[chunkhash:8].js',
-        publicPath: '/js/'
+        publicPath: '/js/',
     },
 
     plugins: [
         // 로더들에게 옵션을 넣어주는 플러그인
         new webpack.LoaderOptionsPlugin({
-            minimize: true
+            minimize: true,
         }),
         new webpack.optimize.UglifyJsPlugin({
             sourceMap: true,
             compress: {
                 warnings: false,
-                unused: true // tree shaking(export된 모듈 중 사용하지 않는 모듈은 포함하지않음)
-            }
+                unused: true, // tree shaking(export된 모듈 중 사용하지 않는 모듈은 포함하지않음)
+            },
         }),
         new webpack.EnvironmentPlugin({
-            NODE_ENV: 'production'
+            NODE_ENV: 'production',
         }),
         // new ExtractTextPlugin({
         //     filename: '[name].[chunkhash:8].css'
@@ -48,12 +48,12 @@ module.exports = merge(baseConfig, {
                 return module.context && module.context.indexOf('node_modules') !== -1;
             },
             // 요 놈은 vendor에 대한 내용
-            fileName: '[name].[chunkhash:8]'
+            fileName: '[name].[chunkhash:8]',
         }),
         // index.html 로 의존성 파일들 inject해주는 플러그인
         new HtmlWebpackPlugin({
-            template: './src/index.html'
-        })
+            template: './src/index.html',
+        }),
     ],
 
     // module: {

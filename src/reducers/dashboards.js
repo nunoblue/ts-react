@@ -6,6 +6,7 @@ import {
     TENANT_DASHBOARDS_FAILURE,
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
+    CLEAR_DASHBOARDS,
 } from '../actions/ActionTypes';
 
 const initialState = {
@@ -52,6 +53,8 @@ export default function dashboards(state = initialState, action) {
                     $set: 'SUCCESS',
                 },
             });
+        case CLEAR_DASHBOARDS:
+            return initialState;
         default:
             return state;
     }

@@ -27,6 +27,8 @@ const apServer = config.apServer;
 const LOGIN_URL = `${apServer}/api/auth/login`;
 const TOKEN_URL = `${apServer}/api/auth/token`;
 const API_USER_URL = `${apServer}/api/user`;
+const API_ACTIVATE_URL = `${apServer}/api/noauth/activate`;
+const API_SEND_ACTIVATION_MAIL_URL = `${apServer}/api/user/sendActivationMail`;
 
 function updateAndValidateToken(token, prefix, notify) {
     let valid = false;
@@ -256,9 +258,37 @@ export const getUserRequest = () => {
             }).then((response) => {
                 dispatch(getUserSuccess(response.data));
             }).catch((error) => {
-                console.log(error.response);
                 dispatch(getUserFailure(error.response.data.message));
             });
         }
+    };
+};
+
+export const sendActivationEmail = (email) => {
+    const params = {
+        email,
+    };
+    return axios.get(API_SEND_ACTIVATION_MAIL_URL, {
+        params,
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    });
+};
+
+export const activateRequest = (activateToken, password) => {
+    return (dispatch) => {
+        dispatch(login());
+        const params = {
+            activateToken,
+            password,
+        };
+        return axios.post(API_ACTIVATE_URL, {
+            params,
+        }).then((response) => {
+            dispatch(loginSuccess(response));
+        }).catch((error) => {
+            dispatch(loginFailure(error.response.data.message));
+        });
     };
 };

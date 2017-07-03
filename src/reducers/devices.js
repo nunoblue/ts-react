@@ -8,6 +8,7 @@ import {
     API_DELETE_DEVICE_SUCCESS,
     API_DEVICE_TYPES,
     API_DEVICE_CREDENTIALS,
+    CLEAR_DEVICES,
  } from '../actions/ActionTypes';
 
 const initialState = {
@@ -74,6 +75,8 @@ export default function devices(state = initialState, action) {
                     $set: action.credentials,
                 },
             });
+        case CLEAR_DEVICES:
+            return initialState;
         default:
             return state;
     }

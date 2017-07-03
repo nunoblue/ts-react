@@ -7,19 +7,19 @@ class CustomButton extends Component {
         tooltipTitle: PropTypes.string,
         className: PropTypes.string,
         iconClassName: PropTypes.string,
-        isUsed: PropTypes.bool,
+        visible: PropTypes.bool,
     }
 
     static defaultProps = {
         tooltipTitle: '',
         className: '',
         iconClassName: '',
-        isUsed: true,
+        visible: true,
     }
 
     render() {
         let component = null;
-        if (this.props.isUsed) {
+        if (this.props.visible) {
             component = (
                 <Tooltip title={this.props.tooltipTitle}>
                     <div className={this.props.className}>

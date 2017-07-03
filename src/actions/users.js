@@ -7,12 +7,13 @@ import {
     API_USERS_FAILURE,
     API_SAVE_USERS_SUCCESS,
     API_DELETE_USERS_SUCCESS,
+    CLEAR_USERS,
 } from './ActionTypes';
 
 import config from '../config';
 
 const apServer = config.apServer;
-const USERS_URL = `${apServer}/api/customer/`;
+const USERS_URL = `${apServer}/api/customer`;
 const SAVE_USER_URL = `${apServer}/api/user`;
 const DELETE_USER_URL = `${apServer}/api/user`;
 
@@ -48,10 +49,15 @@ function deleteUserSuccess() {
     };
 }
 
+function clearUsersSuccess() {
+    return {
+        type: CLEAR_USERS,
+    };
+}
+
 export const getUsersRequest = (limit, textSearch, id) => {
     return (dispatch) => {
         dispatch(getUsers());
-
         const params = {
             limit,
             textSearch,
@@ -118,3 +124,6 @@ export const multipleDeleteUserRequest = (idArray) => {
     };
 };
 
+export const clearUsersRequest = () => (dispatch) => {
+    dispatch(clearUsersSuccess());
+};

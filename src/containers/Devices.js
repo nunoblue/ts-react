@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Modal, notification } from 'antd';
+import { Row, Modal, notification, Button } from 'antd';
 
 import CustomButton from '../components/common/CustomButton';
 import CustomCheckbox from '../components/common/CustomCheckbox';
@@ -9,6 +9,7 @@ import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
 
 import * as actions from '../actions/devices';
+import * as customers from '../actions/customers';
 
 class Devices extends Component {
     state = {
@@ -24,11 +25,69 @@ class Devices extends Component {
         this.refershDeviceRequest();
     }
 
-    shouldComponentUpdate(prevProps) {
-        if (prevProps.data === this.props.data) {
+    shouldComponentUpdate(prevProps, prevState) {
+        if (prevState.checkedCount !== this.state.checkedCount) {
+            return true;
+        } else if (prevProps.shortInfo === this.props.shortInfo) {
             return false;
         }
         return true;
+    }
+
+    buttonComponents = (deviceId, customerId) => {
+        const { shortInfo, currentUser, match } = this.props;
+        const tenantCustomerId = currentUser.customerId.id;
+        const isPublic = shortInfo[customerId] ? shortInfo[customerId].isPublic : undefined;
+        const isAssign = tenantCustomerId !== customerId;
+        let shareVisible;
+        let assignVisible;
+        let deleteVisible;
+        if (this.state.authority) {
+            if (match.params.customerId) {
+                shareVisible = false;
+                assignVisible = true;
+                deleteVisible = false;
+            } else {
+                shareVisible = isPublic;
+                assignVisible = !shareVisible;
+                deleteVisible = true;
+            }
+        } else {
+            shareVisible = false;
+            assignVisible = false;
+            deleteVisible = false;
+        }
+        const modalConfirmAction = this.handleDeleteConfirm.bind(this, name, deviceId);
+        const credentialsModal = this.openCredentials.bind(this, deviceId);
+        return (
+            <Button.Group className="custom-card-buttongroup">
+                <CustomButton
+                    className="custom-card-button"
+                    visible={shareVisible}
+                    iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
+                    tooltipTitle={isPublic ? '디바이스 공유 해제' : '디바이스 공유'}
+                />
+                <CustomButton
+                    className="custom-card-button"
+                    visible={assignVisible}
+                    iconClassName={isAssign ? 'user-delete' : 'user-add'}
+                    tooltipTitle={isAssign ? '커스터머 해제' : '커스터머 할당'}
+                />
+                <CustomButton
+                    className="custom-card-button"
+                    iconClassName="key"
+                    onClick={credentialsModal}
+                    tooltipTitle="크리덴셜 관리"
+                />
+                <CustomButton
+                    className="custom-card-button"
+                    visible={deleteVisible}
+                    iconClassName="delete"
+                    onClick={modalConfirmAction}
+                    tooltipTitle="디바이스 삭제"
+                />
+            </Button.Group>
+        );
     }
 
     components = () => {
@@ -36,14 +95,15 @@ class Devices extends Component {
             const name = data.name;
             const type = data.type;
             const id = data.id.id;
-            const modalConfirmAction = this.handleDeleteConfirm.bind(this, name, id);
-            const credentialsModal = this.openCredentials.bind(this, id);
+            const customerId = data.customerId.id;
             return (
-                <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{name}</CustomCheckbox>} content={type.toUpperCase()}>
-                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="user-add" tooltipTitle="디바이스 공유" />
-                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="tablet" tooltipTitle="커스터머 할당" />
-                    <CustomButton className="custom-card-button" iconClassName="layout" onClick={credentialsModal} tooltipTitle="크리덴셜 관리" />
-                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="디바이스 삭제" />
+                <CustomCard
+                    key={id}
+                    id={id}
+                    title={<CustomCheckbox value={id} onChange={this.handleChecked}>{name}</CustomCheckbox>}
+                    content={type.toUpperCase()}
+                >
+                    {this.buttonComponents(id, customerId)}
                 </CustomCard>
             );
         });
@@ -51,19 +111,37 @@ class Devices extends Component {
     }
 
     refershDeviceRequest = () => {
+        const { currentUser, match } = this.props;
         const limit = this.state.limit;
         const textSearch = this.state.textSearch;
         this.setState({
             checkedIdArray: [],
             checkedCount: 0,
         });
-        this.props.getDevicesRequest(limit, textSearch, this.props.currentUser).then(() => {
+        let authority;
+        let customerId;
+        if (this.state.authority) {
+            customerId = match.params.customerId;
+            authority = customerId ? 'CUSTOMER_USER' : currentUser.authority;
+        } else {
+            customerId = currentUser.customerId.id;
+            authority = 'CUSTOMER_USER';
+        }
+        const customerIdArray = [];
+        this.props.getDevicesRequest(limit, textSearch, authority, customerId).then(() => {
             if (this.props.statusMessage !== 'SUCCESS') {
                 notification.error({
                     message: this.props.errorMessage,
                 });
             }
+            this.props.data.map((data) => {
+                if (customerIdArray.indexOf(data.customerId.id) === -1 && currentUser.customerId.id !== data.customerId.id) {
+                    customerIdArray.push(data.customerId.id);
+                }
+            });
+            this.props.getCustomerShortInfoRequest(customerIdArray);
         });
+
         this.props.getDeviceTypesRequest().then(() => {
             if (this.props.statusMessage !== 'SUCCESS') {
                 notification.error({
@@ -229,14 +307,14 @@ class Devices extends Component {
                 {this.components()}
                 <div className="footer-buttons">
                     <CustomButton
-                    isUsed={this.state.checkedCount !== 0}
+                    visible={this.state.checkedCount !== 0}
                     tooltipTitle={`디바이스 ${this.state.checkedCount}개 삭제`}
                     className="custom-card-button"
                     iconClassName="delete"
                     onClick={this.handleDeleteConfirm}
                     size="large"
                     />
-                    <CustomButton isUsed={this.state.authority} tooltipTitle="디바이스 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDeviceModal} size="large" />
+                    <CustomButton visible={this.state.authority} tooltipTitle="디바이스 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDeviceModal} size="large" />
                 </div>
                 <AddDeviceModal
                 ref={(c) => { this.addModal = c; }}
@@ -263,13 +341,14 @@ const mapStateToProps = (state) => {
         types: state.devices.types,
         credentials: state.devices.credentials,
         currentUser: state.authentication.currentUser,
+        shortInfo: state.customers.shortInfo,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getDevicesRequest: (limit, textSearch, currentUser) => {
-            return dispatch(actions.getDevicesRequest(limit, textSearch, currentUser));
+        getDevicesRequest: (limit, textSearch, currentUser, customerId) => {
+            return dispatch(actions.getDevicesRequest(limit, textSearch, currentUser, customerId));
         },
         getDeviceTypesRequest: () => {
             return dispatch(actions.getDeviceTypesRequest());
@@ -288,6 +367,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         saveDeviceCredentialsRequest: (credentials) => {
             return dispatch(actions.saveDeviceCredentialsRequest(credentials));
+        },
+        getCustomerShortInfoRequest: (customerIdArray) => {
+            return dispatch(customers.getCustomerShortInfoRequest(customerIdArray));
         },
     };
 };

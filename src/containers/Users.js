@@ -22,6 +22,15 @@ class Users extends Component {
         this.refershUserRequest();
     }
 
+    shouldComponentUpdate(prevProps, prevState) {
+        if (prevState.checkedCount !== this.state.checkedCount) {
+            return true;
+        } else if (prevProps.data === this.props.data) {
+            return false;
+        }
+        return true;
+    }
+
     components = () => {
         const components = this.props.data.map((data) => {
             const email = data.email;
@@ -32,7 +41,7 @@ class Users extends Component {
             const modalConfirmAction = this.handleDeleteConfirm.bind(this, email, id);
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{email}</CustomCheckbox>} content={`${firstName} ${lastName}`}>
-                    <CustomButton className="custom-card-button" isUsed={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="유저 디바이스 삭제" />
+                    <CustomButton className="custom-card-button" visible={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="유저 디바이스 삭제" />
                 </CustomCard>
             );
         });
@@ -169,12 +178,12 @@ class Users extends Component {
                 {this.components()}
                 <div className="footer-buttons">
                     <CustomButton
-                    isUsed={this.state.checkedCount !== 0}
-                    tooltipTitle={`유저 ${this.state.checkedCount}개 삭제`}
-                    className="custom-card-button"
-                    iconClassName="delete"
-                    onClick={this.handleDeleteConfirm}
-                    size="large"
+                        visible={this.state.checkedCount !== 0}
+                        tooltipTitle={`유저 ${this.state.checkedCount}개 삭제`}
+                        className="custom-card-button"
+                        iconClassName="delete"
+                        onClick={this.handleDeleteConfirm}
+                        size="large"
                     />
                     <CustomButton tooltipTitle="유저 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddUserModal} size="large" />
                 </div>

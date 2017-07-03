@@ -4,6 +4,7 @@ import {
     API_PLUGINS,
     API_PLUGINS_SUCCESS,
     API_PLUGINS_FAILURE,
+    CLEAR_PLUGINS,
 } from '../actions/ActionTypes';
 
 const initialState = {
@@ -38,6 +39,8 @@ export default function plugins(state = initialState, action) {
                     $set: action.errorMessage,
                 },
             });
+        case CLEAR_PLUGINS:
+            return initialState;
         default:
             return state;
     }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Modal, notification } from 'antd';
+import { translate } from 'react-i18next';
+import i18next from 'i18next';
 
 import CustomButton from '../components/common/CustomButton';
 import CustomCheckbox from '../components/common/CustomCheckbox';
@@ -9,6 +11,7 @@ import AddDashboardModal from '../components/dashboard/AddDashboardModal';
 
 import * as actions from '../actions/dashboards';
 
+@translate(['dashboard'], { wait: false })
 class Dashboards extends Component {
 
     state = {
@@ -24,8 +27,10 @@ class Dashboards extends Component {
         this.refershDashboardRequest();
     }
 
-    shouldComponentUpdate(prevProps) {
-        if (prevProps.data === this.props.data) {
+    shouldComponentUpdate(prevProps, prevState) {
+        if (prevState.checkedCount !== this.state.checkedCount) {
+            return true;
+        } else if (prevProps.data === this.props.data) {
             return false;
         }
         return true;
@@ -38,10 +43,10 @@ class Dashboards extends Component {
             const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{title}</CustomCheckbox>}>
-                    <CustomButton className="custom-card-button" iconClassName="user-add" tooltipTitle="대시보드 상세정보" />
-                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="tablet" tooltipTitle="대시보드 공유" />
-                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="layout" tooltipTitle="커스터머 선택" />
-                    <CustomButton className="custom-card-button" isUsed={this.state.authority} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="대시보드 삭제" />
+                    <CustomButton className="custom-card-button" iconClassName="search" tooltipTitle="대시보드 상세정보" />
+                    <CustomButton className="custom-card-button" visible={this.state.authority} iconClassName="tablet" tooltipTitle="대시보드 공유" />
+                    <CustomButton className="custom-card-button" visible={this.state.authority} iconClassName="layout" tooltipTitle="커스터머 선택" />
+                    <CustomButton className="custom-card-button" visible={this.state.authority} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="대시보드 삭제" />
                 </CustomCard>
             );
         });
@@ -49,13 +54,23 @@ class Dashboards extends Component {
     }
 
     refershDashboardRequest = () => {
+        const { currentUser, match } = this.props;
         const limit = this.state.limit;
         const textSearch = this.state.textSearch;
         this.setState({
             checkedIdArray: [],
             checkedCount: 0,
         });
-        this.props.getDashboardsRequest(limit, textSearch, this.props.currentUser).then(() => {
+        let authority;
+        let customerId;
+        if (this.state.authority) {
+            customerId = match.params.customerId;
+            authority = customerId ? 'CUSTOMER_USER' : currentUser.authority;
+        } else {
+            customerId = currentUser.customerId.id;
+            authority = 'CUSTOMER_USER';
+        }
+        this.props.getDashboardsRequest(limit, textSearch, authority, customerId).then(() => {
             if (this.props.statusMessage !== 'SUCCESS') {
                 notification.error({
                     message: this.props.errorMessage,
@@ -159,19 +174,20 @@ class Dashboards extends Component {
     }
 
     render() {
+        const { t } = this.props;
         return (
             <Row>
                 {this.components()}
                 <div className="footer-buttons">
                     <CustomButton
-                    isUsed={this.state.checkedCount !== 0}
+                    visible={this.state.checkedCount !== 0}
                     tooltipTitle={`대시보드 ${this.state.checkedCount}개 삭제`}
                     className="custom-card-button"
                     iconClassName="delete"
                     onClick={this.handleDeleteConfirm}
                     size="large"
                     />
-                    <CustomButton isUsed={this.state.authority} tooltipTitle="대시보드 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDashboardModal} size="large" />
+                    <CustomButton visible={this.state.authority} tooltipTitle={t('dashboard.add-dashboard-text')} className="custom-card-button" iconClassName="plus" onClick={this.openAddDashboardModal} size="large" />
                 </div>
                 <AddDashboardModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveDashboard} onCancel={this.hideAddDashboardModal} />
             </Row>
@@ -190,8 +206,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getDashboardsRequest: (limit, textSearch, currentUser) => {
-            return dispatch(actions.getDashboardsRequest(limit, textSearch, currentUser));
+        getDashboardsRequest: (limit, textSearch, currentUser, customerId) => {
+            return dispatch(actions.getDashboardsRequest(limit, textSearch, currentUser, customerId));
         },
         saveDashboardRequest: (dashboard) => {
             return dispatch(actions.saveDashboardRequest(dashboard));

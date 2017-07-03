@@ -9,6 +9,7 @@ import CustomCheckbox from '../components/common/CustomCheckbox';
 import AddCustomerModal from '../components/customer/AddCustomerModal';
 
 import * as actions from '../actions/customers';
+import * as dashboards from '../actions/dashboards';
 
 class Customers extends Component {
     state = {
@@ -23,6 +24,15 @@ class Customers extends Component {
         this.refershCustomerRequest();
     }
 
+    shouldComponentUpdate(prevProps, prevState) {
+        if (prevState.checkedCount !== this.state.checkedCount) {
+            return true;
+        } else if (prevProps.data === this.props.data) {
+            return false;
+        }
+        return true;
+    }
+
     components = () => {
         const components = this.props.data.map((data) => {
             const title = data.title;
@@ -33,11 +43,15 @@ class Customers extends Component {
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{title}</CustomCheckbox>} content={address}>
                     <Link to={`/customers/${id}/users`}>
-                        <CustomButton className="custom-card-button" isUsed={!isPublic} iconClassName="user-add" tooltipTitle="커스터머 사용자 관리" />
+                        <CustomButton className="custom-card-button" visible={!isPublic} iconClassName="user-add" tooltipTitle="커스터머 사용자 관리" />
                     </Link>
-                    <CustomButton className="custom-card-button" iconClassName="tablet" tooltipTitle="커스터머 디바이스 관리" />
-                    <CustomButton className="custom-card-button" iconClassName="layout" tooltipTitle="커스터머 대시보드 관리" />
-                    <CustomButton className="custom-card-button" isUsed={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="커스터머 디바이스 삭제" />
+                    <Link to={`/customers/${id}/devices`}>
+                        <CustomButton className="custom-card-button" iconClassName="tablet" tooltipTitle="커스터머 디바이스 관리" />
+                    </Link>
+                    <Link to={`/customers/${id}/dashboards`}>
+                        <CustomButton className="custom-card-button" iconClassName="layout" tooltipTitle="커스터머 대시보드 관리" />
+                    </Link>
+                    <CustomButton className="custom-card-button" visible={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="커스터머 디바이스 삭제" />
                 </CustomCard>
             );
         });
@@ -161,7 +175,7 @@ class Customers extends Component {
                 {this.components()}
                 <div className="footer-buttons">
                     <CustomButton
-                    isUsed={this.state.checkedCount !== 0}
+                    visible={this.state.checkedCount !== 0}
                     tooltipTitle={`커스터머 ${this.state.checkedCount}개 삭제`}
                     className="custom-card-button"
                     iconClassName="delete"
@@ -181,6 +195,7 @@ const mapStateToProps = (state) => {
         statusMessage: state.customers.statusMessage,
         data: state.customers.data,
         errorMessage: state.customers.errorMessage,
+        currentUser: state.authentication.currentUser,
     };
 };
 

@@ -7,6 +7,7 @@ import {
     TENANT_DASHBOARDS_FAILURE,
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
+    CLEAR_DASHBOARDS,
  } from './ActionTypes';
 
 import config from '../config';
@@ -49,9 +50,15 @@ function deleteDashboardSuccess() {
     };
 }
 
-export const getDashboardsRequest = (limit, textSearch, currentUser) => (dispatch) => {
+function clearDashboardsSuccess() {
+    return {
+        type: CLEAR_DASHBOARDS,
+    };
+}
+
+export const getDashboardsRequest = (limit, textSearch, authority, id) => (dispatch) => {
     dispatch(getDashboards());
-    if (currentUser.authority === 'TENANT_ADMIN') {
+    if (authority === 'TENANT_ADMIN') {
         return axios.get(TENANT_DASHBOARDS_URL, {
             params: { limit, textSearch },
             headers: {
@@ -63,7 +70,7 @@ export const getDashboardsRequest = (limit, textSearch, currentUser) => (dispatc
             dispatch(getDashboardsFailure(error.response.data.message));
         });
     }
-    return axios.get(`${CUSTOMER_DASHBOARDS_URL}/${currentUser.customerId.id}/dashboards`, {
+    return axios.get(`${CUSTOMER_DASHBOARDS_URL}/${id}/dashboards`, {
         params: { limit, textSearch },
         headers: {
             'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
@@ -122,4 +129,8 @@ export const multipleDeleteDashboardRequest = (idArray) => {
             });
         }));
     };
+};
+
+export const clearDashboardsRequest = () => (dispatch) => {
+    dispatch(clearDashboardsSuccess());
 };

@@ -6,12 +6,15 @@ import {
     API_CUSTOMERS_FAILURE,
     API_SAVE_CUSTOMER_SUCCESS,
     API_DELETE_CUSTOMER_SUCCESS,
+    API_CUSTOMERS_SHORT_INFO_SUCCESS,
+    CLEAR_CUSTOMERS,
 } from '../actions/ActionTypes';
 
 const initialState = {
     statusMessage: 'INIT',
     data: [],
     erorrMessage: 'NONE',
+    shortInfo: {},
 };
 
 const customers = (state = initialState, action) => {
@@ -54,7 +57,14 @@ const customers = (state = initialState, action) => {
                     $set: 'SUCCESS',
                 },
             });
-
+        case API_CUSTOMERS_SHORT_INFO_SUCCESS:
+            return update(state, {
+                shortInfo: {
+                    $merge: action.shortInfo,
+                },
+            });
+        case CLEAR_CUSTOMERS:
+            return initialState;
         default:
             return state;
     }

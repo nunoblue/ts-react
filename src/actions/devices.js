@@ -9,6 +9,7 @@ import {
     API_DELETE_DEVICE_SUCCESS,
     API_DEVICE_TYPES,
     API_DEVICE_CREDENTIALS,
+    CLEAR_DEVICES,
 } from './ActionTypes';
 
 import config from '../config';
@@ -68,9 +69,15 @@ function deleteDeviceSuccess() {
     };
 }
 
-export const getDevicesRequest = (limit, textSearch, currentUser) => (dispatch) => {
+function clearDevicesSuccess() {
+    return {
+        type: CLEAR_DEVICES,
+    };
+}
+
+export const getDevicesRequest = (limit, textSearch, authority, id) => (dispatch) => {
     dispatch(getDevices());
-    if (currentUser.authority === 'TENANT_ADMIN') {
+    if (authority === 'TENANT_ADMIN') {
         return axios.get(TENANT_DEVICES_URL, {
             params: { limit, textSearch },
             headers: {
@@ -83,7 +90,7 @@ export const getDevicesRequest = (limit, textSearch, currentUser) => (dispatch) 
         });
     }
 
-    return axios.get(`${CUSTOMER_DEVICES_URL}/${currentUser.customerId.id}/devices`, {
+    return axios.get(`${CUSTOMER_DEVICES_URL}/${id}/devices`, {
         params: { limit, textSearch },
         headers: {
             'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
@@ -188,4 +195,8 @@ export const multipleDeleteDeviceRequest = (idArray) => {
             });
         }));
     };
+};
+
+export const clearDevicesRequest = () => (dispatch) => {
+    dispatch(clearDevicesSuccess());
 };

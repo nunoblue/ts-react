@@ -5,6 +5,7 @@ import {
     API_PLUGINS,
     API_PLUGINS_SUCCESS,
     API_PLUGINS_FAILURE,
+    CLEAR_PLUGINS,
 } from './ActionTypes';
 
 import config from '../config';
@@ -31,6 +32,12 @@ function getPluginsFailure() {
     };
 }
 
+function clearPluginsSuccess() {
+    return {
+        type: CLEAR_PLUGINS,
+    };
+}
+
 export const getPluginsRequest = () => (dispatch) => {
     dispatch(getPlugins());
 
@@ -45,3 +52,6 @@ export const getPluginsRequest = () => (dispatch) => {
     });
 };
 
+export const clearPluginsRequest = () => (dispatch) => {
+    dispatch(clearPluginsSuccess());
+};

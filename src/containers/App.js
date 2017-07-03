@@ -4,28 +4,10 @@ import { connect } from 'react-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
 import { Layout, Row, Col, Switch as AntSwitch } from 'antd';
 
-import asyncComponent from '../components/AsyncComponent';
-import NoMatch from '../components/NoMatch';
-import Home from '../components/Home';
-
 import Main from './Main';
 import Login from './Login';
-// import Plugins from './Plugins';
-// import Rules from './Rules';
-// import Customers from './Customers';
-// import Widgets from './Widgets';
-// import Dashboards from './Dashboards';
-// import Devices from './Devices';
-// import Users from './Users';
-
-
 import routes from '../routes';
-
 import '../../less/app.less';
-
-// const About = asyncComponent(() => import('../components/About').then(module => module.default), {name: 'About'});
-// const Dashboard = asyncComponent(() => import('../components/Dashboard').then(module => module.default), {name: 'Dashboard'});
-// const NoMatch = asyncComponent(() => import('../components/NoMatch').then(module => module.default), {name: 'NoMatch'});
 import * as actions from '../actions/authentication';
 
 const history = createBrowserHistory();
@@ -36,7 +18,7 @@ class App extends Component {
         changeContent: false,
     }
 
-    componentWillMount() {
+    componentDidMount() {
         console.log('App Render');
         this.props.validateJwtToken().then(() => {
             this.props.refreshJwtRequest();

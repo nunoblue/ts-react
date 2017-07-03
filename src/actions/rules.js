@@ -5,6 +5,7 @@ import {
     API_RULES,
     API_RULES_SUCCESS,
     API_RULES_FAILURE,
+    CLEAR_RULES,
 } from './ActionTypes';
 
 import config from '../config';
@@ -31,6 +32,12 @@ function getRulesFailure() {
     };
 }
 
+function clearRulesSuccess() {
+    return {
+        type: CLEAR_RULES,
+    };
+}
+
 export const getRulesRequest = () => (dispatch) => {
     dispatch(getRules());
 
@@ -45,3 +52,6 @@ export const getRulesRequest = () => (dispatch) => {
     });
 };
 
+export const clearRulesRequest = () => (dispatch) => {
+    dispatch(clearRulesSuccess());
+};

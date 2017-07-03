@@ -4,6 +4,7 @@ import {
     API_WIDGETS,
     API_WIDGETS_SUCCESS,
     API_WIDGETS_FAILURE,
+    CLEAR_WIDGETS,
 } from '../actions/ActionTypes';
 
 const initialState = {
@@ -34,6 +35,8 @@ export default function widgets(state = initialState, action) {
                     $set: 'FAILURE',
                 },
             });
+        case CLEAR_WIDGETS:
+            return initialState;
         default:
             return state;
     }
