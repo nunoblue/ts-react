@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Modal, notification, Button } from 'antd';
+import { translate } from 'react-i18next';
 
 import CustomButton from '../components/common/CustomButton';
 import CustomCheckbox from '../components/common/CustomCheckbox';
@@ -13,6 +14,7 @@ import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal'
 import * as actions from '../actions/devices';
 import * as customers from '../actions/customers';
 
+@translate(['device'], { wait: false })
 class Devices extends Component {
 
     static contextTypes = {
@@ -43,7 +45,7 @@ class Devices extends Component {
     }
 
     buttonComponents = (deviceId, customerId) => {
-        const { shortInfo, match } = this.props;
+        const { shortInfo, match, t } = this.props;
         const { currentUser } = this.context;
         const tenantCustomerId = currentUser.customerId.id;
         const isPublic = shortInfo[customerId] ? shortInfo[customerId].isPublic : undefined;
@@ -97,7 +99,7 @@ class Devices extends Component {
                     visible={deleteVisible}
                     iconClassName="delete"
                     onClick={modalConfirmAction}
-                    tooltipTitle="디바이스 삭제"
+                    tooltipTitle={t('device.delete')}
                 />
             </Button.Group>
         );
@@ -313,6 +315,7 @@ class Devices extends Component {
     }
 
     render() {
+        const { t } = this.props;
         const options = this.props.types.map((obj) => {
             return obj.type;
         });
@@ -328,7 +331,7 @@ class Devices extends Component {
                         onClick={this.handleDeleteConfirm}
                         size="large"
                     />
-                    <CustomButton shape="circle" visible={this.state.isCustomer} tooltipTitle="디바이스 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDeviceModal} size="large" />
+                    <CustomButton shape="circle" visible={this.state.isCustomer} tooltipTitle={t('device.add')} className="custom-card-button" iconClassName="plus" onClick={this.openAddDeviceModal} size="large" />
                 </div>
                 <AddDeviceModal
                     ref={(c) => { this.addModal = c; }}
