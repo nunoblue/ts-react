@@ -14,8 +14,9 @@ const PATH_NAME = {
     dashboards: ['dashboard', 'Dashboard'],
     tenants: ['people', 'Tenant'],
     'widgets-bundles': ['widgets', 'Widgets'],
-    'setting/general': ['dashboard', 'System-Setting'],
-    'setting/outgoing-mail': ['dashboard', 'System-Setting'],
+    settings: ['settings', 'System Setting'],
+    general: ['settings_applications', 'General'],
+    'outgoing-mail': ['mail', 'Outgoing Mail'],
 };
 
 class Title extends Component {
@@ -42,7 +43,15 @@ class Title extends Component {
             );
         } else {
             components = path.map((str, i) => {
-                if (str !== '' && str.indexOf('-') === -1) {
+                if (str !== '' && str.length < 16) {
+                    if (str === 'settings') {
+                        return (
+                            <Breadcrumb.Item key={str}>
+                                <i className="material-icons margin-right-8 vertical-middle">{PATH_NAME[str][0]}</i>
+                                {(path.length - 1) !== i ? <Link to={`/${path[1]}/general`}>{PATH_NAME[str][1]}</Link> : PATH_NAME[str][1]}
+                            </Breadcrumb.Item>
+                        );
+                    }
                     return (
                         <Breadcrumb.Item key={str}>
                             <i className="material-icons margin-right-8 vertical-middle">{PATH_NAME[str][0]}</i>

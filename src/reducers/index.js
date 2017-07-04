@@ -8,6 +8,7 @@ import rules from './rules';
 import widgets from './widgets';
 import customers from './customers';
 import users from './users';
+import admins from './admins';
 
 export default combineReducers({
     authentication,
@@ -18,4 +19,5 @@ export default combineReducers({
     widgets,
     customers,
     users,
+    admins,
 });

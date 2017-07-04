@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Modal, notification } from 'antd';
@@ -9,9 +10,13 @@ import CustomCheckbox from '../components/common/CustomCheckbox';
 import AddCustomerModal from '../components/customer/AddCustomerModal';
 
 import * as actions from '../actions/customers';
-import * as dashboards from '../actions/dashboards';
 
 class Customers extends Component {
+
+    static contextTypes = {
+        currentUser: PropTypes.object,
+    }
+
     state = {
         limit: 40,
         textSearch: '',
@@ -43,15 +48,15 @@ class Customers extends Component {
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{title}</CustomCheckbox>} content={address}>
                     <Link to={`/customers/${id}/users`}>
-                        <CustomButton className="custom-card-button" visible={!isPublic} iconClassName="user-add" tooltipTitle="커스터머 사용자 관리" />
+                        <CustomButton className="custom-card-button" shape="circle" visible={!isPublic} iconClassName="user-add" tooltipTitle="커스터머 사용자 관리" />
                     </Link>
                     <Link to={`/customers/${id}/devices`}>
-                        <CustomButton className="custom-card-button" iconClassName="tablet" tooltipTitle="커스터머 디바이스 관리" />
+                        <CustomButton className="custom-card-button" shape="circle" iconClassName="tablet" tooltipTitle="커스터머 디바이스 관리" />
                     </Link>
                     <Link to={`/customers/${id}/dashboards`}>
-                        <CustomButton className="custom-card-button" iconClassName="layout" tooltipTitle="커스터머 대시보드 관리" />
+                        <CustomButton className="custom-card-button" shape="circle" iconClassName="layout" tooltipTitle="커스터머 대시보드 관리" />
                     </Link>
-                    <CustomButton className="custom-card-button" visible={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="커스터머 디바이스 삭제" />
+                    <CustomButton className="custom-card-button" shape="circle" visible={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="커스터머 디바이스 삭제" />
                 </CustomCard>
             );
         });
@@ -175,14 +180,14 @@ class Customers extends Component {
                 {this.components()}
                 <div className="footer-buttons">
                     <CustomButton
-                    visible={this.state.checkedCount !== 0}
-                    tooltipTitle={`커스터머 ${this.state.checkedCount}개 삭제`}
-                    className="custom-card-button"
-                    iconClassName="delete"
-                    onClick={this.handleDeleteConfirm}
-                    size="large"
+                        visible={this.state.checkedCount !== 0}
+                        tooltipTitle={`커스터머 ${this.state.checkedCount}개 삭제`}
+                        className="custom-card-button"
+                        iconClassName="delete"
+                        onClick={this.handleDeleteConfirm}
+                        size="large"
                     />
-                    <CustomButton tooltipTitle="커스터머 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddCustomerModal} size="large" />
+                    <CustomButton tooltipTitle="커스터머 추가" className="custom-card-button" shape="circle" iconClassName="plus" onClick={this.openAddCustomerModal} size="large" />
                 </div>
                 <AddCustomerModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveCustomer} onCancel={this.hideAddCustomerModal} />
             </Row>
@@ -195,7 +200,6 @@ const mapStateToProps = (state) => {
         statusMessage: state.customers.statusMessage,
         data: state.customers.data,
         errorMessage: state.customers.errorMessage,
-        currentUser: state.authentication.currentUser,
     };
 };
 

@@ -11,7 +11,11 @@ class CustomCard extends Component {
             PropTypes.number,
             PropTypes.element,
         ]),
-        content: PropTypes.string,
+        content: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.element,
+        ]),
     }
 
     static defaultProps = {
@@ -32,6 +36,10 @@ class CustomCard extends Component {
     }
 
     handleClick = (e) => {
+        const { onClick } = this.props;
+        if (typeof onClick === 'undefined') {
+            return;
+        }
         const exceptedTarget = $(e.target);
         if (exceptedTarget.is('i') || exceptedTarget.is('button') || exceptedTarget.is('span') || exceptedTarget.is('input')) {
             return;

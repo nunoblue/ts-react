@@ -23,8 +23,10 @@ const SYS_ADMIN_MENU = {
     rules: ['settings_ethernet', 'Rule'],
     customers: ['people', 'Tenant'],
     widgets: ['widgets', 'Widget'],
-    'setting/general': ['dashboard', 'System-Setting'],
-    'setting/outgoing-mail': ['dashboard', 'System-Setting'],
+    settings: ['settings', 'System Setting', {
+        'settings/general': ['settings_applications', 'General'],
+        'settings/outgoing-mail': ['mail', 'Outgoing Mail'],
+    }],
 };
 class MenuList extends Component {
 
@@ -64,7 +66,33 @@ class MenuList extends Component {
                     );
                 });
             default:
-                return Object.keys(SYS_ADMIN_MENU).map((key) => {
+                return Object.keys(SYS_ADMIN_MENU).map((key, i) => {
+                    if (SYS_ADMIN_MENU[key].length > 2) {
+                        return (
+                            <Menu.SubMenu
+                                key={`/${key}`}
+                                title={
+                                    <span>
+                                        <i className="material-icons margin-right-8 vertical-middle">{SYS_ADMIN_MENU[key][0]}</i>
+                                        <span className="nav-text">{SYS_ADMIN_MENU[key][1]}</span>
+                                    </span>
+                                }
+                            >
+                                {
+                                    Object.keys(SYS_ADMIN_MENU[key][2]).map((subKey) => {
+                                        return (
+                                            <Menu.Item key={`/${subKey}`}>
+                                                <Link to={`/${subKey}`}>
+                                                    <i className="material-icons margin-right-8 vertical-middle">{SYS_ADMIN_MENU[key][2][subKey][0]}</i>
+                                                    <span className="nav-text">{SYS_ADMIN_MENU[key][2][subKey][1]}</span>
+                                                </Link>
+                                            </Menu.Item>
+                                        );
+                                    })
+                                }
+                            </Menu.SubMenu>
+                        );
+                    }
                     return (
                         <Menu.Item key={`/${key}`}>
                             <Link to={`/${key}`}>
@@ -79,7 +107,7 @@ class MenuList extends Component {
     render() {
         const authority = this.props.authority;
         return (
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={[this.props.selectedKey]}>
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={[this.props.selectedKey]} defaultOpenKeys={[`/${this.props.selectedKey.split('/')[1]}`]}>
                 {this.components(authority)}
             </Menu>
         );

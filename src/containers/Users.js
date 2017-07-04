@@ -41,7 +41,7 @@ class Users extends Component {
             const modalConfirmAction = this.handleDeleteConfirm.bind(this, email, id);
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{email}</CustomCheckbox>} content={`${firstName} ${lastName}`}>
-                    <CustomButton className="custom-card-button" visible={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="유저 디바이스 삭제" />
+                    <CustomButton className="custom-card-button" shape="circle" visible={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="유저 디바이스 삭제" />
                 </CustomCard>
             );
         });
@@ -185,7 +185,7 @@ class Users extends Component {
                         onClick={this.handleDeleteConfirm}
                         size="large"
                     />
-                    <CustomButton tooltipTitle="유저 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddUserModal} size="large" />
+                    <CustomButton shape="circle" tooltipTitle="유저 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddUserModal} size="large" />
                 </div>
                 <AddUserModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveUser} onCancel={this.hideAddUserModal} />
             </Row>

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
-import { Layout } from 'antd';
+import { Layout, Row, Col, Switch } from 'antd';
 
 import MenuList from '../components/MenuList';
 import Title from '../components/Title';
@@ -16,9 +17,23 @@ import * as widgets from '../actions/widgets';
 
 class Main extends Component {
 
+    static contextTypes = {
+        currentUser: PropTypes.object,
+    }
+
+    static childContextTypes = {
+        currentUser: PropTypes.object,
+    }
+
     state = {
         collapsed: false,
     };
+
+    getChildContext() {
+        return {
+            currentUser: this.context.currentUser,
+        };
+    }
 
     componentDidMount() {
         console.log('Layout Render');
@@ -45,7 +60,7 @@ class Main extends Component {
     }
 
     pathValidate = () => {
-        const validate = this.props.children[1].some(element => {
+        const validate = this.props.children.some(element => {
             if (element.props.path === this.props.location.pathname) {
                 return true;
             } else if (this.props.location.pathname.indexOf('-') !== -1) {
@@ -63,8 +78,15 @@ class Main extends Component {
         });
     }
 
+    changeContent = (checked) => {
+        this.setState({
+            changeContent: checked,
+        });
+    }
+
     render() {
-        const { validate, currentUser } = this.props;
+        const { validate } = this.props;
+        const { currentUser } = this.context;
         if (!this.props.isRefreshTokenValid()) {
             return <Redirect to="/login" />;
         }
@@ -92,7 +114,7 @@ class Main extends Component {
                     <div className="main-logo">
                         <Link to="/home">ThingStar</Link>
                     </div>
-                    <MenuList authority={this.props.currentUser.authority} selectedKey={this.props.location.pathname} />
+                    <MenuList authority={currentUser.authority} selectedKey={this.props.location.pathname} />
                 </Layout.Sider>
                 <Layout>
                     <Title
@@ -103,6 +125,11 @@ class Main extends Component {
                     matches={matches}
                     />
                     <Layout.Content className="code-box-demo">
+                        <Row>
+                            <Col span="2">
+                                <Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
+                            </Col>
+                        </Row>
                         {this.props.children}
                     </Layout.Content>
                 </Layout>
@@ -114,7 +141,6 @@ class Main extends Component {
 const mapStateToProps = (state) => {
     return {
         validate: state.authentication.validate,
-        currentUser: state.authentication.currentUser,
     };
 };
 

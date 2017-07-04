@@ -11,6 +11,10 @@ import App from './containers/App';
 import i18n from './i18n';
 import rootReducer from './reducers';
 
+// const resources = Object.assign({},
+//     i18n.getResourceBundle(locale, 'common'),
+//     i18n.getResourceBundle(locale, 'AccountForm')
+//   );
 let store;
 const enhancer = applyMiddleware(thunkMiddleware);
 if (process.env.NODE_ENV === 'development'

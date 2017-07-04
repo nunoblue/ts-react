@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Row, Modal, notification } from 'antd';
 import { translate } from 'react-i18next';
-import i18next from 'i18next';
 
 import CustomButton from '../components/common/CustomButton';
 import CustomCheckbox from '../components/common/CustomCheckbox';
@@ -14,12 +15,16 @@ import * as actions from '../actions/dashboards';
 @translate(['dashboard'], { wait: false })
 class Dashboards extends Component {
 
+    static contextTypes = {
+        currentUser: PropTypes.object,
+    }
+
     state = {
         limit: 30,
         textSearch: '',
         checkedCount: 0,
         checkedIdArray: [],
-        authority: this.props.currentUser.authority === 'TENANT_ADMIN',
+        authority: this.context.currentUser.authority === 'TENANT_ADMIN',
     }
 
     componentDidMount() {
@@ -43,10 +48,10 @@ class Dashboards extends Component {
             const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{title}</CustomCheckbox>}>
-                    <CustomButton className="custom-card-button" iconClassName="search" tooltipTitle="대시보드 상세정보" />
-                    <CustomButton className="custom-card-button" visible={this.state.authority} iconClassName="tablet" tooltipTitle="대시보드 공유" />
-                    <CustomButton className="custom-card-button" visible={this.state.authority} iconClassName="layout" tooltipTitle="커스터머 선택" />
-                    <CustomButton className="custom-card-button" visible={this.state.authority} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="대시보드 삭제" />
+                    <CustomButton className="custom-card-button" shape="circle" iconClassName="search" tooltipTitle="대시보드 상세정보" />
+                    <CustomButton className="custom-card-button" shape="circle" visible={this.state.authority} iconClassName="tablet" tooltipTitle="대시보드 공유" />
+                    <CustomButton className="custom-card-button" shape="circle" visible={this.state.authority} iconClassName="layout" tooltipTitle="커스터머 선택" />
+                    <CustomButton className="custom-card-button" shape="circle" visible={this.state.authority} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="대시보드 삭제" />
                 </CustomCard>
             );
         });
@@ -54,7 +59,8 @@ class Dashboards extends Component {
     }
 
     refershDashboardRequest = () => {
-        const { currentUser, match } = this.props;
+        const { match } = this.props;
+        const { currentUser } = this.context;
         const limit = this.state.limit;
         const textSearch = this.state.textSearch;
         this.setState({
@@ -180,14 +186,14 @@ class Dashboards extends Component {
                 {this.components()}
                 <div className="footer-buttons">
                     <CustomButton
-                    visible={this.state.checkedCount !== 0}
-                    tooltipTitle={`대시보드 ${this.state.checkedCount}개 삭제`}
-                    className="custom-card-button"
-                    iconClassName="delete"
-                    onClick={this.handleDeleteConfirm}
-                    size="large"
+                        visible={this.state.checkedCount !== 0}
+                        tooltipTitle={`대시보드 ${this.state.checkedCount}개 삭제`}
+                        className="custom-card-button"
+                        iconClassName="delete"
+                        onClick={this.handleDeleteConfirm}
+                        size="large"
                     />
-                    <CustomButton visible={this.state.authority} tooltipTitle={t('dashboard.add-dashboard-text')} className="custom-card-button" iconClassName="plus" onClick={this.openAddDashboardModal} size="large" />
+                    <CustomButton visible={this.state.authority} shape="circle" tooltipTitle={t('dashboard.add-dashboard-text')} className="custom-card-button" iconClassName="plus" onClick={this.openAddDashboardModal} size="large" />
                 </div>
                 <AddDashboardModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveDashboard} onCancel={this.hideAddDashboardModal} />
             </Row>
@@ -195,30 +201,18 @@ class Dashboards extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.dashboards.statusMessage,
-        data: state.dashboards.data,
-        errorMessage: state.dashboards.errorMessage,
-        currentUser: state.authentication.currentUser,
-    };
-};
+const mapStateToProps = (state) => ({
+    statusMessage: state.dashboards.statusMessage,
+    data: state.dashboards.data,
+    errorMessage: state.dashboards.errorMessage,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getDashboardsRequest: (limit, textSearch, currentUser, customerId) => {
-            return dispatch(actions.getDashboardsRequest(limit, textSearch, currentUser, customerId));
-        },
-        saveDashboardRequest: (dashboard) => {
-            return dispatch(actions.saveDashboardRequest(dashboard));
-        },
-        deleteDashboardRequest: (dashboardId) => {
-            return dispatch(actions.deleteDashboardRequest(dashboardId));
-        },
-        multipleDeleteDashboardRequest: (dashboardIdArray) => {
-            return dispatch(actions.multipleDeleteDashboardRequest(dashboardIdArray));
-        },
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    getDashboardsRequest: actions.getDashboardsRequest,
+    saveDashboardRequest: actions.saveDashboardRequest,
+    deleteDashboardRequest: actions.deleteDashboardRequest,
+    multipleDeleteDashboardRequest: actions.multipleDeleteDashboardRequest,
+}, dispatch);
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboards);
