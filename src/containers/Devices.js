@@ -324,6 +324,7 @@ class Devices extends Component {
                 {this.components()}
                 <div className="footer-buttons">
                     <CustomButton
+                        shape="circle"
                         visible={this.state.checkedCount !== 0}
                         tooltipTitle={`디바이스 ${this.state.checkedCount}개 삭제`}
                         className="custom-card-button"
@@ -331,7 +332,15 @@ class Devices extends Component {
                         onClick={this.handleDeleteConfirm}
                         size="large"
                     />
-                    <CustomButton shape="circle" visible={this.state.isCustomer} tooltipTitle={t('device.add')} className="custom-card-button" iconClassName="plus" onClick={this.openAddDeviceModal} size="large" />
+                    <CustomButton
+                        shape="circle"
+                        visible={this.state.isCustomer}
+                        tooltipTitle={t('device.add-device-text')}
+                        className="custom-card-button"
+                        iconClassName="plus"
+                        onClick={this.openAddDeviceModal}
+                        size="large"
+                    />
                 </div>
                 <AddDeviceModal
                     ref={(c) => { this.addModal = c; }}

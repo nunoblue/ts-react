@@ -110,7 +110,6 @@ class Dashboards extends Component {
     }
 
     components = () => {
-        console.log('ttt');
         const components = this.props.data.map((data) => {
             const title = data.title;
             const id = data.id.id;
@@ -259,6 +258,7 @@ class Dashboards extends Component {
                 {this.components()}
                 <div className="footer-buttons">
                     <CustomButton
+                        shape="circle"
                         visible={this.state.checkedCount !== 0}
                         tooltipTitle={`대시보드 ${this.state.checkedCount}개 삭제`}
                         className="custom-card-button"
@@ -266,7 +266,15 @@ class Dashboards extends Component {
                         onClick={this.handleDeleteConfirm}
                         size="large"
                     />
-                    <CustomButton shape="circle" visible={this.state.isCustomer} tooltipTitle={t('dashboard.add-dashboard-text')} className="custom-card-button" iconClassName="plus" onClick={this.openAddDashboardModal} size="large" />
+                    <CustomButton
+                        shape="circle"
+                        visible={this.state.isCustomer}
+                        tooltipTitle={t('dashboard.add-dashboard-text')}
+                        className="custom-card-button"
+                        iconClassName="plus"
+                        onClick={this.openAddDashboardModal}
+                        size="large"
+                    />
                 </div>
                 <AddDashboardModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveDashboard} onCancel={this.hideAddDashboardModal} />
             </Row>
