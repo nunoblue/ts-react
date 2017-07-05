@@ -5,6 +5,8 @@ import {
     API_RULES_SUCCESS,
     API_RULES_FAILURE,
     CLEAR_RULES,
+    API_SAVE_RULE_SUCCESS,
+    API_SAVE_RULE_FAILURE,
 } from '../actions/ActionTypes';
 
 const initialState = {
@@ -41,6 +43,21 @@ export default function rules(state = initialState, action) {
             });
         case CLEAR_RULES:
             return initialState;
+        case API_SAVE_RULE_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_SAVE_RULE_FAILURE:
+            return update(state, {
+                statusMessage: {
+                    $set: 'FAILURE',
+                },
+                errorMessage: {
+                    $set: action.errorMessage,
+                },
+            });
         default:
             return state;
     }

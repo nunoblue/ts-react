@@ -36,7 +36,7 @@ class Customers extends Component {
     components = () => {
         const components = this.props.data.map((data) => {
             const title = data.title;
-            const address = data.address ? (data.address || '') : '';
+            const address = data.address || '';
             const id = data.id.id;
             const isPublic = data.additionalInfo ? (data.additionalInfo.isPublic || false) : false;
             const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
@@ -55,7 +55,7 @@ class Customers extends Component {
                 </CustomCard>
             );
         });
-
+;
         return components;
     }
 
