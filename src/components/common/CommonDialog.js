@@ -50,7 +50,7 @@ class CommonDialog extends Component {
 
     render() {
         return (
-            <Layout className={this.state.visible ? 'ts-dialog ts-dialog-show' : 'ts-dialog ts-dialog-hide'}>
+            <Layout className={this.props.visible ? 'ts-dialog ts-dialog-show' : 'ts-dialog ts-dialog-hide'}>
                 <Layout.Header className="ts-dialog-title">
                     <Row>
                         <Col span={20}>

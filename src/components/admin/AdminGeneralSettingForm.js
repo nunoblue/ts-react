@@ -7,16 +7,16 @@ class AdminGeneralSettingForm extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { t } = this.props;
+        const { t, value, onPressEnter } = this.props;
         return (
             <Form layout="vertical">
                 <Form.Item label={t('admin.base-url')}>
                     {
                         getFieldDecorator('baseUrl', {
-                            initialValue: this.props.value.baseUrl,
+                            initialValue: value.baseUrl,
                             rules: [{ required: true, message: 'Please input the title of collection!' }],
                         })(
-                            <Input onPressEnter={this.props.onPressEnter} />,
+                            <Input onPressEnter={onPressEnter} />,
                         )
                     }
                 </Form.Item>

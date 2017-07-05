@@ -6,16 +6,21 @@ import DeviceForm from './DeviceForm';
 class AddDeviceModal extends Component {
 
     render() {
+        const { onSave, onCancel, options } = this.props;
         return (
             <CommonModal
             ref={(c) => { this.modal = c; }}
             title="디바이스 추가"
-            onOk={this.props.onSave}
-            onCancel={this.props.onCancel}
+            onOk={onSave}
+            onCancel={onCancel}
             okText="추가"
             cancelText="취소"
             >
-                <DeviceForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} options={this.props.options} />
+                <DeviceForm
+                    ref={(c) => { this.form = c; }}
+                    onPressEnter={onSave}
+                    options={options}
+                />
             </CommonModal>
         );
     }

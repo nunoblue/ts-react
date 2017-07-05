@@ -15,7 +15,7 @@ import DetailDeviceDialog from '../components/device/DetailDeviceDialog';
 import * as actions from '../actions/devices';
 import * as customers from '../actions/customers';
 
-@translate(['device'], { wait: false })
+@translate(['device', 'attribute'], { wait: false })
 class Devices extends Component {
 
     static contextTypes = {
@@ -29,6 +29,8 @@ class Devices extends Component {
         checkedIdArray: [],
         authority: this.context.currentUser.authority === 'TENANT_ADMIN',
         isCustomer: typeof this.props.match.params.customerId === 'undefined',
+        deviceId: '',
+        dialogVisible: false,
     }
 
     componentDidMount() {
@@ -38,6 +40,10 @@ class Devices extends Component {
 
     shouldComponentUpdate(prevProps, prevState) {
         if (prevState.checkedCount !== this.state.checkedCount) {
+            return true;
+        } else if (prevState.deviceId !== this.state.deviceId) {
+            return true;
+        } else if (prevState.dialogVisible !== this.state.dialogVisible) {
             return true;
         } else if (prevProps.shortInfo === this.props.shortInfo) {
             return false;
@@ -112,11 +118,15 @@ class Devices extends Component {
             const type = data.type;
             const id = data.id.id;
             const customerId = data.customerId.id;
+            const openDialog = this.openDetailDialog.bind(this, id);
+            const closeDialog = this.closeDetailDialog;
             return (
                 <CommonCard
                     key={id}
                     style={{ cursor: 'pointer' }}
-                    id={id}
+                    onSelfEvent={closeDialog}
+                    onNextEvent={openDialog}
+                    isCardDown={!this.state.dialogVisible}
                     title={<CommonCheckbox value={id} onChange={this.handleChecked}>{name}</CommonCheckbox>}
                     content={type.toUpperCase()}
                 >
@@ -305,7 +315,7 @@ class Devices extends Component {
 
             this.props.saveDeviceCredentialsRequest(credentials).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
-                    // this.refershDeviceRequest();
+                    this.refershDeviceRequest();
                     this.hideCredentials();
                 } else {
                     notification.error({
@@ -316,8 +326,39 @@ class Devices extends Component {
         });
     }
 
-    openDetailDialog = () => {
+    openDetailDialog = (deviceId) => {
+        this.setState({
+            dialogVisible: true,
+            deviceId,
+        });
+    }
 
+    closeDetailDialog = () => {
+        this.detailDialog.form.resetFields();
+        this.setState({
+            dialogVisible: false,
+            deviceId: '',
+        });
+    }
+
+    loadDeviceDetailData = (deviceId) => {
+        const { data } = this.props;
+        let findDevice;
+        data.some((device) => {
+            if (device.id.id === deviceId) {
+                const additionalInfo = device.additionalInfo || null;
+                if (additionalInfo) {
+                    const gateway = additionalInfo.gateway || null;
+                    const description = additionalInfo.description || null;
+                    findDevice = Object.assign({}, device, { gateway, description });
+                } else {
+                    findDevice = device;
+                }
+                return true;
+            }
+            return false;
+        });
+        return findDevice;
     }
 
     render() {
@@ -325,6 +366,10 @@ class Devices extends Component {
         const options = this.props.types.map((obj) => {
             return obj.type;
         });
+        let deviceData;
+        if (this.state.deviceId.length !== 0) {
+            deviceData = this.loadDeviceDetailData(this.state.deviceId);
+        }
         const authority = this.state.authority === this.state.isCustomer;
         return (
             <Row>
@@ -361,7 +406,14 @@ class Devices extends Component {
                     onCancel={this.hideCredentials}
                     authority={authority}
                 />
-                <DetailDeviceDialog />
+                <DetailDeviceDialog
+                    ref={(c) => { this.detailDialog = c; }}
+                    t={t}
+                    visible={this.state.dialogVisible}
+                    options={options}
+                    data={deviceData}
+                    closeDialog={this.closeDetailDialog}
+                />
             </Row>
         );
     }

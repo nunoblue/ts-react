@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Card, Col } from 'antd';
 
 class CommonCard extends Component {
     static propTypes = {
-        id: PropTypes.string,
         title: PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.number,
@@ -20,29 +18,16 @@ class CommonCard extends Component {
     }
 
     static defaultProps = {
-        id: '',
         title: '',
         content: '',
         style: {},
     }
 
-    state = {
-        id: this.props.id,
-        selectedIndex: 0,
-    };
-
-    select(index) {
-        this.setState({
-            selectedIndex: index,
-        });
-    }
-
-    downCard = () => {
-        $('.ant-card.ant-card-bordered').removeClass('current-card');
-    }
-
-    upCard = () => {
-
+    onCardDown = () => {
+        const { isCardDown } = this.props;
+        if (isCardDown) {
+            $('.ant-card.ant-card-bordered').removeClass('current-card');
+        }
     }
 
     validTarget = (target) => {
@@ -53,26 +38,37 @@ class CommonCard extends Component {
     }
 
     handleClick = (e) => {
-        const { onClick } = this.props;
-        if (typeof onClick === 'undefined') {
-            return;
-        }
+        const { onSelfEvent, onNextEvent } = this.props;
         const target = e.target;
         if (this.validTarget(e.target)) {
             return;
         }
-
         const card = $(target).parents('.ant-card.ant-card-bordered');
         if (card.is('.current-card')) {
-            card.removeClass('current-card');
+            this.selfCardEvent(card, onSelfEvent);
         } else {
-            this.props.onClick();
-            $('.ant-card.ant-card-bordered').removeClass('current-card');
-            card.addClass('current-card');
+            this.nextCardEvent(card, onNextEvent);
         }
     }
 
+    selfCardEvent = (card, onSelfEvent) => {
+        if (typeof onSelfEvent !== 'undefined') {
+            onSelfEvent();
+        }
+        card.removeClass('current-card');
+    }
+
+    nextCardEvent = (card, onNextEvent) => {
+        if (typeof onNextEvent !== 'undefined') {
+            onNextEvent();
+        }
+        $('.ant-card.ant-card-bordered').removeClass('current-card');
+        card.addClass('current-card');
+    }
+
     render() {
+        this.onCardDown();
+
         return (
             <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                 <span style={this.props.style} role="button" aria-hidden="true" onClick={this.handleClick}>
