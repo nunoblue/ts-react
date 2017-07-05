@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
-import { Layout, Row, Col, Switch as AntSwitch } from 'antd';
+import { Layout } from 'antd';
 
 import Main from './Main';
 import Login from './Login';
@@ -14,8 +15,18 @@ const history = createBrowserHistory();
 
 class App extends Component {
 
+    static childContextTypes = {
+        currentUser: PropTypes.object,
+    }
+
     state = {
         changeContent: false,
+    }
+
+    getChildContext() {
+        return {
+            currentUser: this.props.currentUser,
+        };
     }
 
     componentDidMount() {
@@ -26,12 +37,6 @@ class App extends Component {
         this.props.getUserRequest();
     }
 
-    changeContent = (checked) => {
-        this.setState({
-            changeContent: checked,
-        });
-    }
-
     routeWithSubRoutes = (route, i) => {
         return <Route key={i} exact path={route.path} render={props => (<route.component {...props} routes={route.routes} />)} />;
     }
@@ -40,11 +45,6 @@ class App extends Component {
         if (validation) {
             return (
                 <Main history={history}>
-                    <Row>
-                        <Col span="2">
-                            <AntSwitch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
-                        </Col>
-                    </Row>
                     {
                         routes(authority).map((route, i) => (
                             this.routeWithSubRoutes(route, i)

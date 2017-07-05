@@ -8,6 +8,8 @@ class CustomButton extends Component {
         className: PropTypes.string,
         iconClassName: PropTypes.string,
         visible: PropTypes.bool,
+        shape: PropTypes.string,
+        type: PropTypes.string,
     }
 
     static defaultProps = {
@@ -15,6 +17,8 @@ class CustomButton extends Component {
         className: '',
         iconClassName: '',
         visible: true,
+        shape: undefined,
+        type: 'primary',
     }
 
     render() {
@@ -23,7 +27,7 @@ class CustomButton extends Component {
             component = (
                 <Tooltip title={this.props.tooltipTitle}>
                     <div className={this.props.className}>
-                        <Button shape="circle" type="primary" size={this.props.size} onClick={this.props.onClick}>
+                        <Button shape={this.props.shape} type={this.props.type} size={this.props.size} onClick={this.props.onClick}>
                             <Icon type={this.props.iconClassName} />
                             {this.props.children}
                         </Button>

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Row, Modal, notification } from 'antd';
+import { bindActionCreators } from 'redux';
+import { Row, Modal, notification, Button } from 'antd';
 import { translate } from 'react-i18next';
-import i18next from 'i18next';
 
 import CustomButton from '../components/common/CustomButton';
 import CustomCheckbox from '../components/common/CustomCheckbox';
@@ -10,16 +11,22 @@ import CustomCard from '../components/common/CustomCard';
 import AddDashboardModal from '../components/dashboard/AddDashboardModal';
 
 import * as actions from '../actions/dashboards';
+import * as customers from '../actions/customers';
 
 @translate(['dashboard'], { wait: false })
 class Dashboards extends Component {
+
+    static contextTypes = {
+        currentUser: PropTypes.object,
+    }
 
     state = {
         limit: 30,
         textSearch: '',
         checkedCount: 0,
         checkedIdArray: [],
-        authority: this.props.currentUser.authority === 'TENANT_ADMIN',
+        authority: this.context.currentUser.authority === 'TENANT_ADMIN',
+        isCustomer: typeof this.props.match.params.customerId === 'undefined',
     }
 
     componentDidMount() {
@@ -30,23 +37,86 @@ class Dashboards extends Component {
     shouldComponentUpdate(prevProps, prevState) {
         if (prevState.checkedCount !== this.state.checkedCount) {
             return true;
-        } else if (prevProps.data === this.props.data) {
+        } else if (prevProps.shortInfo === this.props.shortInfo) {
             return false;
         }
         return true;
+    }
+
+    buttonComponents = (dashboardId, customerId) => {
+        const { shortInfo, match, t } = this.props;
+        const { currentUser } = this.context;
+        const tenantCustomerId = currentUser.customerId.id;
+        const isPublic = shortInfo[customerId] ? shortInfo[customerId].isPublic : undefined;
+        const isAssign = tenantCustomerId !== customerId;
+        let shareVisible;
+        let assignVisible;
+        let deleteVisible;
+        if (this.state.authority) {
+            if (match.params.customerId) {
+                shareVisible = false;
+                assignVisible = true;
+                deleteVisible = false;
+            } else {
+                shareVisible = isPublic;
+                assignVisible = !shareVisible;
+                deleteVisible = true;
+            }
+        } else {
+            shareVisible = false;
+            assignVisible = false;
+            deleteVisible = false;
+        }
+
+        const modalConfirmAction = this.handleDeleteConfirm.bind(this, name, customerId);
+        return (
+            <Button.Group className="custom-card-buttongroup">
+                <CustomButton
+                    className="custom-card-button"
+                    shape="circle"
+                    iconClassName="search"
+                    tooltipTitle={t('dashboard.dashboard-details')}
+                />
+                <CustomButton
+                    className="custom-card-button"
+                    shape="circle"
+                    iconClassName="export"
+                    tooltipTitle={t('dashboard.export')}
+                />
+                <CustomButton
+                    className="custom-card-button"
+                    shape="circle"
+                    visible={shareVisible}
+                    iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
+                    tooltipTitle={isPublic ? '대시보드 공유 해제' : '대시보드 공유'}
+                />
+                <CustomButton
+                    className="custom-card-button"
+                    shape="circle"
+                    visible={assignVisible}
+                    iconClassName={isAssign ? 'user-delete' : 'user-add'}
+                    tooltipTitle={isAssign ? t('dashboard.unassign-from-customer') : t('dashboard.assign-to-customer')}
+                />
+                <CustomButton
+                    className="custom-card-button"
+                    shape="circle"
+                    visible={deleteVisible}
+                    iconClassName="delete"
+                    onClick={modalConfirmAction}
+                    tooltipTitle={t('dashboard.delete')}
+                />
+            </Button.Group>
+        );
     }
 
     components = () => {
         const components = this.props.data.map((data) => {
             const title = data.title;
             const id = data.id.id;
-            const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
+            const customerId = data.customerId.id;
             return (
                 <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{title}</CustomCheckbox>}>
-                    <CustomButton className="custom-card-button" iconClassName="search" tooltipTitle="대시보드 상세정보" />
-                    <CustomButton className="custom-card-button" visible={this.state.authority} iconClassName="tablet" tooltipTitle="대시보드 공유" />
-                    <CustomButton className="custom-card-button" visible={this.state.authority} iconClassName="layout" tooltipTitle="커스터머 선택" />
-                    <CustomButton className="custom-card-button" visible={this.state.authority} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="대시보드 삭제" />
+                    {this.buttonComponents(id, customerId)}
                 </CustomCard>
             );
         });
@@ -54,7 +124,8 @@ class Dashboards extends Component {
     }
 
     refershDashboardRequest = () => {
-        const { currentUser, match } = this.props;
+        const { match } = this.props;
+        const { currentUser } = this.context;
         const limit = this.state.limit;
         const textSearch = this.state.textSearch;
         this.setState({
@@ -70,12 +141,19 @@ class Dashboards extends Component {
             customerId = currentUser.customerId.id;
             authority = 'CUSTOMER_USER';
         }
+        const customerIdArray = [];
         this.props.getDashboardsRequest(limit, textSearch, authority, customerId).then(() => {
             if (this.props.statusMessage !== 'SUCCESS') {
                 notification.error({
                     message: this.props.errorMessage,
                 });
             }
+            this.props.data.map((data) => {
+                if (customerIdArray.indexOf(data.customerId.id) === -1 && currentUser.customerId.id !== data.customerId.id) {
+                    customerIdArray.push(data.customerId.id);
+                }
+            });
+            this.props.getCustomerShortInfoRequest(customerIdArray);
         });
     }
 
@@ -180,14 +258,23 @@ class Dashboards extends Component {
                 {this.components()}
                 <div className="footer-buttons">
                     <CustomButton
-                    visible={this.state.checkedCount !== 0}
-                    tooltipTitle={`대시보드 ${this.state.checkedCount}개 삭제`}
-                    className="custom-card-button"
-                    iconClassName="delete"
-                    onClick={this.handleDeleteConfirm}
-                    size="large"
+                        shape="circle"
+                        visible={this.state.checkedCount !== 0}
+                        tooltipTitle={`대시보드 ${this.state.checkedCount}개 삭제`}
+                        className="custom-card-button"
+                        iconClassName="delete"
+                        onClick={this.handleDeleteConfirm}
+                        size="large"
                     />
-                    <CustomButton visible={this.state.authority} tooltipTitle={t('dashboard.add-dashboard-text')} className="custom-card-button" iconClassName="plus" onClick={this.openAddDashboardModal} size="large" />
+                    <CustomButton
+                        shape="circle"
+                        visible={this.state.isCustomer}
+                        tooltipTitle={t('dashboard.add-dashboard-text')}
+                        className="custom-card-button"
+                        iconClassName="plus"
+                        onClick={this.openAddDashboardModal}
+                        size="large"
+                    />
                 </div>
                 <AddDashboardModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveDashboard} onCancel={this.hideAddDashboardModal} />
             </Row>
@@ -195,30 +282,20 @@ class Dashboards extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.dashboards.statusMessage,
-        data: state.dashboards.data,
-        errorMessage: state.dashboards.errorMessage,
-        currentUser: state.authentication.currentUser,
-    };
-};
+const mapStateToProps = (state) => ({
+    statusMessage: state.dashboards.statusMessage,
+    data: state.dashboards.data,
+    errorMessage: state.dashboards.errorMessage,
+    shortInfo: state.customers.shortInfo,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getDashboardsRequest: (limit, textSearch, currentUser, customerId) => {
-            return dispatch(actions.getDashboardsRequest(limit, textSearch, currentUser, customerId));
-        },
-        saveDashboardRequest: (dashboard) => {
-            return dispatch(actions.saveDashboardRequest(dashboard));
-        },
-        deleteDashboardRequest: (dashboardId) => {
-            return dispatch(actions.deleteDashboardRequest(dashboardId));
-        },
-        multipleDeleteDashboardRequest: (dashboardIdArray) => {
-            return dispatch(actions.multipleDeleteDashboardRequest(dashboardIdArray));
-        },
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    getDashboardsRequest: actions.getDashboardsRequest,
+    saveDashboardRequest: actions.saveDashboardRequest,
+    deleteDashboardRequest: actions.deleteDashboardRequest,
+    multipleDeleteDashboardRequest: actions.multipleDeleteDashboardRequest,
+    getCustomerShortInfoRequest: customers.getCustomerShortInfoRequest,
+}, dispatch);
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboards);

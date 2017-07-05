@@ -6,15 +6,13 @@ i18n
     .use(XHR) // backend load
     .use(LanguageDetector)
     .init({
-        lngs: ['en-US', 'ko_KR', 'ru_RU', 'zh_CN'],
-        backend: {
-            loadPath: 'locales/{{lng}}/{{ns}}.json', // backend load
-        },
+        lngs: ['en-US', 'ko-KR', 'ru-RU', 'zh-CN'],
+        // loadPath: 'locales/{{lng}}/{{ns}}.json', // backend load
         load: 'currentOnly',
-        fallbackLng: 'ko_KR',
+        fallbackLng: 'ko-KR',
         react: {
-            // wait: false, // set to true if you like to wait for loaded in every translated hoc
-            // nsMode: 'default', // set it to fallback to let passed namespaces to translated hoc act as fallbacks
+            wait: false, // set to true if you like to wait for loaded in every translated hoc
+            nsMode: 'default', // set it to fallback to let passed namespaces to translated hoc act as fallbacks
         },
         ns: [
             'access',
@@ -61,7 +59,6 @@ i18n
             'widget-type',
             'widget',
         ],
-
     });
 
 export default i18n;

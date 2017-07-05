@@ -6,6 +6,7 @@ import Widgets from './containers/Widgets';
 import Dashboards from './containers/Dashboards';
 import Devices from './containers/Devices';
 import Users from './containers/Users';
+import Admins from './containers/Admins';
 // import asyncComponent from './components/AsyncComponent';
 
 // const Home = asyncComponent(() => import('./components/Home').then(module => module.default), { name: 'Home' });
@@ -91,12 +92,10 @@ const SYS_ADMIN = [
     {
         path: '/tenants',
         component: Customers,
-        routes: [
-            {
-                path: '/tenants/:customerId/users',
-                component: Users,
-            },
-        ],
+    },
+    {
+        path: '/tenants/:customerId/users',
+        component: Users,
     },
     {
         path: '/widgets-bundles',
@@ -104,11 +103,11 @@ const SYS_ADMIN = [
     },
     {
         path: '/settings/general',
-        component: Dashboards,
+        component: Admins,
     },
     {
-        path: '/settings/outgoing-mal',
-        component: Dashboards,
+        path: '/settings/outgoing-mail',
+        component: Admins,
     },
 ];
 

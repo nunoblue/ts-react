@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Row, Modal, notification, Button } from 'antd';
+import { translate } from 'react-i18next';
 
 import CustomButton from '../components/common/CustomButton';
 import CustomCheckbox from '../components/common/CustomCheckbox';
@@ -11,13 +14,20 @@ import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal'
 import * as actions from '../actions/devices';
 import * as customers from '../actions/customers';
 
+@translate(['device'], { wait: false })
 class Devices extends Component {
+
+    static contextTypes = {
+        currentUser: PropTypes.object,
+    }
+
     state = {
         limit: 30,
         textSearch: '',
         checkedCount: 0,
         checkedIdArray: [],
-        authority: this.props.currentUser.authority === 'TENANT_ADMIN',
+        authority: this.context.currentUser.authority === 'TENANT_ADMIN',
+        isCustomer: typeof this.props.match.params.customerId === 'undefined',
     }
 
     componentDidMount() {
@@ -35,7 +45,8 @@ class Devices extends Component {
     }
 
     buttonComponents = (deviceId, customerId) => {
-        const { shortInfo, currentUser, match } = this.props;
+        const { shortInfo, match, t } = this.props;
+        const { currentUser } = this.context;
         const tenantCustomerId = currentUser.customerId.id;
         const isPublic = shortInfo[customerId] ? shortInfo[customerId].isPublic : undefined;
         const isAssign = tenantCustomerId !== customerId;
@@ -63,28 +74,32 @@ class Devices extends Component {
             <Button.Group className="custom-card-buttongroup">
                 <CustomButton
                     className="custom-card-button"
+                    shape="circle"
                     visible={shareVisible}
                     iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
                     tooltipTitle={isPublic ? '디바이스 공유 해제' : '디바이스 공유'}
                 />
                 <CustomButton
                     className="custom-card-button"
+                    shape="circle"
                     visible={assignVisible}
                     iconClassName={isAssign ? 'user-delete' : 'user-add'}
                     tooltipTitle={isAssign ? '커스터머 해제' : '커스터머 할당'}
                 />
                 <CustomButton
                     className="custom-card-button"
+                    shape="circle"
                     iconClassName="key"
                     onClick={credentialsModal}
                     tooltipTitle="크리덴셜 관리"
                 />
                 <CustomButton
                     className="custom-card-button"
+                    shape="circle"
                     visible={deleteVisible}
                     iconClassName="delete"
                     onClick={modalConfirmAction}
-                    tooltipTitle="디바이스 삭제"
+                    tooltipTitle={t('device.delete')}
                 />
             </Button.Group>
         );
@@ -111,7 +126,8 @@ class Devices extends Component {
     }
 
     refershDeviceRequest = () => {
-        const { currentUser, match } = this.props;
+        const { match } = this.props;
+        const { currentUser } = this.context;
         const limit = this.state.limit;
         const textSearch = this.state.textSearch;
         this.setState({
@@ -299,6 +315,7 @@ class Devices extends Component {
     }
 
     render() {
+        const { t } = this.props;
         const options = this.props.types.map((obj) => {
             return obj.type;
         });
@@ -307,71 +324,59 @@ class Devices extends Component {
                 {this.components()}
                 <div className="footer-buttons">
                     <CustomButton
-                    visible={this.state.checkedCount !== 0}
-                    tooltipTitle={`디바이스 ${this.state.checkedCount}개 삭제`}
-                    className="custom-card-button"
-                    iconClassName="delete"
-                    onClick={this.handleDeleteConfirm}
-                    size="large"
+                        shape="circle"
+                        visible={this.state.checkedCount !== 0}
+                        tooltipTitle={`디바이스 ${this.state.checkedCount}개 삭제`}
+                        className="custom-card-button"
+                        iconClassName="delete"
+                        onClick={this.handleDeleteConfirm}
+                        size="large"
                     />
-                    <CustomButton visible={this.state.authority} tooltipTitle="디바이스 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddDeviceModal} size="large" />
+                    <CustomButton
+                        shape="circle"
+                        visible={this.state.isCustomer}
+                        tooltipTitle={t('device.add-device-text')}
+                        className="custom-card-button"
+                        iconClassName="plus"
+                        onClick={this.openAddDeviceModal}
+                        size="large"
+                    />
                 </div>
                 <AddDeviceModal
-                ref={(c) => { this.addModal = c; }}
-                onSave={this.handleSaveDevice}
-                onCancel={this.hideAddDeviceModal}
-                options={options}
+                    ref={(c) => { this.addModal = c; }}
+                    onSave={this.handleSaveDevice}
+                    onCancel={this.hideAddDeviceModal}
+                    options={options}
                 />
                 <DeviceCredentialsModal
-                ref={(c) => { this.credentialsModal = c; }}
-                onSave={this.handleSaveCredentials}
-                onCancel={this.hideCredentials}
-                authority={this.state.authority}
+                    ref={(c) => { this.credentialsModal = c; }}
+                    onSave={this.handleSaveCredentials}
+                    onCancel={this.hideCredentials}
+                    authority={this.state.isCustomer}
                 />
             </Row>
         );
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.devices.statusMessage,
-        data: state.devices.data,
-        errorMessage: state.devices.errorMessage,
-        types: state.devices.types,
-        credentials: state.devices.credentials,
-        currentUser: state.authentication.currentUser,
-        shortInfo: state.customers.shortInfo,
-    };
-};
+const mapStateToProps = (state) => ({
+    statusMessage: state.devices.statusMessage,
+    data: state.devices.data,
+    errorMessage: state.devices.errorMessage,
+    types: state.devices.types,
+    credentials: state.devices.credentials,
+    shortInfo: state.customers.shortInfo,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getDevicesRequest: (limit, textSearch, currentUser, customerId) => {
-            return dispatch(actions.getDevicesRequest(limit, textSearch, currentUser, customerId));
-        },
-        getDeviceTypesRequest: () => {
-            return dispatch(actions.getDeviceTypesRequest());
-        },
-        getDeviceCredentialsRequest: (deviceId) => {
-            return dispatch(actions.getDeviceCredentialsRequest(deviceId));
-        },
-        saveDeviceRequest: (device) => {
-            return dispatch(actions.saveDeviceRequest(device));
-        },
-        deleteDeviceRequest: (deviceId) => {
-            return dispatch(actions.deleteDeviceRequest(deviceId));
-        },
-        multipleDeleteDeviceRequest: (deviceIdArray) => {
-            return dispatch(actions.multipleDeleteDeviceRequest(deviceIdArray));
-        },
-        saveDeviceCredentialsRequest: (credentials) => {
-            return dispatch(actions.saveDeviceCredentialsRequest(credentials));
-        },
-        getCustomerShortInfoRequest: (customerIdArray) => {
-            return dispatch(customers.getCustomerShortInfoRequest(customerIdArray));
-        },
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    getDevicesRequest: actions.getDevicesRequest,
+    getDeviceTypesRequest: actions.getDeviceTypesRequest,
+    getDeviceCredentialsRequest: actions.getDeviceCredentialsRequest,
+    saveDeviceRequest: actions.saveDeviceRequest,
+    deleteDeviceRequest: actions.deleteDeviceRequest,
+    multipleDeleteDeviceRequest: actions.multipleDeleteDeviceRequest,
+    saveDeviceCredentialsRequest: actions.saveDeviceCredentialsRequest,
+    getCustomerShortInfoRequest: customers.getCustomerShortInfoRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Devices);
