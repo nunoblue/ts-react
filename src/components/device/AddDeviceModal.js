@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import CommonModal from '../common/CommonModal';
-import AddDeviceForm from './AddDeviceForm';
+import DeviceForm from './DeviceForm';
 
 class AddDeviceModal extends Component {
 
@@ -15,7 +15,7 @@ class AddDeviceModal extends Component {
             okText="추가"
             cancelText="취소"
             >
-                <AddDeviceForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} options={this.props.options} />
+                <DeviceForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} options={this.props.options} />
             </CommonModal>
         );
     }

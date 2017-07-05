@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Radio } from 'antd';
 
-const AddCustomerForm = Form.create()(
+const CustomerForm = Form.create()(
     (props) => {
         const { getFieldDecorator } = props.form;
         return (
@@ -47,4 +47,4 @@ const AddCustomerForm = Form.create()(
     },
 );
 
-export default AddCustomerForm;
+export default CustomerForm;

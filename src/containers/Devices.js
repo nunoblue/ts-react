@@ -10,6 +10,7 @@ import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
 import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
+import DetailDeviceDialog from '../components/device/DetailDeviceDialog';
 
 import * as actions from '../actions/devices';
 import * as customers from '../actions/customers';
@@ -315,6 +316,10 @@ class Devices extends Component {
         });
     }
 
+    openDetailDialog = () => {
+
+    }
+
     render() {
         const { t } = this.props;
         const options = this.props.types.map((obj) => {
@@ -356,6 +361,7 @@ class Devices extends Component {
                     onCancel={this.hideCredentials}
                     authority={authority}
                 />
+                <DetailDeviceDialog />
             </Row>
         );
     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import CommonModal from '../common/CommonModal';
-import AddCustomerForm from './AddCustomerForm';
+import CustomerForm from './CustomerForm';
 
 class AddCustomerModal extends Component {
 
@@ -15,7 +15,7 @@ class AddCustomerModal extends Component {
                 okText="추가"
                 cancelText="취소"
             >
-                <AddCustomerForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} />
+                <CustomerForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} />
             </CommonModal>
         );
     }
