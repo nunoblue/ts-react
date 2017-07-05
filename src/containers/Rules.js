@@ -4,8 +4,8 @@ import { Row, Modal, notification } from 'antd';
 
 import config from '../config';
 
-import CustomCard from '../components/common/CustomCard';
-import CustomButton from '../components/common/CustomButton';
+import CommonCard from '../components/common/CommonCard';
+import CommonButton from '../components/common/CommonButton';
 
 import * as actions from '../actions/rules';
 import AddRuleModal from '../components/rule/AddRuleModal';
@@ -24,20 +24,21 @@ class Rules extends Component {
             const nullUID = config.nullUID;
             const deleteConfirm = this.handleDeleteConfirm.bind(this, name, id);
             return (
-                <CustomCard
+                <CommonCard
                     key={id}
+                    style={{ cursor: 'pointer' }}
                     title={name}
                     content={state}
                     buttonTooltip="Rule Delete"
                 >
-                    <CustomButton
+                    <CommonButton
                         visible={data && nullUID !== data.tenantId.id}
                         className="custom-card-button"
                         iconClassName="delete"
                         tooltipTitle="룰 삭제"
                         onClick={deleteConfirm}
                     />
-                </CustomCard>
+                </CommonCard>
             );
         });
         return components;
@@ -119,7 +120,7 @@ class Rules extends Component {
                 />
 
                 <div className="footer-buttons">
-                    <CustomButton
+                    <CommonButton
                         tooltipTitle="룰 추가"
                         className="custom-card-button"
                         iconClassName="plus"

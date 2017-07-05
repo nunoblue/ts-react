@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Modal, notification } from 'antd';
 
-import CustomCard from '../components/common/CustomCard';
-import CustomButton from '../components/common/CustomButton';
-import CustomCheckbox from '../components/common/CustomCheckbox';
+import CommonCard from '../components/common/CommonCard';
+import CommonButton from '../components/common/CommonButton';
+import CommonCheckbox from '../components/common/CommonCheckbox';
 import AddCustomerModal from '../components/customer/AddCustomerModal';
 
 import * as actions from '../actions/customers';
@@ -46,18 +46,18 @@ class Customers extends Component {
             const isPublic = data.additionalInfo ? (data.additionalInfo.isPublic || false) : false;
             const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
             return (
-                <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{title}</CustomCheckbox>} content={address}>
+                <CommonCard key={id} style={{ cursor: 'pointer' }} id={id} title={<CommonCheckbox value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>} content={address}>
                     <Link to={`/customers/${id}/users`}>
-                        <CustomButton className="custom-card-button" shape="circle" visible={!isPublic} iconClassName="user-add" tooltipTitle="커스터머 사용자 관리" />
+                        <CommonButton className="custom-card-button" shape="circle" visible={!isPublic} iconClassName="user-add" tooltipTitle="커스터머 사용자 관리" />
                     </Link>
                     <Link to={`/customers/${id}/devices`}>
-                        <CustomButton className="custom-card-button" shape="circle" iconClassName="tablet" tooltipTitle="커스터머 디바이스 관리" />
+                        <CommonButton className="custom-card-button" shape="circle" iconClassName="tablet" tooltipTitle="커스터머 디바이스 관리" />
                     </Link>
                     <Link to={`/customers/${id}/dashboards`}>
-                        <CustomButton className="custom-card-button" shape="circle" iconClassName="layout" tooltipTitle="커스터머 대시보드 관리" />
+                        <CommonButton className="custom-card-button" shape="circle" iconClassName="layout" tooltipTitle="커스터머 대시보드 관리" />
                     </Link>
-                    <CustomButton className="custom-card-button" shape="circle" visible={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="커스터머 디바이스 삭제" />
-                </CustomCard>
+                    <CommonButton className="custom-card-button" shape="circle" visible={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="커스터머 디바이스 삭제" />
+                </CommonCard>
             );
         });
 ;
@@ -179,7 +179,7 @@ class Customers extends Component {
             <Row>
                 {this.components()}
                 <div className="footer-buttons">
-                    <CustomButton
+                    <CommonButton
                         visible={this.state.checkedCount !== 0}
                         tooltipTitle={`커스터머 ${this.state.checkedCount}개 삭제`}
                         className="custom-card-button"
@@ -187,7 +187,7 @@ class Customers extends Component {
                         onClick={this.handleDeleteConfirm}
                         size="large"
                     />
-                    <CustomButton tooltipTitle="커스터머 추가" className="custom-card-button" shape="circle" iconClassName="plus" onClick={this.openAddCustomerModal} size="large" />
+                    <CommonButton tooltipTitle="커스터머 추가" className="custom-card-button" shape="circle" iconClassName="plus" onClick={this.openAddCustomerModal} size="large" />
                 </div>
                 <AddCustomerModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveCustomer} onCancel={this.hideAddCustomerModal} />
             </Row>

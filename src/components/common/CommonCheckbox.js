@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
 
-class CustomCheckbox extends Component {
+class CommonCheckbox extends Component {
     static propTypes = {
         id: PropTypes.string,
         value: PropTypes.string,
@@ -32,4 +32,4 @@ class CustomCheckbox extends Component {
     }
 }
 
-export default CustomCheckbox;
+export default CommonCheckbox;

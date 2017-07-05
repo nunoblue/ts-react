@@ -5,9 +5,9 @@ import { bindActionCreators } from 'redux';
 import { Row, Modal, notification, Button } from 'antd';
 import { translate } from 'react-i18next';
 
-import CustomButton from '../components/common/CustomButton';
-import CustomCheckbox from '../components/common/CustomCheckbox';
-import CustomCard from '../components/common/CustomCard';
+import CommonButton from '../components/common/CommonButton';
+import CommonCheckbox from '../components/common/CommonCheckbox';
+import CommonCard from '../components/common/CommonCard';
 import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
 
@@ -72,28 +72,28 @@ class Devices extends Component {
         const credentialsModal = this.openCredentials.bind(this, deviceId);
         return (
             <Button.Group className="custom-card-buttongroup">
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={shareVisible}
                     iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
                     tooltipTitle={isPublic ? '디바이스 공유 해제' : '디바이스 공유'}
                 />
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={assignVisible}
                     iconClassName={isAssign ? 'user-delete' : 'user-add'}
                     tooltipTitle={isAssign ? '커스터머 해제' : '커스터머 할당'}
                 />
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     iconClassName="key"
                     onClick={credentialsModal}
                     tooltipTitle="크리덴셜 관리"
                 />
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={deleteVisible}
@@ -112,14 +112,15 @@ class Devices extends Component {
             const id = data.id.id;
             const customerId = data.customerId.id;
             return (
-                <CustomCard
+                <CommonCard
                     key={id}
+                    style={{ cursor: 'pointer' }}
                     id={id}
-                    title={<CustomCheckbox value={id} onChange={this.handleChecked}>{name}</CustomCheckbox>}
+                    title={<CommonCheckbox value={id} onChange={this.handleChecked}>{name}</CommonCheckbox>}
                     content={type.toUpperCase()}
                 >
                     {this.buttonComponents(id, customerId)}
-                </CustomCard>
+                </CommonCard>
             );
         });
         return components;
@@ -319,11 +320,12 @@ class Devices extends Component {
         const options = this.props.types.map((obj) => {
             return obj.type;
         });
+        const authority = this.state.authority === this.state.isCustomer;
         return (
             <Row>
                 {this.components()}
                 <div className="footer-buttons">
-                    <CustomButton
+                    <CommonButton
                         shape="circle"
                         visible={this.state.checkedCount !== 0}
                         tooltipTitle={`디바이스 ${this.state.checkedCount}개 삭제`}
@@ -332,7 +334,7 @@ class Devices extends Component {
                         onClick={this.handleDeleteConfirm}
                         size="large"
                     />
-                    <CustomButton
+                    <CommonButton
                         shape="circle"
                         visible={this.state.isCustomer}
                         tooltipTitle={t('device.add-device-text')}
@@ -352,7 +354,7 @@ class Devices extends Component {
                     ref={(c) => { this.credentialsModal = c; }}
                     onSave={this.handleSaveCredentials}
                     onCancel={this.hideCredentials}
-                    authority={this.state.isCustomer}
+                    authority={authority}
                 />
             </Row>
         );

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row } from 'antd';
 
-import CustomCard from '../components/common/CustomCard';
-import CustomButton from '../components/common/CustomButton';
+import CommonCard from '../components/common/CommonCard';
+import CommonButton from '../components/common/CommonButton';
 
 import * as actions from '../actions/widgets';
 
@@ -19,7 +19,7 @@ class Widgets extends Component {
             const title = data.title;
             const id = data.id.id;
             return (
-                <CustomCard key={id} title={title} buttonTooltip="Widget Delete" />
+                <CommonCard key={id} style={{ cursor: 'pointer' }} title={title} buttonTooltip="Widget Delete" />
             );
         });
         return components;
@@ -29,7 +29,7 @@ class Widgets extends Component {
         return (
             <Row>
                 {this.components()}
-                <CustomButton tooltipTitle="Widget Add" iconClassName="plus" />
+                <CommonButton tooltipTitle="Widget Add" iconClassName="plus" />
             </Row>
         );
     }

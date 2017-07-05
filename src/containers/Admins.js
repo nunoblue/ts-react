@@ -5,8 +5,8 @@ import { translate } from 'react-i18next';
 import { notification, Row } from 'antd';
 
 import * as actions from '../actions/admins';
-import CustomCard from '../components/common/CustomCard';
-import CustomButton from '../components/common/CustomButton';
+import CommonCard from '../components/common/CommonCard';
+import CommonButton from '../components/common/CommonButton';
 import AdminMailSettingForm from '../components/admin/AdminMailSettingForm';
 import AdminGeneralSettingForm from '../components/admin/AdminGeneralSettingForm';
 
@@ -80,15 +80,15 @@ export class Admin extends Component {
         if (Object.keys(data).length !== 0) {
             return (
                 <Row>
-                    <CustomCard
+                    <CommonCard
                         title={t(this.state.key === 'mail' ? 'admin.outgoing-mail-settings' : 'admin.general-settings')}
                         content={this.state.key === 'mail' ?
                             <AdminMailSettingForm ref={(c) => { this.form = c; }} value={data.jsonValue} onPressEnter={this.handleSave} />
                             : <AdminGeneralSettingForm ref={(c) => { this.form = c; }} value={data.jsonValue} onPressEnter={this.handleSave} />
                         }
                     >
-                        <CustomButton type="primary" onClick={this.handleSave}>{t('action:action.save')}</CustomButton>
-                    </CustomCard>
+                        <CommonButton type="primary" onClick={this.handleSave}>{t('action:action.save')}</CommonButton>
+                    </CommonCard>
                 </Row>
             );
         }

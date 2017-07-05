@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'antd';
 
-import CustomModal from '../common/CustomModal';
+import CommonModal from '../common/CommonModal';
 import DeviceCredentialsForm from './DeviceCredentialsForm';
 
 class DeviceCredentialsModal extends Component {
@@ -52,7 +52,7 @@ class DeviceCredentialsModal extends Component {
 
     render() {
         return (
-            <CustomModal
+            <CommonModal
             ref={(c) => { this.modal = c; }}
             title="디바이스 크리덴셜"
             onOk={this.props.onSave}
@@ -69,7 +69,7 @@ class DeviceCredentialsModal extends Component {
                 value={this.state.credentialsValue}
                 disabled={!this.props.authority}
                 />
-            </CustomModal>
+            </CommonModal>
         );
     }
 }
