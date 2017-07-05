@@ -1,0 +1,28 @@
+{
+    "customer": {
+        "customers": "커스터머",
+        "management": "커스터머 관리",
+        "dashboard": "커스터머 대시보드",
+        "dashboards": "커스터머 대시보드",
+        "devices": "커스터머 디바이스",
+        "add": "커스터머 추가",
+        "delete": "커스터머 삭제",
+        "manage-customer-users": "커스터머 사용자 관리",
+        "manage-customer-devices": "커스터머 디바이스 관리",
+        "manage-customer-dashboards": "커스터머 대시보드 관리",
+        "add-customer-text": "커스터머 추가",
+        "no-customers-text": "커스터머가 없습니다.",
+        "customer-details": "커스터머 상세정보",
+        "delete-customer-title": "'{{customerTitle}}' 커스터머를 삭제하시겠습니까?",
+        "delete-customer-text": "커스터머 및 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.",
+        "delete-customers-title": "{ count, select, 1 {커스터머 1개} other {커스터머 #개} }를 삭제하시겠습니까?",
+        "delete-customers-action-title": "{ count, select, 1 {커스터머 1개} other {커스터머 #개} } 삭제",
+        "delete-customers-text": "선택된 커스터머는 삭제되고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.",
+        "manage-users": "사용자 관리",
+        "manage-devices": "디바이스 관리",
+        "manage-dashboards": "대시보드 관리",
+        "title": "타이틀",
+        "title-required": "타이틀을 입력하세요.",
+        "description": "설명"
+    }
+}

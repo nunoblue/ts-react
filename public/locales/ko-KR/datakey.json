@@ -1,0 +1,17 @@
+{
+    "datakey": {
+        "settings": "설정",
+        "advanced": "고급",
+        "label": "Label",
+        "color": "색상",
+        "data-generation-func": "데이터 생성 기능",
+        "use-data-post-processing-func": "데이터 후처리 기능 사용",
+        "configuration": "데이터 key 구성",
+        "timeseries": "Timeseries",
+        "attributes": "Attributes",
+        "timeseries-required": "디바이스 timeseries 를 입력하세요.",
+        "timeseries-or-attributes-required": "디바이스 timeseries/attributes 를 입력하세요.",
+        "function-types": "함수 유형",
+        "function-types-required": "함수 유형을 입력하세요."
+    }
+}

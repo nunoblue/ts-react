@@ -1,0 +1,16 @@
+{
+    "timewindow": {
+        "days": "{ days, select, 1 { day } other {# days } }",
+        "hours": "{ hours, select, 0 { hour } 1 {1 hour } other {# hours } }",
+        "minutes": "{ minutes, select, 0 { minute } 1 {1 minute } other {# minutes } }",
+        "seconds": "{ seconds, select, 0 { second } 1 {1 second } other {# seconds } }",
+        "realtime": "Realtime",
+        "history": "History",
+        "last-prefix": "last",
+        "period": "from {{ startTime }} to {{ endTime }}",
+        "edit": "타임윈도우 편집",
+        "date-range": "날짜 범위",
+        "last": "Last",
+        "time-period": "기간"
+    }
+}

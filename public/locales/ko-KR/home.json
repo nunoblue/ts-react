@@ -1,0 +1,10 @@
+{
+    "home": {
+        "home": "홈",
+        "profile": "프로파일",
+        "logout": "로그아웃",
+        "menu": "메뉴",
+        "avatar": "Avatar",
+        "open-user-menu": "사용자 메뉴 열기"
+    }
+}

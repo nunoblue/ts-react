@@ -1,0 +1,14 @@
+{
+    "legend": {
+        "position": "범례 위치",
+        "show-max": "최대값 표시",
+        "show-min": "최소값 표시",
+        "show-avg": "평균값 표시",
+        "show-total": "총합 표시",
+        "settings": "범례 설정",
+        "min": "최소",
+        "max": "최대",
+        "avg": "평균",
+        "total": "합계"
+    }
+}
