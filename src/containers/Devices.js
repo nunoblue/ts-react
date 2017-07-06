@@ -15,7 +15,7 @@ import DetailDeviceDialog from '../components/device/DetailDeviceDialog';
 import * as actions from '../actions/devices';
 import * as customers from '../actions/customers';
 
-@translate(['device', 'attribute'], { wait: false })
+@translate(['device', 'attribute', 'details', 'action'], { wait: false })
 class Devices extends Component {
 
     static contextTypes = {
@@ -272,16 +272,25 @@ class Devices extends Component {
         });
     }
 
-    handleSaveDevice = () => {
-        const form = this.addModal.form;
+    handleSaveDevice = (type) => {
+        const form = type === 'dialog' ? this.detailDialog.form : this.addModal.form;
         form.validateFields((err, values) => {
             if (err) {
                 return false;
             }
+            const additionalInfo = {
+                gateway: values.gateway,
+                description: values.description,
+            };
+            Object.assign(values, { additionalInfo });
+            delete values.gateway;
+            delete values.description;
             this.props.saveDeviceRequest(values).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
                     this.refershDeviceRequest();
-                    this.hideAddDeviceModal();
+                    if (type !== 'dialog') {
+                        this.hideAddDeviceModal();
+                    }
                 } else {
                     notification.error({
                         message: this.props.errorMessage,
@@ -327,6 +336,15 @@ class Devices extends Component {
     }
 
     openDetailDialog = (deviceId) => {
+        this.detailDialog.clearEdit();
+        const deviceData = this.loadDeviceDetailData(deviceId);
+        this.detailDialog.form.setFieldsValue({
+            name: deviceData.name,
+            type: deviceData.type,
+            description: deviceData.description,
+            gateway: deviceData.gateway,
+        });
+        this.detailDialog.initTitle(deviceData.name);
         this.setState({
             dialogVisible: true,
             deviceId,
@@ -366,11 +384,8 @@ class Devices extends Component {
         const options = this.props.types.map((obj) => {
             return obj.type;
         });
-        let deviceData;
-        if (this.state.deviceId.length !== 0) {
-            deviceData = this.loadDeviceDetailData(this.state.deviceId);
-        }
         const authority = this.state.authority === this.state.isCustomer;
+        console.log('ttt');
         return (
             <Row>
                 {this.components()}
@@ -411,8 +426,8 @@ class Devices extends Component {
                     t={t}
                     visible={this.state.dialogVisible}
                     options={options}
-                    data={deviceData}
                     closeDialog={this.closeDetailDialog}
+                    onSave={this.handleSaveDevice}
                 />
             </Row>
         );

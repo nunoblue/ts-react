@@ -43,29 +43,29 @@ class CommonDialog extends Component {
             this.onHide();
             return;
         }
-
         onClick(e);
         this.onHide();
     }
 
     render() {
+        const { children, title, type, tooltipTitle } = this.props;
         return (
             <Layout className={this.props.visible ? 'ts-dialog ts-dialog-show' : 'ts-dialog ts-dialog-hide'}>
                 <Layout.Header className="ts-dialog-title">
                     <Row>
                         <Col span={20}>
-                            <span className="ts-dialog-detail-title">{this.props.title}</span>
-                            <span className="ts-dialog-detail-subtitle">{this.props.type}</span>
+                            <span className="ts-dialog-detail-title">{title}</span>
+                            <span className="ts-dialog-detail-subtitle">{type}</span>
                         </Col>
                         <Col span={4}>
-                            <CommonButton shape="circle" onClick={this.clearButtonClick}>
+                            <CommonButton shape="circle" onClick={this.clearButtonClick} tooltipTitle={tooltipTitle}>
                                 <i className="material-icons vertical-middle">clear</i>
                             </CommonButton>
                         </Col>
                     </Row>
                 </Layout.Header>
                 <Layout.Content className="ts-dialog-content">
-                    {this.props.children}
+                    {children}
                 </Layout.Content>
             </Layout>
         );
