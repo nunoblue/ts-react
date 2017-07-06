@@ -1,0 +1,8 @@
+{
+    "fullscreen": {
+        "expand": "전체화면으로 확장",
+        "exit": "전체화면 종료",
+        "toggle": "전체화면 모드 전환",
+        "fullscreen": "전체화면"
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "user": {
+        "users": "사용자",
+        "customer-users": "커스터머 사용자",
+        "tenant-admins": "테넌트 관리자",
+        "sys-admin": "시스템 관리자",
+        "tenant-admin": "테넌트 관리자",
+        "customer": "커스터머",
+        "anonymous": "Anonymous",
+        "add": "사용자 추가",
+        "delete": "사용자 삭제",
+        "add-user-text": "새로운 사용자 추가",
+        "no-users-text": "사용자가 없습니다.",
+        "user-details": "사용자 상세정보",
+        "delete-user-title": "'{{userEmail}}' 사용자를 삭제하시겠습니까?",
+        "delete-user-text": "사용자와 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.",
+        "delete-users-title": "{ count, select, 1 {사용자 1명} other {사용자 #명} }을 삭제하시겠니까?",
+        "delete-users-action-title": "{ count, select, 1 {사용자 1명} other {사용자 #명} } 삭제",
+        "delete-users-text": "선택된 사용자가 삭제된고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.",
+        "activation-email-sent-message": "활성화 이메일을 보냈습니다!",
+        "resend-activation": "활성화 재전송",
+        "email": "Email",
+        "email-required": "Email을 입력하세요.",
+        "first-name": "이름",
+        "last-name": "성",
+        "description": "설명",
+        "default-dashboard": "기본 대시보드",
+        "always-fullscreen": "항상 전체화면"
+    }
+}

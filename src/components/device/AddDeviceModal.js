@@ -1,22 +1,27 @@
 import React, { Component } from 'react';
 
-import CustomModal from '../common/CustomModal';
-import AddDeviceForm from './AddDeviceForm';
+import CommonModal from '../common/CommonModal';
+import DeviceForm from './DeviceForm';
 
 class AddDeviceModal extends Component {
 
     render() {
+        const { onSave, onCancel, options } = this.props;
         return (
-            <CustomModal
+            <CommonModal
             ref={(c) => { this.modal = c; }}
             title="디바이스 추가"
-            onOk={this.props.onSave}
-            onCancel={this.props.onCancel}
+            onOk={onSave}
+            onCancel={onCancel}
             okText="추가"
             cancelText="취소"
             >
-                <AddDeviceForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} options={this.props.options} />
-            </CustomModal>
+                <DeviceForm
+                    ref={(c) => { this.form = c; }}
+                    onPressEnter={onSave}
+                    options={options}
+                />
+            </CommonModal>
         );
     }
 }

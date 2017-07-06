@@ -1,0 +1,13 @@
+{
+    "timeinterval": {
+        "seconds-interval": "{ seconds, select, 1 {1 second} other {# seconds} }",
+        "minutes-interval": "{ minutes, select, 1 {1 minute} other {# minutes} }",
+        "hours-interval": "{ hours, select, 1 {1 hour} other {# hours} }",
+        "days-interval": "{ days, select, 1 {1 day} other {# days} }",
+        "days": "Days",
+        "hours": "Hours",
+        "minutes": "Minutes",
+        "seconds": "Seconds",
+        "advanced": "고급"
+    }
+}

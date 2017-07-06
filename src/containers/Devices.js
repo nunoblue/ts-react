@@ -5,16 +5,17 @@ import { bindActionCreators } from 'redux';
 import { Row, Modal, notification, Button } from 'antd';
 import { translate } from 'react-i18next';
 
-import CustomButton from '../components/common/CustomButton';
-import CustomCheckbox from '../components/common/CustomCheckbox';
-import CustomCard from '../components/common/CustomCard';
+import CommonButton from '../components/common/CommonButton';
+import CommonCheckbox from '../components/common/CommonCheckbox';
+import CommonCard from '../components/common/CommonCard';
 import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
+import DetailDeviceDialog from '../components/device/DetailDeviceDialog';
 
 import * as actions from '../actions/devices';
 import * as customers from '../actions/customers';
 
-@translate(['device'], { wait: false })
+@translate(['device', 'attribute'], { wait: false })
 class Devices extends Component {
 
     static contextTypes = {
@@ -28,6 +29,8 @@ class Devices extends Component {
         checkedIdArray: [],
         authority: this.context.currentUser.authority === 'TENANT_ADMIN',
         isCustomer: typeof this.props.match.params.customerId === 'undefined',
+        deviceId: '',
+        dialogVisible: false,
     }
 
     componentDidMount() {
@@ -37,6 +40,10 @@ class Devices extends Component {
 
     shouldComponentUpdate(prevProps, prevState) {
         if (prevState.checkedCount !== this.state.checkedCount) {
+            return true;
+        } else if (prevState.deviceId !== this.state.deviceId) {
+            return true;
+        } else if (prevState.dialogVisible !== this.state.dialogVisible) {
             return true;
         } else if (prevProps.shortInfo === this.props.shortInfo) {
             return false;
@@ -72,28 +79,28 @@ class Devices extends Component {
         const credentialsModal = this.openCredentials.bind(this, deviceId);
         return (
             <Button.Group className="custom-card-buttongroup">
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={shareVisible}
                     iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
                     tooltipTitle={isPublic ? '디바이스 공유 해제' : '디바이스 공유'}
                 />
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={assignVisible}
                     iconClassName={isAssign ? 'user-delete' : 'user-add'}
                     tooltipTitle={isAssign ? '커스터머 해제' : '커스터머 할당'}
                 />
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     iconClassName="key"
                     onClick={credentialsModal}
                     tooltipTitle="크리덴셜 관리"
                 />
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={deleteVisible}
@@ -111,15 +118,20 @@ class Devices extends Component {
             const type = data.type;
             const id = data.id.id;
             const customerId = data.customerId.id;
+            const openDialog = this.openDetailDialog.bind(this, id);
+            const closeDialog = this.closeDetailDialog;
             return (
-                <CustomCard
+                <CommonCard
                     key={id}
-                    id={id}
-                    title={<CustomCheckbox value={id} onChange={this.handleChecked}>{name}</CustomCheckbox>}
+                    style={{ cursor: 'pointer' }}
+                    onSelfEvent={closeDialog}
+                    onNextEvent={openDialog}
+                    isCardDown={!this.state.dialogVisible}
+                    title={<CommonCheckbox value={id} onChange={this.handleChecked}>{name}</CommonCheckbox>}
                     content={type.toUpperCase()}
                 >
                     {this.buttonComponents(id, customerId)}
-                </CustomCard>
+                </CommonCard>
             );
         });
         return components;
@@ -303,7 +315,7 @@ class Devices extends Component {
 
             this.props.saveDeviceCredentialsRequest(credentials).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
-                    // this.refershDeviceRequest();
+                    this.refershDeviceRequest();
                     this.hideCredentials();
                 } else {
                     notification.error({
@@ -314,16 +326,56 @@ class Devices extends Component {
         });
     }
 
+    openDetailDialog = (deviceId) => {
+        this.setState({
+            dialogVisible: true,
+            deviceId,
+        });
+    }
+
+    closeDetailDialog = () => {
+        this.detailDialog.form.resetFields();
+        this.setState({
+            dialogVisible: false,
+            deviceId: '',
+        });
+    }
+
+    loadDeviceDetailData = (deviceId) => {
+        const { data } = this.props;
+        let findDevice;
+        data.some((device) => {
+            if (device.id.id === deviceId) {
+                const additionalInfo = device.additionalInfo || null;
+                if (additionalInfo) {
+                    const gateway = additionalInfo.gateway || null;
+                    const description = additionalInfo.description || null;
+                    findDevice = Object.assign({}, device, { gateway, description });
+                } else {
+                    findDevice = device;
+                }
+                return true;
+            }
+            return false;
+        });
+        return findDevice;
+    }
+
     render() {
         const { t } = this.props;
         const options = this.props.types.map((obj) => {
             return obj.type;
         });
+        let deviceData;
+        if (this.state.deviceId.length !== 0) {
+            deviceData = this.loadDeviceDetailData(this.state.deviceId);
+        }
+        const authority = this.state.authority === this.state.isCustomer;
         return (
             <Row>
                 {this.components()}
                 <div className="footer-buttons">
-                    <CustomButton
+                    <CommonButton
                         shape="circle"
                         visible={this.state.checkedCount !== 0}
                         tooltipTitle={`디바이스 ${this.state.checkedCount}개 삭제`}
@@ -332,7 +384,7 @@ class Devices extends Component {
                         onClick={this.handleDeleteConfirm}
                         size="large"
                     />
-                    <CustomButton
+                    <CommonButton
                         shape="circle"
                         visible={this.state.isCustomer}
                         tooltipTitle={t('device.add-device-text')}
@@ -352,7 +404,15 @@ class Devices extends Component {
                     ref={(c) => { this.credentialsModal = c; }}
                     onSave={this.handleSaveCredentials}
                     onCancel={this.hideCredentials}
-                    authority={this.state.isCustomer}
+                    authority={authority}
+                />
+                <DetailDeviceDialog
+                    ref={(c) => { this.detailDialog = c; }}
+                    t={t}
+                    visible={this.state.dialogVisible}
+                    options={options}
+                    data={deviceData}
+                    closeDialog={this.closeDetailDialog}
                 />
             </Row>
         );

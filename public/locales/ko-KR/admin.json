@@ -1,0 +1,25 @@
+{
+    "admin": {
+        "general": "일반",
+        "general-settings": "일반 설정",
+        "outgoing-mail": "메일 전송",
+        "outgoing-mail-settings": "메일 전송 설정",
+        "system-settings": "시스템 설정",
+        "test-mail-sent": "테스트 메일이 성공적으로 전송되었습니다!",
+        "base-url": "기본 URL",
+        "base-url-required": "기본 URL을 입력해야 합니다.",
+        "mail-from": "보내는 사람",
+        "mail-from-required": "보내는 사람을 입력해야 합니다.",
+        "smtp-protocol": "SMTP 프로토콜",
+        "smtp-host": "SMTP 호스트",
+        "smtp-host-required": "SMTP 호스트를 입력해야 합니다.",
+        "smtp-port": "SMTP 포트",
+        "smtp-port-required": "SMTP 포트를 입력해야 합니다.",
+        "smtp-port-invalid": "올바른 SMTP 포트가 아닙니다.",
+        "timeout-msec": "제한시간 (msec)",
+        "timeout-required": "제한시간을 입력해야 합니다.",
+        "timeout-invalid": "올바른 제한시간이 아닙니다.",
+        "enable-tls": "TLS 사용",
+        "send-test-mail": "테스트 메일 보내기"
+    }
+}

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-import CustomModal from '../common/CustomModal';
-import AddUserForm from './AddUserForm';
+import CommonModal from '../common/CommonModal';
+import UserForm from './UserForm';
 
 class AddUserModal extends Component {
 
     render() {
         return (
-            <CustomModal
+            <CommonModal
             ref={(c) => { this.modal = c; }}
             title="유저 추가"
             onOk={this.props.onSave}
@@ -15,8 +15,8 @@ class AddUserModal extends Component {
             okText="추가"
             cancelText="취소"
             >
-                <AddUserForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} />
-            </CustomModal>
+                <UserForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} />
+            </CommonModal>
         );
     }
 }

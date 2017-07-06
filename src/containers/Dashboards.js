@@ -5,9 +5,9 @@ import { bindActionCreators } from 'redux';
 import { Row, Modal, notification, Button } from 'antd';
 import { translate } from 'react-i18next';
 
-import CustomButton from '../components/common/CustomButton';
-import CustomCheckbox from '../components/common/CustomCheckbox';
-import CustomCard from '../components/common/CustomCard';
+import CommonButton from '../components/common/CommonButton';
+import CommonCheckbox from '../components/common/CommonCheckbox';
+import CommonCard from '../components/common/CommonCard';
 import AddDashboardModal from '../components/dashboard/AddDashboardModal';
 
 import * as actions from '../actions/dashboards';
@@ -71,33 +71,34 @@ class Dashboards extends Component {
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, name, customerId);
         return (
             <Button.Group className="custom-card-buttongroup">
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     iconClassName="search"
                     tooltipTitle={t('dashboard.dashboard-details')}
                 />
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
+                    visible={this.state.authority}
                     iconClassName="export"
                     tooltipTitle={t('dashboard.export')}
                 />
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={shareVisible}
                     iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
                     tooltipTitle={isPublic ? '대시보드 공유 해제' : '대시보드 공유'}
                 />
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={assignVisible}
                     iconClassName={isAssign ? 'user-delete' : 'user-add'}
-                    tooltipTitle={isAssign ? t('dashboard.unassign-from-customer') : t('dashboard.assign-to-customer')}
+                    tooltipTitle={isAssign ? t('dashboard.unassign-from-Commoner') : t('dashboard.assign-to-customer')}
                 />
-                <CustomButton
+                <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={deleteVisible}
@@ -115,9 +116,9 @@ class Dashboards extends Component {
             const id = data.id.id;
             const customerId = data.customerId.id;
             return (
-                <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{title}</CustomCheckbox>}>
+                <CommonCard key={id} style={{ cursor: 'pointer' }} id={id} title={<CommonCheckbox value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>}>
                     {this.buttonComponents(id, customerId)}
-                </CustomCard>
+                </CommonCard>
             );
         });
         return components;
@@ -257,7 +258,7 @@ class Dashboards extends Component {
             <Row>
                 {this.components()}
                 <div className="footer-buttons">
-                    <CustomButton
+                    <CommonButton
                         shape="circle"
                         visible={this.state.checkedCount !== 0}
                         tooltipTitle={`대시보드 ${this.state.checkedCount}개 삭제`}
@@ -266,7 +267,7 @@ class Dashboards extends Component {
                         onClick={this.handleDeleteConfirm}
                         size="large"
                     />
-                    <CustomButton
+                    <CommonButton
                         shape="circle"
                         visible={this.state.isCustomer}
                         tooltipTitle={t('dashboard.add-dashboard-text')}

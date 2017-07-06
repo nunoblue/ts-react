@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Collapse, AutoComplete, Input, Icon, Select } from 'antd';
-import _ from 'lodash';
-import CustomModal from '../common/CustomModal';
+import CommonModal from '../common/CommonModal';
 import RuleForm from './RuleForm';
 import FilterList from './FilterList';
 import update from 'react-addons-update';
@@ -10,47 +7,9 @@ import update from 'react-addons-update';
 const Panel = Collapse.Panel;
 
 class AddRuleModal extends Component {
-    static propTypes = {
-        rule: PropTypes.object,
-    };
-
-    state = {
-        rule: this.props.rule,
-        filters: [],
-    };
-
-    handleAutoCompleteChange = (value, label) => {
-        console.log(value, label);
-    }
-
-    handlerFilter = {
-        add: (filter) => {
-            this.setState({
-                filters: update(
-                    this.state.list,
-                    {
-                        $push: [filter],
-                    },
-                ),
-            });
-        },
-    };
-
     render() {
-        const rule = this.props.rule;
-        const isEdit = _.has(rule, 'id');
-
-        const text = `
-      A dog is a type of domesticated animal.
-      Known for its loyalty and faithfulness,
-      it can be found as a welcome guest in many households across the world.
-  `;
-        const dataSource = [{ key: '1', value: 'Burns Bay Road' }, { key: 2, value: 'Downing Street' }, { key: 3, value: 'Wall Street' }];
-        const Option = Select.Option;
-        const options = dataSource.map(d => <Option key={d.key}>{d.value}</Option>);
-
         return (
-            <CustomModal
+            <CommonModal
                 ref={(c) => { this.modal = c; }}
                 title={isEdit ? `${rule.name} 규칙 수정` : '규칙 추가'}
                 onOk={this.props.onSave}
@@ -104,6 +63,7 @@ class AddRuleModal extends Component {
                 </Collapse>
 
             </CustomModal>
+            </CommonModal>
         );
     }
 }

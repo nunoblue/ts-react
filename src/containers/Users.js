@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Modal, notification } from 'antd';
 
-import CustomCard from '../components/common/CustomCard';
-import CustomButton from '../components/common/CustomButton';
-import CustomCheckbox from '../components/common/CustomCheckbox';
+import CommonCard from '../components/common/CommonCard';
+import CommonButton from '../components/common/CommonButton';
+import CommonCheckbox from '../components/common/CommonCheckbox';
 import AddUserModal from '../components/user/AddUserModal';
 
 import * as actions from '../actions/users';
@@ -40,9 +40,9 @@ class Users extends Component {
             const isPublic = data.additionalInfo ? (data.additionalInfo.isPublic || false) : false;
             const modalConfirmAction = this.handleDeleteConfirm.bind(this, email, id);
             return (
-                <CustomCard key={id} id={id} title={<CustomCheckbox value={id} onChange={this.handleChecked}>{email}</CustomCheckbox>} content={`${firstName} ${lastName}`}>
-                    <CustomButton className="custom-card-button" shape="circle" visible={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="유저 디바이스 삭제" />
-                </CustomCard>
+                <CommonCard key={id} style={{ cursor: 'pointer' }} id={id} title={<CommonCheckbox value={id} onChange={this.handleChecked}>{email}</CommonCheckbox>} content={`${firstName} ${lastName}`}>
+                    <CommonButton className="custom-card-button" shape="circle" visible={!isPublic} iconClassName="delete" onClick={modalConfirmAction} tooltipTitle="유저 디바이스 삭제" />
+                </CommonCard>
             );
         });
 
@@ -177,7 +177,7 @@ class Users extends Component {
             <Row>
                 {this.components()}
                 <div className="footer-buttons">
-                    <CustomButton
+                    <CommonButton
                         visible={this.state.checkedCount !== 0}
                         tooltipTitle={`유저 ${this.state.checkedCount}개 삭제`}
                         className="custom-card-button"
@@ -185,7 +185,7 @@ class Users extends Component {
                         onClick={this.handleDeleteConfirm}
                         size="large"
                     />
-                    <CustomButton shape="circle" tooltipTitle="유저 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddUserModal} size="large" />
+                    <CommonButton shape="circle" tooltipTitle="유저 추가" className="custom-card-button" iconClassName="plus" onClick={this.openAddUserModal} size="large" />
                 </div>
                 <AddUserModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveUser} onCancel={this.hideAddUserModal} />
             </Row>

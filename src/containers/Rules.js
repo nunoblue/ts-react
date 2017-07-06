@@ -4,12 +4,12 @@ import { Row, Modal, notification } from 'antd';
 
 import config from '../config';
 
-import CustomCard from '../components/common/CustomCard';
-import CustomButton from '../components/common/CustomButton';
+import CommonCard from '../components/common/CommonCard';
+import CommonButton from '../components/common/CommonButton';
 
 import * as actions from '../actions/rules';
 import AddRuleModal from '../components/rule/AddRuleModal';
-import CustomCheckbox from "../components/common/CustomCheckbox";
+import CommonCheckbox from '../components/common/CommonCheckbox';
 
 class Rules extends Component {
 
@@ -32,25 +32,25 @@ class Rules extends Component {
             const deleteConfirm = this.handleDeleteConfirm.bind(this, name, id);
             const openEditRuleModal = this.modalHandler.show.bind(this, id);
             return (
-                <CustomCard
+                <CommonCard
                     key={id}
                     title={
-                        <CustomCheckbox value={id} onChange={this.handleChecked}>
+                        <CommonCheckbox value={id} onChange={this.handleChecked}>
                             {name}
-                        </CustomCheckbox>
+                        </CommonCheckbox>
                     }
                     content={state}
                     buttonTooltip="Rule Delete"
                     onClick={openEditRuleModal}
                 >
-                    <CustomButton
+                    <CommonButton
                         visible={data && nullUID !== data.tenantId.id}
                         className="custom-card-button"
                         iconClassName="delete"
                         tooltipTitle="규칙 삭제"
                         onClick={deleteConfirm}
                     />
-                </CustomCard>
+                </CommonCard>
             );
         });
         return components;
@@ -157,7 +157,7 @@ class Rules extends Component {
                 />
 
                 <div className="footer-buttons">
-                    <CustomButton
+                    <CommonButton
                         visible={this.state.checkedCount > 0}
                         tooltipTitle={`규칙 ${this.state.checkedCount}건 삭제`}
                         className="custom-card-button"
@@ -166,7 +166,7 @@ class Rules extends Component {
                         size="large"
                         shape="circle"
                     />
-                    <CustomButton
+                    <CommonButton
                         tooltipTitle="규칙 추가"
                         className="custom-card-button"
                         iconClassName="plus"

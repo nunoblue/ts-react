@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Checkbox, Select } from 'antd';
 
-const AddUserForm = Form.create()(
+const UserForm = Form.create()(
     (props) => {
         const { getFieldDecorator } = props.form;
         return (
@@ -57,4 +57,4 @@ const AddUserForm = Form.create()(
     },
 );
 
-export default AddUserForm;
+export default UserForm;

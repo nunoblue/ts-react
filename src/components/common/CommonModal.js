@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import { Modal, Button } from 'antd';
 
-export default class CustomModal extends Component {
+export default class CommonModal extends Component {
+    static propTypes = {
+        title: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.element,
+        ]),
+        okText: PropTypes.string,
+        cancelText: PropTypes.string,
+    }
+
     static defaultProps = {
         title: 'Title',
         okText: '예',

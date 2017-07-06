@@ -1,0 +1,14 @@
+{
+    "contact": {
+        "country": "국가",
+        "city": "시",
+        "state": "도",
+        "postal-code": "우편 번호",
+        "postal-code-invalid": "숫자만 입력하세요.",
+        "address": "주소",
+        "address2": "상세주소",
+        "phone": "전화번호",
+        "email": "Email",
+        "no-address": "주소 정보 없음"
+    }
+}

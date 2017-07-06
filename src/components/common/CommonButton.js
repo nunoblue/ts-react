@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Tooltip, Button, Icon } from 'antd';
 
-class CustomButton extends Component {
+class CommonButton extends Component {
     static propTypes = {
         tooltipTitle: PropTypes.string,
         className: PropTypes.string,
@@ -41,4 +41,4 @@ class CustomButton extends Component {
     }
 }
 
-export default CustomButton;
+export default CommonButton;
