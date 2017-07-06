@@ -11,12 +11,14 @@ export default class CommonModal extends Component {
         ]),
         okText: PropTypes.string,
         cancelText: PropTypes.string,
+        maskClosable: PropTypes.bool,
     }
 
     static defaultProps = {
         title: 'Title',
         okText: '예',
         cancelText: '아니오',
+        maskClosable: 'false',
     }
 
     state = {
@@ -36,14 +38,14 @@ export default class CommonModal extends Component {
     }
 
     footerComponents = () => {
-        const { footer } = this.props;
+        const { footer, onCancel, onOk, cancelText, okText } = this.props;
         if (typeof footer === 'undefined' || footer === null) {
             return ([
-                <Button key="back" size="large" onClick={this.props.onCancel}>
-                    {this.props.cancelText}
+                <Button key="back" size="large" onClick={typeof onCancel === 'undefined' ? this.onHide : onCancel}>
+                    {cancelText}
                 </Button>,
-                <Button key="submit" type="primary" size="large" onClick={this.props.onOk}>
-                    {this.props.okText}
+                <Button key="submit" type="primary" size="large" onClick={onOk}>
+                    {okText}
                 </Button>,
             ]);
         }
@@ -54,19 +56,20 @@ export default class CommonModal extends Component {
     }
 
     render() {
+        const { children, title, okText, cancelText, onOk, onCancel, maskClosable } = this.props;
         return (
             <div>
                 <Modal
-                    title={this.props.title}
+                    title={title}
                     visible={this.state.visible}
-                    okText={this.props.okText}
-                    cancelText={this.props.cancelText}
-                    onOk={this.props.onOk}
-                    onCancel={this.props.onCancel}
-                    maskClosable={false}
+                    okText={okText}
+                    cancelText={cancelText}
+                    onOk={onOk}
+                    onCancel={typeof onCancel === 'undefined' ? this.onHide : onCancel}
+                    maskClosable={maskClosable}
                     footer={this.footerComponents()}
                 >
-                    {this.props.children}
+                    {children}
                 </Modal>
             </div>
         );
