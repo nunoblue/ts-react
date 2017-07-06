@@ -8,13 +8,15 @@ import {
     CLEAR_RULES,
     API_SAVE_RULE_SUCCESS,
     API_SAVE_RULE_FAILURE,
+    API_DELETE_RULE_SUCCESS,
+    API_DELETE_RULE_FAILURE,
 } from './ActionTypes';
 
 import config from '../config';
 
 const apServer = config.apServer;
+const API_RULE_URL = `${apServer}/api/rule`;
 const RULES_URL = `${apServer}/api/rules`;
-const SAVE_RULE_URL = `${apServer}/api/rule`;
 
 function getRules() {
     return {
@@ -50,6 +52,19 @@ function saveRuleSuccess() {
 function saveRuleFailure(message) {
     return {
         type: API_SAVE_RULE_FAILURE,
+        errorMessage: message,
+    };
+}
+
+function deleteRuleSuccess() {
+    return {
+        type: API_DELETE_RULE_SUCCESS,
+    };
+}
+
+function deleteRuleFailure(message) {
+    return {
+        type: API_DELETE_RULE_FAILURE,
         errorMessage: message,
     };
 }
@@ -109,9 +124,14 @@ export const saveRuleRequest = data => (dispatch) => {
             name: 'testAction',
         },
     };
+
+    // Assemble rule object
+    if (data.id) {
+        sample.id = { id: data.id };
+    }
     sample.name = data.name;
     sample.additionalInfo.description = data.description;
-    return axios.post(SAVE_RULE_URL, sample, {
+    return axios.post(API_RULE_URL, sample, {
         headers: {
             'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
         },
@@ -120,4 +140,18 @@ export const saveRuleRequest = data => (dispatch) => {
     }).catch((error) => {
         dispatch(saveRuleFailure(error.response.data.message));
     });
+};
+
+export const deleteRulesRequest = idArray => (dispatch) => {
+    dispatch(getRules());
+    return axios.all(idArray.map(id => axios.delete(
+            `${API_RULE_URL}/${id}`, {
+                headers: {
+                    'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+                },
+            }).then((response) => {
+                dispatch(deleteRuleSuccess());
+            }).catch((error) => {
+                dispatch(deleteRuleFailure(error.response.data.message));
+            })));
 };

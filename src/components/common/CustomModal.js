@@ -7,6 +7,7 @@ export default class CustomModal extends Component {
         title: 'Title',
         okText: '예',
         cancelText: '아니오',
+        visible: false,
     }
 
     state = {
@@ -48,7 +49,7 @@ export default class CustomModal extends Component {
             <div>
                 <Modal
                     title={this.props.title}
-                    visible={this.state.visible}
+                    visible={this.state.visible || this.props.visible}
                     okText={this.props.okText}
                     cancelText={this.props.cancelText}
                     onOk={this.props.onOk}

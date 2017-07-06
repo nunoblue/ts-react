@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { FormBuilder } from 'ts-antd-react-form-builder';
-// import util from '../../utils/formUtil';
+import _ from 'lodash';
+import formUtil from '../../utils/formUtil';
 
 @FormBuilder.create()
 class RuleForm extends Component {
+    static PropTypes = {
+        rule: PropTypes.object,
+    }
+
     render() {
-        const ruleSchema = [{
+        let basicSchema = [{
+            type: 'hidden',
+            name: 'id',
+            },
+            {
             type: 'text',
             name: 'name',
             rules: [
@@ -18,24 +28,32 @@ class RuleForm extends Component {
                 label: '이름',
                 labelCol: { span: 0 },
                 placeholder: '이름',
+                },
             },
-            value: '',
-        },
-        {
-            type: 'textarea',
-            name: 'desc',
-            label: '설명',
-            value: '',
-            placeholder: '설명',
+            {
+                type: 'textarea',
+                name: 'description',
+                label: '설명',
         }];
+
+        if (_.has(this.props.rule, 'id')) {
+            const { name, id: { id } } = this.props.rule;
+            const description = this.props.rule.additionalInfo ? this.props.rule.additionalInfo.description : null;
+            const basicInfo = {
+                id,
+                name,
+                description,
+            };
+            basicSchema = formUtil.valuesToConfig(basicSchema, basicInfo);
+        }
 
         return (
             <div>
                 <FormBuilder
                     size="default"
-                    hasFeedback={true}
+                    hasFeedback
                     layout="horizontal"
-                    config={ruleSchema}
+                    config={basicSchema}
                 />
             </div>
         );
