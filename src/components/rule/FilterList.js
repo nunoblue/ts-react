@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Button } from 'antd';
 import SortableItems from './SortableItems';
-import CustomModal from '../common/CustomModal';
+import CommonModal from '../common/CommonModal';
 
 
 class FilterList extends Component {
@@ -18,6 +18,10 @@ class FilterList extends Component {
         filter: {},
     }
 
+    // http://localhost:8080/api/components/FILTER
+    componentDidMount() {
+        // get filter types for setting
+    }
     modalHandler = {
         show: () => {
             this.setState({
@@ -28,10 +32,7 @@ class FilterList extends Component {
         },
     }
 
-    // http://localhost:8080/api/components/FILTER
-    componentDidMount() {
-        // get filter types for setting
-    }
+
 
     render() {
         const isAdd = _.isEmpty(this.state.filter);
@@ -44,7 +45,7 @@ class FilterList extends Component {
                 </ul>
                 <Button type="primary" icon="plus" onClick={this.modalHandler.show}>추가</Button>
 
-                <CustomModal
+                <CommonModal
                     ref={(c) => { this.modal = c; }}
                     title={isAdd ? '추가' : '수정'}
                     // onOk={this.props.onSave}
@@ -54,7 +55,7 @@ class FilterList extends Component {
                     visible={modal.visible}
                 >
                     modal
-                </CustomModal>
+                </CommonModal>
             </div>
         );
     }
