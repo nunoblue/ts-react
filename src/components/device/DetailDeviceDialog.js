@@ -42,8 +42,7 @@ class DetailDeviceDialog extends Component {
     }
 
     render() {
-        const { t, visible, options, onPressEnter, closeDialog } = this.props;
-        console.log('ttt2');
+        const { t, deviceId, visible, options, onPressEnter, closeDialog } = this.props;
         return (
             <CommonDialog
                 onClick={closeDialog}

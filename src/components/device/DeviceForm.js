@@ -5,12 +5,14 @@ import { translate } from 'react-i18next';
 @translate(['device'], { wait: false })
 class DeviceForm extends PureComponent {
     handleChange = (e) => {
-        this.props.titleChangeEvent(e.target.value);
+        if (typeof this.props.titleChangeEvent !== 'undefined') {
+            this.props.titleChangeEvent(e.target.value);
+        }
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { t, options, onPressEnter, disabled } = this.props;
+        const { t, options, onPressEnter, disabled, titleChangeEvent } = this.props;
         return (
             <Form layout="vertical">
                 <Form.Item label={t('device.name')}>

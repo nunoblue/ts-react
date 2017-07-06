@@ -18,7 +18,7 @@ export default class CommonModal extends Component {
         title: 'Title',
         okText: '예',
         cancelText: '아니오',
-        maskClosable: 'false',
+        maskClosable: false,
     }
 
     state = {

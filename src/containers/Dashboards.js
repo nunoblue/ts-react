@@ -43,7 +43,7 @@ class Dashboards extends Component {
         return true;
     }
 
-    buttonComponents = (dashboardId, customerId) => {
+    buttonComponents = (title, dashboardId, customerId) => {
         const { shortInfo, match, t } = this.props;
         const { currentUser } = this.context;
         const tenantCustomerId = currentUser.customerId.id;
@@ -68,7 +68,7 @@ class Dashboards extends Component {
             deleteVisible = false;
         }
 
-        const modalConfirmAction = this.handleDeleteConfirm.bind(this, name, customerId);
+        const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, dashboardId);
         return (
             <Button.Group className="custom-card-buttongroup">
                 <CommonButton
@@ -117,7 +117,7 @@ class Dashboards extends Component {
             const customerId = data.customerId.id;
             return (
                 <CommonCard key={id} style={{ cursor: 'pointer' }} id={id} title={<CommonCheckbox value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>}>
-                    {this.buttonComponents(id, customerId)}
+                    {this.buttonComponents(title, id, customerId)}
                 </CommonCard>
             );
         });
@@ -178,19 +178,23 @@ class Dashboards extends Component {
     }
 
     handleDeleteConfirm = (title, id) => {
+        const newTitle = `'${title}' 대시보드를 삭제하시겠습니까?`;
+        const newContent = '대시보드 및 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const deleteEvent = this.handleDeleteDashboard.bind(this, id);
+        return Modal.confirm({
+            title: newTitle,
+            content: newContent,
+            okText: '예',
+            cancelText: '아니오',
+            onOk: deleteEvent,
+        });
+    }
+
+    handleMultipleDeleteConfirm = () => {
         const checkedCount = this.state.checkedCount;
-        let newTitle;
-        let newContent;
-        let deleteEvent;
-        if (checkedCount === 0) {
-            newTitle = `'${title}' 대시보드를 삭제하시겠습니까?`;
-            newContent = '대시보드 및 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
-            deleteEvent = this.handleDeleteDashboard.bind(this, id);
-        } else {
-            newTitle = `대시보드 ${checkedCount}개를 삭제하시겠습니까?`;
-            newContent = '선택된 대시보드는 삭제되고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
-            deleteEvent = this.handleMultipleDeleteDashboard.bind(this, id);
-        }
+        const newTitle = `대시보드 ${checkedCount}개를 삭제하시겠습니까?`;
+        const newContent = '선택된 대시보드는 삭제되고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const deleteEvent = this.handleMultipleDeleteDashboard;
         return Modal.confirm({
             title: newTitle,
             content: newContent,
@@ -264,7 +268,7 @@ class Dashboards extends Component {
                         tooltipTitle={`대시보드 ${this.state.checkedCount}개 삭제`}
                         className="custom-card-button"
                         iconClassName="delete"
-                        onClick={this.handleDeleteConfirm}
+                        onClick={this.handleMultipleDeleteConfirm}
                         size="large"
                     />
                     <CommonButton

@@ -29,7 +29,7 @@ class Devices extends Component {
         checkedIdArray: [],
         authority: this.context.currentUser.authority === 'TENANT_ADMIN',
         isCustomer: typeof this.props.match.params.customerId === 'undefined',
-        deviceId: '',
+        selectedDevice: null,
         dialogVisible: false,
     }
 
@@ -41,7 +41,7 @@ class Devices extends Component {
     shouldComponentUpdate(prevProps, prevState) {
         if (prevState.checkedCount !== this.state.checkedCount) {
             return true;
-        } else if (prevState.deviceId !== this.state.deviceId) {
+        } else if (prevState.selectedDevice !== this.state.selectedDevice) {
             return true;
         } else if (prevState.dialogVisible !== this.state.dialogVisible) {
             return true;
@@ -273,7 +273,8 @@ class Devices extends Component {
     }
 
     handleSaveDevice = (type) => {
-        const form = type === 'dialog' ? this.detailDialog.form : this.addModal.form;
+        const isDialog = type === 'dialog';
+        const form = isDialog ? this.detailDialog.form : this.addModal.form;
         form.validateFields((err, values) => {
             if (err) {
                 return false;
@@ -282,14 +283,21 @@ class Devices extends Component {
                 gateway: values.gateway,
                 description: values.description,
             };
-            Object.assign(values, { additionalInfo });
             delete values.gateway;
             delete values.description;
-            this.props.saveDeviceRequest(values).then(() => {
+            const retValue = {};
+            if (isDialog) {
+                Object.assign(retValue, this.state.selectedDevice, values, { additionalInfo });
+            } else {
+                Object.assign(retValue, values, { additionalInfo });
+            }
+            this.props.saveDeviceRequest(retValue).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
                     this.refershDeviceRequest();
-                    if (type !== 'dialog') {
+                    if (!isDialog) {
                         this.hideAddDeviceModal();
+                    } else {
+                        this.openDetailDialog(this.state.selectedDevice.id.id);
                     }
                 } else {
                     notification.error({
@@ -335,19 +343,21 @@ class Devices extends Component {
         });
     }
 
-    openDetailDialog = (deviceId) => {
+    openDetailDialog = (selectedDeviceId) => {
         this.detailDialog.clearEdit();
-        const deviceData = this.loadDeviceDetailData(deviceId);
+        const deviceData = this.loadDeviceDetailData(selectedDeviceId);
+        this.detailDialog.initTitle(deviceData.name);
         this.detailDialog.form.setFieldsValue({
             name: deviceData.name,
             type: deviceData.type,
             description: deviceData.description,
             gateway: deviceData.gateway,
         });
-        this.detailDialog.initTitle(deviceData.name);
+        const customer = this.props.shortInfo[deviceData.customerId.id];
+        const newDevice = Object.assign(deviceData, { assignedCustomer: customer });
         this.setState({
             dialogVisible: true,
-            deviceId,
+            selectedDevice: newDevice,
         });
     }
 
@@ -355,15 +365,15 @@ class Devices extends Component {
         this.detailDialog.form.resetFields();
         this.setState({
             dialogVisible: false,
-            deviceId: '',
+            selectedDevice: null,
         });
     }
 
-    loadDeviceDetailData = (deviceId) => {
+    loadDeviceDetailData = (selectedDeviceId) => {
         const { data } = this.props;
         let findDevice;
         data.some((device) => {
-            if (device.id.id === deviceId) {
+            if (device.id.id === selectedDeviceId) {
                 const additionalInfo = device.additionalInfo || null;
                 if (additionalInfo) {
                     const gateway = additionalInfo.gateway || null;
@@ -385,7 +395,6 @@ class Devices extends Component {
             return obj.type;
         });
         const authority = this.state.authority === this.state.isCustomer;
-        console.log('ttt');
         return (
             <Row>
                 {this.components()}
@@ -424,6 +433,7 @@ class Devices extends Component {
                 <DetailDeviceDialog
                     ref={(c) => { this.detailDialog = c; }}
                     t={t}
+                    deviceId={this.state.selectedDevice ? this.state.selectedDevice.id.id : null}
                     visible={this.state.dialogVisible}
                     options={options}
                     closeDialog={this.closeDetailDialog}
