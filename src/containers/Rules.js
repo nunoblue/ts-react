@@ -9,8 +9,15 @@ import CommonButton from '../components/common/CommonButton';
 
 import * as actions from '../actions/rules';
 import AddRuleModal from '../components/rule/AddRuleModal';
+import CommonCheckbox from '../components/common/CommonCheckbox';
 
 class Rules extends Component {
+
+    state = {
+        checkedCount: 0,
+        checkedIdArray: [],
+        rule: {},
+    };
 
     componentDidMount() {
         this.props.getRulesRequest();
@@ -23,34 +30,64 @@ class Rules extends Component {
             const id = data.id.id;
             const nullUID = config.nullUID;
             const deleteConfirm = this.handleDeleteConfirm.bind(this, name, id);
+            const openEditRuleModal = this.modalHandler.show.bind(this, id);
             return (
                 <CommonCard
                     key={id}
-                    style={{ cursor: 'pointer' }}
-                    title={name}
+                    title={
+                        <CommonCheckbox value={id} onChange={this.handleChecked}>
+                            {name}
+                        </CommonCheckbox>
+                    }
                     content={state}
                     buttonTooltip="Rule Delete"
+                    onClick={openEditRuleModal}
                 >
                     <CommonButton
                         visible={data && nullUID !== data.tenantId.id}
                         className="custom-card-button"
                         iconClassName="delete"
-                        tooltipTitle="룰 삭제"
+                        tooltipTitle="규칙 삭제"
                         onClick={deleteConfirm}
                     />
                 </CommonCard>
             );
         });
         return components;
-    }
+    };
 
-    openAddRuleModal = () => {
-        this.addModal.modal.onShow();
-    }
+    modalHandler = {
+        show: (id) => {
+            const dataList = this.props.data;
+            const rule = id ? dataList.find(item => item.id.id === id) : {};
+            this.setState({
+                rule,
+            })
+            this.addModal.modal.onShow();
+        },
+        hide: () => {
+            // this.addModal.form.formBuilder.resetFields();
+            this.addModal.modal.onHide();
+        },
+    };
 
-    closeAddRuleModal = () => {
-        // this.addModal.form.formBuilder.resetFields();
-        this.addModal.modal.onHide();
+    handleChecked = (e) => {
+        const checkedCount = this.state.checkedCount;
+        const checkedIdArray = this.state.checkedIdArray;
+        if (e.target.checked) {
+            checkedIdArray.push(e.target.value);
+            this.setState({
+                checkedCount: checkedCount + 1,
+                checkedIdArray,
+            });
+        } else {
+            const index = checkedIdArray.indexOf(e.target.value);
+            checkedIdArray.splice(index, 1);
+            this.setState({
+                checkedCount: checkedCount - 1,
+                checkedIdArray,
+            });
+        }
     }
 
     handleSaveRule = () => {
@@ -64,7 +101,7 @@ class Rules extends Component {
             this.props.saveRuleRequest(values).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
                     this.props.getRulesRequest();
-                    this.closeAddRuleModal();
+                    this.modalHandler.hide();
                 } else {
                     notification.error({
                         message: this.props.errorMessage,
@@ -72,22 +109,17 @@ class Rules extends Component {
                 }
             });
         });
-    }
+    };
 
     handleDeleteConfirm = (title, id) => {
-        // const checkedCount = this.state.checkedCount;
         let newTitle;
-        let newContent;
-        let deleteEvent;
-        // if (checkedCount === 0) {
+        const newContent = '규칙과 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const deleteEvent = this.handleDeleteRules.bind(this, id);
+        if (id) {
             newTitle = `'${title}' 규칙을 삭제하시겠습니까?`;
-            newContent = '규칙과 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
-            deleteEvent = this.handleDeleteRules.bind(this, id);
-        // } else {
-        //     newTitle = `커스터머 ${checkedCount}개를 삭제하시겠습니까?`;
-        //     newContent = '선택된 커스터머는 삭제되고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
-        //     deleteEvent = this.handleMultipleDeleteCustomer.bind(this, id);
-        // }
+        } else {
+            newTitle = `${this.state.checkedCount}개의 규칙을 삭제하시겠습니까?`;
+        }
         return Modal.confirm({
             title: newTitle,
             content: newContent,
@@ -95,37 +127,52 @@ class Rules extends Component {
             cancelText: '아니오',
             onOk: deleteEvent,
         });
-    }
+    };
 
     handleDeleteRules = (id) => {
-        this.props.multipleDeleteCustomerRequest(this.state.checkedIdArray).then(() => {
+        const idArray = id ? [id] : this.state.checkedIdArray;
+
+        this.props.deleteRulesRequest(idArray).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
-                this.refershCustomerRequest();
+                this.props.getRulesRequest();
             } else {
                 notification.error({
                     message: this.props.errorMessage,
                 });
             }
         });
-    }
+    };
 
     render() {
+        const { rule } = this.state;
+        const handleShowAddModal = this.modalHandler.show.bind(this, null);
         return (
             <Row>
                 { this.components() }
                 <AddRuleModal
                     ref={(c) => { this.addModal = c; }}
                     onSave={this.handleSaveRule}
-                    onCancel={this.closeAddRuleModal}
+                    onCancel={this.modalHandler.hide}
+                    rule={rule}
                 />
 
                 <div className="footer-buttons">
                     <CommonButton
-                        tooltipTitle="룰 추가"
+                        visible={this.state.checkedCount > 0}
+                        tooltipTitle={`규칙 ${this.state.checkedCount}건 삭제`}
+                        className="custom-card-button"
+                        iconClassName="delete"
+                        onClick={this.handleDeleteConfirm}
+                        size="large"
+                        shape="circle"
+                    />
+                    <CommonButton
+                        tooltipTitle="규칙 추가"
                         className="custom-card-button"
                         iconClassName="plus"
-                        onClick={this.openAddRuleModal}
+                        onClick={handleShowAddModal}
                         size="large"
+                        shape="circle"
                     />
                 </div>
             </Row>
@@ -144,6 +191,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getRulesRequest: () => dispatch(actions.getRulesRequest()),
         saveRuleRequest: rule => dispatch(actions.saveRuleRequest(rule)),
+        deleteRulesRequest: idArray => dispatch(actions.deleteRulesRequest(idArray)),
     };
 };
 

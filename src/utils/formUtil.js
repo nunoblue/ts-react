@@ -23,6 +23,43 @@ export default {
         return str;
     },
 
+    valuesToConfig(formBuilderConfig, data){
+        formBuilderConfig.forEach((v,k)=>{
+            if(v.type === "array"){
+                v.type = "table";
+            }
+            if(!v.key){
+                v.key = this.getUniqueKey();
+            }
+            if(!v.children){
+                if(data[v.name] !== undefined){
+                    v.value = data[v.name];
+                }
+            }else if(v.type === "object" && v.children){
+                if(data[v.name] !== undefined){
+                    valuesToConfig(v.children,data[v.name]);
+                }
+            }else if(v.type === "table" && v.children){
+                if(data[v.name] !== undefined){
+                    var arr = [];
+                    var temp_data = data[v.name];
+                    temp_data.forEach((v2,k2)=>{
+                        var temp = _.cloneDeep(v.children[0]);
+                        //处理key值
+                        temp.forEach((v3,k3)=>{
+                            v3.key = this.getUniqueKey();
+                        })
+                        valuesToConfig(temp, v2);
+                        arr.push(temp)
+                        //console.debug(v)
+                    })
+                    v.children = arr;
+                }
+            }
+        })
+        return formBuilderConfig;
+    },
+
     dataType: [
         {
             value: 'object',

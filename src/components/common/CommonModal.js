@@ -18,6 +18,7 @@ export default class CommonModal extends Component {
         title: 'Title',
         okText: '예',
         cancelText: '아니오',
+        visible: false,
         maskClosable: false,
     }
 
@@ -61,7 +62,7 @@ export default class CommonModal extends Component {
             <div>
                 <Modal
                     title={title}
-                    visible={this.state.visible}
+                    visible={this.state.visible || this.props.visible}
                     okText={okText}
                     cancelText={cancelText}
                     onOk={onOk}
