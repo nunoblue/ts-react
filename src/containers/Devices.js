@@ -51,7 +51,7 @@ class Devices extends Component {
         return true;
     }
 
-    buttonComponents = (deviceId, customerId) => {
+    buttonComponents = (name, deviceId, customerId) => {
         const { shortInfo, match, t } = this.props;
         const { currentUser } = this.context;
         const tenantCustomerId = currentUser.customerId.id;
@@ -130,7 +130,7 @@ class Devices extends Component {
                     title={<CommonCheckbox value={id} onChange={this.handleChecked}>{name}</CommonCheckbox>}
                     content={type.toUpperCase()}
                 >
-                    {this.buttonComponents(id, customerId)}
+                    {this.buttonComponents(name, id, customerId)}
                 </CommonCard>
             );
         });
@@ -199,19 +199,23 @@ class Devices extends Component {
     }
 
     handleDeleteConfirm = (title, id) => {
+        const newTitle = `'${title}' 디바이스를 삭제하시겠습니까?`;
+        const newContent = '디바이스 및 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const deleteEvent = this.handleDeleteDevice.bind(this, id);
+        return Modal.confirm({
+            title: newTitle,
+            content: newContent,
+            okText: '예',
+            cancelText: '아니오',
+            onOk: deleteEvent,
+        });
+    }
+
+    handleMultipleDeleteConfirm = () => {
         const checkedCount = this.state.checkedCount;
-        let newTitle;
-        let newContent;
-        let deleteEvent;
-        if (checkedCount === 0) {
-            newTitle = `'${title}' 디바이스를 삭제하시겠습니까?`;
-            newContent = '디바이스 및 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
-            deleteEvent = this.handleDeleteDevice.bind(this, id);
-        } else {
-            newTitle = `디바이스 ${checkedCount}개를 삭제하시겠습니까?`;
-            newContent = '선택된 디바이스 삭제되고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
-            deleteEvent = this.handleMultipleDeleteDevice.bind(this, id);
-        }
+        const newTitle = `디바이스 ${checkedCount}개를 삭제하시겠습니까?`;
+        const newContent = '선택된 디바이스 삭제되고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const deleteEvent = this.handleMultipleDeleteDevice;
         return Modal.confirm({
             title: newTitle,
             content: newContent,
@@ -288,16 +292,19 @@ class Devices extends Component {
             const retValue = {};
             if (isDialog) {
                 Object.assign(retValue, this.state.selectedDevice, values, { additionalInfo });
+                this.setState({
+                    selectedDevice: retValue,
+                });
             } else {
                 Object.assign(retValue, values, { additionalInfo });
             }
             this.props.saveDeviceRequest(retValue).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
                     this.refershDeviceRequest();
-                    if (!isDialog) {
-                        this.hideAddDeviceModal();
+                    if (isDialog) {
+                        this.openDetailDialog(retValue.id.id);
                     } else {
-                        this.openDetailDialog(this.state.selectedDevice.id.id);
+                        this.hideAddDeviceModal();
                     }
                 } else {
                     notification.error({
@@ -347,11 +354,17 @@ class Devices extends Component {
         this.detailDialog.clearEdit();
         const deviceData = this.loadDeviceDetailData(selectedDeviceId);
         this.detailDialog.initTitle(deviceData.name);
+        let gateway;
+        let description;
+        if (deviceData.additionalInfo) {
+            gateway = deviceData.additionalInfo.gateway || null;
+            description = deviceData.additionalInfo.description || null;
+        }
         this.detailDialog.form.setFieldsValue({
             name: deviceData.name,
             type: deviceData.type,
-            description: deviceData.description,
-            gateway: deviceData.gateway,
+            description,
+            gateway,
         });
         const customer = this.props.shortInfo[deviceData.customerId.id];
         const newDevice = Object.assign(deviceData, { assignedCustomer: customer });
@@ -371,17 +384,15 @@ class Devices extends Component {
 
     loadDeviceDetailData = (selectedDeviceId) => {
         const { data } = this.props;
+        const deviceId = this.state.selectedDevice ? this.state.selectedDevice.id.id : null;
         let findDevice;
+        if (selectedDeviceId === deviceId) {
+            findDevice = this.state.selectedDevice;
+            return findDevice;
+        }
         data.some((device) => {
             if (device.id.id === selectedDeviceId) {
-                const additionalInfo = device.additionalInfo || null;
-                if (additionalInfo) {
-                    const gateway = additionalInfo.gateway || null;
-                    const description = additionalInfo.description || null;
-                    findDevice = Object.assign({}, device, { gateway, description });
-                } else {
-                    findDevice = device;
-                }
+                findDevice = device;
                 return true;
             }
             return false;

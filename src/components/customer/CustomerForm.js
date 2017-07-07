@@ -1,22 +1,35 @@
-import React from 'react';
-import { Form, Input, Radio } from 'antd';
+import React, { Component } from 'react';
+import { Form, Input } from 'antd';
+import { translate } from 'react-i18next';
 
-const CustomerForm = Form.create()(
-    (props) => {
-        const { getFieldDecorator } = props.form;
+@translate(['customer'], { wait: false })
+class CustomerForm extends Component {
+    handleChange = (e) => {
+        if (typeof this.props.titleChangeEvent !== 'undefined') {
+            this.props.titleChangeEvent(e.target.value);
+        }
+    }
+
+    render() {
+        const { getFieldDecorator } = this.props.form;
+        const { t, disabled, onPressEnter } = this.props;
         return (
             <Form layout="vertical">
-                <Form.Item label="타이틀">
+                <Form.Item label={t('customer.title')}>
                     {
                         getFieldDecorator('title', {
-                            rules: [{ required: true, message: 'Please input the title of collection!' }],
+                            rules: [{ required: true, message: t('customer.title-required') }],
                         })(
-                            <Input onPressEnter={props.onPressEnter} />,
+                            <Input
+                                disabled={disabled}
+                                onPressEnter={onPressEnter}
+                                onChange={this.handleChange}
+                            />,
                         )
                     }
                 </Form.Item>
-                <Form.Item label="설명">
-                    {getFieldDecorator('description')(<Input onPressEnter={props.onPressEnter} />)}
+                <Form.Item label={t('customer.description')}>
+                    {getFieldDecorator('description')(<Input disabled={disabled} onPressEnter={onPressEnter} />)}
                 </Form.Item>
                 {/*<Form.Item label="국가">
                     {getFieldDecorator('country')(<Input />)}
@@ -44,7 +57,7 @@ const CustomerForm = Form.create()(
                 </Form.Item>*/}
             </Form>
         );
-    },
-);
+    }
+}
 
-export default CustomerForm;
+export default Form.create()(CustomerForm);

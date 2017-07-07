@@ -9,6 +9,7 @@ import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
 import AddDashboardModal from '../components/dashboard/AddDashboardModal';
+import DetailDashboardDialog from '../components/dashboard/DetailDashboardDialog';
 
 import * as actions from '../actions/dashboards';
 import * as customers from '../actions/customers';
@@ -27,6 +28,8 @@ class Dashboards extends Component {
         checkedIdArray: [],
         authority: this.context.currentUser.authority === 'TENANT_ADMIN',
         isCustomer: typeof this.props.match.params.customerId === 'undefined',
+        selectedDashboard: null,
+        dialogVisible: false,
     }
 
     componentDidMount() {
@@ -36,6 +39,10 @@ class Dashboards extends Component {
 
     shouldComponentUpdate(prevProps, prevState) {
         if (prevState.checkedCount !== this.state.checkedCount) {
+            return true;
+        } else if (prevState.selectedDashboard !== this.state.selectedDashboard) {
+            return true;
+        } else if (prevState.dialogVisible !== this.state.dialogVisible) {
             return true;
         } else if (prevProps.shortInfo === this.props.shortInfo) {
             return false;
@@ -96,7 +103,7 @@ class Dashboards extends Component {
                     shape="circle"
                     visible={assignVisible}
                     iconClassName={isAssign ? 'user-delete' : 'user-add'}
-                    tooltipTitle={isAssign ? t('dashboard.unassign-from-Commoner') : t('dashboard.assign-to-customer')}
+                    tooltipTitle={isAssign ? t('dashboard.unassign-from-customer') : t('dashboard.assign-to-customer')}
                 />
                 <CommonButton
                     className="custom-card-button"
@@ -115,8 +122,17 @@ class Dashboards extends Component {
             const title = data.title;
             const id = data.id.id;
             const customerId = data.customerId.id;
+            const openDialog = this.openDetailDialog.bind(this, id);
+            const closeDialog = this.closeDetailDialog;
             return (
-                <CommonCard key={id} style={{ cursor: 'pointer' }} id={id} title={<CommonCheckbox value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>}>
+                <CommonCard
+                    key={id}
+                    style={{ cursor: 'pointer' }}
+                    title={<CommonCheckbox value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>}
+                    onSelfEvent={closeDialog}
+                    onNextEvent={openDialog}
+                    isCardDown={!this.state.dialogVisible}
+                >
                     {this.buttonComponents(title, id, customerId)}
                 </CommonCard>
             );
@@ -178,8 +194,9 @@ class Dashboards extends Component {
     }
 
     handleDeleteConfirm = (title, id) => {
-        const newTitle = `'${title}' 대시보드를 삭제하시겠습니까?`;
-        const newContent = '대시보드 및 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const { t } = this.props;
+        const newTitle = t('dashboard.delete-dashboard-title', { dashboardTitle: title });
+        const newContent = t('dashboard.delete-dashboard-text');
         const deleteEvent = this.handleDeleteDashboard.bind(this, id);
         return Modal.confirm({
             title: newTitle,
@@ -191,9 +208,10 @@ class Dashboards extends Component {
     }
 
     handleMultipleDeleteConfirm = () => {
+        const { t } = this.props;
         const checkedCount = this.state.checkedCount;
-        const newTitle = `대시보드 ${checkedCount}개를 삭제하시겠습니까?`;
-        const newContent = '선택된 대시보드는 삭제되고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const newTitle = t('dashboard.delete-dashboards-title', { count: checkedCount });
+        const newContent = t('dashboard.delete-dashboards-text');
         const deleteEvent = this.handleMultipleDeleteDashboard;
         return Modal.confirm({
             title: newTitle,
@@ -237,21 +255,94 @@ class Dashboards extends Component {
         });
     }
 
-    handleSaveDashboard = () => {
-        const form = this.addModal.form;
+    handleSaveDashboard = (type) => {
+        const isDialog = type === 'dialog';
+        const form = isDialog ? this.detailDialog.form : this.addModal.form;
         form.validateFields((err, values) => {
             if (err) {
                 return false;
             }
-            this.props.saveDashboardRequest(values).then(() => {
+            const configuration = {
+                description: values.description,
+            };
+            delete values.description;
+            const retValue = {};
+            if (isDialog) {
+                Object.assign(retValue, this.state.selectedDashboard, values, { configuration });
+                this.setState({
+                    selectedDashboard: retValue,
+                });
+            } else {
+                Object.assign(retValue, values, { configuration });
+            }
+            this.props.saveDashboardRequest(retValue).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
                     this.refershDashboardRequest();
-                    this.hideAddDashboardModal();
+                    if (isDialog) {
+                        this.openDetailDialog(retValue.id.id);
+                    } else {
+                        this.hideAddDashboardModal();
+                    }
                 } else {
                     notification.error({
                         message: this.props.errorMessage,
                     });
                 }
+            });
+        });
+    }
+
+    openDetailDialog = (selectedId) => {
+        this.detailDialog.clearEdit();
+        const dashboardData = this.loadDashboardDetailData(selectedId);
+        if (dashboardData instanceof Promise) {
+            dashboardData.then((data) => {
+                this.setDetailDialog(data);
+            });
+        } else {
+            this.setDetailDialog(dashboardData);
+        }
+    }
+
+    setDetailDialog = (data) => {
+        this.detailDialog.initTitle(data.title);
+        let description;
+        if (data.configuration) {
+            description = data.configuration.description || null;
+        }
+        this.detailDialog.form.setFieldsValue({
+            title: data.title,
+            description,
+        });
+        this.setState({
+            dialogVisible: true,
+            selectedDashboard: data,
+        });
+    }
+
+    closeDetailDialog = () => {
+        this.detailDialog.form.resetFields();
+        this.setState({
+            dialogVisible: false,
+            selectedDashboard: null,
+        });
+    }
+
+    loadDashboardDetailData = (selectedId) => {
+        const { getDashboardRequest } = this.props;
+        const id = this.state.selectedDashboard ? this.state.selectedDashboard.id.id : null;
+        let findData;
+        if (selectedId === id) {
+            findData = this.state.selectedDashboard;
+            return findData;
+        }
+        return getDashboardRequest(selectedId).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                findData = this.props.dashboard;
+                return findData;
+            }
+            notification.error({
+                message: this.props.errorMessage,
             });
         });
     }
@@ -265,7 +356,7 @@ class Dashboards extends Component {
                     <CommonButton
                         shape="circle"
                         visible={this.state.checkedCount !== 0}
-                        tooltipTitle={`대시보드 ${this.state.checkedCount}개 삭제`}
+                        tooltipTitle={t('dashboard.delete-dashboards-action-title', { count: this.state.checkedCount })}
                         className="custom-card-button"
                         iconClassName="delete"
                         onClick={this.handleMultipleDeleteConfirm}
@@ -281,7 +372,19 @@ class Dashboards extends Component {
                         size="large"
                     />
                 </div>
-                <AddDashboardModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveDashboard} onCancel={this.hideAddDashboardModal} />
+                <AddDashboardModal
+                    ref={(c) => { this.addModal = c; }}
+                    onSave={this.handleSaveDashboard}
+                    onCancel={this.hideAddDashboardModal}
+                />
+                <DetailDashboardDialog
+                    ref={(c) => { this.detailDialog = c; }}
+                    t={t}
+                    dashboardId={this.state.selectedDashboard ? this.state.selectedDashboard.id.id : null}
+                    visible={this.state.dialogVisible}
+                    closeDialog={this.closeDetailDialog}
+                    onSave={this.handleSaveDashboard}
+                />
             </Row>
         );
     }
@@ -290,12 +393,14 @@ class Dashboards extends Component {
 const mapStateToProps = (state) => ({
     statusMessage: state.dashboards.statusMessage,
     data: state.dashboards.data,
+    dashboard: state.dashboards.dashboard,
     errorMessage: state.dashboards.errorMessage,
     shortInfo: state.customers.shortInfo,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     getDashboardsRequest: actions.getDashboardsRequest,
+    getDashboardRequest: actions.getDashboardRequest,
     saveDashboardRequest: actions.saveDashboardRequest,
     deleteDashboardRequest: actions.deleteDashboardRequest,
     multipleDeleteDashboardRequest: actions.multipleDeleteDashboardRequest,

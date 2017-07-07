@@ -12,7 +12,7 @@ class DeviceForm extends PureComponent {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { t, options, onPressEnter, disabled, titleChangeEvent } = this.props;
+        const { t, options, onPressEnter, disabled } = this.props;
         return (
             <Form layout="vertical">
                 <Form.Item label={t('device.name')}>

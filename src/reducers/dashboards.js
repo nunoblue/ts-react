@@ -4,6 +4,7 @@ import {
     TENANT_DASHBOARDS,
     TENANT_DASHBOARDS_SUCCESS,
     TENANT_DASHBOARDS_FAILURE,
+    API_GET_DASHBOARD_SUCCESS,
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
     CLEAR_DASHBOARDS,
@@ -13,6 +14,7 @@ const initialState = {
     statusMessage: 'INIT',
     data: [],
     errorMessage: 'NONE',
+    dashboard: {},
 };
 
 export default function dashboards(state = initialState, action) {
@@ -39,6 +41,15 @@ export default function dashboards(state = initialState, action) {
                 },
                 errorMessage: {
                     $set: action.errorMessage,
+                },
+            });
+        case API_GET_DASHBOARD_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+                dashboard: {
+                    $set: action.dashboard,
                 },
             });
         case API_SAVE_DASHBOARD_SUCCESS:
