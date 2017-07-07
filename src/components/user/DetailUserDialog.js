@@ -42,7 +42,12 @@ class DetailDeviceDialog extends Component {
     }
 
     render() {
-        const { t, userId, visible, options, onPressEnter, closeDialog } = this.props;
+        const { t, data, visible, options, onPressEnter, closeDialog, buttonComponents } = this.props;
+        let isPublic = false;
+        const additionalInfo = data ? data.additionalInfo : null;
+        if (additionalInfo) {
+            isPublic = typeof additionalInfo.isPublic !== 'undefined' ? additionalInfo.isPublic : false;
+        }
         return (
             <CommonDialog
                 onClick={closeDialog}
@@ -52,14 +57,7 @@ class DetailDeviceDialog extends Component {
                 tooltipTitle="상세정보 닫기"
             >
                 <Row>
-                    <CommonButton className="ts-dialog-button">
-                        <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
-                        {t('user.resend-activation')}
-                    </CommonButton>
-                    <CommonButton className="ts-dialog-button">
-                        <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
-                        {t('user.delete')}
-                    </CommonButton>
+                    {data ? buttonComponents(data.email, data.id.id, isPublic, 'dialog') : null}
                     <Switch checkedChildren={'쓰기'} unCheckedChildren={'읽기'} checked={this.state.editing} onChange={this.changeEdit}>
                         {t('details:details.toggle-edit-mode')}
                     </Switch>

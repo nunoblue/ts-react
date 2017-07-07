@@ -38,14 +38,14 @@ class Devices extends Component {
         this.refershDeviceRequest();
     }
 
-    shouldComponentUpdate(prevProps, prevState) {
-        if (prevState.checkedCount !== this.state.checkedCount) {
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextState.checkedCount !== this.state.checkedCount) {
             return true;
-        } else if (prevState.selectedDevice !== this.state.selectedDevice) {
+        } else if (nextState.selectedDevice !== this.state.selectedDevice) {
             return true;
-        } else if (prevState.dialogVisible !== this.state.dialogVisible) {
+        } else if (nextState.dialogVisible !== this.state.dialogVisible) {
             return true;
-        } else if (prevProps.shortInfo === this.props.shortInfo) {
+        } else if (nextProps.shortInfo === this.props.shortInfo) {
             return false;
         }
         return true;
@@ -256,6 +256,7 @@ class Devices extends Component {
         this.props.deleteDeviceRequest(id).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershDeviceRequest();
+                this.closeDetailDialog();
             } else {
                 notification.error({
                     message: this.props.errorMessage,
@@ -444,11 +445,12 @@ class Devices extends Component {
                 <DetailDeviceDialog
                     ref={(c) => { this.detailDialog = c; }}
                     t={t}
-                    deviceId={this.state.selectedDevice ? this.state.selectedDevice.id.id : null}
+                    data={this.state.selectedDevice}
                     visible={this.state.dialogVisible}
                     options={options}
                     closeDialog={this.closeDetailDialog}
                     onSave={this.handleSaveDevice}
+                    buttonComponents={this.buttonComponents}
                 />
             </Row>
         );

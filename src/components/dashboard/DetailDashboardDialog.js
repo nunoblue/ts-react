@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tabs, Switch, Row } from 'antd';
+import { Switch, Row, Button } from 'antd';
 
 import CommonDialog from '../common/CommonDialog';
 import CommonButton from '../common/CommonButton';
@@ -42,7 +42,7 @@ class DetailDeviceDialog extends Component {
     }
 
     render() {
-        const { t, visible, options, onPressEnter, closeDialog } = this.props;
+        const { t, data, visible, options, onPressEnter, closeDialog, buttonComponents } = this.props;
         return (
             <CommonDialog
                 onClick={closeDialog}
@@ -52,6 +52,7 @@ class DetailDeviceDialog extends Component {
                 tooltipTitle="상세정보 닫기"
             >
                 <Row>
+                    {data ? buttonComponents(data.title, data.id.id, data.customerId.id) : null}
                     <Switch checkedChildren={'쓰기'} unCheckedChildren={'읽기'} checked={this.state.editing} onChange={this.changeEdit}>
                         {t('details:details.toggle-edit-mode')}
                     </Switch>
@@ -62,6 +63,7 @@ class DetailDeviceDialog extends Component {
                     options={options}
                     disabled={!this.state.editing}
                     titleChangeEvent={this.handleTitleChange}
+                    data={data || null}
                 />
                 {
                     this.state.editing ? (

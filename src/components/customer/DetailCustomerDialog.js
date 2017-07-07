@@ -42,7 +42,12 @@ class DetailDeviceDialog extends Component {
     }
 
     render() {
-        const { t, customerId, visible, options, onPressEnter, closeDialog, isPublic } = this.props;
+        const { t, data, visible, options, onPressEnter, closeDialog, buttonComponents } = this.props;
+        let isPublic = false;
+        const additionalInfo = data ? data.additionalInfo : null;
+        if (additionalInfo) {
+            isPublic = typeof additionalInfo.isPublic !== 'undefined' ? additionalInfo.isPublic : false;
+        }
         return (
             <CommonDialog
                 onClick={closeDialog}
@@ -54,6 +59,7 @@ class DetailDeviceDialog extends Component {
                 <Tabs defaultActiveKey="1">
                     <Tabs.TabPane tab={t('customer.details')} key="1">
                         <Row>
+                            {data ? buttonComponents(data.title, data.id.id, isPublic) : null}
                             <CommonButton className="ts-dialog-button">
                                 <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
                                 {t('customer.copyId')}

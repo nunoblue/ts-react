@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Modal, notification } from 'antd';
+import { Row, Modal, notification, Button } from 'antd';
 import { translate } from 'react-i18next';
 
 import CommonCard from '../components/common/CommonCard';
@@ -27,28 +27,53 @@ class Users extends Component {
         this.refershUserRequest();
     }
 
-    shouldComponentUpdate(prevProps, prevState) {
-        if (prevState.checkedCount !== this.state.checkedCount) {
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextState.checkedCount !== this.state.checkedCount) {
             return true;
-        } else if (prevState.selectedUser !== this.state.selectedUser) {
+        } else if (nextState.selectedUser !== this.state.selectedUser) {
             return true;
-        } else if (prevState.dialogVisible !== this.state.dialogVisible) {
+        } else if (nextState.dialogVisible !== this.state.dialogVisible) {
             return true;
-        } else if (prevProps.data === this.props.data) {
+        } else if (nextProps.data === this.props.data) {
             return false;
         }
         return true;
     }
 
-    components = () => {
+    buttonComponents = (email, id, isPublic, type) => {
         const { t } = this.props;
+        const modalConfirmAction = this.handleDeleteConfirm.bind(this, email, id);
+        const sendActivationMail = this.sendActivationMail.bind(this, email);
+        return (
+            <Button.Group>
+                <CommonButton
+                    className="custom-card-button"
+                    shape="circle"
+                    visible={type === 'dialog'}
+                    onClick={sendActivationMail}
+                    tooltipTitle={t('user.resend-activation')}
+                >
+                    <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
+                </CommonButton>
+                <CommonButton
+                    className="custom-card-button"
+                    shape="circle"
+                    visible={!isPublic}
+                    iconClassName="delete"
+                    onClick={modalConfirmAction}
+                    tooltipTitle={t('user.delete')}
+                />
+            </Button.Group>
+        );
+    }
+
+    components = () => {
         const components = this.props.data.map((data) => {
             const email = data.email;
             const firstName = data.firstName || '';
             const lastName = data.lastName || '';
             const id = data.id.id;
             const isPublic = data.additionalInfo ? (data.additionalInfo.isPublic || false) : false;
-            const modalConfirmAction = this.handleDeleteConfirm.bind(this, email, id);
             const openDialog = this.openDetailDialog.bind(this, id);
             const closeDialog = this.closeDetailDialog;
             return (
@@ -61,14 +86,7 @@ class Users extends Component {
                     onNextEvent={openDialog}
                     isCardDown={!this.state.dialogVisible}
                 >
-                    <CommonButton
-                        className="custom-card-button"
-                        shape="circle"
-                        visible={!isPublic}
-                        iconClassName="delete"
-                        onClick={modalConfirmAction}
-                        tooltipTitle={t('user.delete')}
-                    />
+                    {this.buttonComponents(email, id, isPublic)}
                 </CommonCard>
             );
         });
@@ -152,6 +170,7 @@ class Users extends Component {
         this.props.deleteUserRequest(userId).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershUserRequest();
+                this.closeDetailDialog();
             } else {
                 notification.error({
                     message: this.props.errorMessage,
@@ -267,6 +286,21 @@ class Users extends Component {
         return findUser;
     }
 
+    sendActivationMail = (email) => {
+        const { t } = this.props;
+        this.props.sendActivationMailRequest(email).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                notification.success({
+                    message: t('user.activation-email-sent-message'),
+                });
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
+    }
+
     render() {
         const { t } = this.props;
         return (
@@ -292,10 +326,11 @@ class Users extends Component {
                 <DetailUserDialog
                     ref={(c) => { this.detailDialog = c; }}
                     t={t}
-                    deviceId={this.state.selectedUser ? this.state.selectedUser.id.id : null}
+                    data={this.state.selectedUser}
                     visible={this.state.dialogVisible}
                     closeDialog={this.closeDetailDialog}
                     onSave={this.handleSaveUser}
+                    buttonComponents={this.buttonComponents}
                 />
             </Row>
         );
@@ -323,6 +358,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         multipleDeleteUserRequest: (userIdArray) => {
             return dispatch(actions.multipleDeleteUserRequest(userIdArray));
+        },
+        sendActivationMailRequest: (email) => {
+            return dispatch(actions.sendActivationMailRequest(email));
         },
     };
 };

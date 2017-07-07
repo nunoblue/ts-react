@@ -37,14 +37,14 @@ class Dashboards extends Component {
         this.refershDashboardRequest();
     }
 
-    shouldComponentUpdate(prevProps, prevState) {
-        if (prevState.checkedCount !== this.state.checkedCount) {
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextState.checkedCount !== this.state.checkedCount) {
             return true;
-        } else if (prevState.selectedDashboard !== this.state.selectedDashboard) {
+        } else if (nextState.selectedDashboard !== this.state.selectedDashboard) {
             return true;
-        } else if (prevState.dialogVisible !== this.state.dialogVisible) {
+        } else if (nextState.dialogVisible !== this.state.dialogVisible) {
             return true;
-        } else if (prevProps.shortInfo === this.props.shortInfo) {
+        } else if (nextProps.shortInfo === this.props.shortInfo) {
             return false;
         }
         return true;
@@ -235,6 +235,7 @@ class Dashboards extends Component {
         this.props.deleteDashboardRequest(dashboardId).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershDashboardRequest();
+                this.closeDetailDialog();
             } else {
                 notification.error({
                     message: this.props.errorMessage,
@@ -293,18 +294,23 @@ class Dashboards extends Component {
     }
 
     openDetailDialog = (selectedId) => {
+        const { shortInfo } = this.props;
         this.detailDialog.clearEdit();
         const dashboardData = this.loadDashboardDetailData(selectedId);
         if (dashboardData instanceof Promise) {
             dashboardData.then((data) => {
-                this.setDetailDialog(data);
+                const customer = shortInfo[data.customerId.id];
+                Object.assign(data, { customer });
+                this.settingDetailDialog(data);
             });
         } else {
-            this.setDetailDialog(dashboardData);
+            const customer = shortInfo[dashboardData.customerId.id];
+            Object.assign(dashboardData, { customer });
+            this.settingDetailDialog(dashboardData);
         }
     }
 
-    setDetailDialog = (data) => {
+    settingDetailDialog = (data) => {
         this.detailDialog.initTitle(data.title);
         let description;
         if (data.configuration) {
@@ -380,10 +386,11 @@ class Dashboards extends Component {
                 <DetailDashboardDialog
                     ref={(c) => { this.detailDialog = c; }}
                     t={t}
-                    dashboardId={this.state.selectedDashboard ? this.state.selectedDashboard.id.id : null}
+                    data={this.state.selectedDashboard}
                     visible={this.state.dialogVisible}
                     closeDialog={this.closeDetailDialog}
                     onSave={this.handleSaveDashboard}
+                    buttonComponents={this.buttonComponents}
                 />
             </Row>
         );

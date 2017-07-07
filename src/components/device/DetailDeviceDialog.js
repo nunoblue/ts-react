@@ -42,7 +42,7 @@ class DetailDeviceDialog extends Component {
     }
 
     render() {
-        const { t, deviceId, visible, options, onPressEnter, closeDialog } = this.props;
+        const { t, data, visible, options, onPressEnter, closeDialog, buttonComponents } = this.props;
         return (
             <CommonDialog
                 onClick={closeDialog}
@@ -54,6 +54,7 @@ class DetailDeviceDialog extends Component {
                 <Tabs defaultActiveKey="1">
                     <Tabs.TabPane tab={t('device.details')} key="1">
                         <Row>
+                            {data ? buttonComponents(data.name, data.id.id, data.customerId.id) : null}
                             <CommonButton className="ts-dialog-button">
                                 <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
                                 {t('device.copyId')}

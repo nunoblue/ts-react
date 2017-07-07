@@ -28,7 +28,6 @@ const LOGIN_URL = `${apServer}/api/auth/login`;
 const TOKEN_URL = `${apServer}/api/auth/token`;
 const API_USER_URL = `${apServer}/api/user`;
 const API_ACTIVATE_URL = `${apServer}/api/noauth/activate`;
-const API_SEND_ACTIVATION_MAIL_URL = `${apServer}/api/user/sendActivationMail`;
 
 function updateAndValidateToken(token, prefix, notify) {
     let valid = false;
@@ -263,18 +262,6 @@ export const getUserRequest = () => {
             });
         }
     };
-};
-
-export const sendActivationEmail = (email) => {
-    const params = {
-        email,
-    };
-    return axios.get(API_SEND_ACTIVATION_MAIL_URL, {
-        params,
-        headers: {
-            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-        },
-    });
 };
 
 export const activateRequest = (activateToken, password) => {

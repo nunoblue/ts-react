@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Row, Modal, notification } from 'antd';
+import { Row, Modal, notification, Button } from 'antd';
 import { translate } from 'react-i18next';
 
 import CommonCard from '../components/common/CommonCard';
@@ -34,17 +34,58 @@ class Customers extends Component {
         this.refershCustomerRequest();
     }
 
-    shouldComponentUpdate(prevProps, prevState) {
-        if (prevState.checkedCount !== this.state.checkedCount) {
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextState.checkedCount !== this.state.checkedCount) {
             return true;
-        } else if (prevState.selectedCustomer !== this.state.selectedCustomer) {
+        } else if (nextState.selectedCustomer !== this.state.selectedCustomer) {
             return true;
-        } else if (prevState.dialogVisible !== this.state.dialogVisible) {
+        } else if (nextState.dialogVisible !== this.state.dialogVisible) {
             return true;
-        } else if (prevProps.data === this.props.data) {
+        } else if (nextProps.data === this.props.data) {
             return false;
         }
         return true;
+    }
+
+    buttonComponents = (title, id, isPublic) => {
+        const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
+        return (
+            <Button.Group className="custom-card-buttongroup">
+                <Link to={`/customers/${id}/users`}>
+                    <CommonButton
+                        className="custom-card-button"
+                        shape="circle"
+                        visible={!isPublic}
+                        iconClassName="user-add"
+                        tooltipTitle="커스터머 사용자 관리"
+                    />
+                </Link>
+                <Link to={`/customers/${id}/devices`}>
+                    <CommonButton
+                        className="custom-card-button"
+                        shape="circle"
+                        iconClassName="tablet"
+                        tooltipTitle="커스터머 디바이스 관리"
+                    />
+                </Link>
+                <Link to={`/customers/${id}/dashboards`}>
+                    <CommonButton
+                        className="custom-card-button"
+                        shape="circle"
+                        iconClassName="layout"
+                        tooltipTitle="커스터머 대시보드 관리"
+                    />
+                </Link>
+                <CommonButton
+                    className="custom-card-button"
+                    shape="circle"
+                    visible={!isPublic}
+                    iconClassName="delete"
+                    onClick={modalConfirmAction}
+                    tooltipTitle="커스터머 디바이스 삭제"
+                />
+            </Button.Group>
+        );
     }
 
     components = () => {
@@ -53,7 +94,6 @@ class Customers extends Component {
             const address = data.address || '';
             const id = data.id.id;
             const isPublic = data.additionalInfo ? (data.additionalInfo.isPublic || false) : false;
-            const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
             const openDialog = this.openDetailDialog.bind(this, id);
             const closeDialog = this.closeDetailDialog;
             return (
@@ -65,39 +105,7 @@ class Customers extends Component {
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
                 >
-                    <Link to={`/customers/${id}/users`}>
-                        <CommonButton
-                            className="custom-card-button"
-                            shape="circle"
-                            visible={!isPublic}
-                            iconClassName="user-add"
-                            tooltipTitle="커스터머 사용자 관리"
-                        />
-                    </Link>
-                    <Link to={`/customers/${id}/devices`}>
-                        <CommonButton
-                            className="custom-card-button"
-                            shape="circle"
-                            iconClassName="tablet"
-                            tooltipTitle="커스터머 디바이스 관리"
-                        />
-                    </Link>
-                    <Link to={`/customers/${id}/dashboards`}>
-                        <CommonButton
-                            className="custom-card-button"
-                            shape="circle"
-                            iconClassName="layout"
-                            tooltipTitle="커스터머 대시보드 관리"
-                        />
-                    </Link>
-                    <CommonButton
-                        className="custom-card-button"
-                        shape="circle"
-                        visible={!isPublic}
-                        iconClassName="delete"
-                        onClick={modalConfirmAction}
-                        tooltipTitle="커스터머 디바이스 삭제"
-                    />
+                    {this.buttonComponents(title, id, isPublic)}
                 </CommonCard>
             );
         });
@@ -179,6 +187,7 @@ class Customers extends Component {
         this.props.deleteCustomerRequest(customerId).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershCustomerRequest();
+                this.closeDetailDialog();
             } else {
                 notification.error({
                     message: this.props.errorMessage,
@@ -238,7 +247,7 @@ class Customers extends Component {
 
     openDetailDialog = (selectedCustomerId) => {
         this.detailDialog.clearEdit();
-        const customerData = this.loadDeviceDetailData(selectedCustomerId);
+        const customerData = this.loadCustomerDetailData(selectedCustomerId);
         this.detailDialog.initTitle(customerData.title);
         let description;
         if (customerData.additionalInfo) {
@@ -262,7 +271,7 @@ class Customers extends Component {
         });
     }
 
-    loadDeviceDetailData = (selectedCustomerId) => {
+    loadCustomerDetailData = (selectedCustomerId) => {
         const { data } = this.props;
         const customerId = this.state.selectedCustomer ? this.state.selectedCustomer.id.id : null;
         let findCustomer;
@@ -300,11 +309,11 @@ class Customers extends Component {
                 <DetailCustomerDialog
                     ref={(c) => { this.detailDialog = c; }}
                     t={t}
-                    customerId={this.state.selectedCustomer ? this.state.selectedCustomer.id.id : null}
-                    isPublic={this.state.selectedCustomer ? this.state.selectedCustomer.additionalInfo.isPublic : null}
+                    data={this.state.selectedCustomer}
                     visible={this.state.dialogVisible}
                     closeDialog={this.closeDetailDialog}
                     onSave={this.handleSaveCustomer}
+                    buttonComponents={this.buttonComponents}
                 />
             </Row>
         );
