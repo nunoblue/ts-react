@@ -10,6 +10,8 @@ import {
     API_SAVE_RULE_FAILURE,
     API_DELETE_RULE_SUCCESS,
     API_DELETE_RULE_FAILURE,
+    API_COMPONENTS_SUCCESS,
+    API_COMPONENTS_FAILURE,
 } from './ActionTypes';
 
 import config from '../config';
@@ -17,6 +19,7 @@ import config from '../config';
 const apServer = config.apServer;
 const API_RULE_URL = `${apServer}/api/rule`;
 const RULES_URL = `${apServer}/api/rules`;
+const API_COMPONENTS_URL = `${apServer}/api/components/`;
 
 function getRules() {
     return {
@@ -69,6 +72,19 @@ function deleteRuleFailure(message) {
     };
 }
 
+function getComponentsSuccess(components) {
+    return {
+        type: API_COMPONENTS_SUCCESS,
+        components,
+    };
+}
+function getComponentsFailure(message) {
+    return {
+        type: API_COMPONENTS_FAILURE,
+        errorMessage: message,
+    };
+}
+
 export const getRulesRequest = () => (dispatch) => {
     dispatch(getRules());
 
@@ -79,7 +95,7 @@ export const getRulesRequest = () => (dispatch) => {
     }).then((response) => {
         dispatch(getRulesSuccess(response.data));
     }).catch((error) => {
-        console.log(JSON.stringify(error.response.data));
+        console.error(JSON.stringify(error.response.data));
         dispatch(getRulesFailure());
     });
 };
@@ -155,3 +171,17 @@ export const deleteRulesRequest = idArray => (dispatch) => {
                 dispatch(deleteRuleFailure(error.response.data.message));
             })));
 };
+
+export const getComponentsRequest = componentType => (dispatch) => {
+    dispatch(getRules());
+    const url = API_COMPONENTS_URL + componentType;
+    return axios.get(url, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(getComponentsSuccess(response.data));
+    }).catch((error) => {
+        dispatch(getComponentsFailure(error.response.data.message));
+    });
+}

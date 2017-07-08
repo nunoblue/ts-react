@@ -12,6 +12,7 @@ export default class CommonModal extends Component {
         okText: PropTypes.string,
         cancelText: PropTypes.string,
         maskClosable: PropTypes.bool,
+        visible: PropTypes.bool,
     }
 
     static defaultProps = {
@@ -19,7 +20,7 @@ export default class CommonModal extends Component {
         okText: '예',
         cancelText: '아니오',
         visible: false,
-        maskClosable: 'false',
+        maskClosable: false,
     }
 
     state = {

@@ -5,7 +5,7 @@ import { Collapse, AutoComplete, Input, Icon, Select } from 'antd';
 import _ from 'lodash';
 import CommonModal from '../common/CommonModal';
 import RuleForm from './RuleForm';
-import FilterList from './FilterList';
+import FilterContainer from './FilterContainer';
 
 const Panel = Collapse.Panel;
 
@@ -66,7 +66,7 @@ class AddRuleModal extends Component {
 
                 <Collapse bordered={false} defaultActiveKey={['1', '2']}>
                     <Panel header="필터" key="1">
-                        <FilterList filters={this.props.rule.filters} />
+                        <FilterContainer filters={this.props.rule.filters} />
                     </Panel>
                     <Panel header="프로세서" key="2">
                         <p>{text}</p>

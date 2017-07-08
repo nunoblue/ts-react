@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Button } from 'antd';
+import { Form, Input, Button } from 'antd';
 import SortableItems from './SortableItems';
 import CommonModal from '../common/CommonModal';
+import FilterForm from './FilterForm';
+import * as actions from '../../actions/rules';
 
+const FILTER = 'FILTER';
 
 class FilterList extends Component {
     static propTypes = {
@@ -20,8 +24,9 @@ class FilterList extends Component {
 
     // http://localhost:8080/api/components/FILTER
     componentDidMount() {
-        // get filter types for setting
+        this.props.getComponentsRequest(FILTER);
     }
+
     modalHandler = {
         show: () => {
             this.setState({
@@ -30,14 +35,19 @@ class FilterList extends Component {
                 },
             });
         },
+        hide: () => {
+            this.setState({
+                modal: {
+                    visible: false,
+                },
+            });
+        },
     }
-
-
 
     render() {
         const isAdd = _.isEmpty(this.state.filter);
         const { modal } = this.state;
-        console.log(modal.visible);
+
         return (
             <div>
                 <ul>
@@ -49,16 +59,30 @@ class FilterList extends Component {
                     ref={(c) => { this.modal = c; }}
                     title={isAdd ? '추가' : '수정'}
                     // onOk={this.props.onSave}
-                    // onCancel={this.props.onCancel}
+                    onCancel={this.modalHandler.hide}
                     okText={isAdd ? '추가' : '수정'}
                     cancelText="취소"
                     visible={modal.visible}
                 >
-                    modal
+
+                    <FilterForm filters={this.props.components} />
                 </CommonModal>
             </div>
         );
     }
 }
 
-export default FilterList;
+const mapStateToProps = (state) => {
+    return {
+        statusMessage: state.rules.statusMessage,
+        components: state.rules.components,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getComponentsRequest: componentType => dispatch(actions.getComponentsRequest(componentType)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FilterList);
