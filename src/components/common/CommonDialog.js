@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Row, Col, Button } from 'antd';
+import { Layout, Row, Col } from 'antd';
 
 import CommonButton from './CommonButton';
 
@@ -8,11 +8,17 @@ class CommonDialog extends Component {
 
     static defaultProps = {
         title: '',
+        subTitle: '',
         visible: false,
     }
 
     static propTypes = {
         title: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.element,
+        ]),
+        subTitle: PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.number,
             PropTypes.element,
@@ -48,14 +54,14 @@ class CommonDialog extends Component {
     }
 
     render() {
-        const { children, title, type, tooltipTitle } = this.props;
+        const { children, title, subTitle, tooltipTitle } = this.props;
         return (
             <Layout className={this.props.visible ? 'ts-dialog ts-dialog-show' : 'ts-dialog ts-dialog-hide'}>
                 <Layout.Header className="ts-dialog-title">
                     <Row>
                         <Col span={20}>
                             <span className="ts-dialog-detail-title">{title}</span>
-                            <span className="ts-dialog-detail-subtitle">{type}</span>
+                            <span className="ts-dialog-detail-subtitle">{subTitle}</span>
                         </Col>
                         <Col span={4}>
                             <CommonButton shape="circle" onClick={this.clearButtonClick} tooltipTitle={tooltipTitle}>

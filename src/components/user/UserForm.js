@@ -1,60 +1,51 @@
-import React from 'react';
-import { Form, Input, Checkbox, Select } from 'antd';
+import React, { Component } from 'react';
+import { Form, Input, Checkbox } from 'antd';
+import { translate } from 'react-i18next';
 
-const UserForm = Form.create()(
-    (props) => {
-        const { getFieldDecorator } = props.form;
+@translate(['user'], { wait: false })
+class UserForm extends Component {
+    handleChange = (e) => {
+        if (typeof this.props.titleChangeEvent !== 'undefined') {
+            this.props.titleChangeEvent(e.target.value);
+        }
+    }
+
+    render() {
+        const { getFieldDecorator } = this.props.form;
+        const { t, onPressEnter, disabled } = this.props;
         return (
             <Form layout="vertical">
-                <Form.Item label="Email">
+                <Form.Item label={t('user.email')}>
                     {
                         getFieldDecorator('email', {
-                            rules: [{ required: true, message: 'Please input the email of collection!' }],
+                            rules: [{ required: true, message: t('user.email-required') }],
                         })(
-                            <Input onPressEnter={props.onPressEnter} />,
+                            <Input onPressEnter={onPressEnter} disabled={disabled} onChange={this.handleChange} />,
                         )
                     }
                 </Form.Item>
-                <Form.Item label="이름">
-                    {getFieldDecorator('firstName')(<Input onPressEnter={props.onPressEnter} />)}
+                <Form.Item label={t('user.first-name')}>
+                    {getFieldDecorator('firstName')(<Input disabled={disabled} onPressEnter={onPressEnter} />)}
                 </Form.Item>
-                <Form.Item label="성">
-                    {getFieldDecorator('lastName')(<Input onPressEnter={props.onPressEnter} />)}
+                <Form.Item label={t('user.last-name')}>
+                    {getFieldDecorator('lastName')(<Input disabled={disabled} onPressEnter={onPressEnter} />)}
                 </Form.Item>
-                <Form.Item label="설명">
-                    {getFieldDecorator('description')(<Input onPressEnter={props.onPressEnter} />)}
+                <Form.Item label={t('user.description')}>
+                    {getFieldDecorator('description')(<Input disabled={disabled} onPressEnter={onPressEnter} />)}
                 </Form.Item>
-                <Form.Item label="기본 대시보드">
+                <Form.Item label={t('user.default-dashboard')}>
                     {
                         getFieldDecorator('defaultDashboardFullscreen', {
                             valuePropName: 'checked',
                             initialValue: false,
                         })(
-                            <Checkbox>{'항상 전체화면'}</Checkbox>,
+                            <Checkbox disabled={disabled}>{t('user.always-fullscreen')}</Checkbox>,
                         )
                     }
                 </Form.Item>
-                {/*<Form.Item label="도">
-                    {getFieldDecorator('province')(<Input />)}
-                </Form.Item>
-                <Form.Item label="우편번호">
-                    {getFieldDecorator('zipcode')(<Input />)}
-                </Form.Item>
-                <Form.Item label="주소">
-                    {getFieldDecorator('address')(<Input />)}
-                </Form.Item>
-                <Form.Item label="상세주소">
-                    {getFieldDecorator('detailAddress')(<Input />)}
-                </Form.Item>
-                <Form.Item label="전화번호">
-                    {getFieldDecorator('phoneNumber')(<Input />)}
-                </Form.Item>
-                <Form.Item label="Email">
-                    {getFieldDecorator('email')(<Input />)}
-                </Form.Item>*/}
             </Form>
         );
-    },
-);
+    }
+}
 
-export default UserForm;
+export default Form.create()(UserForm);

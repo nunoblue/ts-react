@@ -5,7 +5,9 @@ import { translate } from 'react-i18next';
 @translate(['device'], { wait: false })
 class DeviceForm extends PureComponent {
     handleChange = (e) => {
-        this.props.titleChangeEvent(e.target.value);
+        if (typeof this.props.titleChangeEvent !== 'undefined') {
+            this.props.titleChangeEvent(e.target.value);
+        }
     }
 
     render() {

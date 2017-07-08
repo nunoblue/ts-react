@@ -42,7 +42,10 @@ function getCustomersFailure(message) {
 function getShortInfoSuccess(data) {
     const temp = {};
     data.map((obj) => {
-        Object.assign(temp, { [obj.id]: obj.data });
+        const title = obj.data.title;
+        const isPublic = obj.data.isPublic;
+        const id = obj.id;
+        Object.assign(temp, { [obj.id]: { id, title, isPublic } });
     });
     return {
         type: API_CUSTOMERS_SHORT_INFO_SUCCESS,

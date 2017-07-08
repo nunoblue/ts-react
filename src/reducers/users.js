@@ -7,6 +7,7 @@ import {
     API_SAVE_USERS_SUCCESS,
     API_DELETE_USERS_SUCCESS,
     CLEAR_USERS,
+    API_SEND_ACTIVATION_SUCCESS,
 } from '../actions/ActionTypes';
 
 const initialState = {
@@ -48,6 +49,12 @@ const users = (state = initialState, action) => {
                 },
             });
         case API_DELETE_USERS_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_SEND_ACTIVATION_SUCCESS:
             return update(state, {
                 statusMessage: {
                     $set: 'SUCCESS',

@@ -8,6 +8,7 @@ import {
     API_SAVE_USERS_SUCCESS,
     API_DELETE_USERS_SUCCESS,
     CLEAR_USERS,
+    API_SEND_ACTIVATION_SUCCESS,
 } from './ActionTypes';
 
 import config from '../config';
@@ -15,6 +16,7 @@ import config from '../config';
 const apServer = config.apServer;
 const USERS_URL = `${apServer}/api/customer`;
 const SAVE_USER_URL = `${apServer}/api/user`;
+const API_SEND_ACTIVATION_MAIL_URL = `${apServer}/api/user/sendActivationMail`;
 const DELETE_USER_URL = `${apServer}/api/user`;
 
 function getUsers() {
@@ -52,6 +54,12 @@ function deleteUserSuccess() {
 function clearUsersSuccess() {
     return {
         type: CLEAR_USERS,
+    };
+}
+
+function sendActivationMailSuccess() {
+    return {
+        type: API_SEND_ACTIVATION_SUCCESS,
     };
 }
 
@@ -121,6 +129,21 @@ export const multipleDeleteUserRequest = (idArray) => {
                 dispatch(getUsersFailure(error.response.data.message));
             });
         }));
+    };
+};
+
+export const sendActivationMailRequest = (email) => {
+    return (dispatch) => {
+        dispatch(getUsers());
+        return axios.post(`${API_SEND_ACTIVATION_MAIL_URL}?email=${email}`, null, {
+            headers: {
+                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+            },
+        }).then(() => {
+            dispatch(sendActivationMailSuccess());
+        }).catch((error) => {
+            dispatch(getUsersFailure(error.response.data.message));
+        });
     };
 };
 

@@ -1,50 +1,79 @@
-import React from 'react';
-import { Form, Input, Radio } from 'antd';
+import React, { Component } from 'react';
+import { Form, Input } from 'antd';
+import { translate } from 'react-i18next';
 
-const DashboardForm = Form.create()(
-    (props) => {
-        const { getFieldDecorator } = props.form;
+import config from '../../config';
+
+@translate(['dashboard'], { wait: false })
+class DashboardForm extends Component {
+    shouldCompnentUpdate(nextProps, nextState) {
+        if (nextProps.data === this.props.data) {
+            return false;
+        }
+        return true;
+    }
+
+    handleChange = (e) => {
+        if (typeof this.props.titleChangeEvent !== 'undefined') {
+            this.props.titleChangeEvent(e.target.value);
+        }
+    }
+
+    render() {
+        const { getFieldDecorator } = this.props.form;
+        const { t, onPressEnter, disabled, data } = this.props;
+        let assignField = null;
+        if (data && disabled) {
+            if (typeof data.customer !== 'undefined') {
+                assignField = data.customer.isPublic ? (
+                    <Form.Item label={t('dashboard.public-link')}>
+                        {
+                            getFieldDecorator('publicLink', {
+                                initialValue: `${config.apServer}/dashboards/${data.id.id}?publicId=${data.customer.id}`,
+                            })(
+                                <Input
+                                    disabled={disabled}
+                                />,
+                            )
+                        }
+                    </Form.Item>
+                ) : (
+                    <Form.Item label={t('dashboard.assignedToCustomer')}>
+                        {
+                            getFieldDecorator('assignedToCustomer', {
+                                initialValue: data.customer.title,
+                            })(
+                                <Input
+                                    disabled={disabled}
+                                />,
+                            )
+                        }
+                    </Form.Item>
+                );
+            }
+        }
         return (
             <Form layout="vertical">
-                <Form.Item label="타이틀">
+                {assignField}
+                <Form.Item label={t('dashboard.title')}>
                     {
                         getFieldDecorator('title', {
-                            rules: [{ required: true, message: 'Please input the title of collection!' }],
+                            rules: [{ required: true, message: t('dashboard.title-required') }],
                         })(
-                            <Input onPressEnter={props.onPressEnter} />,
+                            <Input
+                                disabled={disabled}
+                                onPressEnter={onPressEnter}
+                                onChange={this.handleChange}
+                            />,
                         )
                     }
                 </Form.Item>
-                <Form.Item label="설명">
-                    {getFieldDecorator('description')(<Input onPressEnter={props.onPressEnter} />)}
+                <Form.Item label={t('dashboard.description')}>
+                    {getFieldDecorator('description')(<Input disabled={disabled} onPressEnter={onPressEnter} />)}
                 </Form.Item>
-                {/*<Form.Item label="국가">
-                    {getFieldDecorator('country')(<Input />)}
-                </Form.Item>
-                <Form.Item label="시">
-                    {getFieldDecorator('city')(<Input />)}
-                </Form.Item>
-                <Form.Item label="도">
-                    {getFieldDecorator('province')(<Input />)}
-                </Form.Item>
-                <Form.Item label="우편번호">
-                    {getFieldDecorator('zipcode')(<Input />)}
-                </Form.Item>
-                <Form.Item label="주소">
-                    {getFieldDecorator('address')(<Input />)}
-                </Form.Item>
-                <Form.Item label="상세주소">
-                    {getFieldDecorator('detailAddress')(<Input />)}
-                </Form.Item>
-                <Form.Item label="전화번호">
-                    {getFieldDecorator('phoneNumber')(<Input />)}
-                </Form.Item>
-                <Form.Item label="Email">
-                    {getFieldDecorator('email')(<Input />)}
-                </Form.Item>*/}
             </Form>
         );
-    },
-);
+    }
+}
 
-export default DashboardForm;
+export default Form.create()(DashboardForm);

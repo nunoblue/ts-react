@@ -5,6 +5,7 @@ import {
     TENANT_DASHBOARDS,
     TENANT_DASHBOARDS_SUCCESS,
     TENANT_DASHBOARDS_FAILURE,
+    API_GET_DASHBOARD_SUCCESS,
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
     CLEAR_DASHBOARDS,
@@ -14,6 +15,7 @@ import config from '../config';
 
 const apServer = config.apServer;
 const TENANT_DASHBOARDS_URL = `${apServer}/api/tenant/dashboards`;
+const GET_DASHBOARD_URL = `${apServer}/api/dashboard`;
 const CUSTOMER_DASHBOARDS_URL = `${apServer}/api/customer`;
 const SAVE_DASHBOARD_URL = `${apServer}/api/dashboard`;
 const DELETE_DASHBOARD_URL = `${apServer}/api/dashboard`;
@@ -35,6 +37,13 @@ function getDashboardsFailure(message) {
     return {
         type: TENANT_DASHBOARDS_FAILURE,
         errorMessage: message,
+    };
+}
+
+function getDashboardSuccess(data) {
+    return {
+        type: API_GET_DASHBOARD_SUCCESS,
+        dashboard: data,
     };
 }
 
@@ -80,6 +89,22 @@ export const getDashboardsRequest = (limit, textSearch, authority, id) => (dispa
     }).catch((error) => {
         dispatch(getDashboardsFailure(error.response.data.message));
     });
+};
+
+export const getDashboardRequest = (id) => {
+    return (dispatch) => {
+        dispatch(getDashboards());
+
+        return axios.get(`${GET_DASHBOARD_URL}/${id}`, {
+            headers: {
+                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+            },
+        }).then((response) => {
+            dispatch(getDashboardSuccess(response.data));
+        }).catch((error) => {
+            dispatch(getDashboardsFailure(error.response.data.message));
+        });
+    };
 };
 
 export const saveDashboardRequest = (data) => {
