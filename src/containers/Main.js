@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
-import { Layout, Row, Col, Switch } from 'antd';
+import { Layout, Row, Col, Switch, Spin } from 'antd';
 
 import MenuList from '../components/MenuList';
 import Title from '../components/Title';
@@ -23,15 +23,18 @@ class Main extends Component {
 
     static childContextTypes = {
         currentUser: PropTypes.object,
+        pageLoading: PropTypes.func,
     }
 
     state = {
         collapsed: false,
+        loading: false,
     };
 
     getChildContext() {
         return {
             currentUser: this.context.currentUser,
+            pageLoading: this.pageLoading,
         };
     }
 
@@ -84,6 +87,12 @@ class Main extends Component {
         });
     }
 
+    pageLoading = () => {
+        this.setState({
+            loading: !this.state.loading,
+        });
+    }
+
     render() {
         const { validate } = this.props;
         const { currentUser } = this.context;
@@ -125,12 +134,14 @@ class Main extends Component {
                         matches={matches}
                     />
                     <Layout.Content className="code-box-demo">
-                        <Row>
-                            <Col span="2">
-                                <Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
-                            </Col>
-                        </Row>
-                        {this.props.children}
+                        <Spin spinning={this.state.loading}>
+                            <Row>
+                                <Col span="2">
+                                    <Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
+                                </Col>
+                            </Row>
+                            {this.props.children}
+                        </Spin>
                     </Layout.Content>
                 </Layout>
             </Layout>

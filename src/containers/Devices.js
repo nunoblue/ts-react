@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Modal, notification, Button } from 'antd';
-import { translate } from 'react-i18next';
+import i18n from 'i18next';
 
 import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
@@ -15,11 +15,11 @@ import DetailDeviceDialog from '../components/device/DetailDeviceDialog';
 import * as actions from '../actions/devices';
 import * as customers from '../actions/customers';
 
-@translate(['device', 'attribute', 'details', 'action'], { wait: false })
 class Devices extends Component {
 
     static contextTypes = {
         currentUser: PropTypes.object,
+        pageLoading: PropTypes.func,
     }
 
     state = {
@@ -84,21 +84,21 @@ class Devices extends Component {
                     shape="circle"
                     visible={shareVisible}
                     iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
-                    tooltipTitle={isPublic ? '디바이스 공유 해제' : '디바이스 공유'}
+                    tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
                 />
                 <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={assignVisible}
                     iconClassName={isAssign ? 'user-delete' : 'user-add'}
-                    tooltipTitle={isAssign ? '커스터머 해제' : '커스터머 할당'}
+                    tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
                 />
                 <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     iconClassName="key"
                     onClick={credentialsModal}
-                    tooltipTitle="크리덴셜 관리"
+                    tooltipTitle={i18n.t('device.manage-credentials')}
                 />
                 <CommonButton
                     className="custom-card-button"
@@ -106,7 +106,7 @@ class Devices extends Component {
                     visible={deleteVisible}
                     iconClassName="delete"
                     onClick={modalConfirmAction}
-                    tooltipTitle={t('device.delete')}
+                    tooltipTitle={i18n.t('device.delete')}
                 />
             </Button.Group>
         );
@@ -138,6 +138,7 @@ class Devices extends Component {
     }
 
     refershDeviceRequest = () => {
+        this.context.pageLoading();
         const { match } = this.props;
         const { currentUser } = this.context;
         const limit = this.state.limit;
@@ -157,7 +158,7 @@ class Devices extends Component {
         }
         const customerIdArray = [];
         this.props.getDevicesRequest(limit, textSearch, authority, customerId).then(() => {
-            if (this.props.statusMessage !== 'SUCCESS') {
+            if (this.props.statusMessage === 'FAILURE') {
                 notification.error({
                     message: this.props.errorMessage,
                 });
@@ -168,6 +169,7 @@ class Devices extends Component {
                 }
             });
             this.props.getCustomerShortInfoRequest(customerIdArray);
+            this.context.pageLoading();
         });
 
         this.props.getDeviceTypesRequest().then(() => {
@@ -199,28 +201,28 @@ class Devices extends Component {
     }
 
     handleDeleteConfirm = (title, id) => {
-        const newTitle = `'${title}' 디바이스를 삭제하시겠습니까?`;
-        const newContent = '디바이스 및 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const newTitle = i18n.t('device.delete-device-title', { deviceName: title });
+        const newContent = i18n.t('device.delete-device-text');
         const deleteEvent = this.handleDeleteDevice.bind(this, id);
         return Modal.confirm({
             title: newTitle,
             content: newContent,
-            okText: '예',
-            cancelText: '아니오',
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
             onOk: deleteEvent,
         });
     }
 
     handleMultipleDeleteConfirm = () => {
         const checkedCount = this.state.checkedCount;
-        const newTitle = `디바이스 ${checkedCount}개를 삭제하시겠습니까?`;
-        const newContent = '선택된 디바이스 삭제되고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const newTitle = i18n.t('device.delete-devices-title', { count: checkedCount });
+        const newContent = i18n.t('device.delete-devices-text');
         const deleteEvent = this.handleMultipleDeleteDevice;
         return Modal.confirm({
             title: newTitle,
             content: newContent,
-            okText: '예',
-            cancelText: '아니오',
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
             onOk: deleteEvent,
         });
     }
@@ -245,6 +247,10 @@ class Devices extends Component {
                 });
             }
         });
+    }
+
+    openAssignModal = () => {
+        console.log('test');
     }
 
     hideCredentials = () => {
@@ -402,7 +408,6 @@ class Devices extends Component {
     }
 
     render() {
-        const { t } = this.props;
         const options = this.props.types.map((obj) => {
             return obj.type;
         });
@@ -413,17 +418,24 @@ class Devices extends Component {
                 <div className="footer-buttons">
                     <CommonButton
                         shape="circle"
-                        visible={this.state.checkedCount !== 0}
-                        tooltipTitle={`디바이스 ${this.state.checkedCount}개 삭제`}
-                        className="custom-card-button"
+                        tooltipTitle={i18n.t('device.assign-devices-text', { count: this.state.checkedCount })}
+                        className={this.state.checkedCount !== 0 ? 'ts-action-button ts-action-button-fadeIn-1' : 'ts-action-button ts-action-button-fadeOut-1'}
+                        iconClassName="user-add"
+                        onClick={this.openAssignModal}
+                        size="large"
+                    />
+                    <CommonButton
+                        shape="circle"
+                        tooltipTitle={i18n.t('device.delete-devices-action-title', { count: this.state.checkedCount })}
+                        className={this.state.checkedCount !== 0 ? 'ts-action-button ts-action-button-fadeIn-2' : 'ts-action-button ts-action-button-fadeOut-2'}
                         iconClassName="delete"
-                        onClick={this.handleDeleteConfirm}
+                        onClick={this.handleMultipleDeleteConfirm}
                         size="large"
                     />
                     <CommonButton
                         shape="circle"
                         visible={this.state.isCustomer}
-                        tooltipTitle={t('device.add-device-text')}
+                        tooltipTitle={i18n.t('device.add-device-text')}
                         className="custom-card-button"
                         iconClassName="plus"
                         onClick={this.openAddDeviceModal}
@@ -444,7 +456,6 @@ class Devices extends Component {
                 />
                 <DetailDeviceDialog
                     ref={(c) => { this.detailDialog = c; }}
-                    t={t}
                     data={this.state.selectedDevice}
                     visible={this.state.dialogVisible}
                     options={options}

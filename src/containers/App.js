@@ -19,10 +19,6 @@ class App extends Component {
         currentUser: PropTypes.object,
     }
 
-    state = {
-        changeContent: false,
-    }
-
     getChildContext() {
         return {
             currentUser: this.props.currentUser,
@@ -65,14 +61,18 @@ class App extends Component {
         return (
             <Router>
                 <Layout style={{ height: '100vh' }}>
-                    <Route exact path="/" render={() => {
-                        if (validation) {
-                            return <Redirect to="/home" />;
-                        } else if (validate.statusMessage === 'FAILURE' && typeof currentUser.authority === 'undefined') {
-                            return <Redirect to="/login" />;
-                        }
-                        return null;
-                    }} />
+                    <Route
+                        exact
+                        path="/"
+                        render={() => {
+                            if (validation) {
+                                return <Redirect to="/home" />;
+                            } else if (validate.statusMessage === 'FAILURE' && typeof currentUser.authority === 'undefined') {
+                                return <Redirect to="/login" />;
+                            }
+                            return null;
+                        }}
+                    />
                     <Switch>
                         <Route path="/login" component={Login} />
                         {this.mainRoute(validation, currentUser.authority)}

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { translate } from 'react-i18next';
 import { notification, Row } from 'antd';
+import i18n from 'i18next';
 
 import * as actions from '../actions/admins';
 import CommonCard from '../components/common/CommonCard';
@@ -10,7 +10,6 @@ import CommonButton from '../components/common/CommonButton';
 import AdminMailSettingForm from '../components/admin/AdminMailSettingForm';
 import AdminGeneralSettingForm from '../components/admin/AdminGeneralSettingForm';
 
-@translate(['admin', 'action'], { wait: false })
 export class Admin extends Component {
 
     state = {
@@ -76,18 +75,31 @@ export class Admin extends Component {
     }
 
     render() {
-        const { t, data } = this.props;
+        const { data } = this.props;
         if (Object.keys(data).length !== 0) {
             return (
                 <Row>
                     <CommonCard
-                        title={t(this.state.key === 'mail' ? 'admin.outgoing-mail-settings' : 'admin.general-settings')}
+                        title={i18n.t(this.state.key === 'mail' ? 'admin.outgoing-mail-settings' : 'admin.general-settings')}
                         content={this.state.key === 'mail' ?
-                            <AdminMailSettingForm ref={(c) => { this.form = c; }} value={data.jsonValue} onPressEnter={this.handleSave} />
-                            : <AdminGeneralSettingForm ref={(c) => { this.form = c; }} value={data.jsonValue} onPressEnter={this.handleSave} />
+                            <AdminMailSettingForm
+                                ref={(c) => { this.form = c; }}
+                                value={data.jsonValue}
+                                onPressEnter={this.handleSave}
+                            />
+                            : <AdminGeneralSettingForm
+                                ref={(c) => { this.form = c; }}
+                                value={data.jsonValue}
+                                onPressEnter={this.handleSave}
+                            />
                         }
                     >
-                        <CommonButton type="primary" onClick={this.handleSave}>{t('action:action.save')}</CommonButton>
+                        <CommonButton
+                            type="primary"
+                            onClick={this.handleSave}
+                        >
+                            {i18n.t('action:action.save')}
+                        </CommonButton>
                     </CommonCard>
                 </Row>
             );

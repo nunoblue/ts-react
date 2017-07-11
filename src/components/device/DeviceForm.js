@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Form, Input, Select, Checkbox } from 'antd';
-import { translate } from 'react-i18next';
+import i18n from 'i18next';
 
-@translate(['device'], { wait: false })
 class DeviceForm extends PureComponent {
     handleChange = (e) => {
         if (typeof this.props.titleChangeEvent !== 'undefined') {
@@ -12,13 +11,13 @@ class DeviceForm extends PureComponent {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { t, options, onPressEnter, disabled } = this.props;
+        const { options, onPressEnter, disabled } = this.props;
         return (
             <Form layout="vertical">
-                <Form.Item label={t('device.name')}>
+                <Form.Item label={i18n.t('device.name')}>
                     {
                         getFieldDecorator('name', {
-                            rules: [{ required: true, message: t('device.device-required') }],
+                            rules: [{ required: true, message: i18n.t('device.device-required') }],
                         })(
                             <Input onPressEnter={onPressEnter} disabled={disabled} onChange={this.handleChange} />,
                         )
@@ -36,7 +35,7 @@ class DeviceForm extends PureComponent {
                                             key={option}
                                             value={option}
                                         >
-                                        {option}
+                                            {option}
                                         </Select.Option>
                                     );
                                 })}
@@ -48,10 +47,10 @@ class DeviceForm extends PureComponent {
                     {
                         getFieldDecorator('gateway', {
                             valuePropName: 'checked',
-                        })(<Checkbox disabled={disabled}>{t('device.is-gateway')}</Checkbox>)
+                        })(<Checkbox disabled={disabled}>{i18n.t('device.is-gateway')}</Checkbox>)
                     }
                 </Form.Item>
-                <Form.Item label={t('device.description')}>
+                <Form.Item label={i18n.t('device.description')}>
                     {
                         getFieldDecorator('description', {
                         })(

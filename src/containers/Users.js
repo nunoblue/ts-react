@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Row, Modal, notification, Button } from 'antd';
-import { translate } from 'react-i18next';
+import i18n from 'i18next';
 
 import CommonCard from '../components/common/CommonCard';
 import CommonButton from '../components/common/CommonButton';
@@ -11,7 +12,6 @@ import DetailUserDialog from '../components/user/DetailUserDialog';
 
 import * as actions from '../actions/users';
 
-@translate(['user', 'action'], { wait: false })
 class Users extends Component {
     state = {
         limit: 40,
@@ -41,7 +41,6 @@ class Users extends Component {
     }
 
     buttonComponents = (email, id, isPublic, type) => {
-        const { t } = this.props;
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, email, id);
         const sendActivationMail = this.sendActivationMail.bind(this, email);
         return (
@@ -51,7 +50,7 @@ class Users extends Component {
                     shape="circle"
                     visible={type === 'dialog'}
                     onClick={sendActivationMail}
-                    tooltipTitle={t('user.resend-activation')}
+                    tooltipTitle={i18n.t('user.resend-activation')}
                 >
                     <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
                 </CommonButton>
@@ -61,7 +60,7 @@ class Users extends Component {
                     visible={!isPublic}
                     iconClassName="delete"
                     onClick={modalConfirmAction}
-                    tooltipTitle={t('user.delete')}
+                    tooltipTitle={i18n.t('user.delete')}
                 />
             </Button.Group>
         );
@@ -131,28 +130,28 @@ class Users extends Component {
     }
 
     handleDeleteConfirm = (title, id) => {
-        const newTitle = `'${title}' 유저를 삭제하시겠습니까?`;
-        const newContent = '유저 및 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const newTitle = i18n.t('user.delete-user-title', { userEmail: title });
+        const newContent = i18n.t('user.delete-user-text');
         const deleteEvent = this.handleDeleteUser.bind(this, id);
         return Modal.confirm({
             title: newTitle,
             content: newContent,
-            okText: '예',
-            cancelText: '아니오',
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
             onOk: deleteEvent,
         });
     }
 
     handleMultipleDeleteConfirm = () => {
         const checkedCount = this.state.checkedCount;
-        const newTitle = `유저 ${checkedCount}개를 삭제하시겠습니까?`;
-        const newContent = '선택된 유저는 삭제되고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const newTitle = i18n.t('user.delete-users-title', { count: checkedCount });
+        const newContent = i18n.t('user.delete-users-text');
         const deleteEvent = this.handleMultipleDeleteUser;
         return Modal.confirm({
             title: newTitle,
             content: newContent,
-            okText: '예',
-            cancelText: '아니오',
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
             onOk: deleteEvent,
         });
     }
@@ -287,11 +286,10 @@ class Users extends Component {
     }
 
     sendActivationMail = (email) => {
-        const { t } = this.props;
         this.props.sendActivationMailRequest(email).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 notification.success({
-                    message: t('user.activation-email-sent-message'),
+                    message: i18n.t('user.activation-email-sent-message'),
                 });
             } else {
                 notification.error({
@@ -302,7 +300,6 @@ class Users extends Component {
     }
 
     render() {
-        const { t } = this.props;
         return (
             <Row>
                 {this.components()}
@@ -312,11 +309,18 @@ class Users extends Component {
                         iconClassName="delete"
                         shape="circle"
                         visible={this.state.checkedCount !== 0}
-                        tooltipTitle={`유저 ${this.state.checkedCount}개 삭제`}
+                        tooltipTitle={i18n.t('user.delete-users-action-title', { count: this.state.checkedCount })}
                         onClick={this.handleMultipleDeleteConfirm}
                         size="large"
                     />
-                    <CommonButton shape="circle" tooltipTitle={t('user.add')} className="custom-card-button" iconClassName="plus" onClick={this.openAddUserModal} size="large" />
+                    <CommonButton
+                        shape="circle"
+                        tooltipTitle={i18n.t('user.add')}
+                        className="custom-card-button"
+                        iconClassName="plus"
+                        onClick={this.openAddUserModal}
+                        size="large"
+                    />
                 </div>
                 <AddUserModal
                     ref={(c) => { this.addModal = c; }}
@@ -325,7 +329,6 @@ class Users extends Component {
                 />
                 <DetailUserDialog
                     ref={(c) => { this.detailDialog = c; }}
-                    t={t}
                     data={this.state.selectedUser}
                     visible={this.state.dialogVisible}
                     closeDialog={this.closeDetailDialog}
@@ -337,32 +340,18 @@ class Users extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        data: state.users.data,
-        statusMessage: state.users.statusMessage,
-        errorMessage: state.users.errorMessage,
-    };
-};
+const mapStateToProps = (state) => ({
+    data: state.users.data,
+    statusMessage: state.users.statusMessage,
+    errorMessage: state.users.errorMessage,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getUsersRequest: (limit, textSearch, userId) => {
-            return dispatch(actions.getUsersRequest(limit, textSearch, userId));
-        },
-        saveUserRequest: (user) => {
-            return dispatch(actions.saveUserRequest(user));
-        },
-        deleteUserRequest: (userId) => {
-            return dispatch(actions.deleteUserRequest(userId));
-        },
-        multipleDeleteUserRequest: (userIdArray) => {
-            return dispatch(actions.multipleDeleteUserRequest(userIdArray));
-        },
-        sendActivationMailRequest: (email) => {
-            return dispatch(actions.sendActivationMailRequest(email));
-        },
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    getUsersRequest: actions.getUsersRequest,
+    saveUserRequest: actions.saveUserRequest,
+    deleteUserRequest: actions.deleteUserRequest,
+    multipleDeleteUserRequest: actions.multipleDeleteUserRequest,
+    sendActivationMailRequest: actions.sendActivationMailRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users);

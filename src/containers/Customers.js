@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import { Row, Modal, notification, Button } from 'antd';
-import { translate } from 'react-i18next';
+import i18n from 'i18next';
 
 import CommonCard from '../components/common/CommonCard';
 import CommonButton from '../components/common/CommonButton';
@@ -13,11 +14,11 @@ import DetailCustomerDialog from '../components/customer/DetailCustomerDialog';
 
 import * as actions from '../actions/customers';
 
-@translate(['customer', 'attribute', 'details', 'action'], { wait: false })
 class Customers extends Component {
 
     static contextTypes = {
         currentUser: PropTypes.object,
+        pageLoading: PropTypes.func,
     }
 
     state = {
@@ -57,7 +58,7 @@ class Customers extends Component {
                         shape="circle"
                         visible={!isPublic}
                         iconClassName="user-add"
-                        tooltipTitle="커스터머 사용자 관리"
+                        tooltipTitle={i18n.t('customer.manage-customer-users')}
                     />
                 </Link>
                 <Link to={`/customers/${id}/devices`}>
@@ -65,7 +66,7 @@ class Customers extends Component {
                         className="custom-card-button"
                         shape="circle"
                         iconClassName="tablet"
-                        tooltipTitle="커스터머 디바이스 관리"
+                        tooltipTitle={i18n.t('customer.manage-customer-devices')}
                     />
                 </Link>
                 <Link to={`/customers/${id}/dashboards`}>
@@ -73,7 +74,7 @@ class Customers extends Component {
                         className="custom-card-button"
                         shape="circle"
                         iconClassName="layout"
-                        tooltipTitle="커스터머 대시보드 관리"
+                        tooltipTitle={i18n.t('customer.manage-customer-dashboards')}
                     />
                 </Link>
                 <CommonButton
@@ -82,7 +83,7 @@ class Customers extends Component {
                     visible={!isPublic}
                     iconClassName="delete"
                     onClick={modalConfirmAction}
-                    tooltipTitle="커스터머 디바이스 삭제"
+                    tooltipTitle={i18n.t('customer.delete')}
                 />
             </Button.Group>
         );
@@ -113,6 +114,7 @@ class Customers extends Component {
     }
 
     refershCustomerRequest = () => {
+        this.context.pageLoading();
         const limit = this.state.limit;
         const textSearch = this.state.textSearch;
         this.setState({
@@ -120,11 +122,12 @@ class Customers extends Component {
             checkedCount: 0,
         });
         this.props.getCustomersRequest(limit, textSearch).then(() => {
-            if (this.props.statusMessage !== 'SUCCESS') {
+            if (this.props.statusMessage === 'FAILURE') {
                 notification.error({
                     message: this.props.errorMessage,
                 });
             }
+            this.context.pageLoading();
         });
     }
 
@@ -148,28 +151,28 @@ class Customers extends Component {
     }
 
     handleDeleteConfirm = (title, id) => {
-        const newTitle = `'${title}' 커스터머를 삭제하시겠습니까?`;
-        const newContent = '커스터머 및 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const newTitle = i18n.t('customer.delete-customer-title', { customerTitle: title });
+        const newContent = i18n.t('customer.delete-customer-text');
         const deleteEvent = this.handleDeleteCustomer.bind(this, id);
         return Modal.confirm({
             title: newTitle,
             content: newContent,
-            okText: '예',
-            cancelText: '아니오',
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
             onOk: deleteEvent,
         });
     }
 
     handleMultipleDeleteConfirm = () => {
         const checkedCount = this.state.checkedCount;
-        const newTitle = `커스터머 ${checkedCount}개를 삭제하시겠습니까?`;
-        const newContent = '선택된 커스터머는 삭제되고 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.';
+        const newTitle = i18n.t('customer.delete-customers-title', { count: checkedCount });
+        const newContent = i18n.t('customer.delete-customers-text');
         const deleteEvent = this.handleMultipleDeleteCustomer;
         return Modal.confirm({
             title: newTitle,
             content: newContent,
-            okText: '예',
-            cancelText: '아니오',
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
             onOk: deleteEvent,
         });
     }
@@ -290,25 +293,35 @@ class Customers extends Component {
     }
 
     render() {
-        const { t } = this.props;
         return (
             <Row>
                 {this.components()}
                 <div className="footer-buttons">
                     <CommonButton
                         visible={this.state.checkedCount !== 0}
-                        tooltipTitle={`커스터머 ${this.state.checkedCount}개 삭제`}
+                        shape="circle"
+                        tooltipTitle={i18n.t('customer.delete-customers-action-title')}
                         className="custom-card-button"
                         iconClassName="delete"
-                        onClick={this.handleDeleteConfirm}
+                        onClick={this.handleMultipleDeleteConfirm}
                         size="large"
                     />
-                    <CommonButton tooltipTitle="커스터머 추가" className="custom-card-button" shape="circle" iconClassName="plus" onClick={this.openAddCustomerModal} size="large" />
+                    <CommonButton
+                        tooltipTitle={i18n.t('customer.add')}
+                        className="custom-card-button"
+                        shape="circle"
+                        iconClassName="plus"
+                        onClick={this.openAddCustomerModal}
+                        size="large"
+                    />
                 </div>
-                <AddCustomerModal ref={(c) => { this.addModal = c; }} onSave={this.handleSaveCustomer} onCancel={this.hideAddCustomerModal} />
+                <AddCustomerModal
+                    ref={(c) => { this.addModal = c; }}
+                    onSave={this.handleSaveCustomer}
+                    onCancel={this.hideAddCustomerModal}
+                />
                 <DetailCustomerDialog
                     ref={(c) => { this.detailDialog = c; }}
-                    t={t}
                     data={this.state.selectedCustomer}
                     visible={this.state.dialogVisible}
                     closeDialog={this.closeDetailDialog}
@@ -320,29 +333,17 @@ class Customers extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.customers.statusMessage,
-        data: state.customers.data,
-        errorMessage: state.customers.errorMessage,
-    };
-};
+const mapStateToProps = (state) => ({
+    statusMessage: state.customers.statusMessage,
+    data: state.customers.data,
+    errorMessage: state.customers.errorMessage,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getCustomersRequest: (limit, textSearch) => {
-            return dispatch(actions.getCustomersRequest(limit, textSearch));
-        },
-        saveCustomerRequest: (customer) => {
-            return dispatch(actions.saveCustomerRequest(customer));
-        },
-        deleteCustomerRequest: (customerId) => {
-            return dispatch(actions.deleteCustomerRequest(customerId));
-        },
-        multipleDeleteCustomerRequest: (customerIdArray) => {
-            return dispatch(actions.multipleDeleteCustomerRequest(customerIdArray));
-        },
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    getCustomersRequest: actions.getCustomersRequest,
+    saveCustomerRequest: actions.saveCustomerRequest,
+    deleteCustomerRequest: actions.deleteCustomerRequest,
+    multipleDeleteCustomerRequest: actions.multipleDeleteCustomerRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Customers);

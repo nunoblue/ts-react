@@ -1,9 +1,0 @@
-{
-    "common": {
-        "username": "사용자명",
-        "password": "비밀번호",
-        "enter-username": "사용자명을 입력하세요.",
-        "enter-password": "비밀번호를 입력하세요.",
-        "enter-search": "검색어 입력"
-    }
-}

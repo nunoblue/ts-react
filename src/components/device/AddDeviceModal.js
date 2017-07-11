@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import i18n from 'i18next';
 
 import CommonModal from '../common/CommonModal';
 import DeviceForm from './DeviceForm';
@@ -9,12 +10,12 @@ class AddDeviceModal extends Component {
         const { onSave, onCancel, options } = this.props;
         return (
             <CommonModal
-            ref={(c) => { this.modal = c; }}
-            title="디바이스 추가"
-            onOk={onSave}
-            onCancel={onCancel}
-            okText="추가"
-            cancelText="취소"
+                ref={(c) => { this.modal = c; }}
+                title={i18n.t('device.add-device-text')}
+                onOk={onSave}
+                onCancel={onCancel}
+                okText={i18n.t('action.add')}
+                cancelText={i18n.t('action.cancel')}
             >
                 <DeviceForm
                     ref={(c) => { this.form = c; }}

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Input, InputNumber, Select, Col, Checkbox } from 'antd';
-import { translate } from 'react-i18next';
+import { Form, Input, InputNumber, Select, Checkbox } from 'antd';
+import i18n from 'i18next';
 
-@translate(['admin', 'common'], { wait: false })
 class AdminMailSettingForm extends Component {
     state = {
         timeoutExtra: `${this.props.value.timeout.length}/6`,
@@ -10,18 +9,17 @@ class AdminMailSettingForm extends Component {
     }
 
     timeoutValidate = (rule, value, callback) => {
-        const { t } = this.props;
         const length = `${value}`.length;
 
         if (length === 0 || typeof value === 'undefined') {
             this.setState({ timeoutExtra: '' });
-            callback(`${t('admin.timeout-required')} 0/6`);
+            callback(`${i18n.t('admin.timeout-required')} 0/6`);
             return;
         }
 
         if (length > 6) {
             this.setState({ timeoutExtra: '' });
-            callback(`${t('admin.timeout-invalid')} ${length}/6`);
+            callback(`${i18n.t('admin.timeout-invalid')} ${length}/6`);
             return;
         }
         this.setState({
@@ -31,18 +29,17 @@ class AdminMailSettingForm extends Component {
     }
 
     portValidate = (rule, value, callback) => {
-        const { t } = this.props;
         const length = `${value}`.length;
 
         if (length === 0 || typeof value === 'undefined') {
             this.setState({ portExtra: '' });
-            callback(`${t('admin.smtp-port-required')} 0/5`);
+            callback(`${i18n.t('admin.smtp-port-required')} 0/5`);
             return;
         }
 
         if (length > 5) {
             this.setState({ portExtra: '' });
-            callback(`${t('admin.smtp-port-invalid')} ${length}/5`);
+            callback(`${i18n.t('admin.smtp-port-invalid')} ${length}/5`);
             return;
         }
         this.setState({
@@ -53,20 +50,20 @@ class AdminMailSettingForm extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { t, value } = this.props;
+        const { value } = this.props;
         return (
             <Form layout="vertical">
-                <Form.Item label={t('admin.mail-from')}>
+                <Form.Item label={i18n.t('admin.mail-from')}>
                     {
                         getFieldDecorator('mailFrom', {
                             initialValue: value.mailFrom,
-                            rules: [{ required: true, message: t('admin.mail-from-required') }],
+                            rules: [{ required: true, message: i18n.t('admin.mail-from-required') }],
                         })(
                             <Input onPressEnter={this.props.onPressEnter} />,
                         )
                     }
                 </Form.Item>
-                <Form.Item label={t('admin.smtp-protocol')}>
+                <Form.Item label={i18n.t('admin.smtp-protocol')}>
                     {
                         getFieldDecorator('smtpProtocol', {
                             initialValue: value.smtpProtocol,
@@ -82,15 +79,15 @@ class AdminMailSettingForm extends Component {
                         )
                     }
                 </Form.Item>
-                <Form.Item label={t('admin.smtp-host')}>
+                <Form.Item label={i18n.t('admin.smtp-host')}>
                     {
                         getFieldDecorator('smtpHost', {
                             initialValue: value.smtpHost,
-                            rules: [{ required: true, message: t('admin.smtp-host-required') }],
+                            rules: [{ required: true, message: i18n.t('admin.smtp-host-required') }],
                         })(<Input />)
                     }
                 </Form.Item>
-                <Form.Item required label={t('admin.smtp-port')} extra={this.state.portExtra}>
+                <Form.Item required label={i18n.t('admin.smtp-port')} extra={this.state.portExtra}>
                     {
                         getFieldDecorator('smtpPort', {
                             initialValue: value.smtpPort,
@@ -100,7 +97,7 @@ class AdminMailSettingForm extends Component {
                         })(<InputNumber min={1} max={65535} />)
                     }
                 </Form.Item>
-                <Form.Item required label={t('admin.timeout-msec')} extra={this.state.timeoutExtra}>
+                <Form.Item required label={i18n.t('admin.timeout-msec')} extra={this.state.timeoutExtra}>
                     {
                         getFieldDecorator('timeout', {
                             initialValue: value.timeout,
@@ -115,17 +112,17 @@ class AdminMailSettingForm extends Component {
                         getFieldDecorator('enableTls', {
                             valuePropName: 'checked',
                             initialValue: JSON.parse(value.enableTls),
-                        })(<Checkbox>{t('admin.enable-tls')}</Checkbox>)
+                        })(<Checkbox>{i18n.t('admin.enable-tls')}</Checkbox>)
                     }
                 </Form.Item>
-                <Form.Item label={t('common:common.username')}>
+                <Form.Item label={i18n.t('common.username')}>
                     {
                         getFieldDecorator('username', {
                             initialValue: value.username,
                         })(<Input />)
                     }
                 </Form.Item>
-                <Form.Item label={t('common:common.password')}>
+                <Form.Item label={i18n.t('common.password')}>
                     {
                         getFieldDecorator('password', {
                             initialValue: value.password,
