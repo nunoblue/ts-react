@@ -9,7 +9,7 @@ import {
 
 const initialState = {
     statusMessage: 'INIT',
-    data: [],
+    plugins: [],
     errorMessage: 'NONE',
 };
 
@@ -26,7 +26,7 @@ export default function plugins(state = initialState, action) {
                 statusMessage: {
                     $set: 'SUCCESS',
                 },
-                data: {
+                plugins: {
                     $set: action.data,
                 },
             });

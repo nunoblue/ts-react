@@ -9,15 +9,29 @@ import {
     API_SAVE_RULE_FAILURE,
     API_DELETE_RULE_SUCCESS,
     API_DELETE_RULE_FAILURE,
-    API_COMPONENTS_SUCCESS,
+    API_FILTER_COMPONENTS_SUCCESS,
+    API_PROCESSOR_COMPONENTS_SUCCESS,
+    API_PLUGIN_COMPONENTS_SUCCESS,
+    API_FILTER_COMPONENT_SUCCESS,
+    API_PROCESSOR_COMPONENT_SUCCESS,
+    API_PLUGIN_COMPONENT_SUCCESS,
+    API_ACTION_COMPONENT_SUCCESS,
     API_COMPONENTS_FAILURE,
+    API_RULE_ACTIVATE_SUCCESS,
+    API_RULE_ACTIVATE_FAILURE,
 } from '../actions/ActionTypes';
 
 const initialState = {
     statusMessage: 'INIT',
     data: [],
     errorMessage: 'NONE',
-    components:[],
+    filterComponents: [],
+    processorComponents: [],
+    pluginComponents: [],
+    filterComponent: {},
+    processorComponent: {},
+    pluginComponent: {},
+    actionComponent: {},
 };
 
 export default function rules(state = initialState, action) {
@@ -78,19 +92,88 @@ export default function rules(state = initialState, action) {
                     $set: action.errorMessage,
                 },
             });
-        case API_COMPONENTS_SUCCESS:
+        case API_FILTER_COMPONENTS_SUCCESS:
             return update(state, {
                 statusMessage: {
                     $set: 'SUCCESS',
                 },
-                components: {
+                filterComponents: {
                     $set: action.components,
+                },
+            });
+        case API_PROCESSOR_COMPONENTS_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+                processorComponents: {
+                    $set: action.components,
+                },
+            });
+        case API_PLUGIN_COMPONENTS_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+                pluginComponents: {
+                    $set: action.components,
+                },
+            });
+        case API_FILTER_COMPONENT_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+                filterComponent: {
+                    $set: action.component,
+                },
+            });
+        case API_PROCESSOR_COMPONENT_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+                processorComponent: {
+                    $set: action.component,
+                },
+            });
+        case API_PLUGIN_COMPONENT_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+                pluginComponent: {
+                    $set: action.component,
+                },
+            });
+        case API_ACTION_COMPONENT_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+                actionComponent: {
+                    $set: action.component,
                 },
             });
         case API_COMPONENTS_FAILURE:
             return update(state, {
                 statusMessage: {
+                    $set: 'FAILURE',
+                },
+                errorMessage: {
+                    $set: action.errorMessage,
+                },
+            });
+        case API_RULE_ACTIVATE_SUCCESS:
+            return update(state, {
+                statusMessage: {
                     $set: 'SUCCESS',
+                },
+            });
+        case API_RULE_ACTIVATE_FAILURE:
+            return update(state, {
+                statusMessage: {
+                    $set: 'FAILURE',
                 },
                 errorMessage: {
                     $set: action.errorMessage,

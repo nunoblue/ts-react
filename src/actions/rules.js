@@ -10,8 +10,16 @@ import {
     API_SAVE_RULE_FAILURE,
     API_DELETE_RULE_SUCCESS,
     API_DELETE_RULE_FAILURE,
-    API_COMPONENTS_SUCCESS,
+    API_FILTER_COMPONENTS_SUCCESS,
+    API_PROCESSOR_COMPONENTS_SUCCESS,
+    API_PLUGIN_COMPONENTS_SUCCESS,
+    API_FILTER_COMPONENT_SUCCESS,
+    API_PROCESSOR_COMPONENT_SUCCESS,
+    API_PLUGIN_COMPONENT_SUCCESS,
+    API_ACTION_COMPONENT_SUCCESS,
     API_COMPONENTS_FAILURE,
+    API_RULE_ACTIVATE_SUCCESS,
+    API_RULE_ACTIVATE_FAILURE,
 } from './ActionTypes';
 
 import config from '../config';
@@ -20,6 +28,7 @@ const apServer = config.apServer;
 const API_RULE_URL = `${apServer}/api/rule`;
 const RULES_URL = `${apServer}/api/rules`;
 const API_COMPONENTS_URL = `${apServer}/api/components/`;
+const API_COMPONENT_URL = `${apServer}/api/component/`;
 
 function getRules() {
     return {
@@ -72,15 +81,62 @@ function deleteRuleFailure(message) {
     };
 }
 
-function getComponentsSuccess(components) {
+function getFilterComponentsSuccess(components) {
     return {
-        type: API_COMPONENTS_SUCCESS,
+        type: API_FILTER_COMPONENTS_SUCCESS,
         components,
+    };
+}
+function getProcessorComponentsSuccess(components) {
+    return {
+        type: API_PROCESSOR_COMPONENTS_SUCCESS,
+        components,
+    };
+}
+function getPluginComponentsSuccess(components) {
+    return {
+        type: API_PLUGIN_COMPONENTS_SUCCESS,
+        components,
+    };
+}
+function getFilterComponentSuccess(component) {
+    return {
+        type: API_FILTER_COMPONENT_SUCCESS,
+        component,
+    };
+}
+function getProcessorComponentSuccess(component) {
+    return {
+        type: API_PROCESSOR_COMPONENT_SUCCESS,
+        component,
+    };
+}
+function getPluginComponentSuccess(component) {
+    return {
+        type: API_PLUGIN_COMPONENT_SUCCESS,
+        component,
+    };
+}
+function getActionComponentSuccess(component) {
+    return {
+        type: API_ACTION_COMPONENT_SUCCESS,
+        component,
     };
 }
 function getComponentsFailure(message) {
     return {
         type: API_COMPONENTS_FAILURE,
+        errorMessage: message,
+    };
+}
+function getRuleActivateSuccess() {
+    return {
+        type: API_RULE_ACTIVATE_SUCCESS,
+    };
+}
+function getRuleActivateFailure(message) {
+    return {
+        type: API_RULE_ACTIVATE_FAILURE,
         errorMessage: message,
     };
 }
@@ -104,50 +160,10 @@ export const clearRulesRequest = () => (dispatch) => {
     dispatch(clearRulesSuccess());
 };
 
-export const saveRuleRequest = data => (dispatch) => {
+export const saveRuleRequest = rule => (dispatch) => {
     dispatch(getRules());
 
-    const sample = {
-        filters: [
-            {
-                configuration: {
-                    methodNames: [
-                        {
-                            name: 'getTelemetry',
-                        },
-                    ],
-                },
-                name: 'filter1',
-                clazz: 'org.thingsboard.server.extensions.core.filter.MethodNameFilter',
-            },
-        ],
-        name: 'testRule',
-        additionalInfo: {
-            description: 'desc',
-        },
-        processor: {
-            configuration: {
-                alarmIdTemplate: '${date}',
-                alarmBodyTemplate: '${date}${content}',
-            },
-            clazz: 'org.thingsboard.server.extensions.core.processor.AlarmDeduplicationProcessor',
-            name: 'Alarm',
-        },
-        pluginToken: 'telemetry',
-        action: {
-            configuration: {},
-            clazz: 'org.thingsboard.server.extensions.core.action.telemetry.TelemetryPluginAction',
-            name: 'testAction',
-        },
-    };
-
-    // Assemble rule object
-    if (data.id) {
-        sample.id = { id: data.id };
-    }
-    sample.name = data.name;
-    sample.additionalInfo.description = data.description;
-    return axios.post(API_RULE_URL, sample, {
+    return axios.post(API_RULE_URL, rule, {
         headers: {
             'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
         },
@@ -180,8 +196,68 @@ export const getComponentsRequest = componentType => (dispatch) => {
             'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
         },
     }).then((response) => {
-        dispatch(getComponentsSuccess(response.data));
+        switch ( componentType ) {
+            case 'FILTER':
+                dispatch(getFilterComponentsSuccess(response.data));
+                break;
+            case 'PROCESSOR':
+                dispatch(getProcessorComponentsSuccess(response.data));
+                break;
+            case 'PLUGIN':
+                dispatch(getPluginComponentsSuccess(response.data));
+                break;
+            default:
+                break;
+        }
+
     }).catch((error) => {
         dispatch(getComponentsFailure(error.response.data.message));
     });
 }
+
+export const getComponentRequest = clazz => (dispatch) => {
+    dispatch(getRules());
+    const url = API_COMPONENT_URL + clazz;
+    return axios.get(url, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        const componentType = response.data.type;
+        switch (componentType) {
+            case 'FILTER':
+                dispatch(getFilterComponentSuccess(response.data));
+                break;
+            case 'PROCESSOR':
+                dispatch(getProcessorComponentSuccess(response.data));
+                break;
+            case 'PLUGIN':
+                dispatch(getPluginComponentSuccess(response.data));
+                break;
+            case 'ACTION':
+                dispatch(getActionComponentSuccess(response.data));
+                break;
+            default:
+                break;
+        }
+
+    }).catch((error) => {
+        dispatch(getComponentsFailure(error.response.data.message));
+    });
+};
+
+export const activateRuleRequest = (id, state) => (dispatch) => {
+    dispatch(getRules());
+
+    const url = `${API_RULE_URL}/${id}/${state === 'ACTIVE' ? 'suspend' : 'activate'}`;
+    return axios.post(url, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(getRuleActivateSuccess());
+    }).catch((error) => {
+        console.log('ERROR', error);
+        dispatch(getRuleActivateFailure(error));
+    });
+};

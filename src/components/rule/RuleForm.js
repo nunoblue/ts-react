@@ -10,7 +10,18 @@ class RuleForm extends Component {
         rule: PropTypes.object,
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        return (JSON.stringify(nextProps) !== JSON.stringify(this.props));
+    }
+
+    // handleChange = (e) => {
+    //     if (typeof this.props.titleChangeEvent !== 'undefined') {
+    //         this.props.titleChangeEvent(e.target.value);
+    //     }
+    // }
+
     render() {
+        console.log('Render: RuleForm.js');
         let basicSchema = [{
             type: 'hidden',
             name: 'id',
