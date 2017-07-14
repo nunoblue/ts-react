@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Row } from 'antd';
+import i18n from 'i18next';
 
 import CommonCard from '../components/common/CommonCard';
 import CommonButton from '../components/common/CommonButton';
@@ -19,7 +21,7 @@ class Widgets extends Component {
             const title = data.title;
             const id = data.id.id;
             return (
-                <CommonCard key={id} style={{ cursor: 'pointer' }} title={title} buttonTooltip="Widget Delete" />
+                <CommonCard key={id} style={{ cursor: 'pointer' }} title={title} tooltipTitle={i18n.t('widget.delete')} />
             );
         });
         return components;
@@ -35,17 +37,13 @@ class Widgets extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.widgets.statusMessage,
-        data: state.widgets.data,
-    };
-};
+const mapStateToProps = (state) => ({
+    statusMessage: state.widgets.statusMessage,
+    data: state.widgets.data,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getWidgetsRequest: () => dispatch(actions.getWidgetsRequest()),
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    getWidgetsRequest: actions.getWidgetsRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Widgets);

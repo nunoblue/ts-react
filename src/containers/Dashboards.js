@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Modal, notification, Button } from 'antd';
-import { translate } from 'react-i18next';
+import i18n from 'i18next';
 
 import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
@@ -14,11 +14,11 @@ import DetailDashboardDialog from '../components/dashboard/DetailDashboardDialog
 import * as actions from '../actions/dashboards';
 import * as customers from '../actions/customers';
 
-@translate(['dashboard'], { wait: false })
 class Dashboards extends Component {
 
     static contextTypes = {
         currentUser: PropTypes.object,
+        pageLoading: PropTypes.func,
     }
 
     state = {
@@ -82,14 +82,14 @@ class Dashboards extends Component {
                     className="custom-card-button"
                     shape="circle"
                     iconClassName="search"
-                    tooltipTitle={t('dashboard.dashboard-details')}
+                    tooltipTitle={i18n.t('dashboard.dashboard-details')}
                 />
                 <CommonButton
                     className="custom-card-button"
                     shape="circle"
                     visible={this.state.authority}
                     iconClassName="export"
-                    tooltipTitle={t('dashboard.export')}
+                    tooltipTitle={i18n.t('dashboard.export')}
                 />
                 <CommonButton
                     className="custom-card-button"
@@ -103,7 +103,7 @@ class Dashboards extends Component {
                     shape="circle"
                     visible={assignVisible}
                     iconClassName={isAssign ? 'user-delete' : 'user-add'}
-                    tooltipTitle={isAssign ? t('dashboard.unassign-from-customer') : t('dashboard.assign-to-customer')}
+                    tooltipTitle={isAssign ? i18n.t('dashboard.unassign-from-customer') : i18n.t('dashboard.assign-to-customer')}
                 />
                 <CommonButton
                     className="custom-card-button"
@@ -111,7 +111,7 @@ class Dashboards extends Component {
                     visible={deleteVisible}
                     iconClassName="delete"
                     onClick={modalConfirmAction}
-                    tooltipTitle={t('dashboard.delete')}
+                    tooltipTitle={i18n.t('dashboard.delete')}
                 />
             </Button.Group>
         );
@@ -141,6 +141,7 @@ class Dashboards extends Component {
     }
 
     refershDashboardRequest = () => {
+        this.context.pageLoading();
         const { match } = this.props;
         const { currentUser } = this.context;
         const limit = this.state.limit;
@@ -160,7 +161,7 @@ class Dashboards extends Component {
         }
         const customerIdArray = [];
         this.props.getDashboardsRequest(limit, textSearch, authority, customerId).then(() => {
-            if (this.props.statusMessage !== 'SUCCESS') {
+            if (this.props.statusMessage === 'FAILURE') {
                 notification.error({
                     message: this.props.errorMessage,
                 });
@@ -171,6 +172,7 @@ class Dashboards extends Component {
                 }
             });
             this.props.getCustomerShortInfoRequest(customerIdArray);
+            this.context.pageLoading();
         });
     }
 
@@ -194,9 +196,8 @@ class Dashboards extends Component {
     }
 
     handleDeleteConfirm = (title, id) => {
-        const { t } = this.props;
-        const newTitle = t('dashboard.delete-dashboard-title', { dashboardTitle: title });
-        const newContent = t('dashboard.delete-dashboard-text');
+        const newTitle = i18n.t('dashboard.delete-dashboard-title', { dashboardTitle: title });
+        const newContent = i18n.t('dashboard.delete-dashboard-text');
         const deleteEvent = this.handleDeleteDashboard.bind(this, id);
         return Modal.confirm({
             title: newTitle,
@@ -208,10 +209,9 @@ class Dashboards extends Component {
     }
 
     handleMultipleDeleteConfirm = () => {
-        const { t } = this.props;
         const checkedCount = this.state.checkedCount;
-        const newTitle = t('dashboard.delete-dashboards-title', { count: checkedCount });
-        const newContent = t('dashboard.delete-dashboards-text');
+        const newTitle = i18n.t('dashboard.delete-dashboards-title', { count: checkedCount });
+        const newContent = i18n.t('dashboard.delete-dashboards-text');
         const deleteEvent = this.handleMultipleDeleteDashboard;
         return Modal.confirm({
             title: newTitle,
@@ -354,7 +354,6 @@ class Dashboards extends Component {
     }
 
     render() {
-        const { t } = this.props;
         return (
             <Row>
                 {this.components()}
@@ -362,7 +361,7 @@ class Dashboards extends Component {
                     <CommonButton
                         shape="circle"
                         visible={this.state.checkedCount !== 0}
-                        tooltipTitle={t('dashboard.delete-dashboards-action-title', { count: this.state.checkedCount })}
+                        tooltipTitle={i18n.t('dashboard.delete-dashboards-action-title', { count: this.state.checkedCount })}
                         className="custom-card-button"
                         iconClassName="delete"
                         onClick={this.handleMultipleDeleteConfirm}
@@ -371,7 +370,7 @@ class Dashboards extends Component {
                     <CommonButton
                         shape="circle"
                         visible={this.state.isCustomer}
-                        tooltipTitle={t('dashboard.add-dashboard-text')}
+                        tooltipTitle={i18n.t('dashboard.add-dashboard-text')}
                         className="custom-card-button"
                         iconClassName="plus"
                         onClick={this.openAddDashboardModal}
@@ -385,7 +384,6 @@ class Dashboards extends Component {
                 />
                 <DetailDashboardDialog
                     ref={(c) => { this.detailDialog = c; }}
-                    t={t}
                     data={this.state.selectedDashboard}
                     visible={this.state.dialogVisible}
                     closeDialog={this.closeDetailDialog}

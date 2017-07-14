@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Form, Input } from 'antd';
-import { translate } from 'react-i18next';
+import i18n from 'i18next';
 
 import config from '../../config';
 
-@translate(['dashboard'], { wait: false })
 class DashboardForm extends Component {
     shouldCompnentUpdate(nextProps, nextState) {
         if (nextProps.data === this.props.data) {
@@ -21,12 +20,12 @@ class DashboardForm extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { t, onPressEnter, disabled, data } = this.props;
+        const { onPressEnter, disabled, data } = this.props;
         let assignField = null;
         if (data && disabled) {
             if (typeof data.customer !== 'undefined') {
                 assignField = data.customer.isPublic ? (
-                    <Form.Item label={t('dashboard.public-link')}>
+                    <Form.Item label={i18n.t('dashboard.public-link')}>
                         {
                             getFieldDecorator('publicLink', {
                                 initialValue: `${config.apServer}/dashboards/${data.id.id}?publicId=${data.customer.id}`,
@@ -38,7 +37,7 @@ class DashboardForm extends Component {
                         }
                     </Form.Item>
                 ) : (
-                    <Form.Item label={t('dashboard.assignedToCustomer')}>
+                    <Form.Item label={i18n.t('dashboard.assignedToCustomer')}>
                         {
                             getFieldDecorator('assignedToCustomer', {
                                 initialValue: data.customer.title,
@@ -55,10 +54,10 @@ class DashboardForm extends Component {
         return (
             <Form layout="vertical">
                 {assignField}
-                <Form.Item label={t('dashboard.title')}>
+                <Form.Item label={i18n.t('dashboard.title')}>
                     {
                         getFieldDecorator('title', {
-                            rules: [{ required: true, message: t('dashboard.title-required') }],
+                            rules: [{ required: true, message: i18n.t('dashboard.title-required') }],
                         })(
                             <Input
                                 disabled={disabled}
@@ -68,7 +67,7 @@ class DashboardForm extends Component {
                         )
                     }
                 </Form.Item>
-                <Form.Item label={t('dashboard.description')}>
+                <Form.Item label={i18n.t('dashboard.description')}>
                     {getFieldDecorator('description')(<Input disabled={disabled} onPressEnter={onPressEnter} />)}
                 </Form.Item>
             </Form>

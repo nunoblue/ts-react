@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'antd';
+import i18n from 'i18next';
 
 import CommonModal from '../common/CommonModal';
 import DeviceCredentialsForm from './DeviceCredentialsForm';
@@ -44,7 +45,7 @@ class DeviceCredentialsModal extends Component {
         if (!authority) {
             return (
                 <Button key="back" size="large" onClick={this.props.onCancel}>
-                    {"취소"}
+                    {i18n.t('action.cancel')}
                 </Button>
             );
         }
@@ -53,21 +54,21 @@ class DeviceCredentialsModal extends Component {
     render() {
         return (
             <CommonModal
-            ref={(c) => { this.modal = c; }}
-            title="디바이스 크리덴셜"
-            onOk={this.props.onSave}
-            onCancel={this.props.onCancel}
-            okText="저장"
-            cancelText="취소"
-            footer={this.footerComponents()}
+                ref={(c) => { this.modal = c; }}
+                title={i18n.t('device.device-credentials')}
+                onOk={this.props.onSave}
+                onCancel={this.props.onCancel}
+                okText={i18n.t('action.save')}
+                cancelText={i18n.t('action.cancel')}
+                footer={this.footerComponents()}
             >
                 <DeviceCredentialsForm
-                ref={(c) => { this.form = c; }}
-                onPressEnter={this.props.onSave}
-                onChange={this.handleSelectChange}
-                type={this.state.credentialsType}
-                value={this.state.credentialsValue}
-                disabled={!this.props.authority}
+                    ref={(c) => { this.form = c; }}
+                    onPressEnter={this.props.onSave}
+                    onChange={this.handleSelectChange}
+                    type={this.state.credentialsType}
+                    value={this.state.credentialsValue}
+                    disabled={!this.props.authority}
                 />
             </CommonModal>
         );

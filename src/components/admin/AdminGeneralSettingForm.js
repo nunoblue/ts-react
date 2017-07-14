@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { Form, Input } from 'antd';
-import { translate } from 'react-i18next';
+import i18n from 'i18next';
 
-@translate('admin', { wait: false })
 class AdminGeneralSettingForm extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { t, value, onPressEnter } = this.props;
+        const { value, onPressEnter } = this.props;
         return (
             <Form layout="vertical">
-                <Form.Item label={t('admin.base-url')}>
+                <Form.Item label={i18n.t('admin.base-url')}>
                     {
                         getFieldDecorator('baseUrl', {
                             initialValue: value.baseUrl,

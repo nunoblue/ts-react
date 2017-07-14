@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Tabs, Switch, Row } from 'antd';
+import i18n from 'i18next';
 
 import CommonDialog from '../common/CommonDialog';
 import CommonButton from '../common/CommonButton';
@@ -42,7 +43,7 @@ class DetailDeviceDialog extends Component {
     }
 
     render() {
-        const { t, data, visible, options, onPressEnter, closeDialog, buttonComponents } = this.props;
+        const { data, visible, options, onPressEnter, closeDialog, buttonComponents } = this.props;
         let isPublic = false;
         const additionalInfo = data ? data.additionalInfo : null;
         if (additionalInfo) {
@@ -53,21 +54,21 @@ class DetailDeviceDialog extends Component {
                 onClick={closeDialog}
                 visible={visible}
                 title={this.state.title}
-                subTitle={t('customer.customer-details')}
-                tooltipTitle="상세정보 닫기"
+                subTitle={i18n.t('customer.customer-details')}
+                tooltipTitle={i18n.t('action.close')}
             >
                 <Tabs defaultActiveKey="1">
-                    <Tabs.TabPane tab={t('customer.details')} key="1">
+                    <Tabs.TabPane tab={i18n.t('customer.details')} key="1">
                         <Row>
                             {data ? buttonComponents(data.title, data.id.id, isPublic) : null}
                             <CommonButton className="ts-dialog-button">
                                 <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
-                                {t('customer.copyId')}
+                                {i18n.t('customer.copyId')}
                             </CommonButton>
                             {
                                 !isPublic ? (
-                                    <Switch checkedChildren={'쓰기'} unCheckedChildren={'읽기'} checked={this.state.editing} onChange={this.changeEdit}>
-                                        {t('details:details.toggle-edit-mode')}
+                                    <Switch checkedChildren={i18n.t('action.edit')} unCheckedChildren={i18n.t('action.view')} checked={this.state.editing} onChange={this.changeEdit}>
+                                        {i18n.t('details.toggle-edit-mode')}
                                     </Switch>
                                 ) : null
                             }
@@ -83,14 +84,14 @@ class DetailDeviceDialog extends Component {
                             !isPublic && this.state.editing ? (
                                 <CommonButton className="ts-dialog-button" onClick={this.handleSave}>
                                     <i className="material-icons margin-right-8 vertical-middle">save</i>
-                                    {t('action:action.apply-changes')}
+                                    {i18n.t('action.apply-changes')}
                                 </CommonButton>
                             ) : null
                         }
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab={t('attribute:attribute.attributes')} key="2">Content of Tab Pane 2</Tabs.TabPane>
-                    <Tabs.TabPane tab={t('attribute:attribute.latest-lelmetry')} key="3">Content of Tab Pane 3</Tabs.TabPane>
-                    <Tabs.TabPane tab={t('customer.events')} key="4">Content of Tab Pane 4</Tabs.TabPane>
+                    <Tabs.TabPane tab={i18n.t('attribute.attributes')} key="2">Content of Tab Pane 2</Tabs.TabPane>
+                    <Tabs.TabPane tab={i18n.t('attribute.latest-telemetry')} key="3">Content of Tab Pane 3</Tabs.TabPane>
+                    <Tabs.TabPane tab={i18n.t('customer.events')} key="4">Content of Tab Pane 4</Tabs.TabPane>
                 </Tabs>
             </CommonDialog>
         );

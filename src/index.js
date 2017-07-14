@@ -8,13 +8,9 @@ import { I18nextProvider } from 'react-i18next';
 
 import '../less/app.less';
 import App from './containers/App';
-import i18n from './i18n';
+import { i18nClient } from './i18n';
 import rootReducer from './reducers';
 
-// const resources = Object.assign({},
-//     i18n.getResourceBundle(locale, 'common'),
-//     i18n.getResourceBundle(locale, 'AccountForm')
-//   );
 let store;
 const enhancer = applyMiddleware(thunkMiddleware);
 if (process.env.NODE_ENV === 'development'
@@ -29,7 +25,7 @@ if (process.env.NODE_ENV === 'development'
 const rootElement = document.getElementById('root');
 const render = (Component) => {
     ReactDOM.render(
-        <I18nextProvider i18n={i18n}>
+        <I18nextProvider i18n={i18nClient}>
             <Provider store={store}>
                 <AppContainer>
                     <Component />

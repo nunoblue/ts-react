@@ -17,6 +17,7 @@ import Admins from './containers/Admins';
 // const Widgets = asyncComponent(() => import('./containers/Widgets').then(module => module.default), { name: 'Widgets' });
 // const Devices = asyncComponent(() => import('./containers/Devices').then(module => module.default), { name: 'Devices' });
 // const Users = asyncComponent(() => import('./containers/Users').then(module => module.default), { name: 'Users' });
+// const Admins = asyncComponent(() => import('./containers/Admins').then(module => module.default), { name: 'Admins' });
 
 const TENANT_ADMIN = [
     {

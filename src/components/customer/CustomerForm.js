@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input } from 'antd';
-import { translate } from 'react-i18next';
+import i18n from 'i18next';
 
-@translate(['customer'], { wait: false })
 class CustomerForm extends Component {
     handleChange = (e) => {
         if (typeof this.props.titleChangeEvent !== 'undefined') {
@@ -12,13 +11,13 @@ class CustomerForm extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { t, disabled, onPressEnter } = this.props;
+        const { disabled, onPressEnter } = this.props;
         return (
             <Form layout="vertical">
-                <Form.Item label={t('customer.title')}>
+                <Form.Item label={i18n.t('customer.title')}>
                     {
                         getFieldDecorator('title', {
-                            rules: [{ required: true, message: t('customer.title-required') }],
+                            rules: [{ required: true, message: i18n.t('customer.title-required') }],
                         })(
                             <Input
                                 disabled={disabled}
@@ -28,7 +27,7 @@ class CustomerForm extends Component {
                         )
                     }
                 </Form.Item>
-                <Form.Item label={t('customer.description')}>
+                <Form.Item label={i18n.t('customer.description')}>
                     {getFieldDecorator('description')(<Input disabled={disabled} onPressEnter={onPressEnter} />)}
                 </Form.Item>
                 {/*<Form.Item label="국가">

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import i18n from 'i18next';
 
 import CommonModal from '../common/CommonModal';
 import CustomerForm from './CustomerForm';
@@ -9,11 +10,11 @@ class AddCustomerModal extends Component {
         return (
             <CommonModal
                 ref={(c) => { this.modal = c; }}
-                title="커스터머 추가"
+                title={i18n.t('customer.add-customer-text')}
                 onOk={this.props.onSave}
                 onCancel={this.props.onCancel}
-                okText="추가"
-                cancelText="취소"
+                okText={i18n.t('action.add')}
+                cancelText={i18n.t('action.cancel')}
             >
                 <CustomerForm ref={(c) => { this.form = c; }} onPressEnter={this.props.onSave} />
             </CommonModal>

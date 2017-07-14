@@ -1,6 +1,0 @@
-{
-    "js-func": {
-        "no-return-error": "함수는 값을 반환해야 합니다!",
-        "return-type-mismatch": "함수는 '{{type}}' 유형의 값을 반환해야 합니다!"
-    }
-}
