@@ -264,18 +264,18 @@ class Rules extends Component {
                     />
                 </div>
 
-                {/*<RuleDetailDialog*/}
-                    {/*ref={(c) => { this.detailDialog = c; }}*/}
-                    {/*rule={selectedRule}*/}
-                    {/*filters={selectedRule.filters}*/}
-                    {/*processor={selectedRule.processor}*/}
-                    {/*pluginToken={selectedRule.pluginToken}*/}
-                    {/*action={selectedRule.action}*/}
-                    {/*visible={this.state.dialogVisible}*/}
-                    {/*closeDialog={this.closeDetailDialog}*/}
-                    {/*onSave={this.handleSaveRule}*/}
-                    {/*buttonComponents={this.buttonComponents}*/}
-                {/*/>*/}
+                <RuleDetailDialog
+                    ref={(c) => { this.detailDialog = c; }}
+                    rule={selectedRule}
+                    filters={selectedRule.filters}
+                    processor={selectedRule.processor}
+                    pluginToken={selectedRule.pluginToken}
+                    action={selectedRule.action}
+                    visible={this.state.dialogVisible}
+                    closeDialog={this.closeDetailDialog}
+                    onSave={this.handleSaveRule}
+                    buttonComponents={this.buttonComponents}
+                />
             </Row>
         );
     }

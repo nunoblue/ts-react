@@ -250,7 +250,7 @@ export const activateRuleRequest = (id, state) => (dispatch) => {
     dispatch(getRules());
 
     const url = `${API_RULE_URL}/${id}/${state === 'ACTIVE' ? 'suspend' : 'activate'}`;
-    return axios.post(url, {
+    return axios.post(url, null, {
         headers: {
             'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
         },

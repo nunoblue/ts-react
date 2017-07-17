@@ -80,6 +80,7 @@ class PluginActionContainer extends Component {
         if (_.isEmpty(this.props.actionComponent)) {
             return null;
         }
+        console.log('sortableItems', this.props.action, this.props.actionComponent);
         return (
             <SortableItems
                 items={this.props.action}
@@ -91,6 +92,7 @@ class PluginActionContainer extends Component {
     }
 
     render() {
+        console.log('Render : PluginActionContainer.js', this.props.action, this.props.actionComponent);
         const { modal } = this.state;
         const isNew = _.isEmpty(this.props.action);
         return (

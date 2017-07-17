@@ -12,7 +12,6 @@ const SortableItems = (props) => {
     } else {
         items = _.isEmpty(props.items) ? null : [props.items];
     }
-// console.log('SortableItems', items, itemConfig);
     const renderTitle = () => {
         if (items && items.length > 0) {
             return (

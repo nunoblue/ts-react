@@ -128,6 +128,7 @@ class FilterList extends Component {
                         onEdit={this.modalHandler.show}
                         onDelete={this.sortableHandler.delete}
                         componentTypeName="필터"
+                        disabled={this.props.disabled}
                     />
                 </ul>
                 <Button type="primary" icon="plus" onClick={this.modalHandler.show}>추가</Button>

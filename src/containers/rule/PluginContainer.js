@@ -39,46 +39,49 @@ class PluginContainer extends Component {
         });
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     console.log('nextProps.pluginToken, this.props.plugins', nextProps.pluginToken, this.props.plugins);
-    //     if (nextProps.pluginToken && this.props.plugins) {
-    //         console.log('nextProps.pluginToken,texst');
-    //         const livePlugins = this.props.plugins.filter((plugin) => {
-    //             const { clazz } = plugin;
-    //             const index = this.props.pluginComponents.findIndex(c => clazz === c.clazz && c.actions);
-    //             return index > -1;
-    //         });
-    //         const selectedPlugin = livePlugins.find(p => p.apiToken === nextProps.pluginToken);
-    //         const pluginComponent = this.props.pluginComponents.find(pc => pc.clazz === selectedPlugin.clazz);
-    //
-    //         this.setState({
-    //             plugin: selectedPlugin,
-    //             pluginComponent,
-    //         });
-    //
-    //         this.props.onPluginSave(selectedPlugin);
-    //         console.log('should!!!!!!!!', this.props.actionComponent, nextProps.actionComponent,
-    //             'isEqual', _.isEqual(this.props.actionComponent, nextProps.actionComponent));
-    //
-    //         if (pluginComponent && _.isEmpty(this.props.actionComponent)) {
-    //             const { actions } = pluginComponent;
-    //             this.props.onDelete(this.props.action);
-    //             this.props.getComponentRequest(actions);
-    //         }
-    //     }
-    // }
-    //
-    // shouldComponentUpdate(nextProps, nextStates) {
-    //     console.log('should!!!!!!!!', this.props.actionComponent, nextProps.actionComponent, 'isEqual', _.isEqual(this.props.actionComponent, nextProps.actionComponent));
-    //     if (_.isEqual(this.props.actionComponent, nextProps.actionComponent)) {
-    //         console.log('isEqual');
-    //         return false;
-    //     }
-    //     return true;
-    // }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.pluginToken && this.props.plugins) {
+            const livePlugins = this.props.plugins.filter((plugin) => {
+                const { clazz } = plugin;
+                const index = this.props.pluginComponents.findIndex(c => clazz === c.clazz && c.actions);
+                return index > -1;
+            });
+            const selectedPlugin = livePlugins.find(p => p.apiToken === nextProps.pluginToken);
+            const pluginComponent = this.props.pluginComponents.find(pc => pc.clazz === selectedPlugin.clazz);
 
-    componentDidUpdate(prevProps, prevState) {
-        console.log('componentDidUpdate!!!!!!!!', this.props.actionComponent, prevProps.actionComponent)
+            this.setState({
+                plugin: selectedPlugin,
+                pluginComponent,
+            });
+
+            this.props.onPluginSave(selectedPlugin);
+            console.log('actionComopnent!!!', this.props.pluginToken, nextProps.pluginToken);
+            if (pluginComponent && (_.isEmpty(this.props.actionComponent) || this.props.pluginToken !== nextProps.pluginToken)) {
+                const { actions } = pluginComponent;
+                this.props.onDelete(this.props.action);
+                this.props.getComponentRequest(actions);
+            }
+        }
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+        // if (JSON.stringify(this.props.plugin) !== JSON.stringify(nextProps.plugin)) {
+        //     return true;
+        // } else if (JSON.stringify(this.props.pluginToken) !== JSON.stringify(nextProps.pluginToken)) {
+        //     return true;
+        // } else if (JSON.stringify(this.props.action) !== JSON.stringify(nextProps.action)) {
+        //     return true;
+        // } else if (JSON.stringify(this.state.modal.visible) !== JSON.stringify(nextState.modal.visible)) {
+        //     return true;
+        // } else if (JSON.stringify(this.state.plugin) !== JSON.stringify(nextState.plugin)) {
+        //     return true;
+        // } else if (JSON.stringify(this.state.pluginComponent) !== JSON.stringify(nextState.pluginComponent)) {
+        //     return true;
+        // } else if (JSON.stringify(this.props.pluginComponents) === JSON.stringify(nextProps.pluginComponents)) {
+        //     return false;
+        // } else if (JSON.stringify(this.props.actionComponent) === JSON.stringify(nextProps.actionComponent)) {
+        //     return false;
+        // }
+        return true;
     }
 
     handleChange = (clazz) => {
@@ -100,7 +103,7 @@ class PluginContainer extends Component {
     pluginActionPanel = () => {
         if (!_.isEmpty(this.state.plugin)) {
             return (
-                <Collapse bordered={false} defaultActiveKey={['1']}>
+                <Collapse bordered={false} defaultActiveKey={['1']} style={{ 'margin-bottom': '50px' }}>
                     <Panel header="플러그인 액션" key="1">
                         <PluginActionContainer
                             action={this.props.action}

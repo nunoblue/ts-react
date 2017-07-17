@@ -142,13 +142,13 @@ class AddRuleModal extends Component {
                     </Panel>
                 </Collapse>
 
-                {/*<PluginContainer*/}
-                    {/*plugin={this.state.plugin}*/}
-                    {/*action={this.state.action}*/}
-                    {/*onPluginSave={this.handlerPlugin}*/}
-                    {/*onSave={this.handlerAction.edit}*/}
-                    {/*onDelete={this.handlerAction.delete}*/}
-                {/*/>*/}
+                <PluginContainer
+                    plugin={this.state.plugin}
+                    action={this.state.action}
+                    onPluginSave={this.handlerPlugin}
+                    onSave={this.handlerAction.edit}
+                    onDelete={this.handlerAction.delete}
+                />
 
             </CommonModal>
         );

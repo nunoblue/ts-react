@@ -153,8 +153,10 @@ class RuleDetailDialog extends Component {
                         <RuleForm
                             ref={(c) => { this.form = c; }}
                             rule={this.props.rule}
+                            disabled={!this.state.editing}
                         />
 
+                        <div className="ant-row ant-form-item">
                         <Collapse bordered={false} defaultActiveKey={['1', '2']}>
                             <Panel header="필터" key="1">
                                 <FilterContainer
@@ -162,6 +164,7 @@ class RuleDetailDialog extends Component {
                                     onSave={this.handlerFilter.edit}
                                     onAdd={this.handlerFilter.add}
                                     onDelete={this.handlerFilter.delete}
+                                    disabled={!this.state.editing}
                                 />
                             </Panel>
                             <Panel header="프로세서" key="2">
@@ -169,6 +172,7 @@ class RuleDetailDialog extends Component {
                                     processor={this.props.processor}
                                     onSave={this.handlerProcessor.edit}
                                     onDelete={this.handlerProcessor.delete}
+                                    disabled={!this.state.editing}
                                 />
                             </Panel>
                         </Collapse>
@@ -180,6 +184,7 @@ class RuleDetailDialog extends Component {
                             onPluginSave={this.handlerPlugin}
                             onSave={this.handlerAction.edit}
                             onDelete={this.handlerAction.delete}
+                            disabled={!this.state.editing}
                         />
                         {
                             this.state.editing ? (
@@ -189,6 +194,7 @@ class RuleDetailDialog extends Component {
                                 </CommonButton>
                             ) : null
                         }
+                        </div>
                     </Tabs.TabPane>
                     <Tabs.TabPane tab="이벤트" key="2">Content of Tab Pane 2</Tabs.TabPane>
                 </Tabs>
