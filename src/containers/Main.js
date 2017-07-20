@@ -137,7 +137,7 @@ class Main extends Component {
                         <Spin spinning={this.state.loading}>
                             <Row>
                                 <Col span="2">
-                                    <Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
+                                    {/*<Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />*/}
                                 </Col>
                             </Row>
                             {this.props.children}

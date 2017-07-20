@@ -189,7 +189,6 @@ class Rules extends Component {
                     }
                     content={state}
                     buttonTooltip="Rule Delete"
-                    // onClick={openEditRuleModal}
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
                 >
@@ -285,6 +284,7 @@ const mapStateToProps = (state) => {
     return {
         statusMessage: state.rules.statusMessage,
         data: state.rules.data,
+        erorrMessage: state.rules.errorMessage,
     };
 };
 

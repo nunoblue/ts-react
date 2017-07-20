@@ -25,7 +25,6 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-i18next": "^4.6.1",
-    "react-intl-universal": "^1.2.1",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.1.1",
     "redux": "^3.6.0",
