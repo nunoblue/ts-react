@@ -5,14 +5,14 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { I18nextProvider } from 'react-i18next';
-
+import telemetryMiddleware from './middleware/telemetryMiddleware';
 import '../less/app.less';
 import App from './containers/App';
 import { i18nClient } from './i18n';
 import rootReducer from './reducers';
 
 let store;
-const enhancer = applyMiddleware(thunkMiddleware);
+const enhancer = applyMiddleware(thunkMiddleware, telemetryMiddleware);
 if (process.env.NODE_ENV === 'development'
     && window.__REDUX_DEVTOOLS_EXTENSION__
     && window.__REDUX_DEVTOOLS_EXTENSION__()) {

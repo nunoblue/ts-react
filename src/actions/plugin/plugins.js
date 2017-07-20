@@ -9,9 +9,9 @@ import {
     API_PLUGIN_DELETE_SUCCESS,
     API_PLUGIN_ACTIVATE_SUCCESS,
     API_PLUGIN_SUCCESS,
-} from './ActionTypes';
+} from './PluginsTypes';
 
-import config from '../config';
+import config from '../../config';
 
 const { apServer, apiHeaderPrefix } = config;
 const API_PLUGIN_URL = `${apServer}/api/plugin`;

@@ -8,7 +8,7 @@ import {
     API_DELETE_CUSTOMER_SUCCESS,
     API_CUSTOMERS_SHORT_INFO_SUCCESS,
     CLEAR_CUSTOMERS,
-} from '../actions/ActionTypes';
+} from '../actions/customer/CustomersTypes';
 
 const initialState = {
     statusMessage: 'INIT',

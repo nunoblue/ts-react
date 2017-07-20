@@ -8,7 +8,7 @@ import config from '../config';
 import CommonCard from '../components/common/CommonCard';
 import CommonButton from '../components/common/CommonButton';
 
-import * as actions from '../actions/rules';
+import * as actions from '../actions/rule/rules';
 import AddRuleModal from '../components/rule/AddRuleModal';
 import CommonCheckbox from '../components/common/CommonCheckbox';
 import RuleDetailDialog from '../components/rule/RuleDetailDialog';

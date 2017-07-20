@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Redirect, Link } from 'react-router-dom';
 import { Layout, Row, Col, Switch, Spin } from 'antd';
 
 import MenuList from '../components/MenuList';
 import Title from '../components/Title';
-import * as authentication from '../actions/authentication';
-import * as customers from '../actions/customers';
-import * as devices from '../actions/devices';
-import * as plugins from '../actions/plugins';
-import * as rules from '../actions/rules';
-import * as users from '../actions/users';
-import * as dashboards from '../actions/dashboards';
-import * as widgets from '../actions/widgets';
+import * as authentication from '../actions/authentication/authentication';
+import * as customers from '../actions/customer/customers';
+import * as devices from '../actions/device/devices';
+import * as plugins from '../actions/plugin/plugins';
+import * as rules from '../actions/rule/rules';
+import * as users from '../actions/user/users';
+import * as dashboards from '../actions/dashboard/dashboards';
+import * as widgets from '../actions/widget/widgets';
 
 class Main extends Component {
 
@@ -43,7 +44,7 @@ class Main extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const validate = this.props.isJwtTokenValid();
+        const validate = authentication.isJwtTokenValid();
         if (!validate) {
             this.props.refreshJwtRequest();
         }
@@ -63,7 +64,7 @@ class Main extends Component {
     }
 
     pathValidate = () => {
-        const validate = this.props.children.some(element => {
+        const validate = this.props.children.some((element) => {
             if (element.props.path === this.props.location.pathname) {
                 return true;
             } else if (this.props.location.pathname.indexOf('-') !== -1) {
@@ -96,7 +97,7 @@ class Main extends Component {
     render() {
         const { validate } = this.props;
         const { currentUser } = this.context;
-        if (!this.props.isRefreshTokenValid()) {
+        if (!authentication.isRefreshTokenValid()) {
             return <Redirect to="/login" />;
         }
         if (validate.statusMessage === 'FAILURE' && typeof currentUser.authority === 'undefined') {
@@ -149,26 +150,20 @@ class Main extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        validate: state.authentication.validate,
-    };
-};
+const mapStateToProps = (state) => ({
+    validate: state.authentication.validate,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        logoutRequest: () => dispatch(authentication.logoutRequest()),
-        refreshJwtRequest: () => dispatch(authentication.refreshJwtRequest()),
-        isJwtTokenValid: authentication.isJwtTokenValid,
-        isRefreshTokenValid: authentication.isRefreshTokenValid,
-        clearCustomersRequest: () => dispatch(customers.clearCustomersRequest()),
-        clearRulesRequest: () => dispatch(rules.clearRulesRequest()),
-        clearUsersRequest: () => dispatch(users.clearUsersRequest()),
-        clearDashboardsRequest: () => dispatch(dashboards.clearDashboardsRequest()),
-        clearDevicesRequest: () => dispatch(devices.clearDevicesRequest()),
-        clearWidgetsRequest: () => dispatch(widgets.clearWidgetsRequest()),
-        clearPluginsRequest: () => dispatch(plugins.clearPluginsRequest()),
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    logoutRequest: authentication.logoutRequest,
+    refreshJwtRequest: authentication.refreshJwtRequest,
+    clearCustomersRequest: customers.clearCustomersRequest,
+    clearRulesRequest: rules.clearRulesRequest,
+    clearUsersRequest: users.clearUsersRequest,
+    clearDashboardsRequest: dashboards.clearDashboardsRequest,
+    clearDevicesRequest: devices.clearDevicesRequest,
+    clearWidgetsRequest: widgets.clearWidgetsRequest,
+    clearPluginsRequest: plugins.clearPluginsRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

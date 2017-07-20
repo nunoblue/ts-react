@@ -9,6 +9,7 @@ import widgets from './widgets';
 import customers from './customers';
 import users from './users';
 import admins from './admins';
+import telemetry from './telemetry';
 
 export default combineReducers({
     authentication,
@@ -20,4 +21,5 @@ export default combineReducers({
     customers,
     users,
     admins,
+    telemetry,
 });

@@ -5,7 +5,7 @@ import { Button } from 'antd';
 import SortableItems from '../../components/rule/SortableItems';
 import CommonModal from '../../components/common/CommonModal';
 import FilterForm from '../../components/rule/FilterForm';
-import * as actions from '../../actions/rules';
+import * as actions from '../../actions/rule/rules';
 
 const FILTER = 'FILTER';
 const MESSAGE_TYPE_FILTER = 'messageTypes';

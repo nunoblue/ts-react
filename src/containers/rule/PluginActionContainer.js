@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import SortableItems from '../../components/rule/SortableItems';
 import CommonModal from '../../components/common/CommonModal';
 import CommonButton from '../../components/common/CommonButton';
 import PluginActionForm from '../../components/rule/PluginActionForm';
-import * as ruleActions from '../../actions/rules';
+import * as ruleActions from '../../actions/rule/rules';
 
 class PluginActionContainer extends Component {
     static propTypes = {

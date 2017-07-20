@@ -12,7 +12,7 @@ import CommonCheckbox from '../components/common/CommonCheckbox';
 import AddCustomerModal from '../components/customer/AddCustomerModal';
 import DetailCustomerDialog from '../components/customer/DetailCustomerDialog';
 
-import * as actions from '../actions/customers';
+import * as actions from '../actions/customer/customers';
 
 class Customers extends Component {
 

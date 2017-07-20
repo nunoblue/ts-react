@@ -10,7 +10,7 @@ import {
     AUTH_LOGOUT,
     API_GET_USER_SUCCESS,
     API_GET_USER_FAILURE,
-} from '../actions/ActionTypes';
+} from '../actions/authentication/AuthenticationTypes';
 
 const initialState = {
     login: {

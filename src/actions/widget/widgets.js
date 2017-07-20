@@ -6,9 +6,9 @@ import {
     API_WIDGETS_SUCCESS,
     API_WIDGETS_FAILURE,
     CLEAR_WIDGETS,
-} from './ActionTypes';
+} from './WidgetsTypes';
 
-import config from '../config';
+import config from '../../config';
 
 const apServer = config.apServer;
 const WIDGETS_URL = `${apServer}/api/widgetsBundles`;

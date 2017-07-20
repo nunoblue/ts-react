@@ -9,9 +9,9 @@ import {
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
     CLEAR_DASHBOARDS,
- } from './ActionTypes';
+ } from './DashboardsTypes';
 
-import config from '../config';
+import config from '../../config';
 
 const apServer = config.apServer;
 const TENANT_DASHBOARDS_URL = `${apServer}/api/tenant/dashboards`;

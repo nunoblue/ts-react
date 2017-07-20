@@ -5,7 +5,7 @@ import {
     API_ADMINS_SUCCESS,
     API_ADMINS_FAILURE,
     API_ADMIN_SETTINGS_SAVE,
-} from '../actions/ActionTypes';
+} from '../actions/admin/AdminsTypes';
 
 const initialState = {
     data: {},

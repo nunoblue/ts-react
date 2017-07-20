@@ -6,9 +6,9 @@ import {
     API_ADMINS_FAILURE,
     API_ADMINS_SUCCESS,
     API_ADMIN_SETTINGS_SAVE,
-} from './ActionTypes';
+} from './AdminsTypes';
 
-import config from '../config';
+import config from '../../config';
 
 const apServer = config.apServer;
 const API_ADMIN_SETTINGS_GENERAL_URL = `${apServer}/api/admin/settings/general`;

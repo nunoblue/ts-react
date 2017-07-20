@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import _ from 'lodash';
 
-import * as actions from '../../actions/rules';
+import * as actions from '../../actions/rule/rules';
 import SortableItems from '../../components/rule/SortableItems';
 import CommonModal from '../../components/common/CommonModal';
 import CommonButton from '../../components/common/CommonButton';

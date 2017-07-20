@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseConfig = require('./webpack.common.config.js');
 
 const devPort = 3001;
+const host = '192.168.20.240';
 
 module.exports = merge(baseConfig, {
     devtool: 'eval-source-map',
@@ -12,7 +13,7 @@ module.exports = merge(baseConfig, {
     entry: {
         bundle: [
             'react-hot-loader/patch',
-            `webpack-dev-server/client?http://localhost:${devPort}`,
+            `webpack-dev-server/client?http://${host}:${devPort}`,
             'webpack/hot/only-dev-server',
             path.resolve(__dirname, 'src/index.js'),
         ],
@@ -32,6 +33,7 @@ module.exports = merge(baseConfig, {
         hot: true,
         publicPath: '/',
         historyApiFallback: true,
+        host,
         // proxy: {
         //     '**': {
         //         target: 'http://localhost:8080/',

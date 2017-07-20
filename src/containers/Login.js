@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { notification } from 'antd';
 
 import Authentication from '../components/Authentication';
-import * as actions from '../actions/authentication';
+import * as actions from '../actions/authentication/authentication';
 
 class Login extends Component {
 
@@ -21,6 +23,9 @@ class Login extends Component {
                 });
                 return true;
             }
+            notification.error({
+                message: this.props.errorMessage,
+            });
             return false;
         });
         return request;
@@ -35,26 +40,23 @@ class Login extends Component {
         return (
             <div>
                 <Authentication
-                mode={true}
-                onLogin={this.handleLogin}
+                    mode={true}
+                    onLogin={this.handleLogin}
                 />
             </div>
         );
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        login: state.authentication.login,
-        validate: state.authentication.validate,
-    };
-};
-const mapDispatchToProps = (dispatch) => {
-    return {
-        loginRequest: (id, pw) => dispatch(actions.loginRequest(id, pw)),
-        getUserRequest: () => {
-            return dispatch(actions.getUserRequest());
-        },
-    };
-};
+const mapStateToProps = (state) => ({
+    login: state.authentication.login,
+    validate: state.authentication.validate,
+    errorMessage: state.authentication.errorMessage,
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    loginRequest: actions.loginRequest,
+    getUserRequest: actions.getUserRequest,
+}, dispatch);
+
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

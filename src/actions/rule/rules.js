@@ -20,9 +20,9 @@ import {
     API_COMPONENTS_FAILURE,
     API_RULE_ACTIVATE_SUCCESS,
     API_RULE_ACTIVATE_FAILURE,
-} from './ActionTypes';
+} from './RulesTypes';
 
-import config from '../config';
+import config from '../../config';
 
 const apServer = config.apServer;
 const API_RULE_URL = `${apServer}/api/rule`;

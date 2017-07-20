@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { Collapse, Select } from 'antd';
 import _ from 'lodash';
 
-import * as ruleActions from '../../actions/rules';
-import * as pluginActions from '../../actions/plugins';
+import * as ruleActions from '../../actions/rule/rules';
+import * as pluginActions from '../../actions/plugin/plugins';
 import config from '../../config';
 import PluginActionContainer from './PluginActionContainer';
 

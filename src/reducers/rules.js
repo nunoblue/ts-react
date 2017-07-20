@@ -19,7 +19,7 @@ import {
     API_COMPONENTS_FAILURE,
     API_RULE_ACTIVATE_SUCCESS,
     API_RULE_ACTIVATE_FAILURE,
-} from '../actions/ActionTypes';
+} from '../actions/rule/RulesTypes';
 
 const initialState = {
     statusMessage: 'INIT',

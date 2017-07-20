@@ -9,9 +9,9 @@ import {
     API_DELETE_USERS_SUCCESS,
     CLEAR_USERS,
     API_SEND_ACTIVATION_SUCCESS,
-} from './ActionTypes';
+} from './UsersTypes';
 
-import config from '../config';
+import config from '../../config';
 
 const apServer = config.apServer;
 const USERS_URL = `${apServer}/api/customer`;

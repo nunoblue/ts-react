@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Row, Modal, notification, Button } from 'antd';
 import i18n from 'i18next';
 import _ from 'lodash';
@@ -9,8 +10,8 @@ import CommonButton from '../components/common/CommonButton';
 import CommonCheckBox from '../components/common/CommonCheckbox';
 import AddPluginModal from '../components/plugin/AddPluginModal';
 
-import * as actions from '../actions/plugins';
-import * as ruleActions from '../actions/rules';
+import * as actions from '../actions/plugin/plugins';
+import * as ruleActions from '../actions/rule/rules';
 
 import config from '../config';
 
@@ -56,7 +57,6 @@ class Plugins extends Component {
                 });
             }
         });
-
     }
 
     handleChecked = (e) => {
@@ -188,22 +188,18 @@ class Plugins extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.plugins.statusMessage,
-        data: state.plugins.data,
-        errorMessage: state.plugins.errorMessage,
-        pluginComponents: state.rules.pluginComponents,
-    };
-};
+const mapStateToProps = (state) => ({
+    statusMessage: state.plugins.statusMessage,
+    data: state.plugins.data,
+    errorMessage: state.plugins.errorMessage,
+    pluginComponents: state.rules.pluginComponents,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getPluginsRequest: () => dispatch(actions.getPluginsRequest()),
-        deletePluginsRequest: idArray => dispatch(actions.deletePluginsRequest(idArray)),
-        activatePluginRequest: (id, state) => dispatch(actions.activatePluginRequest(id, state)),
-        getComponentsRequest: componentType => dispatch(ruleActions.getComponentsRequest(componentType)),
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    getPluginsRequest: actions.getPluginsRequest,
+    deletePluginsRequest: actions.deletePluginsRequest,
+    activatePluginRequest: actions.activatePluginRequest,
+    getComponentsRequest: ruleActions.getComponentsRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Plugins);

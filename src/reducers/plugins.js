@@ -9,7 +9,7 @@ import {
     API_PLUGIN_DELETE_SUCCESS,
     API_PLUGIN_SUCCESS,
     API_PLUGIN_COMPONENT_LIST_SUCCCESS,
-} from '../actions/ActionTypes';
+} from '../actions/plugin/PluginsTypes';
 
 const initialState = {
     statusMessage: 'INIT',

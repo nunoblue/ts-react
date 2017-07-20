@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import createBrowserHistory from 'history/createBrowserHistory';
 import { Layout } from 'antd';
 
@@ -9,7 +10,7 @@ import Main from './Main';
 import Login from './Login';
 import routes from '../routes';
 import '../../less/app.less';
-import * as actions from '../actions/authentication';
+import * as actions from '../actions/authentication/authentication';
 
 const history = createBrowserHistory();
 
@@ -27,7 +28,7 @@ class App extends Component {
 
     componentDidMount() {
         console.log('App Render');
-        this.props.validateJwtToken().then(() => {
+        this.props.validateJwtToken(true).then(() => {
             this.props.refreshJwtRequest();
         });
         this.props.getUserRequest();
@@ -83,21 +84,15 @@ class App extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        validate: state.authentication.validate,
-        currentUser: state.authentication.currentUser,
-    };
-};
+const mapStateToProps = (state) => ({
+    validate: state.authentication.validate,
+    currentUser: state.authentication.currentUser,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        refreshJwtRequest: () => dispatch(actions.refreshJwtRequest()),
-        validateJwtToken: () => dispatch(actions.validateJwtToken(true)),
-        getUserRequest: () => {
-            return dispatch(actions.getUserRequest());
-        },
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    refreshJwtRequest: actions.refreshJwtRequest,
+    validateJwtToken: actions.validateJwtToken,
+    getUserRequest: actions.getUserRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
