@@ -7,6 +7,7 @@ import _ from 'lodash';
 import CommonCard from '../components/common/CommonCard';
 import CommonButton from '../components/common/CommonButton';
 import CommonCheckBox from '../components/common/CommonCheckbox';
+import AddPluginModal from '../components/plugin/AddPluginModal';
 
 import * as actions from '../actions/plugins';
 import * as ruleActions from '../actions/rules';
@@ -24,11 +25,6 @@ class Plugins extends Component {
     componentDidMount() {
         this.props.getPluginsRequest();
         this.props.getComponentsRequest('PLUGIN');
-    }
-
-    modalHandler = {
-        show: (id) => {},
-        hide: () => {},
     }
 
     handleDeleteConfirm = (title, id) => {
@@ -146,8 +142,17 @@ class Plugins extends Component {
         );
     };
 
+    modalHandler = {
+        show: () => {
+            this.addModal.modal.onShow();
+        },
+        hide: () => {
+            this.addModal.modal.onHide();
+        },
+    }
+
     render() {
-        const handleShowAddModal = this.modalHandler.show.bind(this, null);
+        // const handleShowAddModal = this.modalHandler.show.bind(this, null);
         return (
             <Row>
                 {this.components()}
@@ -166,11 +171,18 @@ class Plugins extends Component {
                         tooltipTitle={i18n.t('plugin.add')}
                         className="custom-card-button"
                         iconClassName="plus"
-                        onClick={handleShowAddModal}
+                        onClick={this.modalHandler.show}
                         size="large"
                         shape="circle"
                     />
                 </div>
+
+                <AddPluginModal
+                    ref={(c) => {this.addModal = c; }}
+                    // onSave
+                    pluginComponents={this.props.pluginComponents}
+                />
+
             </Row>
         );
     }
