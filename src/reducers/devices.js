@@ -9,7 +9,7 @@ import {
     API_DEVICE_TYPES,
     API_DEVICE_CREDENTIALS,
     CLEAR_DEVICES,
- } from '../actions/ActionTypes';
+ } from '../actions/device/DevicesTypes';
 
 const initialState = {
     statusMessage: 'INIT',

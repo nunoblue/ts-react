@@ -8,7 +8,7 @@ import {
     API_DELETE_USERS_SUCCESS,
     CLEAR_USERS,
     API_SEND_ACTIVATION_SUCCESS,
-} from '../actions/ActionTypes';
+} from '../actions/user/UsersTypes';
 
 const initialState = {
     statusMessage: 'INIT',

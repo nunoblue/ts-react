@@ -15,9 +15,9 @@ import {
     AUTH_LOGOUT,
     API_GET_USER_SUCCESS,
     API_GET_USER_FAILURE,
-} from './ActionTypes';
+} from './AuthenticationTypes';
 
-import config from '../config';
+import config from '../../config';
 
 /*= ===========================================================================
     authentication
@@ -88,9 +88,10 @@ function loginSuccess(response) {
     };
 }
 
-function loginFailure() {
+function loginFailure(errorMessage) {
     return {
         type: AUTH_LOGIN_FAILURE,
+        errorMessage,
     };
 }
 
@@ -184,7 +185,11 @@ export const loginRequest = (username, password) => (dispatch) => {
     }).then((response) => {
         dispatch(loginSuccess(response));
     }).catch((error) => {
-        dispatch(loginFailure(error.response.data.message));
+        if (error.response) {
+            dispatch(loginFailure(error.response.data.message));
+        } else {
+            dispatch(loginFailure(error.message));
+        }
     });
 };
 
@@ -257,7 +262,6 @@ export const getUserRequest = () => {
             }).then((response) => {
                 dispatch(getUserSuccess(response.data));
             }).catch((error) => {
-                console.log(error);
                 dispatch(getUserFailure(error.response.data.message));
             });
         }

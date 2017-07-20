@@ -8,9 +8,22 @@ import formUtil from '../../utils/formUtil';
 class RuleForm extends Component {
     static PropTypes = {
         rule: PropTypes.object,
+        disabled: PropTypes.bool,
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        return (JSON.stringify(nextProps) !== JSON.stringify(this.props));
+    }
+
+    // handleChange = (e) => {
+    //     if (typeof this.props.titleChangeEvent !== 'undefined') {
+    //         this.props.titleChangeEvent(e.target.value);
+    //     }
+    // }
+
     render() {
+        console.log('Render: RuleForm.js');
+        const { disabled } = this.props;
         let basicSchema = [{
             type: 'hidden',
             name: 'id',
@@ -18,6 +31,7 @@ class RuleForm extends Component {
             {
             type: 'text',
             name: 'name',
+            disabled,
             rules: [
                 {
                     required: true,
@@ -34,6 +48,7 @@ class RuleForm extends Component {
                 type: 'textarea',
                 name: 'description',
                 label: '설명',
+                disabled,
         }];
 
         if (_.has(this.props.rule, 'id')) {

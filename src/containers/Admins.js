@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { notification, Row } from 'antd';
 import i18n from 'i18next';
 
-import * as actions from '../actions/admins';
+import * as actions from '../actions/admin/admins';
 import CommonCard from '../components/common/CommonCard';
 import CommonButton from '../components/common/CommonButton';
 import AdminMailSettingForm from '../components/admin/AdminMailSettingForm';
@@ -98,7 +98,7 @@ export class Admin extends Component {
                             type="primary"
                             onClick={this.handleSave}
                         >
-                            {i18n.t('action:action.save')}
+                            {i18n.t('action.save')}
                         </CommonButton>
                     </CommonCard>
                 </Row>

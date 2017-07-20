@@ -11,8 +11,8 @@ import CommonCard from '../components/common/CommonCard';
 import AddDashboardModal from '../components/dashboard/AddDashboardModal';
 import DetailDashboardDialog from '../components/dashboard/DetailDashboardDialog';
 
-import * as actions from '../actions/dashboards';
-import * as customers from '../actions/customers';
+import * as actions from '../actions/dashboard/dashboards';
+import * as customers from '../actions/customer/customers';
 
 class Dashboards extends Component {
 

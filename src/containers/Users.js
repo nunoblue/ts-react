@@ -10,7 +10,7 @@ import CommonCheckbox from '../components/common/CommonCheckbox';
 import AddUserModal from '../components/user/AddUserModal';
 import DetailUserDialog from '../components/user/DetailUserDialog';
 
-import * as actions from '../actions/users';
+import * as actions from '../actions/user/users';
 
 class Users extends Component {
     state = {

@@ -10,9 +10,9 @@ import {
     API_DEVICE_TYPES,
     API_DEVICE_CREDENTIALS,
     CLEAR_DEVICES,
-} from './ActionTypes';
+} from './DevicesTypes';
 
-import config from '../config';
+import config from '../../config';
 
 const apServer = config.apServer;
 const TENANT_DEVICES_URL = `${apServer}/api/tenant/devices`;
@@ -126,6 +126,7 @@ export const getDeviceCredentialsRequest = (id) => {
             },
         }).then((response) => {
             dispatch(getDeviceCredentialsSuccess(response.data));
+            return response.data;
         }).catch((error) => {
             dispatch(getDevicesFailure(error.response.data.message));
         });

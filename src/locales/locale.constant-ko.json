@@ -464,7 +464,9 @@
         "add": "플러그인 추가",
         "delete-plugin-title": "'{{pluginName}}' 플러그인을 삭제하시겠습니까?",
         "delete-plugin-text": "플러그인과 관련된 모든 데이터를 복구할 수 없으므로 주의하십시오.",
-        "delete-plugins-title": "{ count, select, 1 {플러그인 1개} other {플러그인 #개} }를 삭제하시겠습니까?",
+        "delete-plugins-title": "플러그인 {{count}}개를 삭제하시겠습니까?",
+        "delete-plugins-title_plural": "플러그인 {{count}}개를 삭제하시겠습니까?",
+
         "delete-plugins-action-title": "{ count, select, 1 {플러그인 1개} other {플러그인 #개} } 삭제",
         "delete-plugins-text": "선택된 플러그인이 삭제되고 관련된 모든 데이터가 없어지므로 주의하십시오.",
         "add-plugin-text": "새로운 플러그인 추가",

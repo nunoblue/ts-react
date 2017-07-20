@@ -12,8 +12,9 @@ import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
 import DetailDeviceDialog from '../components/device/DetailDeviceDialog';
 
-import * as actions from '../actions/devices';
-import * as customers from '../actions/customers';
+import * as actions from '../actions/device/devices';
+import * as customers from '../actions/customer/customers';
+import * as telemetry from '../actions/telemetry/telemetry';
 
 class Devices extends Component {
 
@@ -51,8 +52,15 @@ class Devices extends Component {
         return true;
     }
 
+    componentWillUnmount() {
+        const { subscribers } = this.props;
+        if (Object.keys(subscribers).length !== 0) {
+            this.props.unsubscribe(subscribers);
+        }
+    }
+
     buttonComponents = (name, deviceId, customerId) => {
-        const { shortInfo, match, t } = this.props;
+        const { shortInfo, match } = this.props;
         const { currentUser } = this.context;
         const tenantCustomerId = currentUser.customerId.id;
         const isPublic = shortInfo[customerId] ? shortInfo[customerId].isPublic : undefined;
@@ -237,10 +245,10 @@ class Devices extends Component {
     }
 
     openCredentials = (id) => {
-        this.props.getDeviceCredentialsRequest(id).then(() => {
+        this.props.getDeviceCredentialsRequest(id).then((data) => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.credentialsModal.modal.onShow();
-                this.credentialsModal.changeValue(this.props.credentials);
+                this.credentialsModal.changeValue(data);
             } else {
                 notification.error({
                     message: this.props.errorMessage,
@@ -357,7 +365,30 @@ class Devices extends Component {
         });
     }
 
+    subscribeForDeviceAttributes = (selectedDeviceId) => {
+        const { isOpened, subscribers } = this.props;
+        const clientScope = {
+            entityType: 'DEVICE',
+            entityId: selectedDeviceId,
+            scope: 'CLIENT_SCOPE',
+        };
+        const latestTelemetryScope = {
+            entityType: 'DEVICE',
+            entityId: selectedDeviceId,
+            scope: 'LATEST_TELEMETRY',
+        };
+        const attributeList = [clientScope, latestTelemetryScope];
+        if (Object.keys(subscribers).length === 0) {
+            this.props.subscribeForEntityAttributes(attributeList, isOpened);
+        } else {
+            this.props.unsubscribe(subscribers).then(() => {
+                this.props.subscribeForEntityAttributes(attributeList, isOpened);
+            });
+        }
+    }
+
     openDetailDialog = (selectedDeviceId) => {
+        this.subscribeForDeviceAttributes(selectedDeviceId);
         this.detailDialog.clearEdit();
         const deviceData = this.loadDeviceDetailData(selectedDeviceId);
         this.detailDialog.initTitle(deviceData.name);
@@ -475,6 +506,10 @@ const mapStateToProps = (state) => ({
     types: state.devices.types,
     credentials: state.devices.credentials,
     shortInfo: state.customers.shortInfo,
+    readyState: state.telemetry.readyState,
+    lastCmdId: state.telemetry.lastCmdId,
+    subscribers: state.telemetry.subscribers,
+    isOpened: state.telemetry.isOpened,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
@@ -486,6 +521,8 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     multipleDeleteDeviceRequest: actions.multipleDeleteDeviceRequest,
     saveDeviceCredentialsRequest: actions.saveDeviceCredentialsRequest,
     getCustomerShortInfoRequest: customers.getCustomerShortInfoRequest,
+    subscribeForEntityAttributes: telemetry.subscribeForEntityAttributes,
+    unsubscribe: telemetry.unsubscribe,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Devices);

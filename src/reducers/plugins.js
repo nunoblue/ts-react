@@ -5,6 +5,10 @@ import {
     API_PLUGINS_SUCCESS,
     API_PLUGINS_FAILURE,
     CLEAR_PLUGINS,
+    API_PLUGIN_SAVE_SUCCESS,
+    API_PLUGIN_DELETE_SUCCESS,
+    API_PLUGIN_SUCCESS,
+    API_PLUGIN_COMPONENT_LIST_SUCCCESS,
 } from '../actions/plugin/PluginsTypes';
 
 const initialState = {
@@ -31,12 +35,25 @@ export default function plugins(state = initialState, action) {
                 },
             });
         case API_PLUGINS_FAILURE:
+            console.log('action', action);
             return update(state, {
                 statusMessage: {
                     $set: 'FAILURE',
                 },
                 errorMessage: {
                     $set: action.errorMessage,
+                },
+            });
+        case API_PLUGIN_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_PLUGIN_DELETE_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
                 },
             });
         case CLEAR_PLUGINS:

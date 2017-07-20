@@ -46,7 +46,6 @@ const i18nClient = i18n
                 'locale.constant': translationEs,
             },
         },
-        debug: true,
     });
 
 /**

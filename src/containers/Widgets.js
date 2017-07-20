@@ -7,7 +7,7 @@ import i18n from 'i18next';
 import CommonCard from '../components/common/CommonCard';
 import CommonButton from '../components/common/CommonButton';
 
-import * as actions from '../actions/widgets';
+import * as actions from '../actions/widget/widgets';
 
 class Widgets extends Component {
 

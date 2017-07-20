@@ -8,7 +8,7 @@ import {
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
     CLEAR_DASHBOARDS,
-} from '../actions/ActionTypes';
+} from '../actions/dashboard/DashboardsTypes';
 
 const initialState = {
     statusMessage: 'INIT',

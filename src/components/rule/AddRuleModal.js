@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import update from 'react-addons-update';
-import { Collapse, AutoComplete, Input, Icon, Select } from 'antd';
+import { Collapse } from 'antd';
 import _ from 'lodash';
+
 import CommonModal from '../common/CommonModal';
 import RuleForm from './RuleForm';
-import FilterContainer from './FilterContainer';
+import FilterContainer from '../../containers/rule/FilterContainer';
+import ProcessorContainer from '../../containers/rule/ProcessorContainer';
+import PluginContainer from '../../containers/rule/PluginContainer';
 
 const Panel = Collapse.Panel;
 
@@ -16,38 +19,95 @@ class AddRuleModal extends Component {
 
     state = {
         rule: this.props.rule,
-        filters: [],
+        filters: this.props.rule.filters || [],
+        processor: this.props.rule.processor || {},
+        plugin: this.props.rule.plugin || {},
+        action: this.props.rule.action || {},
     };
 
-    handleAutoCompleteChange = (value, label) => {
-        console.log(value, label);
+    componentDidMount() {
     }
 
     handlerFilter = {
         add: (filter) => {
             this.setState({
                 filters: update(
-                    this.state.list,
+                    this.state.filters,
                     {
                         $push: [filter],
                     },
                 ),
             });
         },
+        edit: (filter) => {
+            const { key } = filter;
+            const filters = this.state.filters;
+            const index = filters.findIndex(savedFilter => savedFilter.key === key);
+            this.setState({
+                filters: update(
+                    this.state.filters,
+                    {
+                        [index]: {
+                            clazz: { $set: filter.clazz },
+                            configuration: { $set: filter.configuration },
+                            filterTypeName: { $set: filter.filterTypeName },
+                            name: { $set: filter.name },
+                        }
+                    },
+                ),
+            });
+        },
+        delete: (filter) => {
+            const { key } = filter;
+            const filters = this.state.filters;
+            const index = filters.findIndex(savedFilter => savedFilter.key === key);
+            this.setState({
+                filters: update(
+                    this.state.filters,
+                    {
+                        $splice: [[index, 1]],
+                    },
+                ),
+            });
+        },
+    };
+
+    handlerProcessor = {
+        edit: (processor) => {
+            this.setState({
+                processor,
+            });
+        },
+        delete: () => {
+            this.setState({
+                processor: {},
+            });
+        },
+    };
+
+    handlerAction = {
+        edit: (action) => {
+            this.setState({
+                action,
+            });
+        },
+        delete: () => {
+            this.setState({
+                action: {},
+            });
+        },
+    };
+
+    handlerPlugin = (plugin) => {
+        this.setState({
+            plugin,
+        });
     };
 
     render() {
+        console.log('AddRuleModal rendered');
         const rule = this.props.rule;
         const isEdit = _.has(rule, 'id');
-
-        const text = `
-      A dog is a type of domesticated animal.
-      Known for its loyalty and faithfulness,
-      it can be found as a welcome guest in many households across the world.
-  `;
-        const dataSource = [{ key: '1', value: 'Burns Bay Road' }, { key: 2, value: 'Downing Street' }, { key: 3, value: 'Wall Street' }];
-        const Option = Select.Option;
-        const options = dataSource.map(d => <Option key={d.key}>{d.value}</Option>);
 
         return (
             <CommonModal
@@ -66,42 +126,29 @@ class AddRuleModal extends Component {
 
                 <Collapse bordered={false} defaultActiveKey={['1', '2']}>
                     <Panel header="필터" key="1">
-                        <FilterContainer filters={this.props.rule.filters} />
+                        <FilterContainer
+                            filters={this.state.filters}
+                            onSave={this.handlerFilter.edit}
+                            onAdd={this.handlerFilter.add}
+                            onDelete={this.handlerFilter.delete}
+                        />
                     </Panel>
                     <Panel header="프로세서" key="2">
-                        <p>{text}</p>
+                        <ProcessorContainer
+                            processor={this.state.processor}
+                            onSave={this.handlerProcessor.edit}
+                            onDelete={this.handlerProcessor.delete}
+                        />
                     </Panel>
                 </Collapse>
 
-                {/* <AutoComplete*/}
-                {/* style={{ width: '100%' }}*/}
-                {/* dataSource={dataSource}*/}
-                {/* placeholder="플러그인 선택"*/}
-                {/* allowClear={true}*/}
-                {/* filterOption={(inputValue, option) =>*/}
-                {/* option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}*/}
-                {/* onChange={this.handleAutoCompleteChange}*/}
-                {/* >*/}
-                {/* </AutoComplete>*/}
-
-                <Select
-                    showSearch
-                    style={{ width: '100%' }}
-                    placeholder="플러그인 선택"
-                    showArrow={false}
-                    allowClear
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    // onChange={this.handleChange}
-                >
-                    {options}
-                </Select>
-
-                <Collapse bordered={false} defaultActiveKey={['1']}>
-                    <Panel header="플러그인 액션" key="1">
-                        <p>{text}</p>
-                    </Panel>
-                </Collapse>
+                <PluginContainer
+                    plugin={this.state.plugin}
+                    action={this.state.action}
+                    onPluginSave={this.handlerPlugin}
+                    onSave={this.handlerAction.edit}
+                    onDelete={this.handlerAction.delete}
+                />
 
             </CommonModal>
         );

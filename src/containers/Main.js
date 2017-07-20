@@ -11,7 +11,7 @@ import * as authentication from '../actions/authentication/authentication';
 import * as customers from '../actions/customer/customers';
 import * as devices from '../actions/device/devices';
 import * as plugins from '../actions/plugin/plugins';
-import * as rules from '../actions/rules';
+import * as rules from '../actions/rule/rules';
 import * as users from '../actions/user/users';
 import * as dashboards from '../actions/dashboard/dashboards';
 import * as widgets from '../actions/widget/widgets';
@@ -64,7 +64,7 @@ class Main extends Component {
     }
 
     pathValidate = () => {
-        const validate = this.props.children.some(element => {
+        const validate = this.props.children.some((element) => {
             if (element.props.path === this.props.location.pathname) {
                 return true;
             } else if (this.props.location.pathname.indexOf('-') !== -1) {
@@ -138,7 +138,7 @@ class Main extends Component {
                         <Spin spinning={this.state.loading}>
                             <Row>
                                 <Col span="2">
-                                    <Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
+                                    {/*<Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />*/}
                                 </Col>
                             </Row>
                             {this.props.children}

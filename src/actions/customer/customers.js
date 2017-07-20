@@ -9,9 +9,9 @@ import {
     API_DELETE_CUSTOMER_SUCCESS,
     API_CUSTOMERS_SHORT_INFO_SUCCESS,
     CLEAR_CUSTOMERS,
-} from './ActionTypes';
+} from './CustomersTypes';
 
-import config from '../config';
+import config from '../../config';
 
 const apServer = config.apServer;
 const CUSTOMERS_URL = `${apServer}/api/customers`;

@@ -5,7 +5,7 @@ import {
     API_WIDGETS_SUCCESS,
     API_WIDGETS_FAILURE,
     CLEAR_WIDGETS,
-} from '../actions/ActionTypes';
+} from '../actions/widget/WidgetsTypes';
 
 const initialState = {
     statusMessage: 'INIT',
