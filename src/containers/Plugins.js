@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Row } from 'antd';
 
 import CommonCard from '../components/common/CommonCard';
 import CommonButton from '../components/common/CommonButton';
 
-import * as actions from '../actions/plugins';
+import * as actions from '../actions/plugin/plugins';
 
 class Plugins extends Component {
 
@@ -36,17 +37,13 @@ class Plugins extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.plugins.statusMessage,
-        data: state.plugins.data,
-    };
-};
+const mapStateToProps = (state) => ({
+    statusMessage: state.plugins.statusMessage,
+    data: state.plugins.data,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getPluginsRequest: () => dispatch(actions.getPluginsRequest()),
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    getPluginsRequest: actions.getPluginsRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Plugins);

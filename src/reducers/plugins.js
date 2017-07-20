@@ -5,7 +5,7 @@ import {
     API_PLUGINS_SUCCESS,
     API_PLUGINS_FAILURE,
     CLEAR_PLUGINS,
-} from '../actions/ActionTypes';
+} from '../actions/plugin/PluginsTypes';
 
 const initialState = {
     statusMessage: 'INIT',
