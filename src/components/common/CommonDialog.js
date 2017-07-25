@@ -57,7 +57,7 @@ class CommonDialog extends Component {
         const { children, title, subTitle, tooltipTitle } = this.props;
         const visible = typeof this.props.visible === 'undefined' ? this.state.visible : this.props.visible;
         return (
-            <Layout className={visible ? 'ts-dialog ts-dialog-show' : 'ts-dialog ts-dialog-hide'}>
+            <Layout className={visible ? 'ts-dialog ts-dialog-show' : 'ts-dialog ts-dialog-hide'} style={{ display: !visible ? 'none' : 'flex' }}>
                 <Layout.Header className="ts-dialog-title">
                     <Row>
                         <Col span={20}>
@@ -65,7 +65,7 @@ class CommonDialog extends Component {
                             <span className="ts-dialog-detail-subtitle">{subTitle}</span>
                         </Col>
                         <Col span={4}>
-                            <CommonButton shape="circle" onClick={this.clearButtonClick} tooltipTitle={tooltipTitle}>
+                            <CommonButton visible={visible} shape="circle" onClick={this.clearButtonClick} tooltipTitle={tooltipTitle}>
                                 <i className="material-icons vertical-middle">clear</i>
                             </CommonButton>
                         </Col>

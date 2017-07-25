@@ -1,5 +1,5 @@
 import storage from 'store/storages/localStorage';
-
+import _ from 'lodash';
 import {
     WEBSOCKET_OPEN,
     WEBSOCKET_CLOSED,
@@ -10,7 +10,7 @@ import {
 } from './TelemetryTypes';
 
 import config from '../../config';
-import { types } from '../..//utils/commons';
+import { types } from '../../utils/commons';
 import { isJwtTokenValid, refreshJwtRequest } from '../authentication/authentication';
 
 let lastCmdId = 0;
@@ -34,6 +34,7 @@ const send = (payload) => {
         type: WEBSOCKET_SEND,
         payload: payload.cmdsWrapper,
         subscribers: payload.subscribers,
+        subscriptions: payload.subscriptions,
     };
 };
 
@@ -86,23 +87,20 @@ const tryConnect = (dispatch) => {
     });
 };
 
-const subscribe = (subscribers, isOpened) => (dispatch) => {
+const subscribe = (subscriber, isOpened) => (dispatch) => {
     const cmdsWrapper = {
         tsSubCmds: [],
         historyCmds: [],
         attrSubCmds: [],
     };
-    Object.keys(subscribers).forEach((id) => {
-        Object.assign(subscribers[id].subscriptionCommand, { cmdId: nextCmdId() });
-        if (subscribers[id].type === types.dataKeyType.timeseries) {
-            cmdsWrapper.tsSubCmds.push(subscribers[id].subscriptionCommand);
-        } else {
-            cmdsWrapper.attrSubCmds.push(subscribers[id].subscriptionCommand);
-        }
-    });
+    if (subscriber.type === types.dataKeyType.timeseries) {
+        cmdsWrapper.tsSubCmds.push(subscriber.subscriptionCommand);
+    } else {
+        cmdsWrapper.attrSubCmds.push(subscriber.subscriptionCommand);
+    }
     const payload = {
         cmdsWrapper,
-        subscribers,
+        subscribers: subscriber,
     };
     if (isOpened) {
         dispatch(send(payload));
@@ -113,7 +111,66 @@ const subscribe = (subscribers, isOpened) => (dispatch) => {
     }
 };
 
-export const subscribeForEntityAttributes = (attributeList, isOpened) => (dispatch) => {
+const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
+    const cmdsWrapper = {
+        tsSubCmds: [],
+        historyCmds: [],
+        attrSubCmds: [],
+    };
+    const subscriptions = {};
+    Object.keys(subscribers).forEach((id) => {
+        const cmdId = nextCmdId();
+        Object.assign(subscriptions, {
+            [cmdId]: {
+                subscriptionCommand: subscribers[id].subscriptionCommand,
+                attributes: subscribers[id].attributes || {},
+                type: subscribers[id].type || '',
+            },
+        });
+        Object.assign(subscribers[id].subscriptionCommand, { cmdId });
+        if (subscribers[id].type === types.dataKeyType.timeseries) {
+            cmdsWrapper.tsSubCmds.push(subscribers[id].subscriptionCommand);
+        } else {
+            cmdsWrapper.attrSubCmds.push(subscribers[id].subscriptionCommand);
+        }
+    });
+    const payload = {
+        cmdsWrapper,
+        subscribers,
+        subscriptions,
+    };
+    if (isOpened) {
+        dispatch(send(payload));
+    } else {
+        tryConnect(dispatch).then(() => {
+            dispatch(send(payload));
+        });
+    }
+};
+
+export const unsubscribe = (subscriber) => (dispatch) => {
+    const cmdsWrapper = {
+        tsSubCmds: [],
+        historyCmds: [],
+        attrSubCmds: [],
+    };
+    return new Promise((resolve, reject) => {
+        Object.assign(subscriber.subscriptionCommand, { unsubscribe: true });
+        if (subscriber.type === types.dataKeyType.timeseries) {
+            cmdsWrapper.tsSubCmds.push(subscriber.subscriptionCommand);
+        } else {
+            cmdsWrapper.attrSubCmds.push(subscriber.subscriptionCommand);
+        }
+        const payload = {
+            cmdsWrapper,
+            subscribers: subscriber,
+        };
+        dispatch(send(payload));
+        resolve();
+    });
+};
+
+export const subscribeWithObjectsForEntityAttributes = (attributeList, isOpened) => (dispatch) => {
     const subscribers = {};
     attributeList.forEach((attribute) => {
         const subscriptionCommand = {
@@ -131,10 +188,10 @@ export const subscribeForEntityAttributes = (attributeList, isOpened) => (dispat
         };
         Object.assign(subscribers, { [subscriptionId]: subscriber });
     });
-    subscribe(subscribers, isOpened)(dispatch);
+    subscribeWithObjects(subscribers, isOpened)(dispatch);
 };
 
-export const unsubscribe = (subscribers) => (dispatch) => {
+export const unsubscribeWithObjects = (subscribers) => (dispatch) => {
     const cmdsWrapper = {
         tsSubCmds: [],
         historyCmds: [],
@@ -156,4 +213,8 @@ export const unsubscribe = (subscribers) => (dispatch) => {
         dispatch(send(payload));
         resolve();
     });
+};
+
+export const unsubscribeWithObjectsForEntityAttributes = (subscribers) => (dispatch) => {
+    return unsubscribeWithObjects(subscribers)(dispatch);
 };

@@ -2,21 +2,22 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Layout, Breadcrumb, Row, Col, Icon } from 'antd';
+import i18n from 'i18next';
 
 const PATH_NAME = {
-    home: ['home', 'Home'],
-    plugins: ['extension', 'Plugin'],
-    rules: ['settings_ethernet', 'Rule'],
-    customers: ['people', 'Customer'],
-    users: ['people', 'User'],
-    devices: ['devices_other', 'Device'],
-    widgets: ['widgets', 'Widget'],
-    dashboards: ['dashboard', 'Dashboard'],
-    tenants: ['people', 'Tenant'],
-    'widgets-bundles': ['widgets', 'Widgets'],
-    settings: ['settings', 'System Setting'],
-    general: ['settings_applications', 'General'],
-    'outgoing-mail': ['mail', 'Outgoing Mail'],
+    home: ['home', 'home.home'],
+    plugins: ['extension', 'plugin.plugins'],
+    rules: ['settings_ethernet', 'rule.rules'],
+    customers: ['people', 'customer.customers'],
+    users: ['people', 'user.users'],
+    devices: ['devices_other', 'device.devices'],
+    widgets: ['widgets', 'widget.widget-bundle'],
+    dashboards: ['dashboard', 'dashboard.dashboards'],
+    tenants: ['people', 'tenant.tenants'],
+    'widgets-bundles': ['widgets', 'widget.widget-bundle'],
+    settings: ['settings', 'admin.system-settings'],
+    general: ['settings_applications', 'admin.general'],
+    'outgoing-mail': ['mail', 'admin.outgoing-mail'],
 };
 
 class Title extends Component {
@@ -38,7 +39,7 @@ class Title extends Component {
             components = (
                 <Breadcrumb.Item>
                     <i className="material-icons margin-right-8 vertical-middle">{PATH_NAME[path[1]][0]}</i>
-                    {PATH_NAME[path[1]][1]}
+                    {i18n.t(PATH_NAME[path[1]][1])}
                 </Breadcrumb.Item>
             );
         } else {
@@ -48,14 +49,14 @@ class Title extends Component {
                         return (
                             <Breadcrumb.Item key={str}>
                                 <i className="material-icons margin-right-8 vertical-middle">{PATH_NAME[str][0]}</i>
-                                {(path.length - 1) !== i ? <Link to={`/${path[1]}/general`}>{PATH_NAME[str][1]}</Link> : PATH_NAME[str][1]}
+                                {(path.length - 1) !== i ? <Link to={`/${path[1]}/general`}>{i18n.t(PATH_NAME[str][1])}</Link> : i18n.t(PATH_NAME[str][1])}
                             </Breadcrumb.Item>
                         );
                     }
                     return (
                         <Breadcrumb.Item key={str}>
                             <i className="material-icons margin-right-8 vertical-middle">{PATH_NAME[str][0]}</i>
-                            {(path.length - 1) !== i ? <Link to={`/${path[i]}`}>{PATH_NAME[str][1]}</Link> : PATH_NAME[str][1]}
+                            {(path.length - 1) !== i ? <Link to={`/${path[i]}`}>{i18n.t(PATH_NAME[str][1])}</Link> : i18n.t(PATH_NAME[str][1])}
                         </Breadcrumb.Item>
                     );
                 }
@@ -77,9 +78,9 @@ class Title extends Component {
                     <Col span={18}>
                         <Col span={this.props.matches ? 2 : 0}>
                             <Icon
-                            className="trigger"
-                            type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
-                            onClick={this.props.toggle}
+                                className="trigger"
+                                type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
+                                onClick={this.props.toggle}
                             />
                         </Col>
                         <Col span={this.props.matches ? 22 : 24}>

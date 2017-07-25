@@ -74,7 +74,9 @@ function clearCustomersSuccess() {
 export const getCustomersRequest = (limit, textSearch) => {
     return (dispatch) => {
         dispatch(getCustomers());
-
+        if (typeof limit === 'undefined') {
+            limit = 10;
+        }
         const params = {
             limit,
             textSearch,

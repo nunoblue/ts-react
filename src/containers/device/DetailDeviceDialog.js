@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
-import { Tabs, Switch, Row } from 'antd';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Tabs, Switch, Row, Select } from 'antd';
 import i18n from 'i18next';
 
-import CommonDialog from '../common/CommonDialog';
-import CommonButton from '../common/CommonButton';
-import DeviceForm from './DeviceForm';
+import CommonDialog from '../../components/common/CommonDialog';
+import CommonButton from '../../components/common/CommonButton';
+import DeviceForm from '../../components/device/DeviceForm';
+import AttributeTable from '../../components/attribute/AttributeTable';
+import { types } from '../../utils/commons';
 
 class DetailDeviceDialog extends Component {
     state = {
         editing: false,
         title: null,
+        attributesScope: types.attributesScope.client,
     }
 
     changeEdit = () => {
@@ -42,8 +47,15 @@ class DetailDeviceDialog extends Component {
         });
     }
 
+    handleSelect = (value, option) => {
+        this.setState({
+            attributesScope: types.attributesScope[value],
+        });
+    }
+
     render() {
         const { data, visible, options, onPressEnter, closeDialog, buttonComponents } = this.props;
+        const { subscriptions, isOpened } = this.props;
         return (
             <CommonDialog
                 onClick={closeDialog}
@@ -82,8 +94,33 @@ class DetailDeviceDialog extends Component {
                             </CommonButton>
                         ) : null}
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab={i18n.t('attribute.attributes')} key="2">Content of Tab Pane 2</Tabs.TabPane>
-                    <Tabs.TabPane tab={i18n.t('attribute.latest-telemetry')} key="3">Content of Tab Pane 3</Tabs.TabPane>
+                    <Tabs.TabPane tab={i18n.t('attribute.attributes')} key="2">
+                        <Select defaultValue={i18n.t(types.attributesScope.client.name)} onChange={this.handleChange} onSelect={this.handleSelect}>
+                            <Select.Option value="client">
+                                {i18n.t(types.attributesScope.client.name)}
+                            </Select.Option>
+                            <Select.Option value="server">
+                                {i18n.t(types.attributesScope.server.name)}
+                            </Select.Option>
+                            <Select.Option value="shared">
+                                {i18n.t(types.attributesScope.shared.name)}
+                            </Select.Option>
+                        </Select>
+                        <AttributeTable
+                            subscriptions={subscriptions}
+                            entityId={data ? data.id.id : undefined}
+                            type={types.dataKeyType.attribute}
+                            attributeScope={this.state.attributesScope}
+                        />
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab={i18n.t('attribute.latest-telemetry')} key="3">
+                        <AttributeTable
+                            subscriptions={subscriptions}
+                            entityId={data ? data.id.id : undefined}
+                            type={types.dataKeyType.timeseries}
+                            attributeScope={types.latestTelemetry}
+                        />
+                    </Tabs.TabPane>
                     <Tabs.TabPane tab={i18n.t('device.events')} key="4">Content of Tab Pane 4</Tabs.TabPane>
                 </Tabs>
             </CommonDialog>
@@ -91,4 +128,20 @@ class DetailDeviceDialog extends Component {
     }
 }
 
-export default DetailDeviceDialog;
+const mapStateToProps = (state, ownProps) => {
+    if (ownProps.visible) {
+        return {
+            isOpened: state.telemetry.isOpened,
+            subscriptions: state.telemetry.subscriptions,
+        };
+    }
+    return {
+        isOpened: state.telemetry.isOpened,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(DetailDeviceDialog);

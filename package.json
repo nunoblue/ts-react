@@ -21,6 +21,8 @@
     "i18next-xhr-backend": "^1.4.2",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
