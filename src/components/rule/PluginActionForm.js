@@ -34,7 +34,7 @@ class PluginActionForm extends Component {
                         initialValue: configuration ? configuration[key] : null,
                         rules: [{ required: isRequired, message: `${properties[key].title} 를 입력하세요.` }],
                     })(
-                        <Input type={formAttr.type} rows={formAttr.rows}/>,
+                        <Input type={formAttr.type} rows={formAttr.rows} />,
                     )}
                 </FormItem>
             );

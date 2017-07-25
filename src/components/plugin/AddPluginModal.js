@@ -17,8 +17,13 @@ class AddPluginModal extends Component {
             <CommonModal
                 ref={(c) => { this.modal = c; }}
                 title={i18n.t('plugin.add')}
+                onOk={this.props.onSave}
             >
-                <PluginForm></PluginForm>
+                <PluginForm
+                    ref={(c) => { this.form = c; }}
+                    plugin={this.props.plugin}
+                    pluginComponents={this.props.pluginComponents}
+                />
             </CommonModal>
         );
     };

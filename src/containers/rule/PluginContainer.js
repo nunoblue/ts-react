@@ -55,7 +55,7 @@ class PluginContainer extends Component {
             });
 
             this.props.onPluginSave(selectedPlugin);
-            console.log('actionComopnent!!!', this.props.pluginToken, nextProps.pluginToken);
+            // console.log('actionComponent!!!', this.props.pluginToken, nextProps.pluginToken);
             if (pluginComponent && (_.isEmpty(this.props.actionComponent) || this.props.pluginToken !== nextProps.pluginToken)) {
                 const { actions } = pluginComponent;
                 this.props.onDelete(this.props.action);
@@ -121,7 +121,6 @@ class PluginContainer extends Component {
     };
 
     render() {
-        console.log('Render : PluginContainer.js');
         const Option = Select.Option;
         const pluginComponents = this.props.pluginComponents;
         const plugins = this.props.plugins;
@@ -173,7 +172,7 @@ const mapStateToProps = (state) => {
     return {
         statusMessage: state.rules.statusMessage,
         pluginComponents: state.rules.pluginComponents,
-        plugins: state.plugins.plugins,
+        plugins: state.plugins.data,
         pluginsStatusMessage: state.plugins.statusMessage,
         actionComponent: state.rules.actionComponent,
     };

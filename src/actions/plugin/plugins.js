@@ -7,7 +7,7 @@ import {
     API_PLUGINS_FAILURE,
     CLEAR_PLUGINS,
     API_PLUGIN_DELETE_SUCCESS,
-    API_PLUGIN_ACTIVATE_SUCCESS,
+    API_PLUGIN_SAVE_SUCCESS,
     API_PLUGIN_SUCCESS,
 } from './PluginsTypes';
 
@@ -94,9 +94,26 @@ export const activatePluginRequest = (id, state) => (dispatch) => {
            'X-Authorization': xAuthorization,
        },
     }).then((response) => {
+        console.debug('activatePluginRequest is success', response);
         dispatch(getPluginApiSuccess());
     }).catch((error) => {
         dispatch(getPluginApiFailure(error.response.data.message));
+    });
+};
+
+export const savePluginRequest = (plugin) => (dispatch) => {
+    dispatch(getPlugins());
+
+    const url = API_PLUGIN_URL;
+    return axios.post(url, plugin, {
+        headers: {
+            'X-Authorization': xAuthorization,
+        },
+    }).then((response) => {
+        console.debug('savePluginRequest is success', response.data);
+        dispatch(getPluginApiSuccess());
+    }).catch((error) => {
+       dispatch(getPluginApiFailure(error.response.data.message));
     });
 };
 
