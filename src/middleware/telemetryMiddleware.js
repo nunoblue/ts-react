@@ -136,10 +136,6 @@ const telemetryMiddleware = () => {
                     next(action);
                     return promise;
                 }
-                close();
-                const promise = initialize(store, action);
-                next(action);
-                return promise;
             // User request to disconnect
             case WEBSOCKET_DISCONNECT:
                 close();

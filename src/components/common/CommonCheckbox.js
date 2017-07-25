@@ -9,6 +9,7 @@ class CommonCheckbox extends Component {
         name: PropTypes.string,
         disabled: PropTypes.bool,
         className: PropTypes.string,
+        checked: PropTypes.bool,
     }
 
     static defaultProps = {
@@ -17,15 +18,43 @@ class CommonCheckbox extends Component {
         name: '',
         disabled: false,
         className: '',
+        checked: false,
     }
 
     state = {
         id: this.props.id,
+        checked: this.props.checked,
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.checkedCount === 0 && this.state.checked === true) {
+            this.setState({
+                checked: false,
+            });
+        }
+    }
+
+    handleChecked = (e) => {
+        const { onChange } = this.props;
+        if (typeof onChange !== 'undefined') {
+            this.props.onChange(e);
+        }
+        this.setState({
+            checked: !this.state.checked,
+        });
     }
 
     render() {
+        const { className, name, value, disabled } = this.props;
         return (
-            <Checkbox className={this.props.className} name={this.props.name} value={this.props.value} disabled={this.props.disabled} onChange={this.props.onChange}>
+            <Checkbox
+                className={className}
+                name={name}
+                value={value}
+                disabled={disabled}
+                onChange={this.handleChecked}
+                checked={this.state.checked}
+            >
                 {this.props.children}
             </Checkbox>
         );

@@ -80,6 +80,7 @@
         "send-test-mail": "테스트 메일 보내기"
     },
     "attribute": {
+        "no-data": "데이터 없음",
         "attributes": "속성",
         "latest-telemetry": "최근 데이터",
         "attributes-scope": "디바이스 속성 범위",
@@ -102,8 +103,8 @@
         "prev-widget": "이전 위젯",
         "add-to-dashboard": "대시보드에 추가",
         "add-widget-to-dashboard": "대시보드에 위젯 추가",
-        "selected-attributes": "{ count, select, 1 {속성 1개} other {속성 #개} } 선택됨",
-        "selected-telemetry": "{ count, select, 1 {최근 데이터 1개} other {최근 데이터 #개} } 선택됨"
+        "selected-attributes": "속성 {{count}}개 선택됨",
+        "selected-telemetry": "최근 데이터 {{count}}개 선택됨"
     },
     "confirm-on-exit": {
         "message": "변경 사항을 저장하지 않았습니다. 이 페이지를 나가시겠습니까?",

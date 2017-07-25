@@ -9,6 +9,9 @@ import {
     API_DELETE_DEVICE_SUCCESS,
     API_DEVICE_TYPES,
     API_DEVICE_CREDENTIALS,
+    API_ASSIGN_DEVICE_TO_CUSTOMER_SUCCESS,
+    API_UNASSIGN_DEVICE_TO_CUSTOMER_SUCCESS,
+    API_MAKE_DEVICE_PUBLIC_SUCCESS,
     CLEAR_DEVICES,
 } from './DevicesTypes';
 
@@ -22,6 +25,7 @@ const DEVICE_CREDENTIALS_URL = `${apServer}/api/device`;
 const SAVE_CREDENTIALS_URL = `${apServer}/api/device/credentials`;
 const SAVE_DEVICE_URL = `${apServer}/api/device`;
 const DELETE_DEVICE_URL = `${apServer}/api/device`;
+const MAKE_DEVICE_PUBLIC_URL = `${apServer}/api/customer/public/device/`;
 
 function getDevices() {
     return {
@@ -66,6 +70,24 @@ function saveDeviceSuccess() {
 function deleteDeviceSuccess() {
     return {
         type: API_DELETE_DEVICE_SUCCESS,
+    };
+}
+
+function assignDeviceToCustomerSuccess() {
+    return {
+        type: API_ASSIGN_DEVICE_TO_CUSTOMER_SUCCESS,
+    };
+}
+
+function unassignDeviceToCustomerSuccess() {
+    return {
+        type: API_UNASSIGN_DEVICE_TO_CUSTOMER_SUCCESS,
+    };
+}
+
+function makeDevicePublicSuccess() {
+    return {
+        type: API_MAKE_DEVICE_PUBLIC_SUCCESS,
     };
 }
 
@@ -196,6 +218,60 @@ export const multipleDeleteDeviceRequest = (idArray) => {
             });
         }));
     };
+};
+
+export const assignDeviceToCustomerRequest = (customerId, deviceId) => (dispatch) => {
+    dispatch(getDevices());
+    return axios.post(`${CUSTOMER_DEVICES_URL}/${customerId}/device/${deviceId}`, null, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(assignDeviceToCustomerSuccess());
+    }).catch((error) => {
+        dispatch(getDevicesFailure(error.response.data.message));
+    });
+};
+
+export const multipleAssignDeviceToCustomerRequest = (customerId, deviceIdArray) => (dispatch) => {
+    dispatch(getDevices());
+    return axios.all(deviceIdArray.map((id) => {
+        return axios.post(`${CUSTOMER_DEVICES_URL}/${customerId}/device/${id}`, null, {
+            headers: {
+                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+            },
+        }).then((response) => {
+            dispatch(assignDeviceToCustomerSuccess());
+        }).catch((error) => {
+            dispatch(getDevicesFailure(error.response.data.message));
+        });
+    }));
+};
+
+export const unassignDeviceToCustomerRequest = (deviceId) => (dispatch) => {
+    dispatch(getDevices());
+    return axios.delete(`${CUSTOMER_DEVICES_URL}/device/${deviceId}`, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(unassignDeviceToCustomerSuccess());
+    }).catch((error) => {
+        dispatch(getDevicesFailure(error.response.data.message));
+    });
+};
+
+export const makeDevicePublicRequest = (deviceId) => (dispatch) => {
+    dispatch(getDevices());
+    return axios.post(`${MAKE_DEVICE_PUBLIC_URL}/${deviceId}`, null, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(makeDevicePublicSuccess());
+    }).catch((error) => {
+        dispatch(getDevicesFailure(error.response.data.message));
+    });
 };
 
 export const clearDevicesRequest = () => (dispatch) => {

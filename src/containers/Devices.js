@@ -8,9 +8,10 @@ import i18n from 'i18next';
 import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
+import AssignCustomerModal from '../components/device/AssignCustomerModal';
 import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
-import DetailDeviceDialog from '../components/device/DetailDeviceDialog';
+import DetailDeviceDialog from './device/DetailDeviceDialog';
 
 import * as actions from '../actions/device/devices';
 import * as customers from '../actions/customer/customers';
@@ -55,7 +56,7 @@ class Devices extends Component {
     componentWillUnmount() {
         const { subscribers } = this.props;
         if (Object.keys(subscribers).length !== 0) {
-            this.props.unsubscribe(subscribers);
+            this.props.unsubscribeWithObjectsForEntityAttributes(subscribers);
         }
     }
 
@@ -85,6 +86,9 @@ class Devices extends Component {
         }
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, name, deviceId);
         const credentialsModal = this.openCredentials.bind(this, deviceId);
+        const assignCustomerModal = this.openAssignCustomerModal.bind(this, deviceId);
+        const unassignConfirm = this.handleUnAssignConfirm.bind(this, name, deviceId, isPublic);
+        const makePublicConfirm = this.handleMakePublicConfirm.bind(this, name, deviceId);
         return (
             <Button.Group className="custom-card-buttongroup">
                 <CommonButton
@@ -93,6 +97,7 @@ class Devices extends Component {
                     visible={shareVisible}
                     iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
                     tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
+                    onClick={isPublic ? unassignConfirm : makePublicConfirm}
                 />
                 <CommonButton
                     className="custom-card-button"
@@ -100,6 +105,7 @@ class Devices extends Component {
                     visible={assignVisible}
                     iconClassName={isAssign ? 'user-delete' : 'user-add'}
                     tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
+                    onClick={isAssign ? unassignConfirm : assignCustomerModal}
                 />
                 <CommonButton
                     className="custom-card-button"
@@ -135,7 +141,7 @@ class Devices extends Component {
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
                     isCardDown={!this.state.dialogVisible}
-                    title={<CommonCheckbox value={id} onChange={this.handleChecked}>{name}</CommonCheckbox>}
+                    title={<CommonCheckbox checkedCount={this.state.checkedCount} value={id} onChange={this.handleChecked}>{name}</CommonCheckbox>}
                     content={type.toUpperCase()}
                 >
                     {this.buttonComponents(name, id, customerId)}
@@ -146,6 +152,7 @@ class Devices extends Component {
     }
 
     refershDeviceRequest = () => {
+        this.closeDetailDialog();
         this.context.pageLoading();
         const { match } = this.props;
         const { currentUser } = this.context;
@@ -235,6 +242,34 @@ class Devices extends Component {
         });
     }
 
+    handleUnAssignConfirm = (title, id, isPublic) => {
+        const newTitle = isPublic ? i18n.t('device.make-private-device-title', { deviceName: title })
+                                : i18n.t('device.unassign-device-title', { deviceName: title });
+        const newContent = isPublic ? i18n.t('device.make-private-device-text')
+                                : i18n.t('device.unassign-device-text');
+        const unassignEvent = this.handleUnAssignCustomers.bind(this, id);
+        return Modal.confirm({
+            title: newTitle,
+            content: newContent,
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
+            onOk: unassignEvent,
+        });
+    }
+
+    handleMakePublicConfirm = (title, id) => {
+        const newTitle = i18n.t('device.make-public-device-title', { deviceName: title });
+        const newContent = i18n.t('device.make-public-device-text');
+        const unassignEvent = this.handleMakeDevicePublic.bind(this, id);
+        return Modal.confirm({
+            title: newTitle,
+            content: newContent,
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
+            onOk: unassignEvent,
+        });
+    }
+
     openAddDeviceModal = () => {
         this.addModal.modal.onShow();
     }
@@ -257,13 +292,31 @@ class Devices extends Component {
         });
     }
 
-    openAssignModal = () => {
-        console.log('test');
-    }
-
     hideCredentials = () => {
         this.credentialsModal.form.resetFields();
         this.credentialsModal.modal.onHide();
+    }
+
+    openAssignCustomerModal = (deviceIdArray) => {
+        if (typeof deviceIdArray === 'object') {
+            deviceIdArray = this.state.checkedIdArray;
+        } else {
+            deviceIdArray = [deviceIdArray];
+        }
+        this.props.getCustomersRequest().then(() => {
+            if (this.props.customersStatusMessage === 'SUCCESS') {
+                this.assignCustomerModal.modal.onShow();
+                this.assignCustomerModal.initDatas(this.props.customers, deviceIdArray);
+            } else {
+                notification.error({
+                    message: this.props.customersErrorMessage,
+                });
+            }
+        });
+    }
+
+    hideAssignCustomers = () => {
+        this.assignCustomerModal.modal.onHide();
     }
 
     handleDeleteDevice = (id) => {
@@ -293,7 +346,7 @@ class Devices extends Component {
 
     handleSaveDevice = (type) => {
         const isDialog = type === 'dialog';
-        const form = isDialog ? this.detailDialog.form : this.addModal.form;
+        const form = isDialog ? this.detailDialog.getWrappedInstance().form : this.addModal.form;
         form.validateFields((err, values) => {
             if (err) {
                 return false;
@@ -365,7 +418,70 @@ class Devices extends Component {
         });
     }
 
-    subscribeForDeviceAttributes = (selectedDeviceId) => {
+    handleAssignCustomers = () => {
+        if (!Array.isArray(this.assignCustomerModal.deviceId)) {
+            const deviceId = this.assignCustomerModal.deviceId;
+            const customerId = this.assignCustomerModal.customerId;
+            this.props.assignDeviceToCustomerRequest(customerId, deviceId).then(() => {
+                if (this.props.statusMessage === 'SUCCESS') {
+                    this.refershDeviceRequest();
+                    this.hideAssignCustomers();
+                } else {
+                    notification.error({
+                        message: this.props.errorMessage,
+                    });
+                }
+            });
+        } else {
+            const deviceId = this.assignCustomerModal.deviceId;
+            const customerId = this.assignCustomerModal.customerId;
+            this.props.multipleAssignDeviceToCustomerRequest(customerId, deviceId).then(() => {
+                if (this.props.statusMessage === 'SUCCESS') {
+                    this.refershDeviceRequest();
+                    this.hideAssignCustomers();
+                } else {
+                    notification.error({
+                        message: this.props.errorMessage,
+                    });
+                }
+            });
+        }
+    }
+
+    handleUnAssignCustomers = (deviceId) => {
+        this.props.unassignDeviceToCustomerRequest(deviceId).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.refershDeviceRequest();
+                this.hideAssignCustomers();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
+    }
+
+    handleMakeDevicePublic = (deviceId) => {
+        this.props.makeDevicePublicRequest(deviceId).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.refershDeviceRequest();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
+    }
+
+    handleSearchCustomer = (textSearch) => {
+        this.props.getCustomersRequest(this.state.limit, textSearch).then(() => {
+            if (this.props.customersStatusMessage === 'SUCCESS') {
+                this.assignCustomerModal.setDatas(this.props.customers);
+            }
+        });
+    };
+
+    subscribeWithObjectsForDeviceAttributes = (selectedDeviceId) => {
         const { isOpened, subscribers } = this.props;
         const clientScope = {
             entityType: 'DEVICE',
@@ -379,26 +495,26 @@ class Devices extends Component {
         };
         const attributeList = [clientScope, latestTelemetryScope];
         if (Object.keys(subscribers).length === 0) {
-            this.props.subscribeForEntityAttributes(attributeList, isOpened);
+            this.props.subscribeWithObjectsForEntityAttributes(attributeList, isOpened);
         } else {
-            this.props.unsubscribe(subscribers).then(() => {
-                this.props.subscribeForEntityAttributes(attributeList, isOpened);
+            this.props.unsubscribeWithObjectsForEntityAttributes(subscribers).then(() => {
+                this.props.subscribeWithObjectsForEntityAttributes(attributeList, isOpened);
             });
         }
     }
 
     openDetailDialog = (selectedDeviceId) => {
-        this.subscribeForDeviceAttributes(selectedDeviceId);
-        this.detailDialog.clearEdit();
+        this.subscribeWithObjectsForDeviceAttributes(selectedDeviceId);
+        this.detailDialog.getWrappedInstance().clearEdit();
         const deviceData = this.loadDeviceDetailData(selectedDeviceId);
-        this.detailDialog.initTitle(deviceData.name);
+        this.detailDialog.getWrappedInstance().initTitle(deviceData.name);
         let gateway;
         let description;
         if (deviceData.additionalInfo) {
             gateway = deviceData.additionalInfo.gateway || null;
             description = deviceData.additionalInfo.description || null;
         }
-        this.detailDialog.form.setFieldsValue({
+        this.detailDialog.getWrappedInstance().form.setFieldsValue({
             name: deviceData.name,
             type: deviceData.type,
             description,
@@ -413,7 +529,7 @@ class Devices extends Component {
     }
 
     closeDetailDialog = () => {
-        this.detailDialog.form.resetFields();
+        this.detailDialog.getWrappedInstance().form.resetFields();
         this.setState({
             dialogVisible: false,
             selectedDevice: null,
@@ -452,7 +568,7 @@ class Devices extends Component {
                         tooltipTitle={i18n.t('device.assign-devices-text', { count: this.state.checkedCount })}
                         className={this.state.checkedCount !== 0 ? 'ts-action-button ts-action-button-fadeIn-1' : 'ts-action-button ts-action-button-fadeOut-1'}
                         iconClassName="user-add"
-                        onClick={this.openAssignModal}
+                        onClick={this.openAssignCustomerModal}
                         size="large"
                     />
                     <CommonButton
@@ -485,6 +601,12 @@ class Devices extends Component {
                     onCancel={this.hideCredentials}
                     authority={authority}
                 />
+                <AssignCustomerModal
+                    ref={(c) => { this.assignCustomerModal = c; }}
+                    onSave={this.handleAssignCustomers}
+                    onCancel={this.hideAssignCustomers}
+                    onSearch={this.handleSearchCustomer}
+                />
                 <DetailDeviceDialog
                     ref={(c) => { this.detailDialog = c; }}
                     data={this.state.selectedDevice}
@@ -506,6 +628,9 @@ const mapStateToProps = (state) => ({
     types: state.devices.types,
     credentials: state.devices.credentials,
     shortInfo: state.customers.shortInfo,
+    customers: state.customers.data,
+    customersStatusMessage: state.customers.statusMessage,
+    customersErrorMessage: state.customers.errorMessage,
     readyState: state.telemetry.readyState,
     lastCmdId: state.telemetry.lastCmdId,
     subscribers: state.telemetry.subscribers,
@@ -521,8 +646,13 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     multipleDeleteDeviceRequest: actions.multipleDeleteDeviceRequest,
     saveDeviceCredentialsRequest: actions.saveDeviceCredentialsRequest,
     getCustomerShortInfoRequest: customers.getCustomerShortInfoRequest,
-    subscribeForEntityAttributes: telemetry.subscribeForEntityAttributes,
-    unsubscribe: telemetry.unsubscribe,
+    getCustomersRequest: customers.getCustomersRequest,
+    subscribeWithObjectsForEntityAttributes: telemetry.subscribeWithObjectsForEntityAttributes,
+    unsubscribeWithObjectsForEntityAttributes: telemetry.unsubscribeWithObjectsForEntityAttributes,
+    assignDeviceToCustomerRequest: actions.assignDeviceToCustomerRequest,
+    unassignDeviceToCustomerRequest: actions.unassignDeviceToCustomerRequest,
+    makeDevicePublicRequest: actions.makeDevicePublicRequest,
+    multipleAssignDeviceToCustomerRequest: actions.multipleAssignDeviceToCustomerRequest,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Devices);

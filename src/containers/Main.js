@@ -112,7 +112,7 @@ class Main extends Component {
             matches = this.sider.mql.matches;
         }
         return (
-            <Layout>
+            <Layout style={{ height: '100vh' }}>
                 <Layout.Sider
                     ref={(c) => { this.sider = c; }}
                     trigger={null}
@@ -136,11 +136,11 @@ class Main extends Component {
                     />
                     <Layout.Content className="code-box-demo">
                         <Spin spinning={this.state.loading}>
-                            <Row>
+                            {/* <Row>
                                 <Col span="2">
-                                    {/*<Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />*/}
+                                    <Switch checkedChildren={'Table'} unCheckedChildren={'Card'} onChange={this.changeContent} />
                                 </Col>
-                            </Row>
+                            </Row> */}
                             {this.props.children}
                         </Spin>
                     </Layout.Content>

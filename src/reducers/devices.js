@@ -8,6 +8,9 @@ import {
     API_DELETE_DEVICE_SUCCESS,
     API_DEVICE_TYPES,
     API_DEVICE_CREDENTIALS,
+    API_ASSIGN_DEVICE_TO_CUSTOMER_SUCCESS,
+    API_UNASSIGN_DEVICE_TO_CUSTOMER_SUCCESS,
+    API_MAKE_DEVICE_PUBLIC_SUCCESS,
     CLEAR_DEVICES,
  } from '../actions/device/DevicesTypes';
 
@@ -73,6 +76,24 @@ export default function devices(state = initialState, action) {
                 },
                 credentials: {
                     $set: action.credentials,
+                },
+            });
+        case API_ASSIGN_DEVICE_TO_CUSTOMER_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_UNASSIGN_DEVICE_TO_CUSTOMER_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_MAKE_DEVICE_PUBLIC_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
                 },
             });
         case CLEAR_DEVICES:

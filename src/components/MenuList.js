@@ -1,31 +1,32 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
+import i18n from 'i18next';
 
 const TENANT_ADMIN_MENU = {
-    home: ['home', 'Home'],
-    plugins: ['extension', 'Plugin'],
-    rules: ['settings_ethernet', 'Rule'],
-    customers: ['people', 'Customer'],
-    devices: ['devices_other', 'Device'],
-    widgets: ['widgets', 'Widget'],
-    dashboards: ['dashboard', 'Dashboard'],
+    home: ['home', 'home.home'],
+    plugins: ['extension', 'plugin.plugins'],
+    rules: ['settings_ethernet', 'rule.rules'],
+    customers: ['people', 'customer.customers'],
+    devices: ['devices_other', 'device.devices'],
+    widgets: ['widgets', 'widget.widget-library'],
+    dashboards: ['dashboard', 'dashboard.dashboards'],
 };
 const CUSTOMER_USER_MENU = {
-    home: ['home', 'Home'],
-    devices: ['devices_other', 'Device'],
-    dashboards: ['dashboard', 'Dashboard'],
+    home: ['home', 'home.home'],
+    devices: ['devices_other', 'device.devices'],
+    dashboards: ['dashboard', 'dashboard.dashboards'],
 };
 
 const SYS_ADMIN_MENU = {
-    home: ['home', 'Home'],
-    plugins: ['extension', 'Plugin'],
-    rules: ['settings_ethernet', 'Rule'],
-    customers: ['people', 'Tenant'],
-    widgets: ['widgets', 'Widget'],
-    settings: ['settings', 'System Setting', {
-        'settings/general': ['settings_applications', 'General'],
-        'settings/outgoing-mail': ['mail', 'Outgoing Mail'],
+    home: ['home', 'home.home'],
+    plugins: ['extension', 'plugin.plugins'],
+    rules: ['settings_ethernet', 'rule.rules'],
+    customers: ['people', 'tenant.tenants'],
+    widgets: ['widgets', 'widget.widget-library'],
+    settings: ['settings', 'admin.system-settings', {
+        'settings/general': ['settings_applications', 'admin.general'],
+        'settings/outgoing-mail': ['mail', 'admin.outgoing-mail'],
     }],
 };
 class MenuList extends Component {
@@ -49,7 +50,7 @@ class MenuList extends Component {
                         <Menu.Item key={`/${key}`}>
                             <Link to={`/${key}`}>
                                 <i className="material-icons margin-right-8 vertical-middle">{TENANT_ADMIN_MENU[key][0]}</i>
-                                <span className="nav-text">{TENANT_ADMIN_MENU[key][1]}</span>
+                                <span className="nav-text">{i18n.t(TENANT_ADMIN_MENU[key][1])}</span>
                             </Link>
                         </Menu.Item>
                     );
@@ -60,7 +61,7 @@ class MenuList extends Component {
                         <Menu.Item key={`/${key}`}>
                             <Link to={`/${key}`}>
                                 <i className="material-icons margin-right-8 vertical-middle">{CUSTOMER_USER_MENU[key][0]}</i>
-                                <span className="nav-text">{CUSTOMER_USER_MENU[key][1]}</span>
+                                <span className="nav-text">{i18n.t(CUSTOMER_USER_MENU[key][1])}</span>
                             </Link>
                         </Menu.Item>
                     );
@@ -74,7 +75,7 @@ class MenuList extends Component {
                                 title={
                                     <span>
                                         <i className="material-icons margin-right-8 vertical-middle">{SYS_ADMIN_MENU[key][0]}</i>
-                                        <span className="nav-text">{SYS_ADMIN_MENU[key][1]}</span>
+                                        <span className="nav-text">{i18n.t(SYS_ADMIN_MENU[key][1])}</span>
                                     </span>
                                 }
                             >
@@ -84,7 +85,7 @@ class MenuList extends Component {
                                             <Menu.Item key={`/${subKey}`}>
                                                 <Link to={`/${subKey}`}>
                                                     <i className="material-icons margin-right-8 vertical-middle">{SYS_ADMIN_MENU[key][2][subKey][0]}</i>
-                                                    <span className="nav-text">{SYS_ADMIN_MENU[key][2][subKey][1]}</span>
+                                                    <span className="nav-text">{i18n.t(SYS_ADMIN_MENU[key][2][subKey][1])}</span>
                                                 </Link>
                                             </Menu.Item>
                                         );
@@ -97,7 +98,7 @@ class MenuList extends Component {
                         <Menu.Item key={`/${key}`}>
                             <Link to={`/${key}`}>
                                 <i className="material-icons margin-right-8 vertical-middle">{SYS_ADMIN_MENU[key][0]}</i>
-                                <span className="nav-text">{SYS_ADMIN_MENU[key][1]}</span>
+                                <span className="nav-text">{i18n.t(SYS_ADMIN_MENU[key][1])}</span>
                             </Link>
                         </Menu.Item>
                     );

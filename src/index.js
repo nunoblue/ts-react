@@ -5,11 +5,13 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { I18nextProvider } from 'react-i18next';
+import moment from 'moment';
 import telemetryMiddleware from './middleware/telemetryMiddleware';
 import '../less/app.less';
 import App from './containers/App';
 import { i18nClient } from './i18n';
 import rootReducer from './reducers';
+
 
 let store;
 const enhancer = applyMiddleware(thunkMiddleware, telemetryMiddleware);
@@ -23,6 +25,7 @@ if (process.env.NODE_ENV === 'development'
 }
 
 const rootElement = document.getElementById('root');
+moment.locale(i18nClient.language);
 const render = (Component) => {
     ReactDOM.render(
         <I18nextProvider i18n={i18nClient}>
