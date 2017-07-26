@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Tabs, Switch, Row, Select } from 'antd';
+import { Tabs, Switch, Row, Select, Form, Input } from 'antd';
 import i18n from 'i18next';
 
 import CommonDialog from '../../components/common/CommonDialog';
@@ -12,6 +12,7 @@ import { types } from '../../utils/commons';
 
 class DetailDeviceDialog extends Component {
     state = {
+        type: 'dialog',
         editing: false,
         title: null,
         attributesScope: types.attributesScope.client,
@@ -37,8 +38,7 @@ class DetailDeviceDialog extends Component {
     }
 
     handleSave = () => {
-        const type = 'dialog';
-        this.props.onSave(type);
+        this.props.onSave(this.state.type);
     }
 
     handleTitleChange = (value) => {
@@ -47,7 +47,7 @@ class DetailDeviceDialog extends Component {
         });
     }
 
-    handleSelect = (value, option) => {
+    handleSelect = (value) => {
         this.setState({
             attributesScope: types.attributesScope[value],
         });
@@ -56,6 +56,14 @@ class DetailDeviceDialog extends Component {
     render() {
         const { data, visible, options, onPressEnter, closeDialog, buttonComponents } = this.props;
         const { subscriptions, isOpened } = this.props;
+        let assigendInput;
+        if (!this.state.editing) {
+            assigendInput = data && data.assignedCustomer ? (
+                <Form.Item label={i18n.t('device.assignedToCustomer')}>
+                    <Input value={data.assignedCustomer.title} readOnly disabled />
+                </Form.Item>
+            ) : null;
+        }
         return (
             <CommonDialog
                 onClick={closeDialog}
@@ -86,7 +94,9 @@ class DetailDeviceDialog extends Component {
                             options={options}
                             disabled={!this.state.editing}
                             titleChangeEvent={this.handleTitleChange}
-                        />
+                        >
+                         {assigendInput}
+                        </DeviceForm>
                         {this.state.editing ? (
                             <CommonButton className="ts-dialog-button" onClick={this.handleSave}>
                                 <i className="material-icons margin-right-8 vertical-middle">save</i>

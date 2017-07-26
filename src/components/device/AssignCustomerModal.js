@@ -22,7 +22,7 @@ class AssignCustomerModal extends Component {
     setDatas = (datas) => {
         this.setState({
             customers: datas,
-            selectedRowKeys: undefined,
+            selectedId: undefined,
             loading: false,
         });
     }
@@ -30,7 +30,7 @@ class AssignCustomerModal extends Component {
     initDatas = (datas, deviceId) => {
         this.setState({
             customers: datas,
-            selectedRowKeys: undefined,
+            selectedId: undefined,
             deviceId,
             value: undefined,
             loading: false,
