@@ -282,7 +282,8 @@
         "password": "Password",
         "enter-username": "Enter username",
         "enter-password": "Enter password",
-        "enter-search": "Enter search"
+        "enter-search": "Enter search",
+        "enter-arg": "'{{arg}}' is required."
     },
     "customer": {
         "customer": "Customer",

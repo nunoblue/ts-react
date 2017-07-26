@@ -128,7 +128,8 @@
         "password": "비밀번호",
         "enter-username": "사용자명을 입력하세요.",
         "enter-password": "비밀번호를 입력하세요.",
-        "enter-search": "검색어 입력"
+        "enter-search": "검색어 입력",
+        "enter-arg": "'{{arg}}' 항목을 입력하세요."
     },
     "customer": {
         "customers": "커스터머",

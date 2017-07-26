@@ -170,7 +170,7 @@ class Rules extends Component {
     findRule = (ruleId) => {
         const { data } = this.props;
         return data.find(r => r.id.id === ruleId);
-    }
+    };
 
     components = () => {
         const components = this.props.data.map((data) => {
