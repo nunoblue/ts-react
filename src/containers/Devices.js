@@ -9,13 +9,19 @@ import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
 import AssignCustomerModal from '../components/device/AssignCustomerModal';
+import ItemSelectModal from '../components/common/ItemSelectModal';
 import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
 import DetailDeviceDialog from './device/DetailDeviceDialog';
 
+
 import * as actions from '../actions/device/devices';
 import * as customers from '../actions/customer/customers';
 import * as telemetry from '../actions/telemetry/telemetry';
+
+import config from '../config';
+
+const url = `${config.apServer}/api/tenant/devices`;
 
 class Devices extends Component {
 
@@ -36,7 +42,6 @@ class Devices extends Component {
     }
 
     componentDidMount() {
-        console.log('Devices Render');
         this.refershDeviceRequest();
     }
 
@@ -278,6 +283,15 @@ class Devices extends Component {
         this.addModal.form.resetFields();
         this.addModal.modal.onHide();
     }
+
+    assignDeviceModalHandler = {
+        show: () => {
+            this.assignDeviceModal.modal.onShow();
+        },
+        hide: () => {
+            this.assignDeviceModal.modal.onHide();
+        },
+    };
 
     openCredentials = (id) => {
         this.props.getDeviceCredentialsRequest(id).then((data) => {
@@ -554,6 +568,20 @@ class Devices extends Component {
         return findDevice;
     }
 
+    handleSelectDevice = (selectedDeviceIds) => {
+        const customerId = this.props.match.params.customerId;
+        this.props.multipleAssignDeviceToCustomerRequest(customerId, selectedDeviceIds).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.refershDeviceRequest();
+                this.assignDeviceModalHandler.hide();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
+    };
+
     render() {
         const options = this.props.types.map((obj) => {
             return obj.type;
@@ -588,6 +616,15 @@ class Devices extends Component {
                         onClick={this.openAddDeviceModal}
                         size="large"
                     />
+                    <CommonButton
+                        shape="circle"
+                        visible={!this.state.isCustomer}
+                        tooltipTitle={i18n.t('device.assign-new-device')}
+                        className="custom-card-button"
+                        iconClassName="plus"
+                        onClick={this.assignDeviceModalHandler.show}
+                        size="large"
+                    />
                 </div>
                 <AddDeviceModal
                     ref={(c) => { this.addModal = c; }}
@@ -615,6 +652,17 @@ class Devices extends Component {
                     closeDialog={this.closeDetailDialog}
                     onSave={this.handleSaveDevice}
                     buttonComponents={this.buttonComponents}
+                />
+                <ItemSelectModal
+                    ref={(c) => { this.assignDeviceModal = c; }}
+                    url={url}
+                    multiple
+                    labelField={'name'}
+                    valueField={'id.id'}
+                    showSearch
+                    message={i18n.t('device.assign-device-to-customer-text')}
+                    title={i18n.t('device.assign-device-to-customer')}
+                    onSelect={this.handleSelectDevice}
                 />
             </Row>
         );

@@ -10,6 +10,7 @@ import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
 import AddDashboardModal from '../components/dashboard/AddDashboardModal';
 import DetailDashboardDialog from '../components/dashboard/DetailDashboardDialog';
+import ItemSelectModal from '../components/common/ItemSelectModal';
 
 import * as actions from '../actions/dashboard/dashboards';
 import * as customers from '../actions/customer/customers';
@@ -33,7 +34,6 @@ class Dashboards extends Component {
     }
 
     componentDidMount() {
-        console.log('Dashboards Render');
         this.refershDashboardRequest();
     }
 
@@ -291,7 +291,30 @@ class Dashboards extends Component {
                 }
             });
         });
-    }
+    };
+
+    assignDashboardModalHandler = {
+        show: () => {
+            this.assignDashboardModal.onShow();
+        },
+        hide: () => {
+            this.assignDashboardModal.onHide();
+        },
+    };
+
+    handleSelectDevice = (selectedIds) => {
+        const customerId = this.props.match.params.customerId;
+        this.props.multipleAssignDashboardToCustomer(customerId, selectedIds).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.refershDashboardRequest();
+                this.assignDashboardModalHandler.hide();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
+    };
 
     openDetailDialog = (selectedId) => {
         const { shortInfo } = this.props;
@@ -376,6 +399,15 @@ class Dashboards extends Component {
                         onClick={this.openAddDashboardModal}
                         size="large"
                     />
+                    <CommonButton
+                        shape="circle"
+                        visible={!this.state.isCustomer}
+                        tooltipTitle={i18n.t('dashboard.assign-new-dashboard')}
+                        className="custom-card-button"
+                        iconClassName="plus"
+                        onClick={this.assignDashboardModalHandler.show}
+                        size="large"
+                    />
                 </div>
                 <AddDashboardModal
                     ref={(c) => { this.addModal = c; }}
@@ -389,6 +421,17 @@ class Dashboards extends Component {
                     closeDialog={this.closeDetailDialog}
                     onSave={this.handleSaveDashboard}
                     buttonComponents={this.buttonComponents}
+                />
+                <ItemSelectModal
+                    ref={(c) => { this.assignDashboardModal = c; }}
+                    url={actions.TENANT_DASHBOARDS_URL}
+                    multiple
+                    labelField={'title'}
+                    valueField={'id.id'}
+                    showSearch
+                    message={i18n.t('dashboard.assign-dashboard-to-customer-text')}
+                    title={i18n.t('dashboard.assign-dashboard-to-customer')}
+                    onSelect={this.handleSelectDevice}
                 />
             </Row>
         );
@@ -410,6 +453,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     deleteDashboardRequest: actions.deleteDashboardRequest,
     multipleDeleteDashboardRequest: actions.multipleDeleteDashboardRequest,
     getCustomerShortInfoRequest: customers.getCustomerShortInfoRequest,
+    multipleAssignDashboardToCustomer: actions.multipleAssignDashboardToCustomer,
 }, dispatch);
 
 

@@ -9,12 +9,12 @@ import {
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
     CLEAR_DASHBOARDS,
- } from './DashboardsTypes';
+} from './DashboardsTypes';
 
 import config from '../../config';
 
 const apServer = config.apServer;
-const TENANT_DASHBOARDS_URL = `${apServer}/api/tenant/dashboards`;
+export const TENANT_DASHBOARDS_URL = `${apServer}/api/tenant/dashboards`;
 const GET_DASHBOARD_URL = `${apServer}/api/dashboard`;
 const CUSTOMER_DASHBOARDS_URL = `${apServer}/api/customer`;
 const SAVE_DASHBOARD_URL = `${apServer}/api/dashboard`;
@@ -69,7 +69,7 @@ export const getDashboardsRequest = (limit, textSearch, authority, id) => (dispa
     dispatch(getDashboards());
     if (authority === 'TENANT_ADMIN') {
         return axios.get(TENANT_DASHBOARDS_URL, {
-            params: { limit, textSearch },
+            params: {limit, textSearch},
             headers: {
                 'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
             },
@@ -80,7 +80,7 @@ export const getDashboardsRequest = (limit, textSearch, authority, id) => (dispa
         });
     }
     return axios.get(`${CUSTOMER_DASHBOARDS_URL}/${id}/dashboards`, {
-        params: { limit, textSearch },
+        params: {limit, textSearch},
         headers: {
             'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
         },
@@ -91,69 +91,73 @@ export const getDashboardsRequest = (limit, textSearch, authority, id) => (dispa
     });
 };
 
-export const getDashboardRequest = (id) => {
-    return (dispatch) => {
-        dispatch(getDashboards());
+export const getDashboardRequest = id => (dispatch) => {
+    dispatch(getDashboards());
 
-        return axios.get(`${GET_DASHBOARD_URL}/${id}`, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
-            dispatch(getDashboardSuccess(response.data));
-        }).catch((error) => {
-            dispatch(getDashboardsFailure(error.response.data.message));
-        });
-    };
+    return axios.get(`${GET_DASHBOARD_URL}/${id}`, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(getDashboardSuccess(response.data));
+    }).catch((error) => {
+        dispatch(getDashboardsFailure(error.response.data.message));
+    });
 };
 
-export const saveDashboardRequest = (data) => {
-    return (dispatch) => {
-        dispatch(getDashboards());
+export const saveDashboardRequest = data => (dispatch) => {
+    dispatch(getDashboards());
 
-        return axios.post(SAVE_DASHBOARD_URL, data, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
-            dispatch(saveDashboardSuccess());
-        }).catch((error) => {
-            dispatch(getDashboardsFailure(error.response.data.message));
-        });
-    };
+    return axios.post(SAVE_DASHBOARD_URL, data, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(saveDashboardSuccess());
+    }).catch((error) => {
+        dispatch(getDashboardsFailure(error.response.data.message));
+    });
 };
 
-export const deleteDashboardRequest = (id) => {
-    return (dispatch) => {
-        dispatch(getDashboards());
+export const deleteDashboardRequest = id => (dispatch) => {
+    dispatch(getDashboards());
 
-        return axios.delete(`${DELETE_DASHBOARD_URL}/${id}`, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
-            dispatch(deleteDashboardSuccess());
-        }).catch((error) => {
-            dispatch(getDashboardsFailure(error.response.data.message));
-        });
-    };
+    return axios.delete(`${DELETE_DASHBOARD_URL}/${id}`, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(deleteDashboardSuccess());
+    }).catch((error) => {
+        dispatch(getDashboardsFailure(error.response.data.message));
+    });
 };
 
-export const multipleDeleteDashboardRequest = (idArray) => {
-    return (dispatch) => {
-        dispatch(getDashboards());
-        return axios.all(idArray.map((id) => {
-            return axios.delete(`${DELETE_DASHBOARD_URL}/${id}`, {
-                headers: {
-                    'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-                },
-            }).then((response) => {
-                dispatch(deleteDashboardSuccess());
-            }).catch((error) => {
-                dispatch(getDashboardsFailure(error.response.data.message));
-            });
-        }));
-    };
+export const multipleDeleteDashboardRequest = idArray => (dispatch) => {
+    dispatch(getDashboards());
+    return axios.all(idArray.map(id => axios.delete(`${DELETE_DASHBOARD_URL}/${id}`, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(deleteDashboardSuccess());
+    }).catch((error) => {
+        dispatch(getDashboardsFailure(error.response.data.message));
+    })));
+};
+
+
+export const multipleAssignDashboardToCustomer = (customerId, idArray) => (dispatch) => {
+    dispatch(getDashboards());
+    return axios.all(idArray.map(id => axios.post(`${CUSTOMER_DASHBOARDS_URL}/${customerId}/dashboard/${id}`, null, {
+        headers: {
+            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
+        },
+    }).then((response) => {
+        dispatch(saveDashboardSuccess());
+    }).catch((error) => {
+        dispatch(getDashboardsFailure(error.response.data.message));
+    })));
 };
 
 export const clearDashboardsRequest = () => (dispatch) => {
