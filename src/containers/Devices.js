@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Modal, notification, Button } from 'antd';
+import { Row, Col, Modal, notification, Button, Card } from 'antd';
 import i18n from 'i18next';
 
 import CommonButton from '../components/common/CommonButton';
@@ -561,6 +561,10 @@ class Devices extends Component {
         const authority = this.state.authority === this.state.isCustomer;
         return (
             <Row>
+                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                    <Card className="ts-card-example">
+                    </Card>
+                </Col>
                 {this.components()}
                 <div className="footer-buttons">
                     <CommonButton

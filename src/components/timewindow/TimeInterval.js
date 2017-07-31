@@ -8,7 +8,7 @@ import {
 } from 'antd';
 import i18n from 'i18next';
 
-import { times } from '../../../utils/commons';
+import { times } from '../../utils/commons';
 
 class TimeInterval extends Component {
     static propTypes = {
@@ -74,57 +74,11 @@ class TimeInterval extends Component {
     }
 
     handleChangeSelect = (value) => {
-        const min = value.key / times.MAX_LIMIT;
-        const test = this.boundMinInterval(min);
-        const max = value.key / times.MIN_LIMIT;
-        const test2 = this.boundMaxInterval(max);
-        console.log(test, test2);
-        const test3 = this.matchesExistingInterval(min, max, value.key);
-        console.log(test3);
+        const { onChangeInterval } = this.props;
+        if (typeof onChangeInterval !== 'undefined') {
+            onChangeInterval(value);
+        }
         this.setIntervalMs(value.key);
-    }
-
-    boundMinInterval = (min) => {
-        return this.toBound(min, times.MIN_INTERVAL, times.MAX_INTERVAL, times.MIN_INTERVAL);
-    }
-
-    boundMaxInterval = (max) => {
-        return this.toBound(max, times.MIN_INTERVAL, times.MAX_INTERVAL, times.MAX_INTERVAL);
-    }
-
-    toBound = (value, min, max, defValue) => {
-        if (value) {
-            value = Math.max(value, min);
-            value = Math.min(value, max);
-            return value;
-        } else {
-            return defValue;
-        }
-    }
-
-    matchesExistingInterval = (min, max, intervalMs) => {
-        const intervals = this.getIntervals(min, max);
-        for (let i in intervals) {
-            const interval = intervals[i];
-            if (intervalMs === interval.value) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    getIntervals = (min, max) => {
-        const { intervals } = this.props;
-        min = this.boundMinInterval(min);
-        max = this.boundMaxInterval(max);
-        const newIntervals = [];
-        for (let i in intervals) {
-            const interval = intervals[i];
-            if (interval.value >= min && interval.value <= max) {
-                newIntervals.push(interval);
-            }
-        }
-        return newIntervals;
     }
 
     handleChangeTime = (e) => {

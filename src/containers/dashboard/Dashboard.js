@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import GeneralTimeWindow from '../../components/general/GeneralTimeWindow';
-import CommonButton from '../../components/common/CommonButton';
+import GeneralTimeWindow from '../../components/timewindow/GeneralTimeWindow';
 
 class Dashboard extends Component {
+    state = {
+        timewindowVisible: false,
+    }
 
     render() {
         return (
-            <GeneralTimeWindow>
-                <CommonButton />
-            </GeneralTimeWindow>
+            <GeneralTimeWindow />
         );
     }
 }
