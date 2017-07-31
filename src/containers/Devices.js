@@ -562,7 +562,7 @@ class Devices extends Component {
         return (
             <Row>
                 <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                    <Card className="ts-card-example">
+                    <Card className="ts-card-example" onClick={this.openAddDeviceModal}>
                     </Card>
                 </Col>
                 {this.components()}
