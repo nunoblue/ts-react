@@ -415,3 +415,105 @@ export const types = {
         customTranslationsPrefix: 'custom.',
     },
 };
+
+const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+
+const MIN_INTERVAL = SECOND;
+const MAX_INTERVAL = 365 * 20 * DAY;
+
+const MIN_LIMIT = 10;
+const AVG_LIMIT = 200;
+const MAX_LIMIT = 500;
+
+export const times = {
+    SECOND,
+    MINUTE,
+    HOUR,
+    DAY,
+    MIN_INTERVAL,
+    MAX_INTERVAL,
+    MIN_LIMIT,
+    AVG_LIMIT,
+    MAX_LIMIT,
+    predefIntervals: [
+        {
+            name: { text: 'timeinterval.seconds-interval', value: 1 },
+            value: 1 * SECOND,
+        },
+        {
+            name: { text: 'timeinterval.seconds-interval', value: 5 },
+            value: 5 * SECOND,
+        },
+        {
+            name: { text: 'timeinterval.seconds-interval', value: 10 },
+            value: 10 * SECOND,
+        },
+        {
+            name: { text: 'timeinterval.seconds-interval', value: 15 },
+            value: 15 * SECOND,
+        },
+        {
+            name: { text: 'timeinterval.seconds-interval', value: 30 },
+            value: 30 * SECOND,
+        },
+        {
+            name: { text: 'timeinterval.minutes-interval', value: 1 },
+            value: 1 * MINUTE,
+        },
+        {
+            name: { text: 'timeinterval.minutes-interval', value: 2 },
+            value: 2 * MINUTE,
+        },
+        {
+            name: { text: 'timeinterval.minutes-interval', value: 5 },
+            value: 5 * MINUTE,
+        },
+        {
+            name: { text: 'timeinterval.minutes-interval', value: 10 },
+            value: 10 * MINUTE,
+        },
+        {
+            name: { text: 'timeinterval.minutes-interval', value: 15 },
+            value: 15 * MINUTE,
+        },
+        {
+            name: { text: 'timeinterval.minutes-interval', value: 30 },
+            value: 30 * MINUTE,
+        },
+        {
+            name: { text: 'timeinterval.hours-interval', value: 1 },
+            value: 1 * HOUR,
+        },
+        {
+            name: { text: 'timeinterval.hours-interval', value: 2 },
+            value: 2 * HOUR,
+        },
+        {
+            name: { text: 'timeinterval.hours-interval', value: 5 },
+            value: 5 * HOUR,
+        },
+        {
+            name: { text: 'timeinterval.hours-interval', value: 10 },
+            value: 10 * HOUR,
+        },
+        {
+            name: { text: 'timeinterval.hours-interval', value: 12 },
+            value: 12 * HOUR,
+        },
+        {
+            name: { text: 'timeinterval.days-interval', value: 1 },
+            value: 1 * DAY,
+        },
+        {
+            name: { text: 'timeinterval.days-interval', value: 7 },
+            value: 7 * DAY,
+        },
+        {
+            name: { text: 'timeinterval.days-interval', value: 30 },
+            value: 30 * DAY,
+        },
+    ],
+};

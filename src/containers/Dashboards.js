@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 import { Row, Modal, notification, Button } from 'antd';
 import i18n from 'i18next';
 
@@ -51,7 +52,7 @@ class Dashboards extends Component {
     }
 
     buttonComponents = (title, dashboardId, customerId) => {
-        const { shortInfo, match, t } = this.props;
+        const { shortInfo, match } = this.props;
         const { currentUser } = this.context;
         const tenantCustomerId = currentUser.customerId.id;
         const isPublic = shortInfo[customerId] ? shortInfo[customerId].isPublic : undefined;
@@ -59,11 +60,31 @@ class Dashboards extends Component {
         let shareVisible;
         let assignVisible;
         let deleteVisible;
+        let linkButton = (
+            <Link to={`/dashboards/${dashboardId}`}>
+                <CommonButton
+                    className="custom-card-button"
+                    shape="circle"
+                    iconClassName="search"
+                    tooltipTitle={i18n.t('dashboard.dashboard-details')}
+                />
+            </Link>
+        );
         if (this.state.authority) {
             if (match.params.customerId) {
                 shareVisible = false;
                 assignVisible = true;
                 deleteVisible = false;
+                linkButton = (
+                    <Link to={`/customers/${match.params.customerId}/dashboards/${dashboardId}`}>
+                        <CommonButton
+                            className="custom-card-button"
+                            shape="circle"
+                            iconClassName="search"
+                            tooltipTitle={i18n.t('dashboard.dashboard-details')}
+                        />
+                    </Link>
+                );
             } else {
                 shareVisible = isPublic;
                 assignVisible = !shareVisible;
@@ -78,12 +99,7 @@ class Dashboards extends Component {
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, dashboardId);
         return (
             <Button.Group className="custom-card-buttongroup">
-                <CommonButton
-                    className="custom-card-button"
-                    shape="circle"
-                    iconClassName="search"
-                    tooltipTitle={i18n.t('dashboard.dashboard-details')}
-                />
+                {linkButton}
                 <CommonButton
                     className="custom-card-button"
                     shape="circle"

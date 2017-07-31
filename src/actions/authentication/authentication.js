@@ -262,7 +262,8 @@ export const getUserRequest = () => {
             }).then((response) => {
                 dispatch(getUserSuccess(response.data));
             }).catch((error) => {
-                dispatch(getUserFailure(error.response.data.message));
+                const message = error.response ? error.response.data.message : error.message;
+                dispatch(getUserFailure(message));
             });
         }
     };
