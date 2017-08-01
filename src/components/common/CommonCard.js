@@ -72,7 +72,7 @@ class CommonCard extends Component {
         return (
             <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                 <span style={this.props.style} role="button" aria-hidden="true" onClick={this.handleClick}>
-                    <Card title={this.props.title} style={{ minHeight: 160 }}>
+                    <Card title={this.props.title} style={{ minHeight: 160 }} bodyStyle={{ background: "purple" }}>
                         <div className="custom-card-content">
                             {this.props.content}
                         </div>

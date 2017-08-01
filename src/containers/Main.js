@@ -120,9 +120,12 @@ class Main extends Component {
                     collapsedWidth="0"
                     collapsed={this.state.collapsed}
                     onCollapse={(collapsed, type) => { this.setState({ collapsed }); }}
+                    className="ts-layout-sider"
                 >
                     <div className="main-logo">
-                        <Link to="/home">ThingStar</Link>
+                        <Link to="/home">
+                            <img src="images/tsLogo.png" alt="ThingStar Logo" />
+                        </Link>
                     </div>
                     <MenuList authority={currentUser.authority} selectedKey={this.props.location.pathname} />
                 </Layout.Sider>
@@ -134,7 +137,7 @@ class Main extends Component {
                         toggle={this.toggle}
                         matches={matches}
                     />
-                    <Layout.Content className="code-box-demo">
+                    <Layout.Content className="ts-layout-content">
                         <Spin spinning={this.state.loading}>
                             {/* <Row>
                                 <Col span="2">
@@ -144,6 +147,9 @@ class Main extends Component {
                             {this.props.children}
                         </Spin>
                     </Layout.Content>
+                    <Layout.Footer style={{backgroundColor: '#CCCCCC', marginTop: 20, paddingTop: 10, paddingBottom: 10, paddingLeft:15, color: '#666666', textAlign: 'left' }}>
+                        {'© Copyright 2017. All rights Reserved.'}
+                    </Layout.Footer>
                 </Layout>
             </Layout>
         );

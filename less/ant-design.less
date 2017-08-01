@@ -1,333 +1,406 @@
-html, body {
-  background: blue;
-}
+// html, body {
+//   background: blue;
+// }
 
-#root {
-    height: 100%;
-}
+// #root {
+//     height: 100%;
+// }
 
-.main-logo {
-    height: 32px;
-    background: #333;
-    border-radius: 6px;
-    margin: 16px;
-    text-align: center;
-    font-size: 20px;
-    line-height: 30px;
-}
+// .main-logo {
+//     height: 32px;
+//     background: #333;
+//     border-radius: 6px;
+//     margin: 16px;
+//     text-align: center;
+//     font-size: 20px;
+//     line-height: 30px;
+// }
 
-.code-box-demo {
-    height: 100%;
-    .ant-row {
-        margin-left: 12px;
-        margin-right: 12px;
-        margin-bottom: 12px;
-    }
-}
-.code-box-demo .ant-row > div {
-    padding: 16px 8px 0px 8px;
-}
+// .code-box-demo {
+//     height: 100%;
+//     .ant-row {
+//         margin-left: 12px;
+//         margin-right: 12px;
+//         margin-bottom: 12px;
+//     }
+// }
+// .code-box-demo .ant-row > div {
+//     padding: 16px 8px 0px 8px;
+// }
 
-.code-box-demo .current-card {
-    opacity: .5;
-    -webkit-transform: scale(1.05);
-    transform: scale(1.05);
-}
+// .code-box-demo .current-card {
+//     opacity: .5;
+//     -webkit-transform: scale(1.05);
+//     transform: scale(1.05);
+// }
 
-.code-box-demo {
-    &.ant-layout-content {
-        height: 100%;
-        overflow: auto;
-    }
-    .ant-spin-nested-loading {
-        height: 100%;
-    }
-    .ant-spin-container {
-        height: 100%;
-    }
-    .ant-spin-dot {
-        top: 100% !important;
-    }
-}
+// .code-box-demo {
+//     &.ant-layout-content {
+//         height: 100%;
+//         overflow: auto;
+//     }
+//     .ant-spin-nested-loading {
+//         height: 100%;
+//     }
+//     .ant-spin-container {
+//         height: 100%;
+//     }
+//     .ant-spin-dot {
+//         top: 100% !important;
+//     }
+// }
 
-.code-box-demo .ant-btn-circle.ant-btn-lg {
-    width: 56px;
-    height: 56px;
-    font-size: 24px;
-}
+// .code-box-demo .ant-btn-circle.ant-btn-lg {
+//     width: 56px;
+//     height: 56px;
+//     font-size: 24px;
+// }
 
-.auth .card {
-    width: 400px;
-    margin: 0 auto;
-}
+// .auth .card {
+//     width: 400px;
+//     margin: 0 auto;
+// }
 
-/* Authentication */
-.auth {
-    margin-top: 50px;
-    text-align: center;
-}
+// /* Authentication */
+// .auth {
+//     margin-top: 50px;
+//     text-align: center;
+// }
 
-.auth-logo {
-    text-align: center;
-    font-weight: 100;
-    font-size: 80px;
-    -webkit-user-select: none;
-    /* Chrome all / Safari all */
-    -moz-user-select: none;
-    /* Firefox all */
-    -ms-user-select: none;
-    /* IE 10+ */
-    user-select: none;
-    /* Likely future */
-}
+// .auth-logo {
+//     text-align: center;
+//     font-weight: 100;
+//     font-size: 80px;
+//     -webkit-user-select: none;
+//     /* Chrome all / Safari all */
+//     -moz-user-select: none;
+//     /* Firefox all */
+//     -ms-user-select: none;
+//     /* IE 10+ */
+//     user-select: none;
+//     /* Likely future */
+// }
 
-.auth .card {
-    width: 400px;
-    margin: 0 auto;
-}
+// .auth .card {
+//     width: 400px;
+//     margin: 0 auto;
+// }
 
-@media screen and (max-width: 768px) {
-    .auth .card {
-        width: 100%;
-    }
+// @media screen and (max-width: 768px) {
+//     .auth .card {
+//         width: 100%;
+//     }
 
-    .auth-logo {
-        font-size: 60px;
-    }
+//     .auth-logo {
+//         font-size: 60px;
+//     }
     
-    .ts-dialog {
-        width: 100vw !important;
+//     .ts-dialog {
+//         width: 100vw !important;
+//     }
+// }
+
+// .auth .header {
+//     font-size: 18px;
+// }
+
+// .auth .row {
+//     margin-bottom: 0px;
+// }
+
+// .auth .username {
+//     margin-top: 0px;
+// }
+
+// .auth .btn {
+//     width: 90%;
+// }
+
+// .auth .footer {
+//     border-top: 1px solid #E9E9E9;
+//     padding-bottom: 21px;
+// }
+
+// .footer-buttons {
+//     position: fixed;
+//     right: 40px;
+//     bottom: 40px;
+//     z-index: 2;
+//     display: flex;
+// }
+
+// .trigger {
+//     font-size: 18px;
+//     line-height: 64px;
+//     padding: 0 8px;
+//     cursor: pointer;
+//     transition: color .3s;
+// }
+
+// .trigger:hover {
+//     color: #108ee9;
+// }
+
+// .nav-text { 
+//     margin-left: 16px;
+//     color: rgba(255, 255, 255, 0.67);
+// }
+
+// .code-box-demo {
+//     .ant-card-body {
+//         padding: 8px;
+//     }
+// }
+
+// .custom-card-content {
+//     display: block;
+//     min-height: 80px;
+// }
+
+// .custom-card-bottom {
+//     display: flex;
+//     flex-flow: row wrap;
+//     justify-content: flex-end;
+//     align-self: flex-end;
+//     .ant-btn-group {
+//         display: flex;
+//     }
+// }
+
+// .custom-card-button {
+//     margin: 8px;
+// }
+
+// .ant-layout-sider {
+//     box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+// }
+
+// .ant-layout-header {
+//     box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+// }
+
+// .ant-card {
+//     box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+// }
+
+// .ts-dialog {
+//     padding: 0px !important;
+//     width: 0;
+//     transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+//     position: fixed;
+//     background: #404040;
+//     right: 0;
+//     bottom: 0;
+//     top: 64px;
+//     z-index: 100;
+//     box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+//     &.ts-dialog-show {
+//         width: 40vw;
+//     }
+//     &.ts-dialog-hide {
+//         width: 0vw;
+//     }
+//     .ant-btn-group {
+//         display: flex;
+//     }
+// }
+
+// .ts-dialog-title {
+//     min-height: 100px;
+//     max-height: 120px;
+//     div {
+//         height: 100%;
+//     }
+//     span {
+//         width: 100%;
+//     }
+//     .ant-col-4 {
+//         display: flex;
+//         justify-content: flex-end;
+//     }
+//     .ant-col-20 {
+//         display: flex;
+//         flex-direction: column;
+//         line-height: 28px;
+//         color: #fff
+//     }
+//     &.ant-layout-header {
+//         padding: 0px;
+//     }
+// }
+
+// .ts-dialog-content {
+//     background: red;
+//     position: relative;
+//     top: 0;
+//     bottom: 0;
+//     .ant-tabs-bar {
+//         margin: 0px !important;
+//     }
+//     .ant-tabs-content {
+//         background: yellow;
+//         .ant-tabs-tabpane {
+//             overflow-y: auto;
+//         }
+//     }
+//     .ant-table-row {
+//         &.ant-table-row-level-0 {
+//             &.ts-table-active-row {
+//                 background: #ecf6fd;
+//             }
+//         }
+//     }
+// }
+
+// .ts-dialog-detail-title {
+//     font-size: 1.6rem;
+//     font-weight: 400;
+//     text-transform: uppercase;
+// }
+
+// .ts-dialog-detail-subtitle {
+//     font-size: 1.2rem;
+//     margin: 10px 0;
+//     opacity: .8;
+// }
+
+// .ts-action-button {
+//     margin: 8px;
+//     transition: all .3s cubic-bezier(.55,0,.55,.2);
+//     transition-duration: .14286s;
+//     &.ts-action-button-fadeOut-1 {
+//         opacity: 0;
+//         transform: scale(0);
+//         transition-delay: 2ms;
+//         z-index: 21;        
+//     }
+//     &.ts-action-button-fadeOut-2 {
+//         opacity: 0;
+//         transform: scale(0);
+//         transition-delay: -63ms;
+//         z-index: 22;        
+//     }
+//     &.ts-action-button-fadeOut-3 {
+//         opacity: 0;
+//         transform: scale(0);
+//         transition-delay: -128ms;
+//         z-index: 23;        
+//     }
+//     &.ts-action-button-fadeOut-4 {
+//         opacity: 0;
+//         transform: scale(0);
+//         transition-delay: -193ms;
+//         z-index: 24;        
+//     }
+//     &.ts-action-button-fadeOut-5 {
+//         opacity: 0;
+//         transform: scale(0);
+//         transition-delay: -258ms;
+//         z-index: 25;        
+//     }
+//     &.ts-action-button-fadeIn-1 {
+//         opacity: 1;
+//         transform: scale(1);
+//         transition-delay: 0ms;
+//         z-index: 21;        
+//     }
+//     &.ts-action-button-fadeIn-2 {
+//         opacity: 1;
+//         transform: scale(1);
+//         transition-delay: -65ms;
+//         z-index: 22;        
+//     }
+//     &.ts-action-button-fadeIn-3 {
+//         opacity: 1;
+//         transform: scale(1);
+//         transition-delay: -130ms;
+//         z-index: 23;        
+//     }
+//     &.ts-action-button-fadeIn-4 {
+//         opacity: 1;
+//         transform: scale(1);
+//         transition-delay: -195ms;
+//         z-index: 24;        
+//     }
+//     &.ts-action-button-fadeIn-5 {
+//         opacity: 1;
+//         transform: scale(1);
+//         transition-delay: -260ms;
+//         z-index: 25;        
+//     }
+// }
+
+.ts-layout {
+    background: #ECEFF1;
+}
+
+.ts-sign-out {
+    overflow: hidden;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50px;
+    background: #FFB13D;
+}
+.ts-sign-out a {
+    position: absolute;
+    top: -14px;
+    left: 10px;
+    font-size: 20px;
+    color: #FFEDD1;
+}
+.ts-sign-out a:hover,
+.ts-sign-out a:focus,
+.ts-sign-out a:active, {
+    color: #FFF;
+}
+
+.ts-layout-sider {
+    &.ant-layout-sider {
+        background: #FF9800;
+    }
+    .main-logo {
+        width: 220px;
+        height: 50px;
+        background: url('/app/ts-react/public/images/tsLogo.png');
+    }
+    .ant-menu-light,
+    .ant-menu-light .ant-menu-inline.ant-menu-sub {
+        background: #FFA726;
+    }
+    .ant-menu-item-selected > a,
+    .ant-menu-item-selected > a:hover {
+        background: transparent;
+    }
+    .ant-menu.ant-menu-light .ant-menu-item-selected {
+        background: #FFBA54;
+        border-left: 3px solid #FFDF4F;
+    }
+    .ant-menu-inline .ant-menu-item:after,
+    .ant-menu-vertical .ant-menu-item:after {
+        border-right: none;
+    }
+    .ant-menu-light .ant-menu-item,
+    .ant-menu-light .ant-menu-item-group-title,
+    .ant-menu-light .ant-menu-item > a,
+    .ant-menu-light .ant-menu-inline.ant-menu-sub,
+    .ant-menu-light .ant-menu-submenu-title {
+        color: #FFF;
+    }
+    .ant-menu-inline, .ant-menu-vertical {
+        border-right: none;
+    }
+    .ant-menu-inline .ant-menu-item,
+    .ant-menu-vertical .ant-menu-item {
+        left: 0
     }
 }
 
-.auth .header {
-    font-size: 18px;
+.ts-card {
+    background: #333;
 }
 
-.auth .row {
-    margin-bottom: 0px;
-}
-
-.auth .username {
-    margin-top: 0px;
-}
-
-.auth .btn {
-    width: 90%;
-}
-
-.auth .footer {
-    border-top: 1px solid #E9E9E9;
-    padding-bottom: 21px;
-}
-
-.footer-buttons {
-    position: fixed;
-    right: 40px;
-    bottom: 40px;
-    z-index: 2;
-    display: flex;
-}
-
-.trigger {
-    font-size: 18px;
-    line-height: 64px;
-    padding: 0 8px;
-    cursor: pointer;
-    transition: color .3s;
-}
-
-.trigger:hover {
-    color: #108ee9;
-}
-
-.nav-text { 
-    margin-left: 16px;
-    color: rgba(255, 255, 255, 0.67);
-}
-
-.code-box-demo {
-    .ant-card-body {
-        padding: 8px;
-    }
-}
-
-.custom-card-content {
-    display: block;
-    min-height: 80px;
-}
-
-.custom-card-bottom {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-end;
-    align-self: flex-end;
-    .ant-btn-group {
-        display: flex;
-    }
-}
-
-.custom-card-button {
-    margin: 8px;
-}
-
-.ant-layout-sider {
-    box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
-}
-
-.ant-layout-header {
-    box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
-}
-
-.ant-card {
-    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
-}
-
-.ts-dialog {
-    padding: 0px !important;
-    width: 0;
-    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
-    position: fixed;
-    background: #404040;
-    right: 0;
-    bottom: 0;
-    top: 64px;
-    z-index: 100;
-    box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
-    &.ts-dialog-show {
-        width: 40vw;
-    }
-    &.ts-dialog-hide {
-        width: 0vw;
-    }
-    .ant-btn-group {
-        display: flex;
-    }
-}
-
-.ts-dialog-title {
-    min-height: 100px;
-    max-height: 120px;
-    div {
-        height: 100%;
-    }
-    span {
-        width: 100%;
-    }
-    .ant-col-4 {
-        display: flex;
-        justify-content: flex-end;
-    }
-    .ant-col-20 {
-        display: flex;
-        flex-direction: column;
-        line-height: 28px;
-        color: #fff
-    }
-    &.ant-layout-header {
-        padding: 0px;
-    }
-}
-
-.ts-dialog-content {
-    background: red;
-    position: relative;
-    top: 0;
-    bottom: 0;
-    .ant-tabs-bar {
-        margin: 0px !important;
-    }
-    .ant-tabs-content {
-        background: yellow;
-        .ant-tabs-tabpane {
-            overflow-y: auto;
-        }
-    }
-    .ant-table-row {
-        &.ant-table-row-level-0 {
-            &.ts-table-active-row {
-                background: #ecf6fd;
-            }
-        }
-    }
-}
-
-.ts-dialog-detail-title {
-    font-size: 1.6rem;
-    font-weight: 400;
-    text-transform: uppercase;
-}
-
-.ts-dialog-detail-subtitle {
-    font-size: 1.2rem;
-    margin: 10px 0;
-    opacity: .8;
-}
-
-.ts-action-button {
-    margin: 8px;
-    transition: all .3s cubic-bezier(.55,0,.55,.2);
-    transition-duration: .14286s;
-    &.ts-action-button-fadeOut-1 {
-        opacity: 0;
-        transform: scale(0);
-        transition-delay: 2ms;
-        z-index: 21;        
-    }
-    &.ts-action-button-fadeOut-2 {
-        opacity: 0;
-        transform: scale(0);
-        transition-delay: -63ms;
-        z-index: 22;        
-    }
-    &.ts-action-button-fadeOut-3 {
-        opacity: 0;
-        transform: scale(0);
-        transition-delay: -128ms;
-        z-index: 23;        
-    }
-    &.ts-action-button-fadeOut-4 {
-        opacity: 0;
-        transform: scale(0);
-        transition-delay: -193ms;
-        z-index: 24;        
-    }
-    &.ts-action-button-fadeOut-5 {
-        opacity: 0;
-        transform: scale(0);
-        transition-delay: -258ms;
-        z-index: 25;        
-    }
-    &.ts-action-button-fadeIn-1 {
-        opacity: 1;
-        transform: scale(1);
-        transition-delay: 0ms;
-        z-index: 21;        
-    }
-    &.ts-action-button-fadeIn-2 {
-        opacity: 1;
-        transform: scale(1);
-        transition-delay: -65ms;
-        z-index: 22;        
-    }
-    &.ts-action-button-fadeIn-3 {
-        opacity: 1;
-        transform: scale(1);
-        transition-delay: -130ms;
-        z-index: 23;        
-    }
-    &.ts-action-button-fadeIn-4 {
-        opacity: 1;
-        transform: scale(1);
-        transition-delay: -195ms;
-        z-index: 24;        
-    }
-    &.ts-action-button-fadeIn-5 {
-        opacity: 1;
-        transform: scale(1);
-        transition-delay: -260ms;
-        z-index: 25;        
-    }
-}
 
 

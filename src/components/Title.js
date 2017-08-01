@@ -68,9 +68,11 @@ class Title extends Component {
 
     render() {
         const logoutButton = (
-            <a onClick={this.props.onLogout}>
-                <i className="material-icons">lock_open</i>
-            </a>
+            <div className="ts-sign-out">
+                <a onClick={this.props.onLogout}>
+                    <i className="fa fa-sign-out"></i>
+                </a>
+            </div>
         );
         return (
             <Layout.Header style={{ background: '#fff', padding: 0 }}>

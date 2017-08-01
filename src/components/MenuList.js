@@ -108,7 +108,7 @@ class MenuList extends Component {
     render() {
         const authority = this.props.authority;
         return (
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={[this.props.selectedKey]} defaultOpenKeys={[`/${this.props.selectedKey.split('/')[1]}`]}>
+            <Menu mode="inline" defaultSelectedKeys={[this.props.selectedKey]} defaultOpenKeys={[`/${this.props.selectedKey.split('/')[1]}`]}>
                 {this.components(authority)}
             </Menu>
         );
