@@ -1,17 +1,20 @@
 import React from 'react';
 
-export const stateToProps = mixins => proxyComponent => {
-    console.log(mixins);
-    return mixins.reduce((proxyComponent, Mixin) => {
+const stateToProps = (mixins) => (ProxyComponent) => {
+    return mixins.reduce((PrevComponent, Mixin) => {
         return class extends Mixin {
-            componentWillReceiveProps(nextProps) {
-                console.log(nextProps);
-            }
-
+            static displayName = PrevComponent.displayName || PrevComponent.name;
             render() {
-                const props = Object.assign({}, this.props, this.state);
-                return React.createElement(proxyComponent, props);
+                console.log('{this}', this);
+                console.log('{props}', this.props);
+                console.log('{state}', this.state);
+                console.log('{handlers}', this.handlers);
+                const newHandlers = Object.assign({}, this.props.handlers, this.handlers);
+                const props = Object.assign({}, this.props, this.state, { handlers: newHandlers });
+                return <PrevComponent {...props} />;
             }
         };
-    }, proxyComponent);
+    }, ProxyComponent);
 };
+
+export default stateToProps;

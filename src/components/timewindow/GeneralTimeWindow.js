@@ -11,7 +11,7 @@ import { types, times } from '../../utils/commons';
 import HistoryPanel from './HistoryPanel';
 import RealTimePanel from './RealTimePanel';
 import CommonButton from '../common/CommonButton';
-import { stateToProps } from './StateToProps';
+import stateToProps from './StateToProps';
 
 class GeneralTimeWindow extends Component {
     state = {
@@ -91,10 +91,10 @@ class GeneralTimeWindow extends Component {
                         defaultActiveKey="1"
                     >
                         <Tabs.TabPane tab={i18n.t('timewindow.realtime')} key="1">
-                            <RealTimePanel />
+                            <RealTimePanel {...this.props.handlers} {...this.props} />
                         </Tabs.TabPane>
                         <Tabs.TabPane tab={i18n.t('timewindow.history')} key="2">
-                            <HistoryPanel />
+                            <HistoryPanel {...this.props.handlers} {...this.props} />
                         </Tabs.TabPane>
                     </Tabs>
                 </Row>
@@ -112,7 +112,6 @@ class GeneralTimeWindow extends Component {
 
     render() {
         const { children } = this.props;
-        console.log(this.props);
         const buttonComponent = children || <CommonButton onClick={this.handleChangeVisible} />;
         return (
             <Popover

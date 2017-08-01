@@ -137,7 +137,6 @@ class Devices extends Component {
             return (
                 <CommonCard
                     key={id}
-                    style={{ cursor: 'pointer' }}
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
                     isCardDown={!this.state.dialogVisible}
