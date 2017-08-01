@@ -9,31 +9,30 @@ import { times } from '../../utils/commons';
 
 class HistoryPanel extends Component {
     state = {
-        datetimeType: 1,
-        startDateTime: +new Date() - (1 * 1000 * 60 * 60 * 24),
-        endDateTime: +new Date(),
+        dateTimeType: 1,
         history: {},
     }
 
-    handleChangeDateTimeType = (e) => {
-        this.setState({
-            datetimeType: e.target.value,
-        });
+    handlers = {
+        onChangedateTimeType: (e) => {
+            this.setState({
+                dateTimeType: e.target.value,
+            });
+        },
     }
 
     render() {
-        console.log(this.state.datetimeType);
         return (
             <Row>
                 <Row>
                     <Radio.Group
-                        value={this.state.datetimeType}
-                        onChange={this.handleChangeDateTimeType}
+                        defaultValue={1}
+                        onChange={this.props.onChangedateTimeType}
                     >
                         <Radio value={1}>
                             <label>{i18n.t('timewindow.last')}</label>
                             {
-                                this.state.datetimeType === 1 ? (
+                                this.props.dateTimeType === 1 ? (
                                     <TimeInterval
                                         intervals={times.predefIntervals}
                                     />
@@ -43,10 +42,9 @@ class HistoryPanel extends Component {
                         <Radio value={2}>
                             <label>{i18n.t('timewindow.time-period')}</label>
                             {
-                                this.state.datetimeType === 2 ? (
+                                this.props.dateTimeType === 2 ? (
                                     <DatePeriod
-                                        startDateTime={this.state.startDateTime}
-                                        endDateTime={this.state.endDateTime}
+                                        
                                     />
                                 ) : null
                             }

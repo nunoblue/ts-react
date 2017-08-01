@@ -78,7 +78,6 @@ class Users extends Component {
             return (
                 <CommonCard
                     key={id}
-                    style={{ cursor: 'pointer' }}
                     title={<CommonCheckbox value={id} onChange={this.handleChecked}>{email}</CommonCheckbox>}
                     content={`${firstName} ${lastName}`}
                     onSelfEvent={closeDialog}

@@ -143,7 +143,6 @@ class Dashboards extends Component {
             return (
                 <CommonCard
                     key={id}
-                    style={{ cursor: 'pointer' }}
                     title={<CommonCheckbox value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>}
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}

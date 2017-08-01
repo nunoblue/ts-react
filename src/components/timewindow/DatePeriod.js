@@ -28,20 +28,22 @@ class DatePeriod extends Component {
     }
 
     render() {
+        const startDateTime = +new Date() - (1 * 1000 * 60 * 60 * 24);
+        const endDateTime = +new Date();
         return (
             <Row>
                 <DatePicker
                     showTime
                     format="YYYY-MM-DD HH:mm:ss"
                     locale={enUS.DatePicker}
-                    defaultValue={moment(this.props.startDateTime)}
+                    defaultValue={moment(startDateTime)}
                     onChange={this.handleChangeStartDateTime}
                 />
                 <DatePicker
                     showTime
                     format="YYYY-MM-DD HH:mm:ss"
                     locale={enUS.DatePicker}
-                    defaultValue={moment(this.props.endDateTime)}
+                    defaultValue={moment(endDateTime)}
                     onChange={this.handleChangeEndDateTime}
                 />
             </Row>

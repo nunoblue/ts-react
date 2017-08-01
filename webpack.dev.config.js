@@ -4,8 +4,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseConfig = require('./webpack.common.config.js');
 
-const devPort = 3001;
-const host = '192.168.20.240';
+const devPort = 8081;
+const host = 'localhost';
 
 module.exports = merge(baseConfig, {
     devtool: 'eval-source-map',

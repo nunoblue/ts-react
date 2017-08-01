@@ -202,7 +202,6 @@ class Plugins extends Component {
             return (
                 <CommonCard
                     key={id}
-                    style={{ cursor: 'pointer' }}
                     title={
                         <CommonCheckBox value={id} onChange={this.handleChecked}>{name}</CommonCheckBox>
                     }

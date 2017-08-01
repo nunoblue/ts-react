@@ -10,6 +10,12 @@ class RealTimePanel extends Component {
         realtime: {},
     }
 
+    handlers = {
+        changeLast: () => {
+
+        },
+    }
+
     handleChangeLast = () => {
 
     }
