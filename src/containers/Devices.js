@@ -137,6 +137,7 @@ class Devices extends Component {
             return (
                 <CommonCard
                     key={id}
+                    className="ts-card"
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
                     isCardDown={!this.state.dialogVisible}
@@ -561,7 +562,12 @@ class Devices extends Component {
         return (
             <Row>
                 <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                    <Card className="ts-card" onClick={this.openAddDeviceModal}>
+                    <Card className="ts-card-new" onClick={this.openAddDeviceModal}>
+                        <div>
+                            <span>Create a
+                                <span className="point"> new device</span>
+                            </span>
+                        </div>
                     </Card>
                 </Col>
                 {this.components()}
