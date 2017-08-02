@@ -90,39 +90,42 @@ class Devices extends Component {
         const unassignConfirm = this.handleUnAssignConfirm.bind(this, name, deviceId, isPublic);
         const makePublicConfirm = this.handleMakePublicConfirm.bind(this, name, deviceId);
         return (
-            <Button.Group className="custom-card-buttongroup">
-                <CommonButton
-                    className="custom-card-button"
-                    shape="circle"
-                    visible={shareVisible}
-                    iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
-                    tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
-                    onClick={isPublic ? unassignConfirm : makePublicConfirm}
-                />
-                <CommonButton
-                    className="custom-card-button"
-                    shape="circle"
-                    visible={assignVisible}
-                    iconClassName={isAssign ? 'user-delete' : 'user-add'}
-                    tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
-                    onClick={isAssign ? unassignConfirm : assignCustomerModal}
-                />
-                <CommonButton
-                    className="custom-card-button"
-                    shape="circle"
-                    iconClassName="key"
-                    onClick={credentialsModal}
-                    tooltipTitle={i18n.t('device.manage-credentials')}
-                />
-                <CommonButton
-                    className="custom-card-button"
-                    shape="circle"
-                    visible={deleteVisible}
-                    iconClassName="delete"
-                    onClick={modalConfirmAction}
-                    tooltipTitle={i18n.t('device.delete')}
-                />
-            </Button.Group>
+            <Row>
+                <CommonCheckbox checkedCount={this.state.checkedCount} value={deviceId} onChange={this.handleChecked} />
+                <Button.Group className="custom-card-buttongroup">
+                    <CommonButton
+                        className="custom-card-button"
+                        shape="circle"
+                        visible={shareVisible}
+                        iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
+                        tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
+                        onClick={isPublic ? unassignConfirm : makePublicConfirm}
+                    />
+                    <CommonButton
+                        className="custom-card-button"
+                        shape="circle"
+                        visible={assignVisible}
+                        iconClassName={isAssign ? 'user-delete' : 'user-add'}
+                        tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
+                        onClick={isAssign ? unassignConfirm : assignCustomerModal}
+                    />
+                    <CommonButton
+                        className="custom-card-button"
+                        shape="circle"
+                        iconClassName="key"
+                        onClick={credentialsModal}
+                        tooltipTitle={i18n.t('device.manage-credentials')}
+                    />
+                    <CommonButton
+                        className="custom-card-button"
+                        shape="circle"
+                        visible={deleteVisible}
+                        iconClassName="delete"
+                        onClick={modalConfirmAction}
+                        tooltipTitle={i18n.t('device.delete')}
+                    />
+                </Button.Group>
+            </Row>
         );
     }
 
@@ -139,8 +142,8 @@ class Devices extends Component {
                     key={id}
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
+                    title={name}
                     isCardDown={!this.state.dialogVisible}
-                    title={<CommonCheckbox checkedCount={this.state.checkedCount} value={id} onChange={this.handleChecked}>{name}</CommonCheckbox>}
                     content={type.toUpperCase()}
                 >
                     {this.buttonComponents(name, id, customerId)}
@@ -560,10 +563,10 @@ class Devices extends Component {
         const authority = this.state.authority === this.state.isCustomer;
         return (
             <Row>
-                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                 <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                     <Card className="ts-card-example" onClick={this.openAddDeviceModal}>
                     </Card>
-                </Col>
+                </Col> 
                 {this.components()}
                 <div className="footer-buttons">
                     <CommonButton
