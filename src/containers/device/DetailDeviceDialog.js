@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Tabs, Switch, Row, Select, Form, Input } from 'antd';
+import { Tabs, Row, Select, Form, Input } from 'antd';
 import i18n from 'i18next';
 
 import CommonDialog from '../../components/common/CommonDialog';
@@ -19,6 +18,10 @@ class DetailDeviceDialog extends Component {
     }
 
     handleClickEdit = () => {
+        const { onCancelDialogEdit } = this.props;
+        if (this.state.editing) {
+            onCancelDialogEdit();
+        }
         this.setState({
             editing: !this.state.editing,
         });
@@ -117,7 +120,7 @@ class DetailDeviceDialog extends Component {
                             disabled={!this.state.editing}
                             titleChangeEvent={this.handleTitleChange}
                         >
-                         {assigendInput}
+                            {assigendInput}
                         </DeviceForm>
                     </Tabs.TabPane>
                     <Tabs.TabPane tab={i18n.t('attribute.attributes')} key="2">

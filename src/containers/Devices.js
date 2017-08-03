@@ -620,6 +620,17 @@ class Devices extends Component {
         });
     }
 
+    onCancelDialogEdit = () => {
+        const { selectedDevice } = this.state;
+        this.detailDialog.getWrappedInstance().initTitle(selectedDevice.name);
+        this.detailDialog.getWrappedInstance().form.setFieldsValue({
+            name: selectedDevice.name,
+            type: selectedDevice.type,
+            description: selectedDevice.description,
+            gateway: selectedDevice.gateway,
+        });
+    }
+
     loadDeviceDetailData = (selectedDeviceId) => {
         const { data } = this.props;
         const deviceId = this.state.selectedDevice ? this.state.selectedDevice.id.id : null;
@@ -705,9 +716,10 @@ class Devices extends Component {
                     data={this.state.selectedDevice}
                     visible={this.state.dialogVisible}
                     options={options}
+                    buttonComponents={this.buttonComponents}
                     closeDialog={this.closeDetailDialog}
                     onSave={this.handleSaveDevice}
-                    buttonComponents={this.buttonComponents}
+                    onCancelDialogEdit={this.onCancelDialogEdit}
                 />
             </Row>
         );
