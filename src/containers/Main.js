@@ -112,7 +112,7 @@ class Main extends Component {
             matches = this.sider.mql.matches;
         }
         return (
-            <Layout style={{ height: '100vh' }}>
+            <Layout className="ts-layout">
                 <Layout.Sider
                     ref={(c) => { this.sider = c; }}
                     trigger={null}
@@ -147,8 +147,11 @@ class Main extends Component {
                             {this.props.children}
                         </Spin>
                     </Layout.Content>
-                    <Layout.Footer style={{backgroundColor: '#CCCCCC', marginTop: 20, paddingTop: 10, paddingBottom: 10, paddingLeft:15, color: '#666666', textAlign: 'left' }}>
+                    <Layout.Footer style={{overflow: 'hidden', backgroundColor: '#CCCCCC', marginTop: 20, paddingTop: 10, paddingBottom: 10, paddingLeft:15, color: '#666666', textAlign: 'left', zIndex: '200'}}>
                         {'© Copyright 2017. All rights Reserved.'}
+                        <div className="footer-ver">
+                            <span>Version 1.0.1</span>
+                        </div>
                     </Layout.Footer>
                 </Layout>
             </Layout>
