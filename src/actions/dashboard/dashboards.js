@@ -1,6 +1,3 @@
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-
 import {
     TENANT_DASHBOARDS,
     TENANT_DASHBOARDS_SUCCESS,
@@ -8,17 +5,10 @@ import {
     API_GET_DASHBOARD_SUCCESS,
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
+    API_GET_SERVERTIME_SUCCESS,
     CLEAR_DASHBOARDS,
  } from './DashboardsTypes';
-
-import config from '../../config';
-
-const apServer = config.apServer;
-const TENANT_DASHBOARDS_URL = `${apServer}/api/tenant/dashboards`;
-const GET_DASHBOARD_URL = `${apServer}/api/dashboard`;
-const CUSTOMER_DASHBOARDS_URL = `${apServer}/api/customer`;
-const SAVE_DASHBOARD_URL = `${apServer}/api/dashboard`;
-const DELETE_DASHBOARD_URL = `${apServer}/api/dashboard`;
+import { dashboardService } from '../../services/api';
 
 function getDashboards() {
     return {
@@ -59,6 +49,13 @@ function deleteDashboardSuccess() {
     };
 }
 
+function getServerTimeDiffSuccess(stDiff) {
+    return {
+        type: API_GET_SERVERTIME_SUCCESS,
+        stDiff,
+    };
+}
+
 function clearDashboardsSuccess() {
     return {
         type: CLEAR_DASHBOARDS,
@@ -68,41 +65,26 @@ function clearDashboardsSuccess() {
 export const getDashboardsRequest = (limit, textSearch, authority, id) => (dispatch) => {
     dispatch(getDashboards());
     if (authority === 'TENANT_ADMIN') {
-        return axios.get(TENANT_DASHBOARDS_URL, {
-            params: { limit, textSearch },
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return dashboardService.getTenantDashboards(limit, textSearch).then((response) => {
             dispatch(getDashboardsSuccess(response.data.data));
         }).catch((error) => {
-            dispatch(getDashboardsFailure(error.response.data.message));
+            dispatch(getDashboardsFailure(error.message));
         });
     }
-    return axios.get(`${CUSTOMER_DASHBOARDS_URL}/${id}/dashboards`, {
-        params: { limit, textSearch },
-        headers: {
-            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-        },
-    }).then((response) => {
+    return dashboardService.getCustomerDashboards(limit, textSearch, id).then((response) => {
         dispatch(getDashboardsSuccess(response.data.data));
     }).catch((error) => {
-        dispatch(getDashboardsFailure(error.response.data.message));
+        dispatch(getDashboardsFailure(error.message));
     });
 };
 
 export const getDashboardRequest = (id) => {
     return (dispatch) => {
         dispatch(getDashboards());
-
-        return axios.get(`${GET_DASHBOARD_URL}/${id}`, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return dashboardService.getDashboard(id).then((response) => {
             dispatch(getDashboardSuccess(response.data));
         }).catch((error) => {
-            dispatch(getDashboardsFailure(error.response.data.message));
+            dispatch(getDashboardsFailure(error.message));
         });
     };
 };
@@ -110,15 +92,10 @@ export const getDashboardRequest = (id) => {
 export const saveDashboardRequest = (data) => {
     return (dispatch) => {
         dispatch(getDashboards());
-
-        return axios.post(SAVE_DASHBOARD_URL, data, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return dashboardService.saveDashboard(data).then(() => {
             dispatch(saveDashboardSuccess());
         }).catch((error) => {
-            dispatch(getDashboardsFailure(error.response.data.message));
+            dispatch(getDashboardsFailure(error.message));
         });
     };
 };
@@ -126,15 +103,10 @@ export const saveDashboardRequest = (data) => {
 export const deleteDashboardRequest = (id) => {
     return (dispatch) => {
         dispatch(getDashboards());
-
-        return axios.delete(`${DELETE_DASHBOARD_URL}/${id}`, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return dashboardService.deleteDashboard(id).then(() => {
             dispatch(deleteDashboardSuccess());
         }).catch((error) => {
-            dispatch(getDashboardsFailure(error.response.data.message));
+            dispatch(getDashboardsFailure(error.message));
         });
     };
 };
@@ -142,17 +114,26 @@ export const deleteDashboardRequest = (id) => {
 export const multipleDeleteDashboardRequest = (idArray) => {
     return (dispatch) => {
         dispatch(getDashboards());
-        return axios.all(idArray.map((id) => {
-            return axios.delete(`${DELETE_DASHBOARD_URL}/${id}`, {
-                headers: {
-                    'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-                },
-            }).then((response) => {
-                dispatch(deleteDashboardSuccess());
-            }).catch((error) => {
-                dispatch(getDashboardsFailure(error.response.data.message));
-            });
-        }));
+        return dashboardService.multipleDeleteDashboard(idArray).then(() => {
+            dispatch(deleteDashboardSuccess());
+        }).catch((error) => {
+            dispatch(getDashboardsFailure(error.message));
+        });
+    };
+};
+
+export const getServerTimeDiffRequest = () => {
+    return (dispatch) => {
+        dispatch(getDashboards());
+        const ts = Date.now();
+        return dashboardService.getServerTime().then((response) => {
+            const ts1 = Date.now();
+            const st = response.data;
+            const stDiff = Math.ceil(st - ((ts + ts1) / 2));
+            dispatch(getServerTimeDiffSuccess(stDiff));
+        }).catch((error) => {
+            dispatch(getDashboardsFailure(error.message));
+        });
     };
 };
 

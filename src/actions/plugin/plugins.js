@@ -1,6 +1,3 @@
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-
 import {
     API_PLUGINS,
     API_PLUGINS_SUCCESS,
@@ -10,13 +7,7 @@ import {
     API_PLUGIN_SAVE_SUCCESS,
     API_PLUGIN_SUCCESS,
 } from './PluginsTypes';
-
-import config from '../../config';
-
-const { apServer, apiHeaderPrefix } = config;
-const API_PLUGIN_URL = `${apServer}/api/plugin`;
-const API_PLUGINS_URL = `${apServer}/api/plugins`;
-const xAuthorization = `${apiHeaderPrefix} ${storage.read('jwt_token')}`;
+import { pluginService } from '../../services/api';
 
 function getPlugins() {
     return {
@@ -59,61 +50,40 @@ function clearPluginsSuccess() {
 export const getPluginsRequest = () => (dispatch) => {
     dispatch(getPlugins());
 
-    return axios.get(API_PLUGINS_URL, {
-        headers: {
-            'X-Authorization': `${apiHeaderPrefix} ${storage.read('jwt_token')}`,
-        },
-    }).then((response) => {
+    return pluginService.getPlugins().then((response) => {
         dispatch(getPluginsSuccess(response.data));
     }).catch((error) => {
-        dispatch(getPluginApiFailure(error.response.data.message))
+        dispatch(getPluginApiFailure(error.message));
     });
 };
 
 export const deletePluginsRequest = (idArray) => (dispatch) => {
     dispatch(getPlugins());
 
-    return axios.all(idArray.map(id => axios.delete(
-        `${API_PLUGIN_URL}/${id}`, {
-            headers: {
-                'X-Authorization': `${apiHeaderPrefix} ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
-            dispatch(deletePluginSuccess());
-        }).catch((error) => {
-            dispatch(getPluginApiFailure(error.response.data.message));
-        })));
+    return pluginService.deletePlugins(idArray).then(() => {
+        dispatch(deletePluginSuccess());
+    }).catch((error) => {
+        dispatch(getPluginApiFailure(error.message));
+    });
 };
 
 export const activatePluginRequest = (id, state) => (dispatch) => {
     dispatch(getPlugins());
-
-    const url = `${API_PLUGIN_URL}/${id}/${state === 'ACTIVE' ? 'suspend' : 'activate'}`;
-    return axios.post(url, null, {
-       headers: {
-           'X-Authorization': xAuthorization,
-       },
-    }).then((response) => {
+    return pluginService.activatePlugin(id, state).then((response) => {
         console.debug('activatePluginRequest is success', response);
         dispatch(getPluginApiSuccess());
     }).catch((error) => {
-        dispatch(getPluginApiFailure(error.response.data.message));
+        dispatch(getPluginApiFailure(error.message));
     });
 };
 
 export const savePluginRequest = (plugin) => (dispatch) => {
     dispatch(getPlugins());
-
-    const url = API_PLUGIN_URL;
-    return axios.post(url, plugin, {
-        headers: {
-            'X-Authorization': xAuthorization,
-        },
-    }).then((response) => {
+    return pluginService.savePlugin(plugin).then((response) => {
         console.debug('savePluginRequest is success', response.data);
         dispatch(getPluginApiSuccess());
     }).catch((error) => {
-       dispatch(getPluginApiFailure(error.response.data.message));
+        dispatch(getPluginApiFailure(error.message));
     });
 };
 

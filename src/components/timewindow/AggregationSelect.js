@@ -5,9 +5,11 @@ import { Select } from 'antd';
 import { types } from '../../utils/commons';
 
 class AggregationSelect extends Component {
-
     handleChangeSelect = (value) => {
-        console.log(value);
+        const { onChangeAggregation } = this.props;
+        if (typeof onChangeAggregation !== 'undefined') {
+            onChangeAggregation(value.key);
+        }
     }
 
     render() {

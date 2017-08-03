@@ -14,7 +14,7 @@ import DetailPluginDialog from '../components/plugin/DetailPluginDialog';
 import * as actions from '../actions/plugin/plugins';
 import * as ruleActions from '../actions/rule/rules';
 
-import config from '../config';
+import config from '../configs';
 
 class Plugins extends Component {
 
@@ -28,6 +28,11 @@ class Plugins extends Component {
     componentDidMount() {
         this.props.getPluginsRequest();
         this.props.getComponentsRequest('PLUGIN');
+    }
+
+    componentWillUnmount() {
+        const { clearPluginsRequest } = this.props;
+        clearPluginsRequest();
     }
 
     modalHandler = {
@@ -303,6 +308,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     savePluginRequest: actions.savePluginRequest,
     activatePluginRequest: actions.activatePluginRequest,
     getComponentsRequest: ruleActions.getComponentsRequest,
+    clearPluginsRequest: actions.clearPluginsRequest,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Plugins);

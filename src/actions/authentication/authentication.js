@@ -1,4 +1,3 @@
-import axios from 'axios';
 import storage from 'store/storages/localStorage';
 import jwtDecode from 'jwt-decode';
 
@@ -6,9 +5,6 @@ import {
     AUTH_LOGIN,
     AUTH_LOGIN_SUCCESS,
     AUTH_LOGIN_FAILURE,
-    AUTH_REGISTER,
-    AUTH_REGISTER_SUCCESS,
-    AUTH_REGISTER_FAILURE,
     AUTH_GET_STATUS,
     AUTH_GET_STATUS_SUCCESS,
     AUTH_GET_STATUS_FAILURE,
@@ -16,20 +12,9 @@ import {
     API_GET_USER_SUCCESS,
     API_GET_USER_FAILURE,
 } from './AuthenticationTypes';
+import { authenticationService } from '../../services/api';
 
-import config from '../../config';
-
-/*= ===========================================================================
-    authentication
-==============================================================================*/
-
-const apServer = config.apServer;
-const LOGIN_URL = `${apServer}/api/auth/login`;
-const TOKEN_URL = `${apServer}/api/auth/token`;
-const API_USER_URL = `${apServer}/api/user`;
-const API_ACTIVATE_URL = `${apServer}/api/noauth/activate`;
-
-function updateAndValidateToken(token, prefix, notify) {
+const updateAndValidateToken = (token, prefix, notify) => {
     let valid = false;
     const tokenData = jwtDecode(token);
     const issuedAt = tokenData.iat;
@@ -37,159 +22,137 @@ function updateAndValidateToken(token, prefix, notify) {
     if (issuedAt && expTime) {
         const ttl = expTime - issuedAt;
         if (ttl > 0) {
-            const clientExpiration = +new Date() + ttl * 1000;
+            const clientExpiration = +new Date() + (ttl * 1000);
             storage.write(prefix, token);
             storage.write(`${prefix}_expiration`, clientExpiration);
             valid = true;
         }
     }
-}
+};
 
-function clearTokenData() {
+const clearTokenData = () => {
     storage.remove('jwt_token');
     storage.remove('jwt_token_expiration');
     storage.remove('refresh_token');
     storage.remove('refresh_token_expiration');
-}
+};
 
-function setUserFromJwtToken(jwtToken, refreshToken, notify, doLogout) {
+const setUserFromJwtToken = (jwtToken, refreshToken, notify, doLogout) => {
     if (!jwtToken) {
         clearTokenData();
     } else {
         updateAndValidateToken(jwtToken, 'jwt_token', doLogout);
         updateAndValidateToken(refreshToken, 'refresh_token', doLogout);
     }
-}
+};
 
-function clearJwtToken(doLogout) {
+const clearJwtToken = (doLogout) => {
     setUserFromJwtToken(null, null, true, doLogout);
-}
+};
 
-function isTokenValid(prefix) {
+const isTokenValid = (prefix) => {
     const clientExpiration = storage.read(`${prefix}_expiration`);
     return clientExpiration && clientExpiration > +new Date();
-}
+};
 
-/**
- * LOGIN
- */
-function login() {
+const login = () => {
     return {
         type: AUTH_LOGIN,
     };
-}
+};
 
-function loginSuccess(response) {
-    const token = response.data.token;
-    const refreshToken = response.data.refreshToken;
+const loginSuccess = (data) => {
+    const token = data.token;
+    const refreshToken = data.refreshToken;
     setUserFromJwtToken(token, refreshToken, false, false);
     return {
         type: AUTH_LOGIN_SUCCESS,
     };
-}
+};
 
-function loginFailure(errorMessage) {
+const loginFailure = (errorMessage) => {
     return {
         type: AUTH_LOGIN_FAILURE,
         errorMessage,
     };
-}
+};
 
-function logoutSuccess() {
+const logoutSuccess = () => {
     clearJwtToken(false);
     return {
         type: AUTH_LOGOUT,
     };
-}
+};
 
-function register() {
-    return {
-        type: AUTH_REGISTER,
-    };
-}
-
-function registerSuccess() {
-    return {
-        type: AUTH_REGISTER_SUCCESS,
-    };
-}
-
-function registerFailure(error) {
-    return {
-        type: AUTH_REGISTER_FAILURE,
-        error,
-    };
-}
-
-function getUserSuccess(data) {
+const getUserSuccess = (data) => {
     return {
         type: API_GET_USER_SUCCESS,
         currentUser: data,
     };
-}
+};
 
-function getUserFailure(message) {
+const getUserFailure = (message) => {
     clearJwtToken(false);
     return {
         type: API_GET_USER_FAILURE,
         errorMessage: message,
     };
-}
+};
 
-function getRefresh() {
+const getRefresh = () => {
     return {
         type: AUTH_GET_STATUS,
     };
-}
+};
 
-function getRefreshSuccess(response) {
-    if (response) {
-        const token = response.data.token;
-        const refreshToken = response.data.refreshToken;
+const getRefreshSuccess = (data) => {
+    if (data) {
+        const token = data.token;
+        const refreshToken = data.refreshToken;
         setUserFromJwtToken(token, refreshToken, false, false);
     }
 
     return {
         type: AUTH_GET_STATUS_SUCCESS,
     };
-}
+};
 
-function getRefreshFailure(message) {
+const getRefreshFailure = (message) => {
     clearJwtToken(false);
     return {
         type: AUTH_GET_STATUS_FAILURE,
         errorMessage: message,
     };
-}
-
-/* REGISTER */
-export const registerRequest = (username, password) => (dispatch) => {
-    dispatch(register());
-
-    return axios.post('/api/account/signup', { username, password })
-    .then((response) => {
-        dispatch(registerSuccess(response));
-    }).catch((error) => {
-        dispatch(registerFailure(error.response.data.code));
-    });
 };
+
+// const fetchAllowedDashboardIds = () => {
+//     const pageLink = {limit: 100};
+//     let fetchDashboardsPromise;
+//     if (currentUser.authority === 'TENANT_ADMIN') {
+//         fetchDashboardsPromise = dashboardService.getTenantDashboards(pageLink);
+//     } else {
+//         fetchDashboardsPromise = dashboardService.getCustomerDashboards(currentUser.customerId, pageLink);
+//     }
+//     fetchDashboardsPromise.then(
+//         function success(result) {
+//             var dashboards = result.data;
+//             for (var d=0;d<dashboards.length;d++) {
+//                 allowedDashboardIds.push(dashboards[d].id.id);
+//             }
+//             deferred.resolve();
+//         },
+//         function fail() {
+//             deferred.reject();
+//         }
+//     );
+// }
 
 export const loginRequest = (username, password) => (dispatch) => {
     dispatch(login());
-    const loginData = {
-        username,
-        password,
-    };
-    return axios.post(LOGIN_URL, JSON.stringify(loginData), {
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    }).then((response) => {
-        dispatch(loginSuccess(response));
+    return authenticationService.login(username, password).then((response) => {
+        dispatch(loginSuccess(response.data));
     }).catch((error) => {
-        if (error.response) {
-            dispatch(loginFailure(error.response.data.message));
-        } else {
-            dispatch(loginFailure(error.message));
-        }
+        dispatch(loginFailure(error.message));
     });
 };
 
@@ -198,19 +161,13 @@ export const refreshJwtRequest = () => (dispatch) => {
     const refreshToken = storage.read('refresh_token');
     const refreshTokenValid = isTokenValid('refresh_token');
     dispatch(getRefresh());
-
     if (!refreshTokenValid) {
         return dispatch(getRefreshFailure());
     }
-    const refreshTokenRequest = {
-        refreshToken,
-    };
-    return axios.post(TOKEN_URL, JSON.stringify(refreshTokenRequest), {
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    }).then((response) => {
-        dispatch(getRefreshSuccess(response));
+    return authenticationService.refershJwtRequest(refreshToken).then((response) => {
+        dispatch(getRefreshSuccess(response.data));
     }).catch((error) => {
-        dispatch(getRefreshFailure(error.response.data.message));
+        dispatch(getRefreshFailure(error.message));
     });
 };
 
@@ -251,19 +208,14 @@ export const getUserRequest = () => {
         } else if (tokenData) {
             tokenData.authority = 'ANONYMOUS';
         }
-
         if (tokenData.isPublic) {
-
+            // $rootScope.forceFullscreen = true;
+            // fetchAllowedDashboardIds();
         } else if (tokenData.userId) {
-            return axios.get(`${API_USER_URL}/${tokenData.userId}`, {
-                headers: {
-                    'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-                },
-            }).then((response) => {
+            return authenticationService.getUser(tokenData.userId).then((response) => {
                 dispatch(getUserSuccess(response.data));
             }).catch((error) => {
-                const message = error.response ? error.response.data.message : error.message;
-                dispatch(getUserFailure(message));
+                dispatch(getUserFailure(error.message));
             });
         }
     };
@@ -272,16 +224,10 @@ export const getUserRequest = () => {
 export const activateRequest = (activateToken, password) => {
     return (dispatch) => {
         dispatch(login());
-        const params = {
-            activateToken,
-            password,
-        };
-        return axios.post(API_ACTIVATE_URL, {
-            params,
-        }).then((response) => {
-            dispatch(loginSuccess(response));
+        return authenticationService.activate(activateToken, password).then((response) => {
+            dispatch(loginSuccess(response.data));
         }).catch((error) => {
-            dispatch(loginFailure(error.response.data.message));
+            dispatch(loginFailure(error.message));
         });
     };
 };

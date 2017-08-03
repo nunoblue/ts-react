@@ -8,13 +8,14 @@ import { Layout, Row, Col, Switch, Spin } from 'antd';
 import MenuList from '../components/MenuList';
 import Title from '../components/Title';
 import * as authentication from '../actions/authentication/authentication';
-import * as customers from '../actions/customer/customers';
-import * as devices from '../actions/device/devices';
-import * as plugins from '../actions/plugin/plugins';
-import * as rules from '../actions/rule/rules';
-import * as users from '../actions/user/users';
-import * as dashboards from '../actions/dashboard/dashboards';
-import * as widgets from '../actions/widget/widgets';
+import { clearCustomersRequest } from '../actions/customer/customers';
+import { clearDevicesRequest } from '../actions/device/devices';
+import { clearPluginsRequest } from '../actions/plugin/plugins';
+import { clearRulesRequest } from '../actions/rule/rules';
+import { clearUsersRequest } from '../actions/user/users';
+import { clearDashboardsRequest } from '../actions/dashboard/dashboards';
+import { clearWidgetsRequest } from '../actions/widget/widgets';
+import { clearAdminsRequest } from '../actions/admin/admins';
 
 class Main extends Component {
 
@@ -157,13 +158,14 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     logoutRequest: authentication.logoutRequest,
     refreshJwtRequest: authentication.refreshJwtRequest,
-    clearCustomersRequest: customers.clearCustomersRequest,
-    clearRulesRequest: rules.clearRulesRequest,
-    clearUsersRequest: users.clearUsersRequest,
-    clearDashboardsRequest: dashboards.clearDashboardsRequest,
-    clearDevicesRequest: devices.clearDevicesRequest,
-    clearWidgetsRequest: widgets.clearWidgetsRequest,
-    clearPluginsRequest: plugins.clearPluginsRequest,
+    clearCustomersRequest,
+    clearRulesRequest,
+    clearUsersRequest,
+    clearDashboardsRequest,
+    clearDevicesRequest,
+    clearWidgetsRequest,
+    clearPluginsRequest,
+    clearAdminsRequest,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

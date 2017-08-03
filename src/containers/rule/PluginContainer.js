@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 import * as ruleActions from '../../actions/rule/rules';
 import * as pluginActions from '../../actions/plugin/plugins';
-import config from '../../config';
+import config from '../../configs';
 import PluginActionContainer from './PluginActionContainer';
 
 const PLUGIN = 'PLUGIN';

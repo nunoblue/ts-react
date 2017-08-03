@@ -429,6 +429,99 @@ const AVG_LIMIT = 200;
 const MAX_LIMIT = 500;
 
 export const times = {
+    getIntervals: (min, max) => {
+        const intervals = times.predefIntervals;
+        min = times.boundMinInterval(min);
+        max = times.boundMaxInterval(max);
+        const newIntervals = [];
+        for (let i in intervals) {
+            const interval = intervals[i];
+            if (interval.value >= min && interval.value <= max) {
+                newIntervals.push(interval);
+            }
+        }
+        return newIntervals;
+    },
+    getValueIntervals: (timewindow) => {
+        const intervals = times.predefIntervals;
+        const min = times.minIntervalLimit(timewindow);
+        const max = times.maxIntervalLimit(timewindow);
+        const newIntervals = [];
+        intervals.forEach((interval) => {
+            if (interval.value >= min && interval.value <= max) {
+                newIntervals.push(interval);
+            }
+        });
+        return newIntervals;
+    },
+    matchesExistingInterval: (min, max, intervalMs) => {
+        const intervals = times.getIntervals(min, max);
+        const matches = intervals.some((interval) => {
+            return intervalMs === interval.value;
+        });
+        return matches;
+    },
+    minIntervalLimit: (timewindow) => {
+        const min = timewindow / MAX_LIMIT;
+        return times.boundMinInterval(min);
+    },
+    avgInterval: (timewindow) => {
+        const avg = timewindow / AVG_LIMIT;
+        return times.boundMinInterval(avg);
+    },
+    maxIntervalLimit: (timewindow) => {
+        const max = timewindow / MIN_LIMIT;
+        return times.boundMaxInterval(max);
+    },
+    boundMinInterval: (min) => {
+        return times.toBound(min, times.MIN_INTERVAL, times.MAX_INTERVAL, times.MIN_INTERVAL);
+    },
+    boundMaxInterval: (max) => {
+        return times.toBound(max, times.MIN_INTERVAL, times.MAX_INTERVAL, times.MAX_INTERVAL);
+    },
+    toBound: (value, min, max, defValue) => {
+        if (value) {
+            value = Math.max(value, min);
+            value = Math.min(value, max);
+            return value;
+        }
+        return defValue;
+    },
+    boundIntervalToTimewindow: (timewindow, intervalMs, aggType) => {
+        if (aggType === types.aggregation.none.value) {
+            return SECOND;
+        } else {
+            const min = times.minIntervalLimit(timewindow);
+            const max = times.maxIntervalLimit(timewindow);
+            if (intervalMs) {
+                return times.toBound(intervalMs, min, max, intervalMs);
+            } else {
+                return times.boundToPredefinedInterval(min, max, times.avgInterval(timewindow));
+            }
+        }
+    },
+    boundToPredefinedInterval: (min, max, intervalMs) => {
+        const intervals = times.getIntervals(min, max);
+        let minDelta = MAX_INTERVAL;
+        let boundedInterval = intervalMs || min;
+        let matchedInterval;
+        for (let i in intervals) {
+            const interval = intervals[i];
+            const delta = Math.abs(interval.value - boundedInterval);
+            if (delta < minDelta) {
+                matchedInterval = interval;
+                minDelta = delta;
+            }
+        }
+        boundedInterval = matchedInterval.value;
+        return boundedInterval;
+    },
+    closestNumber: (intervals, intervalMs) => {
+        const nearest = intervals.reduce((prev, curr) => {
+            return (Math.abs(curr.value - intervalMs) < Math.abs(prev.value - intervalMs)) ? curr : prev;
+        });
+        return nearest.value;
+    },
     SECOND,
     MINUTE,
     HOUR,

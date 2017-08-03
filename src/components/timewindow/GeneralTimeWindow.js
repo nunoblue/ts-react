@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import i18n from 'i18next';
 import {
     Popover,
@@ -7,18 +9,118 @@ import {
     Tabs,
 } from 'antd';
 
-import { types, times } from '../../utils/commons';
 import HistoryPanel from './HistoryPanel';
 import RealTimePanel from './RealTimePanel';
 import CommonButton from '../common/CommonButton';
-import stateToProps from './StateToProps';
+import stateToProps from '../StateToProps';
+
+/**
+ * var historyCommand = {
+        entityType: datasourceSubscription.entityType,
+        entityId: datasourceSubscription.entityId,
+        keys: tsKeys,
+        startTs: subsTw.fixedWindow.startTimeMs,
+        endTs: subsTw.fixedWindow.endTimeMs,
+        interval: subsTw.aggregation.interval,
+        limit: subsTw.aggregation.limit,
+        agg: subsTw.aggregation.type
+    };
+
+    entityType: datasourceSubscription.entityType,
+    entityId: datasourceSubscription.entityId,
+    keys: tsKeys
+    function updateRealtimeSubscriptionCommand(subscriptionCommand, subsTw) {
+        subscriptionCommand.startTs = subsTw.startTs;
+        subscriptionCommand.timeWindow = subsTw.aggregation.timeWindow;
+        subscriptionCommand.interval = subsTw.aggregation.interval;
+        subscriptionCommand.limit = subsTw.aggregation.limit;
+        subscriptionCommand.agg = subsTw.aggregation.type;
+    }
+
+    function createSubscriptionTimewindow(timewindow, stDiff) {
+
+        var subscriptionTimewindow = {
+            fixedWindow: null,
+            realtimeWindowMs: null,
+            aggregation: {
+                interval: SECOND,
+                limit: AVG_LIMIT,
+                type: types.aggregation.avg.value
+            }
+        };
+        var aggTimewindow = 0;
+
+        if (angular.isDefined(timewindow.aggregation)) {
+            subscriptionTimewindow.aggregation = {
+                type: timewindow.aggregation.type || types.aggregation.avg.value,
+                limit: timewindow.aggregation.limit || AVG_LIMIT
+            };
+        }
+        if (angular.isDefined(timewindow.realtime)) {
+            subscriptionTimewindow.realtimeWindowMs = timewindow.realtime.timewindowMs;
+            subscriptionTimewindow.aggregation.interval =
+                boundIntervalToTimewindow(subscriptionTimewindow.realtimeWindowMs, timewindow.realtime.interval,
+                    subscriptionTimewindow.aggregation.type);
+            subscriptionTimewindow.startTs = (new Date).getTime() + stDiff - subscriptionTimewindow.realtimeWindowMs;
+            var startDiff = subscriptionTimewindow.startTs % subscriptionTimewindow.aggregation.interval;
+            aggTimewindow = subscriptionTimewindow.realtimeWindowMs;
+            if (startDiff) {
+                subscriptionTimewindow.startTs -= startDiff;
+                aggTimewindow += subscriptionTimewindow.aggregation.interval;
+            }
+        } else if (angular.isDefined(timewindow.history)) {
+            if (angular.isDefined(timewindow.history.timewindowMs)) {
+                var currentTime = (new Date).getTime();
+                subscriptionTimewindow.fixedWindow = {
+                    startTimeMs: currentTime - timewindow.history.timewindowMs,
+                    endTimeMs: currentTime
+                }
+                aggTimewindow = timewindow.history.timewindowMs;
+
+            } else {
+                subscriptionTimewindow.fixedWindow = {
+                    startTimeMs: timewindow.history.fixedTimewindow.startTimeMs,
+                    endTimeMs: timewindow.history.fixedTimewindow.endTimeMs
+                }
+                aggTimewindow = subscriptionTimewindow.fixedWindow.endTimeMs - subscriptionTimewindow.fixedWindow.startTimeMs;
+            }
+            subscriptionTimewindow.startTs = subscriptionTimewindow.fixedWindow.startTimeMs;
+            subscriptionTimewindow.aggregation.interval =
+                boundIntervalToTimewindow(aggTimewindow, timewindow.history.interval, subscriptionTimewindow.aggregation.type);
+        }
+        var aggregation = subscriptionTimewindow.aggregation;
+        aggregation.timeWindow = aggTimewindow;
+        if (aggregation.type !== types.aggregation.none.value) {
+            aggregation.limit = Math.ceil(aggTimewindow / subscriptionTimewindow.aggregation.interval);
+        }
+        return subscriptionTimewindow;
+    }
+
+    getServerTimeDiff() {
+        var deferred = $q.defer();
+        var url = '/api/dashboard/serverTime';
+        var ct1 = Date.now();
+        $http.get(url, { ignoreLoading: true }).then(function success(response) {
+            var ct2 = Date.now();
+            var st = response.data;
+            var stDiff = Math.ceil(st - (ct1+ct2)/2);
+            deferred.resolve(stDiff);
+        }, function fail() {
+            deferred.reject();
+        });
+        return deferred.promise;
+    }
+ */
 
 class GeneralTimeWindow extends Component {
     state = {
         visible: false,
+        activeKey: 'realtime',
     }
 
-    onChangeVisible = () => {
+    handleClickUpdate = () => {
+        const { activeKey } = this.state;
+        console.log(this.props[activeKey]);
         this.setState({
             visible: !this.state.visible,
         });
@@ -30,57 +132,10 @@ class GeneralTimeWindow extends Component {
         });
     }
 
-    getIntervals = (min, max) => {
-        const { intervals } = this.props;
-        min = this.boundMinInterval(min);
-        max = this.boundMaxInterval(max);
-        const newIntervals = [];
-        for (let i in intervals) {
-            const interval = intervals[i];
-            if (interval.value >= min && interval.value <= max) {
-                newIntervals.push(interval);
-            }
-        }
-        return newIntervals;
-    }
-
-    matchesExistingInterval = (min, max, intervalMs) => {
-        const intervals = this.getIntervals(min, max);
-        for (let i in intervals) {
-            const interval = intervals[i];
-            if (intervalMs === interval.value) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    boundMinInterval = (min) => {
-        return this.toBound(min, times.MIN_INTERVAL, times.MAX_INTERVAL, times.MIN_INTERVAL);
-    }
-
-    boundMaxInterval = (max) => {
-        return this.toBound(max, times.MIN_INTERVAL, times.MAX_INTERVAL, times.MAX_INTERVAL);
-    }
-
-    toBound = (value, min, max, defValue) => {
-        if (value) {
-            value = Math.max(value, min);
-            value = Math.min(value, max);
-            return value;
-        } else {
-            return defValue;
-        }
-    }
-
-    handleChangeSelect = (value) => {
-        const min = value.key / times.MAX_LIMIT;
-        const test = this.boundMinInterval(min);
-        const max = value.key / times.MIN_LIMIT;
-        const test2 = this.boundMaxInterval(max);
-        console.log(test, test2);
-        const test3 = this.matchesExistingInterval(min, max, value.key);
-        console.log(test3);
+    handleChangeTab = (activeKey) => {
+        this.setState({
+            activeKey,
+        });
     }
 
     contents = () => {
@@ -88,19 +143,20 @@ class GeneralTimeWindow extends Component {
             <Row>
                 <Row>
                     <Tabs
-                        defaultActiveKey="1"
+                        defaultActiveKey="realtime"
+                        onChange={this.handleChangeTab}
                     >
-                        <Tabs.TabPane tab={i18n.t('timewindow.realtime')} key="1">
-                            <RealTimePanel {...this.props.handlers} {...this.props} />
+                        <Tabs.TabPane tab={i18n.t('timewindow.realtime')} key="realtime">
+                            <RealTimePanel {...this.props.handlers.realtime} {...this.props.realtime} />
                         </Tabs.TabPane>
-                        <Tabs.TabPane tab={i18n.t('timewindow.history')} key="2">
-                            <HistoryPanel {...this.props.handlers} {...this.props} />
+                        <Tabs.TabPane tab={i18n.t('timewindow.history')} key="history">
+                            <HistoryPanel {...this.props.handlers.history} {...this.props.history} />
                         </Tabs.TabPane>
                     </Tabs>
                 </Row>
                 <Row>
                     <Col span={4}>
-                        <CommonButton onClick={this.handleChangeVisible}>{'업데이트'}</CommonButton>
+                        <CommonButton onClick={this.handleClickUpdate}>{'업데이트'}</CommonButton>
                     </Col>
                     <Col span={4}>
                         <CommonButton type="default" onClick={this.handleChangeVisible}>{'취소'}</CommonButton>
@@ -129,5 +185,13 @@ class GeneralTimeWindow extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => ({
+    
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    
+}, dispatch);
 
 export default stateToProps([HistoryPanel, RealTimePanel])(GeneralTimeWindow);

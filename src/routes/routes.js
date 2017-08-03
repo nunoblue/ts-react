@@ -1,14 +1,14 @@
-import Home from './components/Home';
-import Plugins from './containers/Plugins';
-import Rules from './containers/Rules';
-import Customers from './containers/Customers';
-import Widgets from './containers/Widgets';
-import Dashboards from './containers/Dashboards';
-import Devices from './containers/Devices';
-import Users from './containers/Users';
-import Admins from './containers/Admins';
+import Home from '../components/Home';
+import Plugins from '../containers/Plugins';
+import Rules from '../containers/Rules';
+import Customers from '../containers/Customers';
+import Widgets from '../containers/Widgets';
+import Dashboards from '../containers/Dashboards';
+import Devices from '../containers/Devices';
+import Users from '../containers/Users';
+import Admins from '../containers/Admins';
 
-import Dashboard from './containers/dashboard/Dashboard';
+import Dashboard from '../containers/dashboard/Dashboard';
 
 
 // import asyncComponent from './components/AsyncComponent';

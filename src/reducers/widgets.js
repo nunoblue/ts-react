@@ -9,6 +9,7 @@ import {
 
 const initialState = {
     statusMessage: 'INIT',
+    errorMessage: 'NONE',
     data: [],
 };
 
@@ -33,6 +34,9 @@ export default function widgets(state = initialState, action) {
             return update(state, {
                 statusMessage: {
                     $set: 'FAILURE',
+                },
+                errorMessage: {
+                    $set: action.errorMessage,
                 },
             });
         case CLEAR_WIDGETS:

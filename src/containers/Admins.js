@@ -32,8 +32,12 @@ export class Admin extends Component {
         if (prevProps.data === this.props.data) {
             return false;
         }
-
         return true;
+    }
+
+    componentWillUnmount() {
+        const { clearAdminsRequest } = this.props;
+        clearAdminsRequest();
     }
 
     refershAdminSettingsRequest = (key) => {
@@ -117,6 +121,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     getAdminSettingsRequest: actions.getAdminSettingsRequest,
     saveAdminSettingsRequest: actions.saveAdminSettingsRequest,
+    clearAdminsRequest: actions.clearAdminsRequest,
 }, dispatch);
 
 
