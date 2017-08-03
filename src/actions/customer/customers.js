@@ -1,6 +1,3 @@
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-
 import {
     API_CUSTOMERS,
     API_CUSTOMERS_SUCCESS,
@@ -10,14 +7,7 @@ import {
     API_CUSTOMERS_SHORT_INFO_SUCCESS,
     CLEAR_CUSTOMERS,
 } from './CustomersTypes';
-
-import config from '../../config';
-
-const apServer = config.apServer;
-const CUSTOMERS_URL = `${apServer}/api/customers`;
-const SAVE_CUSTOMER_URL = `${apServer}/api/customer`;
-const DELETE_CUSTOMER_URL = `${apServer}/api/customer`;
-const SHORT_INFO_URL = `${apServer}/api/customer`;
+import { customerService } from '../../services/api';
 
 function getCustomers() {
     return {
@@ -44,8 +34,8 @@ function getShortInfoSuccess(data) {
     data.map((obj) => {
         const title = obj.data.title;
         const isPublic = obj.data.isPublic;
-        const id = obj.id;
-        Object.assign(temp, { [obj.id]: { id, title, isPublic } });
+        const id = obj.config.headers.id;
+        Object.assign(temp, { [id]: { title, isPublic } });
     });
     return {
         type: API_CUSTOMERS_SHORT_INFO_SUCCESS,
@@ -77,20 +67,10 @@ export const getCustomersRequest = (limit, textSearch) => {
         if (typeof limit === 'undefined') {
             limit = 10;
         }
-        const params = {
-            limit,
-            textSearch,
-        };
-
-        return axios.get(CUSTOMERS_URL, {
-            params,
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return customerService.getCustomers(limit, textSearch).then((response) => {
             dispatch(getCustomersSuccess(response.data.data));
         }).catch((error) => {
-            dispatch(getCustomersFailure(error.response.data.message));
+            dispatch(getCustomersFailure(error.message));
         });
     };
 };
@@ -98,18 +78,10 @@ export const getCustomersRequest = (limit, textSearch) => {
 export const getCustomerShortInfoRequest = (idArray) => {
     return (dispatch) => {
         dispatch(getCustomers());
-        return axios.all(idArray.map((id) => {
-            return axios.get(`${SHORT_INFO_URL}/${id}/shortInfo`, {
-                headers: {
-                    'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-                },
-            }).then((response) => {
-                return { data: response.data, id };
-            }).catch((error) => {
-                dispatch(getCustomersFailure(error.response.data.message));
-            });
-        })).then((data) => {
-            dispatch(getShortInfoSuccess(data));
+        return customerService.getCustomerShortInfo(idArray).then((results) => {
+            dispatch(getShortInfoSuccess(results, idArray));
+        }).catch((error) => {
+            dispatch(getCustomersFailure(error.message));
         });
     };
 };
@@ -117,15 +89,10 @@ export const getCustomerShortInfoRequest = (idArray) => {
 export const saveCustomerRequest = (data) => {
     return (dispatch) => {
         dispatch(getCustomers());
-
-        return axios.post(SAVE_CUSTOMER_URL, data, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return customerService.saveCustomer(data).then(() => {
             dispatch(saveCustomerSuccess());
         }).catch((error) => {
-            dispatch(getCustomersFailure(error.response.data.message));
+            dispatch(getCustomersFailure(error.message));
         });
     };
 };
@@ -134,14 +101,10 @@ export const deleteCustomerRequest = (id) => {
     return (dispatch) => {
         dispatch(getCustomers());
 
-        return axios.delete(`${DELETE_CUSTOMER_URL}/${id}`, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return customerService.deleteCustomer(id).then(() => {
             dispatch(deleteCustomerSuccess());
         }).catch((error) => {
-            dispatch(getCustomersFailure(error.response.data.message));
+            dispatch(getCustomersFailure(error.message));
         });
     };
 };
@@ -149,17 +112,11 @@ export const deleteCustomerRequest = (id) => {
 export const multipleDeleteCustomerRequest = (idArray) => {
     return (dispatch) => {
         dispatch(getCustomers());
-        return axios.all(idArray.map((id) => {
-            return axios.delete(`${DELETE_CUSTOMER_URL}/${id}`, {
-                headers: {
-                    'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-                },
-            }).then((response) => {
-                dispatch(deleteCustomerSuccess());
-            }).catch((error) => {
-                dispatch(getCustomersFailure(error.response.data.message));
-            });
-        }));
+        return customerService.multipleDeleteCustomer(idArray).then(() => {
+            dispatch(deleteCustomerSuccess());
+        }).catch((error) => {
+            dispatch(getCustomersFailure(error.message));
+        });
     };
 };
 

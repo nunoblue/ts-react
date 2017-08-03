@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, Input } from 'antd';
 import i18n from 'i18next';
 
-import config from '../../config';
+import config from '../../configs';
 
 class DashboardForm extends Component {
     shouldCompnentUpdate(nextProps, nextState) {

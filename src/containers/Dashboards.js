@@ -51,6 +51,11 @@ class Dashboards extends Component {
         return true;
     }
 
+    componentWillUnmount() {
+        const { clearDashboardsRequest } = this.props;
+        clearDashboardsRequest();
+    }
+
     buttonComponents = (title, dashboardId, customerId) => {
         const { shortInfo, match } = this.props;
         const { currentUser } = this.context;
@@ -181,13 +186,15 @@ class Dashboards extends Component {
                     message: this.props.errorMessage,
                 });
             }
-            this.props.data.map((data) => {
-                if (customerIdArray.indexOf(data.customerId.id) === -1 && currentUser.customerId.id !== data.customerId.id) {
-                    customerIdArray.push(data.customerId.id);
-                }
-            });
-            this.props.getCustomerShortInfoRequest(customerIdArray);
-            this.context.pageLoading();
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.props.data.map((data) => {
+                    if (customerIdArray.indexOf(data.customerId.id) === -1 && currentUser.customerId.id !== data.customerId.id) {
+                        customerIdArray.push(data.customerId.id);
+                    }
+                });
+                this.props.getCustomerShortInfoRequest(customerIdArray);
+                this.context.pageLoading();
+            }
         });
     }
 
@@ -424,7 +431,9 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     saveDashboardRequest: actions.saveDashboardRequest,
     deleteDashboardRequest: actions.deleteDashboardRequest,
     multipleDeleteDashboardRequest: actions.multipleDeleteDashboardRequest,
+    getServerTimeDiffRequest: actions.getServerTimeDiffRequest,
     getCustomerShortInfoRequest: customers.getCustomerShortInfoRequest,
+    clearDashboardsRequest: actions.clearDashboardsRequest,
 }, dispatch);
 
 

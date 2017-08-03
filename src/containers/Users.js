@@ -40,6 +40,11 @@ class Users extends Component {
         return true;
     }
 
+    componentWillUnmount() {
+        const { clearUsersRequest } = this.props;
+        clearUsersRequest();
+    }
+
     buttonComponents = (email, id, isPublic, type) => {
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, email, id);
         const sendActivationMail = this.sendActivationMail.bind(this, email);
@@ -351,6 +356,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     deleteUserRequest: actions.deleteUserRequest,
     multipleDeleteUserRequest: actions.multipleDeleteUserRequest,
     sendActivationMailRequest: actions.sendActivationMailRequest,
+    clearUsersRequest: actions.clearUsersRequest,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users);

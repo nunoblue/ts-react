@@ -1,19 +1,11 @@
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-
 import {
     API_ADMINS,
     API_ADMINS_FAILURE,
     API_ADMINS_SUCCESS,
     API_ADMIN_SETTINGS_SAVE,
+    CLEAR_ADMINS,
 } from './AdminsTypes';
-
-import config from '../../config';
-
-const apServer = config.apServer;
-const API_ADMIN_SETTINGS_GENERAL_URL = `${apServer}/api/admin/settings/general`;
-const API_ADMIN_SETTINGS_MAIL_URL = `${apServer}/api/admin/settings/mail`;
-const API_ADMIN_SETTINGS_SAVE_URL = `${apServer}/api/admin/settings`;
+import { adminService } from '../../services/api';
 
 function getAdminSettings() {
     return {
@@ -41,23 +33,25 @@ function saveAdminSettings() {
     };
 }
 
+const clearAdminsSuccess = () => {
+    return {
+        type: CLEAR_ADMINS,
+    };
+};
+
 export const getAdminSettingsRequest = (key) => {
     return (dispatch) => {
         dispatch(getAdminSettings());
-        let url;
+        let promise;
         if (key === 'mail') {
-            url = API_ADMIN_SETTINGS_MAIL_URL;
+            promise = adminService.getAdminSettingsMail();
         } else {
-            url = API_ADMIN_SETTINGS_GENERAL_URL;
+            promise = adminService.getAdminSettingsGeneral();
         }
-        return axios.get(url, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return promise.then((response) => {
             dispatch(getAdminSettingsSusccess(response.data));
         }).catch((error) => {
-            dispatch(getAdminSettingsFailure(error.response.data.message));
+            dispatch(getAdminSettingsFailure(error.message));
         });
     };
 };
@@ -66,14 +60,14 @@ export const saveAdminSettingsRequest = (data) => {
     return (dispatch) => {
         dispatch(getAdminSettings());
 
-        return axios.post(API_ADMIN_SETTINGS_SAVE_URL, data, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return adminService.saveAdminSettings(data).then(() => {
             dispatch(saveAdminSettings());
         }).catch((error) => {
-            dispatch(getAdminSettingsFailure(error.response.data.message));
+            dispatch(getAdminSettingsFailure(error.message));
         });
     };
+};
+
+export const clearAdminsRequest = () => (dispatch) => {
+    dispatch(clearAdminsSuccess());
 };

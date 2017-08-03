@@ -54,13 +54,14 @@ class Devices extends Component {
     }
 
     componentWillUnmount() {
-        const { subscribers } = this.props;
+        const { subscribers, clearDevicesRequest } = this.props;
+        clearDevicesRequest();
         if (Object.keys(subscribers).length !== 0) {
             this.props.unsubscribeWithObjectsForEntityAttributes(subscribers);
         }
     }
 
-    buttonComponents = (name, deviceId, customerId) => {
+    buttonComponents = (name, deviceId, customerId, isDialog) => {
         const { shortInfo, match } = this.props;
         const { currentUser } = this.context;
         const tenantCustomerId = currentUser.customerId.id;
@@ -89,43 +90,89 @@ class Devices extends Component {
         const assignCustomerModal = this.openAssignCustomerModal.bind(this, deviceId);
         const unassignConfirm = this.handleUnAssignConfirm.bind(this, name, deviceId, isPublic);
         const makePublicConfirm = this.handleMakePublicConfirm.bind(this, name, deviceId);
-        return (
-            <Row>
-                <CommonCheckbox checkedCount={this.state.checkedCount} value={deviceId} onChange={this.handleChecked} />
+        if (isDialog) {
+            return (
                 <Button.Group className="custom-card-buttongroup">
+                    <label>{isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}</label>
                     <CommonButton
                         className="custom-card-button"
-                        shape="circle"
                         visible={shareVisible}
                         iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
                         tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
                         onClick={isPublic ? unassignConfirm : makePublicConfirm}
                     />
+                    <label>{isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}</label>
                     <CommonButton
                         className="custom-card-button"
-                        shape="circle"
                         visible={assignVisible}
                         iconClassName={isAssign ? 'user-delete' : 'user-add'}
                         tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
                         onClick={isAssign ? unassignConfirm : assignCustomerModal}
                     />
+                    <label>{i18n.t('device.manage-credentials')}</label>
                     <CommonButton
                         className="custom-card-button"
-                        shape="circle"
                         iconClassName="key"
                         onClick={credentialsModal}
                         tooltipTitle={i18n.t('device.manage-credentials')}
                     />
+                    <label>{i18n.t('device.delete')}</label>
                     <CommonButton
                         className="custom-card-button"
-                        shape="circle"
                         visible={deleteVisible}
                         iconClassName="delete"
                         onClick={modalConfirmAction}
                         tooltipTitle={i18n.t('device.delete')}
                     />
+                    <label>{i18n.t('device.copyId')}</label>
+                    <CommonButton
+                        className="custom-card-button"
+                    >
+                        <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
+                    </CommonButton>
+                    <label>{i18n.t('device.copyAccessToken')}</label>
+                    <CommonButton
+                        className="custom-card-button"
+                    >
+                        <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
+                    </CommonButton>
                 </Button.Group>
-            </Row>
+            );
+        }
+        return (
+            <Button.Group className="custom-card-buttongroup">
+                <CommonButton
+                    className="custom-card-button"
+                    shape="circle"
+                    visible={shareVisible}
+                    iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
+                    tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
+                    onClick={isPublic ? unassignConfirm : makePublicConfirm}
+                />
+                <CommonButton
+                    className="custom-card-button"
+                    shape="circle"
+                    visible={assignVisible}
+                    iconClassName={isAssign ? 'user-delete' : 'user-add'}
+                    tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
+                    onClick={isAssign ? unassignConfirm : assignCustomerModal}
+                />
+                <CommonButton
+                    className="custom-card-button"
+                    shape="circle"
+                    iconClassName="key"
+                    onClick={credentialsModal}
+                    tooltipTitle={i18n.t('device.manage-credentials')}
+                />
+                <CommonButton
+                    className="custom-card-button"
+                    shape="circle"
+                    visible={deleteVisible}
+                    iconClassName="delete"
+                    onClick={modalConfirmAction}
+                    tooltipTitle={i18n.t('device.delete')}
+                />
+            </Button.Group>
         );
     }
 
@@ -147,6 +194,7 @@ class Devices extends Component {
                     isCardDown={!this.state.dialogVisible}
                     content={type.toUpperCase()}
                 >
+                    <CommonCheckbox checkedCount={this.state.checkedCount} value={id} onChange={this.handleChecked} />
                     {this.buttonComponents(name, id, customerId)}
                 </CommonCard>
             );
@@ -181,13 +229,15 @@ class Devices extends Component {
                     message: this.props.errorMessage,
                 });
             }
-            this.props.data.map((data) => {
-                if (customerIdArray.indexOf(data.customerId.id) === -1 && currentUser.customerId.id !== data.customerId.id) {
-                    customerIdArray.push(data.customerId.id);
-                }
-            });
-            this.props.getCustomerShortInfoRequest(customerIdArray);
-            this.context.pageLoading();
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.props.data.map((data) => {
+                    if (customerIdArray.indexOf(data.customerId.id) === -1 && currentUser.customerId.id !== data.customerId.id) {
+                        customerIdArray.push(data.customerId.id);
+                    }
+                });
+                this.props.getCustomerShortInfoRequest(customerIdArray);
+                this.context.pageLoading();
+            }
         });
 
         this.props.getDeviceTypesRequest().then(() => {
@@ -665,6 +715,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     unassignDeviceToCustomerRequest: actions.unassignDeviceToCustomerRequest,
     makeDevicePublicRequest: actions.makeDevicePublicRequest,
     multipleAssignDeviceToCustomerRequest: actions.multipleAssignDeviceToCustomerRequest,
+    clearDevicesRequest: actions.clearDevicesRequest,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Devices);

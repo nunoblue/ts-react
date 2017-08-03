@@ -16,6 +16,11 @@ class Widgets extends Component {
         this.props.getWidgetsRequest();
     }
 
+    componentWillUnmount() {
+        const { clearWidgetsRequest } = this.props;
+        clearWidgetsRequest();
+    }
+
     components = () => {
         const components = this.props.data.map((data) => {
             const title = data.title;
@@ -44,6 +49,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     getWidgetsRequest: actions.getWidgetsRequest,
+    clearWidgetsRequest: actions.clearWidgetsRequest,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Widgets);

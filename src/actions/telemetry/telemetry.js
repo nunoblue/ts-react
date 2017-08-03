@@ -9,7 +9,7 @@ import {
     WEBSOCKET_SEND,
 } from './TelemetryTypes';
 
-import config from '../../config';
+import config from '../../configs';
 import { types } from '../../utils/commons';
 import { isJwtTokenValid, refreshJwtRequest } from '../authentication/authentication';
 
@@ -93,10 +93,25 @@ const subscribe = (subscriber, isOpened) => (dispatch) => {
         historyCmds: [],
         attrSubCmds: [],
     };
-    if (subscriber.type === types.dataKeyType.timeseries) {
-        cmdsWrapper.tsSubCmds.push(subscriber.subscriptionCommand);
-    } else {
-        cmdsWrapper.attrSubCmds.push(subscriber.subscriptionCommand);
+    const subscriptions = {};
+    const cmdId = nextCmdId();
+    if (subscriber.subscriptionCommand) {
+        Object.assign(subscriptions, {
+            [cmdId]: {
+                subscriptionCommand: subscriber.subscriptionCommand,
+                attributes: subscriber.attributes || {},
+                type: subscriber.type || '',
+            },
+        });
+        Object.assign(subscriber.subscriptionCommand, { cmdId });
+        if (subscriber.type === types.dataKeyType.timeseries) {
+            cmdsWrapper.tsSubCmds.push(subscriber.subscriptionCommand);
+        } else {
+            cmdsWrapper.attrSubCmds.push(subscriber.subscriptionCommand);
+        }
+    } else if (subscriber.historyCommand) {
+        Object.assign(subscriber.historyCommand, { cmdId });
+        cmdsWrapper.historyCmds.push(subscriber.historyCommand);
     }
     const payload = {
         cmdsWrapper,
@@ -120,18 +135,23 @@ const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
     const subscriptions = {};
     Object.keys(subscribers).forEach((id) => {
         const cmdId = nextCmdId();
-        Object.assign(subscriptions, {
-            [cmdId]: {
-                subscriptionCommand: subscribers[id].subscriptionCommand,
-                attributes: subscribers[id].attributes || {},
-                type: subscribers[id].type || '',
-            },
-        });
-        Object.assign(subscribers[id].subscriptionCommand, { cmdId });
-        if (subscribers[id].type === types.dataKeyType.timeseries) {
-            cmdsWrapper.tsSubCmds.push(subscribers[id].subscriptionCommand);
-        } else {
-            cmdsWrapper.attrSubCmds.push(subscribers[id].subscriptionCommand);
+        if (subscribers[id].subscriptionCommand) {
+            Object.assign(subscriptions, {
+                [cmdId]: {
+                    subscriptionCommand: subscribers[id].subscriptionCommand,
+                    attributes: subscribers[id].attributes || {},
+                    type: subscribers[id].type || '',
+                },
+            });
+            Object.assign(subscribers[id].subscriptionCommand, { cmdId });
+            if (subscribers[id].type === types.dataKeyType.timeseries) {
+                cmdsWrapper.tsSubCmds.push(subscribers[id].subscriptionCommand);
+            } else {
+                cmdsWrapper.attrSubCmds.push(subscribers[id].subscriptionCommand);
+            }
+        } else if (subscribers[id].historyCommand) {
+            Object.assign(subscribers[id].historyCommand, { cmdId });
+            cmdsWrapper.historyCmds.push(subscribers[id].historyCommand);
         }
     });
     const payload = {
@@ -199,11 +219,15 @@ export const unsubscribeWithObjects = (subscribers) => (dispatch) => {
     };
     return new Promise((resolve, reject) => {
         Object.keys(subscribers).forEach((id) => {
-            Object.assign(subscribers[id].subscriptionCommand, { unsubscribe: true });
-            if (subscribers[id].type === types.dataKeyType.timeseries) {
-                cmdsWrapper.tsSubCmds.push(subscribers[id].subscriptionCommand);
-            } else {
-                cmdsWrapper.attrSubCmds.push(subscribers[id].subscriptionCommand);
+            if (subscribers[id].subscriptionCommand) {
+                Object.assign(subscribers[id].subscriptionCommand, { unsubscribe: true });
+                if (subscribers[id].type === types.dataKeyType.timeseries) {
+                    cmdsWrapper.tsSubCmds.push(subscribers[id].subscriptionCommand);
+                } else {
+                    cmdsWrapper.attrSubCmds.push(subscribers[id].subscriptionCommand);
+                }
+            } else if (subscribers[id].historyCommand) {
+                
             }
         });
         const payload = {
