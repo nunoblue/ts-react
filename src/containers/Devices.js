@@ -8,6 +8,7 @@ import i18n from 'i18next';
 import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
+import CommonLabel from '../components/common/CommonLabel';
 import AssignCustomerModal from '../components/device/AssignCustomerModal';
 import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
@@ -93,7 +94,7 @@ class Devices extends Component {
         if (isDialog) {
             return (
                 <Button.Group className="custom-card-buttongroup">
-                    <label>{isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}</label>
+                    <CommonLabel visible={shareVisible}>{isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}</CommonLabel>
                     <CommonButton
                         className="custom-card-button"
                         visible={shareVisible}
@@ -101,7 +102,7 @@ class Devices extends Component {
                         tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
                         onClick={isPublic ? unassignConfirm : makePublicConfirm}
                     />
-                    <label>{isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}</label>
+                    <CommonLabel visible={assignVisible}>{isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}</CommonLabel>
                     <CommonButton
                         className="custom-card-button"
                         visible={assignVisible}
@@ -109,14 +110,14 @@ class Devices extends Component {
                         tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
                         onClick={isAssign ? unassignConfirm : assignCustomerModal}
                     />
-                    <label>{i18n.t('device.manage-credentials')}</label>
+                    <CommonLabel>{i18n.t('device.manage-credentials')}</CommonLabel>
                     <CommonButton
                         className="custom-card-button"
                         iconClassName="key"
                         onClick={credentialsModal}
                         tooltipTitle={i18n.t('device.manage-credentials')}
                     />
-                    <label>{i18n.t('device.delete')}</label>
+                    <CommonLabel visible={deleteVisible}>{i18n.t('device.delete')}</CommonLabel>
                     <CommonButton
                         className="custom-card-button"
                         visible={deleteVisible}
@@ -124,15 +125,17 @@ class Devices extends Component {
                         onClick={modalConfirmAction}
                         tooltipTitle={i18n.t('device.delete')}
                     />
-                    <label>{i18n.t('device.copyId')}</label>
+                    <CommonLabel>{i18n.t('device.copyId')}</CommonLabel>
                     <CommonButton
                         className="custom-card-button"
+                        tooltipTitle={i18n.t('device.copyId')}
                     >
                         <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
                     </CommonButton>
-                    <label>{i18n.t('device.copyAccessToken')}</label>
+                    <CommonLabel>{i18n.t('device.copyAccessToken')}</CommonLabel>
                     <CommonButton
                         className="custom-card-button"
+                        tooltipTitle={i18n.t('device.copyAccessToken')}
                     >
                         <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
                     </CommonButton>
