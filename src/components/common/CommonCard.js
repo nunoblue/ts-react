@@ -73,14 +73,15 @@ class CommonCard extends Component {
             <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                 <Card
                     className={this.props.className}
+                    shape="circle"
                     title={this.props.title}
                     style={{ minHeight: 160, cursor: 'pointer' }}
                     onClick={this.handleClick}
                 >
-                    <div className="custom-card-content">
+                    <div className="ts-card-content">
                         {this.props.content}
                     </div>
-                    <div className="custom-card-bottom">
+                    <div className="ts-card-bottom">
                         {this.props.children}
                     </div>
                 </Card>
