@@ -32,3 +32,13 @@ export const multipleDeleteDashboard = idArray => (
 export const getServerTime = () => (
     client.get(`${DASHBOARDS.SERVERTIME_DASHBOARD_URL}`, { ignoreLoading: true })
 );
+
+export const assignDashboard = (customerId, id) => (
+    client.post(`${DASHBOARDS.CUSTOMER_DASHBOARDS_URL}/${customerId}/dashboard/${id}`, null)
+);
+
+export const multipleAssignDashboard = (customerId, idArray) => (
+    client.all(idArray.map(id => (
+        assignDashboard(customerId, id)
+    )))
+);

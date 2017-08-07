@@ -1,6 +1,3 @@
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-
 import {
     TENANT_DASHBOARDS,
     TENANT_DASHBOARDS_SUCCESS,
@@ -142,4 +139,15 @@ export const getServerTimeDiffRequest = () => {
 
 export const clearDashboardsRequest = () => (dispatch) => {
     dispatch(clearDashboardsSuccess());
+};
+
+export const multipleAssignDashboardToCustomer = (customerId, idArray) => {
+    return (dispatch) => {
+        dispatch(getDashboards());
+        return dashboardService.multipleAssignDashboard(customerId, idArray).then(() => {
+            dispatch(saveDashboardSuccess());
+        }).catch((error) => {
+            dispatch(getDashboardsFailure(error.message));
+        });
+    };
 };
