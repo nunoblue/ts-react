@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import {
     Select,
     Switch,
-    InputNumber,
+    Input,
     Row,
+    Col,
 } from 'antd';
 import i18n from 'i18next';
 
@@ -270,7 +271,7 @@ class TimeInterval extends Component {
                     this.changeStepTime(days + 1, 'days');
                 }
             } else if (value < 0) {
-                if ((days + value + minutes < 0)) {
+                if (days + value + minutes < 0) {
                     const intervalMs = this.calculateIntervalMs(days, 0, minutes, 1);
                     if (intervalMs !== false) {
                         this.setState({
@@ -279,6 +280,9 @@ class TimeInterval extends Component {
                             intervalMs,
                         });
                     }
+                    return;
+                }
+                if (days === 0) {
                     return;
                 }
                 const intervalMs = this.calculateIntervalMs(days - 1, 23, minutes, seconds);
@@ -366,14 +370,22 @@ class TimeInterval extends Component {
         const { advanced, intervalMs, days, hours, minutes, seconds } = this.state;
         const lastTimeInterval = advanced ? (
             <Row>
-                <label>{i18n.t('timeinterval.days')}</label>
-                <input type="number" id="days" min={0} max={7300} onBlur={this.handleBlurTime} onChange={this.handleChangeTime} value={days} />
-                <label>{i18n.t('timeinterval.hours')}</label>
-                <input type="number" id="hours" onBlur={this.handleBlurTime} onChange={this.handleChangeTime} value={hours} />
-                <label>{i18n.t('timeinterval.minutes')}</label>
-                <input type="number" id="minutes" onBlur={this.handleBlurTime} onChange={this.handleChangeTime} value={minutes} />
-                <label>{i18n.t('timeinterval.seconds')}</label>
-                <input type="number" id="seconds" onBlur={this.handleBlurTime} onChange={this.handleChangeTime} value={seconds} />
+                <Col span={6}>
+                    <label>{i18n.t('timeinterval.days')}</label>
+                    <Input type="number" id="days" min={0} max={7300} onBlur={this.handleBlurTime} onChange={this.handleChangeTime} value={days} />
+                </Col>
+                <Col span={6}>
+                    <label>{i18n.t('timeinterval.hours')}</label>
+                    <Input type="number" id="hours" onBlur={this.handleBlurTime} onChange={this.handleChangeTime} value={hours} />
+                </Col>
+                <Col span={6}>
+                    <label>{i18n.t('timeinterval.minutes')}</label>
+                    <Input type="number" id="minutes" onBlur={this.handleBlurTime} onChange={this.handleChangeTime} value={minutes} />
+                </Col>
+                <Col span={6}>
+                    <label>{i18n.t('timeinterval.seconds')}</label>
+                    <Input type="number" id="seconds" onBlur={this.handleBlurTime} onChange={this.handleChangeTime} value={seconds} />
+                </Col>
             </Row>
         ) : (
             <Select
@@ -395,11 +407,15 @@ class TimeInterval extends Component {
         );
         return (
             <Row>
-                {lastTimeInterval}
-                <span>{i18n.t('timeinterval.advanced')}</span>
-                <Switch
-                    onChange={this.handleChangeAdvanced}
-                />
+                <Col span={20}>
+                    {lastTimeInterval}
+                </Col>
+                <Col span={4}>
+                    <label>{i18n.t('timeinterval.advanced')}</label>
+                    <Switch
+                        onChange={this.handleChangeAdvanced}
+                    />
+                </Col>
             </Row>
         );
     }

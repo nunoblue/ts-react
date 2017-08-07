@@ -7,6 +7,7 @@ import * as widgetService from './widgets.service';
 import * as ruleService from './rules.service';
 import * as pluginService from './plugins.service';
 import * as authenticationService from './authentication.service';
+import * as telemetryService from './telemetry.service';
 
 export {
     dashboardService,
@@ -18,4 +19,5 @@ export {
     ruleService,
     pluginService,
     authenticationService,
+    telemetryService,
 };

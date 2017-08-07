@@ -9,32 +9,28 @@ import { times, types } from '../../utils/commons';
 
 class HistoryPanel extends Component {
     state = {
+        intervals: times.getIntervals((times.MINUTE / times.MAX_LIMIT), (times.MINUTE / times.MIN_LIMIT)),
         history: {
-            intervals: times.getIntervals((times.MINUTE / times.MAX_LIMIT), (times.MINUTE / times.MIN_LIMIT)),
-            history: {
-                historyType: 0,
-                interval: times.SECOND.toString(),
-                timewindowMs: times.MINUTE.toString(),
-                fixedTimewindow: {
-                    startTimeMs: +new Date() - times.DAY,
-                    endTimeMs: +new Date(),
-                },
+            historyType: 0,
+            interval: times.SECOND.toString(),
+            timewindowMs: times.MINUTE.toString(),
+            fixedTimewindow: {
+                startTimeMs: +new Date() - times.DAY,
+                endTimeMs: +new Date(),
             },
-            aggregation: {
-                type: types.aggregation.avg.value,
-                limit: times.AVG_LIMIT,
-            },
+        },
+        aggregation: {
+            type: types.aggregation.avg.value,
+            limit: times.AVG_LIMIT,
         },
     }
 
     handlers = {
-        id: 'history',
         onChangeHistoryType: (e) => {
-            const id = this.handlers.id;
-            let timewindowMs = this.state[id].history.timewindowMs;
+            let timewindowMs = this.state.history.timewindowMs;
             let intervals = times.getValueIntervals(timewindowMs);
             if (e.target.value === 1) {
-                const gapInterval = this.state[id].history.fixedTimewindow.endTimeMs - this.state[id].history.fixedTimewindow.startTimeMs;
+                const gapInterval = this.state.history.fixedTimewindow.endTimeMs - this.state.history.fixedTimewindow.startTimeMs;
                 intervals = times.getValueIntervals(gapInterval);
                 timewindowMs = gapInterval.toString();
             } else {
@@ -42,108 +38,104 @@ class HistoryPanel extends Component {
                 intervals = times.getValueIntervals(timewindowMs);
             }
             const interval = intervals[0].value.toString();
-            let history = Object.assign({}, this.state[id].history, { historyType: e.target.value, interval, timewindowMs });
-            let limit = this.state[id].aggregation.limit;
-            if (this.state[id].aggregation.type !== types.aggregation.none.value) {
+            const history = Object.assign({}, this.state.history, { historyType: e.target.value, interval, timewindowMs });
+            let limit = this.state.aggregation.limit;
+            if (this.state.aggregation.type !== types.aggregation.none.value) {
                 limit = Math.ceil(timewindowMs / interval);
             }
-            const aggregation = Object.assign({}, this.state[id].aggregation, { limit });
-            history = Object.assign({}, this.state[id], { history, intervals, aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { limit });
             this.setState({
-                [id]: history,
+                intervals,
+                history,
+                aggregation,
             });
         },
         onChangeTimewindowMs: (value) => {
-            const id = this.handlers.id;
             const intervals = times.getValueIntervals(value);
             const interval = intervals[0].value.toString();
-            let history = Object.assign({}, this.state[id].history, { timewindowMs: value, interval });
-            let limit = this.state[id].aggregation.limit;
-            if (this.state[id].aggregation.type !== types.aggregation.none.value) {
+            const history = Object.assign({}, this.state.history, { timewindowMs: value, interval });
+            let limit = this.state.aggregation.limit;
+            if (this.state.aggregation.type !== types.aggregation.none.value) {
                 limit = Math.ceil(value / interval);
             }
-            const aggregation = Object.assign({}, this.state[id].aggregation, { limit });
-            history = Object.assign({}, this.state[id], { history, intervals, aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { limit });
             this.setState({
-                [id]: history,
+                intervals,
+                history,
+                aggregation,
             });
         },
         onChangeInterval: (value) => {
-            const id = this.handlers.id;
-            let history = Object.assign({}, this.state[id].history, { interval: value });
-            const timewindowMs = this.state[id].history.timewindowMs;
-            let limit = this.state[id].aggregation.limit;
-            if (this.state[id].aggregation.type !== types.aggregation.none.value) {
+            const history = Object.assign({}, this.state.history, { interval: value });
+            const timewindowMs = this.state.history.timewindowMs;
+            let limit = this.state.aggregation.limit;
+            if (this.state.aggregation.type !== types.aggregation.none.value) {
                 limit = Math.ceil(timewindowMs / value);
             }
-            const aggregation = Object.assign({}, this.state[id].aggregation, { limit });
-            history = Object.assign({}, this.state[id], { history, aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { limit });
             this.setState({
-                [id]: history,
+                history,
+                aggregation,
             });
         },
         onChangeStartTimeMs: (value) => {
-            const id = this.handlers.id;
-            let intervals = this.state[id].intervals;
-            let interval = this.state[id].history.interval;
-            let timewindowMs = this.state[id].history.timewindowMs;
+            let intervals = this.state.intervals;
+            let interval = this.state.history.interval;
+            let timewindowMs = this.state.history.timewindowMs;
             if (!isNaN(value)) {
-                const gapInterval = this.state[id].history.fixedTimewindow.endTimeMs - value;
+                const gapInterval = this.state.history.fixedTimewindow.endTimeMs - value;
                 intervals = times.getValueIntervals(gapInterval);
                 interval = intervals[0].value.toString();
                 timewindowMs = gapInterval;
             }
-            const fixedTimewindow = Object.assign({}, this.state[id].history.fixedTimewindow, { startTimeMs: value });
-            let history = Object.assign({}, this.state[id].history, { fixedTimewindow, interval, timewindowMs });
-            let limit = this.state[id].aggregation.limit;
-            if (this.state[id].aggregation.type !== types.aggregation.none.value) {
+            const fixedTimewindow = Object.assign({}, this.state.history.fixedTimewindow, { startTimeMs: value });
+            const history = Object.assign({}, this.state.history, { fixedTimewindow, interval, timewindowMs });
+            let limit = this.state.aggregation.limit;
+            if (this.state.aggregation.type !== types.aggregation.none.value) {
                 limit = Math.ceil(timewindowMs / interval);
             }
-            const aggregation = Object.assign({}, this.state[id].aggregation, { limit });
-            history = Object.assign({}, this.state[id], { intervals, history, aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { limit });
             this.setState({
-                [id]: history,
+                intervals,
+                history,
+                aggregation,
             });
         },
         onChangeEndTimeMs: (value) => {
-            const id = this.handlers.id;
-            let intervals = this.state[id].intervals;
-            let interval = this.state[id].history.interval;
-            let timewindowMs = this.state[id].history.timewindowMs;
+            let intervals = this.state.intervals;
+            let interval = this.state.history.interval;
+            let timewindowMs = this.state.history.timewindowMs;
             if (!isNaN(value)) {
-                const gapInterval = value - this.state[id].history.fixedTimewindow.startTimeMs;
+                const gapInterval = value - this.state.history.fixedTimewindow.startTimeMs;
                 intervals = times.getValueIntervals(gapInterval);
                 interval = intervals[0].value.toString();
                 timewindowMs = gapInterval;
             }
-            const fixedTimewindow = Object.assign({}, this.state[id].history.fixedTimewindow, { endTimeMs: value });
-            let history = Object.assign({}, this.state[id].history, { fixedTimewindow, interval, timewindowMs });
-            let limit = this.state[id].aggregation.limit;
-            if (this.state[id].aggregation.type !== types.aggregation.none.value) {
+            const fixedTimewindow = Object.assign({}, this.state.history.fixedTimewindow, { endTimeMs: value });
+            const history = Object.assign({}, this.state.history, { fixedTimewindow, interval, timewindowMs });
+            let limit = this.state.aggregation.limit;
+            if (this.state.aggregation.type !== types.aggregation.none.value) {
                 limit = Math.ceil(timewindowMs / interval);
             }
-            const aggregation = Object.assign({}, this.state[id].aggregation, { limit });
-            history = Object.assign({}, this.state[id], { intervals, history, aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { limit });
             this.setState({
-                [id]: history,
+                intervals,
+                history,
+                aggregation,
             });
         },
         onChangeAggregation: (value) => {
-            const id = this.handlers.id;
             const type = value;
-            const aggregation = Object.assign({}, this.state[id].aggregation, { type });
-            const history = Object.assign({}, this.state[id], { aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { type });
             this.setState({
-                [id]: history,
+                aggregation,
             });
         },
         onChangeAggregationLimit: (value) => {
-            const id = this.handlers.id;
             const limit = value;
-            const aggregation = Object.assign({}, this.state[id].aggregation, { limit });
-            const history = Object.assign({}, this.state[id], { aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { limit });
             this.setState({
-                [id]: history,
+                aggregation,
             });
         },
     }

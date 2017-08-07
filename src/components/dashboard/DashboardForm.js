@@ -28,7 +28,7 @@ class DashboardForm extends Component {
                     <Form.Item label={i18n.t('dashboard.public-link')}>
                         {
                             getFieldDecorator('publicLink', {
-                                initialValue: `${config.apServer}/dashboards/${data.id.id}?publicId=${data.customer.id}`,
+                                initialValue: `${config.apServer}/dashboards/${data.id.id}?publicId=${data.customerId.id}`,
                             })(
                                 <Input
                                     disabled={disabled}

@@ -65,11 +65,16 @@ export const USERS = {
  */
 export const DASHBOARDS = {
     TENANT_DASHBOARDS_URL: '/api/tenant/dashboards',
+    TENANT_DASHBOARDS_BY_ID_URL: '/api/tenant',
     GET_DASHBOARD_URL: '/api/dashboard',
+    GET_DASHBOARD_INFO_URL: '/api/dashboard/info',
     CUSTOMER_DASHBOARDS_URL: '/api/customer',
     SAVE_DASHBOARD_URL: '/api/dashboard',
     DELETE_DASHBOARD_URL: '/api/dashboard',
     SERVERTIME_DASHBOARD_URL: '/api/dashboard/serverTime',
+    ASSIGN_DASHBOARD_CUSTOMER_URL: '/api/customer',
+    UNASSIGN_DASHBOARD_CUSTOMER_URL: 'api/customer/dashboard',
+    MAKE_DASHBOARD_PUBLIC_URL: '/api/customer/public/dashboard/',
 };
 
 /**
@@ -91,4 +96,11 @@ export const DEVICES = {
     SAVE_DEVICE_URL: '/api/device',
     DELETE_DEVICE_URL: '/api/device',
     MAKE_DEVICE_PUBLIC_URL: '/api/customer/public/device',
+};
+
+/**
+ * TELEMETRY API
+ */
+export const TELEMETRY = {
+    API_ATTRIBUTES_URL: '/api/plugins/telemetry',
 };

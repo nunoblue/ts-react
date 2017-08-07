@@ -7,66 +7,58 @@ import { times, types } from '../../utils/commons';
 
 class RealTimePanel extends Component {
     state = {
+        intervals: times.getIntervals((times.MINUTE / times.MAX_LIMIT), (times.MINUTE / times.MIN_LIMIT)),
         realtime: {
-            intervals: times.getIntervals((times.MINUTE / times.MAX_LIMIT), (times.MINUTE / times.MIN_LIMIT)),
-            realtime: {
-                interval: times.SECOND.toString(),
-                timewindowMs: times.MINUTE.toString(),
-            },
-            aggregation: {
-                type: types.aggregation.avg.value,
-                limit: times.AVG_LIMIT,
-            },
+            interval: times.SECOND.toString(),
+            timewindowMs: times.MINUTE.toString(),
+        },
+        aggregation: {
+            type: types.aggregation.avg.value,
+            limit: times.AVG_LIMIT,
         },
     }
 
     handlers = {
-        id: 'realtime',
         onChangeTimewindowMs: (value) => {
-            const id = this.handlers.id;
             const intervals = times.getValueIntervals(value);
             const interval = intervals[0].value.toString();
-            let realtime = Object.assign({}, this.state[id].realtime, { timewindowMs: value, interval });
-            let limit = this.state[id].aggregation.limit;
-            if (this.state[id].aggregation.type !== types.aggregation.none.value) {
+            const realtime = Object.assign({}, this.state.realtime, { timewindowMs: value, interval });
+            let limit = this.state.aggregation.limit;
+            if (this.state.aggregation.type !== types.aggregation.none.value) {
                 limit = Math.ceil(value / interval);
             }
-            const aggregation = Object.assign({}, this.state[id].aggregation, { limit });
-            realtime = Object.assign({}, this.state[id], { realtime, intervals, aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { limit });
             this.setState({
-                [id]: realtime,
+                realtime,
+                intervals,
+                aggregation,
             });
         },
         onChangeInterval: (value) => {
-            const id = this.handlers.id;
-            let realtime = Object.assign({}, this.state[id].realtime, { interval: value });
-            let limit = this.state[id].aggregation.limit;
-            const timewindowMs = this.state[id].realtime.timewindowMs;
-            if (this.state[id].aggregation.type !== types.aggregation.none.value) {
+            const realtime = Object.assign({}, this.state.realtime, { interval: value });
+            let limit = this.state.aggregation.limit;
+            const timewindowMs = this.state.realtime.timewindowMs;
+            if (this.state.aggregation.type !== types.aggregation.none.value) {
                 limit = Math.ceil(timewindowMs / value);
             }
-            const aggregation = Object.assign({}, this.state[id].aggregation, { limit });
-            realtime = Object.assign({}, this.state[id], { realtime, aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { limit });
             this.setState({
-                [id]: realtime,
+                realtime,
+                aggregation,
             });
         },
         onChangeAggregation: (value) => {
-            const id = this.handlers.id;
             const type = value;
-            const aggregation = Object.assign({}, this.state[id].aggregation, { type });
-            const realtime = Object.assign({}, this.state[id], { aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { type });
             this.setState({
-                [id]: realtime,
+                aggregation,
             });
         },
         onChangeAggregationLimit: (value) => {
-            const id = this.handlers.id;
             const limit = value;
-            const aggregation = Object.assign({}, this.state[id].aggregation, { limit });
-            const realtime = Object.assign({}, this.state[id], { aggregation });
+            const aggregation = Object.assign({}, this.state.aggregation, { limit });
             this.setState({
-                [id]: realtime,
+                aggregation,
             });
         },
     }

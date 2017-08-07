@@ -171,11 +171,11 @@ class GeneralTimeWindow extends Component {
         const buttonComponent = children || <CommonButton onClick={this.handleChangeVisible} />;
         return (
             <Popover
-                placement={undefined}
+                placement="topLeft"
                 overlayStyle={{ width: '600px' }}
                 overlayClassName={undefined}
                 autoAdjustOverflow
-                arrowPointAtCenter={false}
+                arrowPointAtCenter
                 content={this.contents()}
                 trigger="click"
                 visible={this.state.visible}
@@ -194,4 +194,4 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     
 }, dispatch);
 
-export default stateToProps([HistoryPanel, RealTimePanel])(GeneralTimeWindow);
+export default stateToProps([{ history: HistoryPanel }, { realtime: RealTimePanel }])(GeneralTimeWindow);

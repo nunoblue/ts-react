@@ -6,7 +6,7 @@ import CommonDialog from '../common/CommonDialog';
 import CommonButton from '../common/CommonButton';
 import UserForm from './UserForm';
 
-class DetailDeviceDialog extends Component {
+class DetailUserDialog extends Component {
     state = {
         editing: false,
         title: null,
@@ -86,4 +86,4 @@ class DetailDeviceDialog extends Component {
     }
 }
 
-export default DetailDeviceDialog;
+export default DetailUserDialog;

@@ -6,61 +6,83 @@ import {
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
     API_GET_SERVERTIME_SUCCESS,
+    API_ASSIGN_DASHBOARD_CUSTOMER,
+    API_MAKE_PUBLIC_DASHBOARD,
+    API_UNASSIGN_DASHBOARD_CUSTOMER,
     CLEAR_DASHBOARDS,
  } from './DashboardsTypes';
 import { dashboardService } from '../../services/api';
+import config from '../../configs';
 
-function getDashboards() {
+const getDashboards = () => {
     return {
         type: TENANT_DASHBOARDS,
     };
-}
+};
 
-function getDashboardsSuccess(data) {
+const getDashboardsSuccess = (data) => {
     return {
         type: TENANT_DASHBOARDS_SUCCESS,
         data,
     };
-}
+};
 
-function getDashboardsFailure(message) {
+const getDashboardsFailure = (message) => {
     return {
         type: TENANT_DASHBOARDS_FAILURE,
         errorMessage: message,
     };
-}
+};
 
-function getDashboardSuccess(data) {
+const getDashboardSuccess = (data) => {
     return {
         type: API_GET_DASHBOARD_SUCCESS,
         dashboard: data,
     };
-}
+};
 
-function saveDashboardSuccess() {
+const saveDashboardSuccess = () => {
     return {
         type: API_SAVE_DASHBOARD_SUCCESS,
     };
-}
+};
 
-function deleteDashboardSuccess() {
+const deleteDashboardSuccess = () => {
     return {
         type: API_DELETE_DASHBOARD_SUCCESS,
     };
-}
+};
 
-function getServerTimeDiffSuccess(stDiff) {
+const getServerTimeDiffSuccess = (stDiff) => {
     return {
         type: API_GET_SERVERTIME_SUCCESS,
         stDiff,
     };
-}
+};
 
-function clearDashboardsSuccess() {
+const assignDashboardToCustomerSuccess = () => {
+    return {
+        type: API_ASSIGN_DASHBOARD_CUSTOMER,
+    };
+};
+
+const unassignDashboardToCustomerSuccess = () => {
+    return {
+        type: API_UNASSIGN_DASHBOARD_CUSTOMER,
+    };
+};
+
+const makeDashboardPublicSuccess = () => {
+    return {
+        type: API_MAKE_PUBLIC_DASHBOARD,
+    };
+};
+
+const clearDashboardsSuccess = () => {
     return {
         type: CLEAR_DASHBOARDS,
     };
-}
+};
 
 export const getDashboardsRequest = (limit, textSearch, authority, id) => (dispatch) => {
     dispatch(getDashboards());
@@ -137,6 +159,48 @@ export const getServerTimeDiffRequest = () => {
     };
 };
 
+export const assignDashboardToCustomerRequest = (customerId, dashboardId) => (dispatch) => {
+    dispatch(getDashboards());
+    return dashboardService.assignDashboardToCustomer(customerId, dashboardId).then(() => {
+        dispatch(assignDashboardToCustomerSuccess());
+    }).catch((error) => {
+        dispatch(getDashboardsFailure(error.message));
+    });
+};
+
+export const multipleAssignDashboardToCustomerRequest = (customerId, dashboardIdArray) => (dispatch) => {
+    dispatch(getDashboards());
+    return dashboardService.multipleAssignDashboardToCustomer(customerId, dashboardIdArray).then(() => {
+        dispatch(assignDashboardToCustomerSuccess());
+    }).catch((error) => {
+        dispatch(getDashboardsFailure(error.message));
+    });
+};
+
+export const unassignDashboardToCustomerRequest = dashboardId => (dispatch) => {
+    dispatch(getDashboards());
+    return dashboardService.unassignDashboardToCustomer(dashboardId).then(() => {
+        dispatch(unassignDashboardToCustomerSuccess());
+    }).catch((error) => {
+        dispatch(getDashboardsFailure(error.message));
+    });
+};
+
+export const makeDashboardPublicRequest = dashboardId => (dispatch) => {
+    dispatch(getDashboards());
+    return dashboardService.makeDashboardPublic(dashboardId).then(() => {
+        dispatch(makeDashboardPublicSuccess());
+    }).catch((error) => {
+        dispatch(getDashboardsFailure(error.message));
+    });
+};
+
 export const clearDashboardsRequest = () => (dispatch) => {
     dispatch(clearDashboardsSuccess());
+};
+
+export const getPublicDashboardLinkRequest = (dashboardId, customerId) => {
+    let url = config.locationUrl;
+    url += `/dashboards/${dashboardId}?publicId=${customerId}`;
+    return url;
 };

@@ -25,7 +25,7 @@ class CommonButton extends Component {
         let component = null;
         if (this.props.visible) {
             component = (
-                <Tooltip title={this.props.tooltipTitle}>
+                <Tooltip title={this.props.tooltipTitle} autoAdjustOverflow>
                     <div className={this.props.className}>
                         <Button shape={this.props.shape} type={this.props.type} size={this.props.size} onClick={this.props.onClick}>
                             <Icon type={this.props.iconClassName} />

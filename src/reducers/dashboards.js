@@ -8,6 +8,9 @@ import {
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
     API_GET_SERVERTIME_SUCCESS,
+    API_ASSIGN_DASHBOARD_CUSTOMER,
+    API_MAKE_PUBLIC_DASHBOARD,
+    API_UNASSIGN_DASHBOARD_CUSTOMER,
     CLEAR_DASHBOARDS,
 } from '../actions/dashboard/DashboardsTypes';
 
@@ -73,6 +76,24 @@ export default function dashboards(state = initialState, action) {
                 },
                 stDiff: {
                     $set: action.stDiff,
+                },
+            });
+        case API_ASSIGN_DASHBOARD_CUSTOMER:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_UNASSIGN_DASHBOARD_CUSTOMER:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_MAKE_PUBLIC_DASHBOARD:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
                 },
             });
         case CLEAR_DASHBOARDS:

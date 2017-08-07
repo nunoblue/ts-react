@@ -5,14 +5,21 @@ import i18n from 'i18next';
 import CommonDialog from '../common/CommonDialog';
 import CommonButton from '../common/CommonButton';
 import CustomerForm from './CustomerForm';
+import { types } from '../../utils/commons';
 
-class DetailDeviceDialog extends Component {
+class DetailCustomerDialog extends Component {
     state = {
+        type: 'dialog',
         editing: false,
         title: null,
+        attributesScope: types.attributesScope.client,
     }
 
-    changeEdit = () => {
+    handleClickEdit = () => {
+        const { onCancelDialogEdit } = this.props;
+        if (this.state.editing) {
+            onCancelDialogEdit();
+        }
         this.setState({
             editing: !this.state.editing,
         });
@@ -98,4 +105,4 @@ class DetailDeviceDialog extends Component {
     }
 }
 
-export default DetailDeviceDialog;
+export default DetailCustomerDialog;

@@ -35,9 +35,7 @@ const requestInterceptor = (method, url, data, headers) => {
                 resolve(response);
             }).catch((error) => {
                 if (error.response) {
-                    error.message = error.response.data.message;
-                } else if (error.request) {
-                    error.message = error.request.data.message;
+                    error.message = error.response.data ? error.response.data.message : `${error.response.status} ${error.response.statusText}`;
                 } else {
                     error.message = error.message || `${error.status} ${error.statusText}`;
                 }
