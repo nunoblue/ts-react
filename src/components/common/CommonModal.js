@@ -64,6 +64,7 @@ export default class CommonModal extends Component {
         return (
             <div>
                 <Modal
+                    className={this.props.className}
                     title={title}
                     visible={this.state.visible || this.props.visible}
                     okText={okText}
