@@ -58,3 +58,12 @@ export const unassignDashboardFromCustomer = dashboardId => (
 export const makeDashboardPublic = dashboardId => (
     client.post(`${DASHBOARDS.MAKE_DASHBOARD_PUBLIC_URL}/${dashboardId}`)
 );
+export const assignDashboard = (customerId, id) => (
+    client.post(`${DASHBOARDS.CUSTOMER_DASHBOARDS_URL}/${customerId}/dashboard/${id}`, null)
+);
+
+export const multipleAssignDashboard = (customerId, idArray) => (
+    client.all(idArray.map(id => (
+        assignDashboard(customerId, id)
+    )))
+);

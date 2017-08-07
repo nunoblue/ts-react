@@ -61,7 +61,7 @@ class DetailDeviceDialog extends Component {
     footerComponents = () => {
         return (
             this.state.editing ? (
-                <CommonButton className="ts-dialog-button" onClick={this.handleSave}>
+                <CommonButton className="ts-card-button" onClick={this.handleSave}>
                     <i className="material-icons margin-right-8 vertical-middle">save</i>
                     {i18n.t('action.apply-changes')}
                 </CommonButton>
@@ -72,15 +72,16 @@ class DetailDeviceDialog extends Component {
     tabActionComponents = () => {
         return (
             <CommonButton
-                className="ts-dialog-button"
+                className="ts-card-button"
+                shape="circle"
                 tooltipTitle={i18n.t('details.toggle-edit-mode')}
                 onClick={this.handleClickEdit}
             >
                 {
                     !this.state.editing ? (
-                        <i className="material-icons">mode_edit</i>
+                        <i className="material-icons margin-right-8 vertical-middle">mode_edit</i>
                     ) : (
-                        <i className="material-icons">close</i>
+                        <i className="material-icons margin-right-8 vertical-middle">close</i>
                     )
                 }
             </CommonButton>

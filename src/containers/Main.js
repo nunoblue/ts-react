@@ -113,7 +113,7 @@ class Main extends Component {
             matches = this.sider.mql.matches;
         }
         return (
-            <Layout style={{ height: '100vh' }}>
+            <Layout className="ts-layout">
                 <Layout.Sider
                     ref={(c) => { this.sider = c; }}
                     trigger={null}
@@ -121,9 +121,12 @@ class Main extends Component {
                     collapsedWidth="0"
                     collapsed={this.state.collapsed}
                     onCollapse={(collapsed, type) => { this.setState({ collapsed }); }}
+                    className="ts-layout-sider"
                 >
                     <div className="main-logo">
-                        <Link to="/home">ThingStar</Link>
+                        <Link to="/home">
+                            <img src="images/tsLogo.png" alt="ThingStar Logo" />
+                        </Link>
                     </div>
                     <MenuList authority={currentUser.authority} selectedKey={this.props.location.pathname} />
                 </Layout.Sider>
@@ -135,7 +138,7 @@ class Main extends Component {
                         toggle={this.toggle}
                         matches={matches}
                     />
-                    <Layout.Content className="code-box-demo">
+                    <Layout.Content className="ts-layout-content">
                         <Spin spinning={this.state.loading}>
                             {/* <Row>
                                 <Col span="2">
@@ -145,6 +148,12 @@ class Main extends Component {
                             {this.props.children}
                         </Spin>
                     </Layout.Content>
+                    <Layout.Footer style={{overflow: 'hidden', backgroundColor: '#CCCCCC', marginTop: 20, paddingTop: 10, paddingBottom: 10, paddingLeft:15, color: '#666666', textAlign: 'left', zIndex: '200'}}>
+                        {'© Copyright 2017. All rights Reserved.'}
+                        <div className="footer-ver">
+                            <span>Version 1.0.1</span>
+                        </div>
+                    </Layout.Footer>
                 </Layout>
             </Layout>
         );

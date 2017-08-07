@@ -61,7 +61,7 @@ class App extends Component {
         const validation = validate.statusMessage === 'SUCCESS' && typeof currentUser.authority !== 'undefined';
         return (
             <Router>
-                <Layout style={{ height: '100vh' }}>
+                <div style={{height: '100vh'}}>
                     <Route
                         exact
                         path="/"
@@ -78,7 +78,7 @@ class App extends Component {
                         <Route path="/login" component={Login} />
                         {this.mainRoute(validation, currentUser.authority)}
                     </Switch>
-                </Layout>
+                </div>
             </Router>
         );
     }
