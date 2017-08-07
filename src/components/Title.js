@@ -68,12 +68,14 @@ class Title extends Component {
 
     render() {
         const logoutButton = (
-            <a onClick={this.props.onLogout}>
-                <i className="material-icons">lock_open</i>
-            </a>
+            <div className="ts-sign-out">
+                <a onClick={this.props.onLogout}>
+                    <i className="fa fa-sign-out"></i>
+                </a>
+            </div>
         );
         return (
-            <Layout.Header style={{ background: '#fff', padding: 0 }}>
+            <Layout.Header style={{ background: '#ECEFF1', padding: 0, height: 50, borderBottom: '1px solid #C8D2D7' }}>
                 <Row>
                     <Col span={18}>
                         <Col span={this.props.matches ? 2 : 0}>
@@ -84,7 +86,7 @@ class Title extends Component {
                             />
                         </Col>
                         <Col span={this.props.matches ? 22 : 24}>
-                            <Breadcrumb style={{ margin: '0px 12px' }} separator=">">
+                            <Breadcrumb style={{ marginTop: -8, marginLeft: 20, fontSize: 14 }} separator=">">
                                 {this.breadCrumb()}
                             </Breadcrumb>
                         </Col>

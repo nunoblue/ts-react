@@ -73,7 +73,7 @@ class Devices extends Component {
         const tenantCustomerId = currentUser.customerId.id;
         const isPublic = shortInfo[customerId] ? shortInfo[customerId].isPublic : undefined;
         const isAssign = tenantCustomerId !== customerId;
-        let shareVisible;
+        let shareVisible = false;
         let assignVisible;
         let deleteVisible;
         if (this.state.authority) {
@@ -98,59 +98,89 @@ class Devices extends Component {
         const makePublicConfirm = this.handleMakePublicConfirm.bind(this, name, deviceId);
         if (isDialog) {
             return (
-                <Button.Group className="custom-card-buttongroup">
-                    <CommonLabel visible={shareVisible}>{isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}</CommonLabel>
-                    <CommonButton
-                        className="custom-card-button"
-                        visible={shareVisible}
-                        iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
-                        tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
-                        onClick={isPublic ? unassignConfirm : makePublicConfirm}
-                    />
-                    <CommonLabel visible={assignVisible}>{isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}</CommonLabel>
-                    <CommonButton
-                        className="custom-card-button"
-                        visible={assignVisible}
-                        iconClassName={isAssign ? 'user-delete' : 'user-add'}
-                        tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
-                        onClick={isAssign ? unassignConfirm : assignCustomerModal}
-                    />
-                    <CommonLabel>{i18n.t('device.manage-credentials')}</CommonLabel>
-                    <CommonButton
-                        className="custom-card-button"
-                        iconClassName="key"
-                        onClick={credentialsModal}
-                        tooltipTitle={i18n.t('device.manage-credentials')}
-                    />
-                    <CommonLabel visible={deleteVisible}>{i18n.t('device.delete')}</CommonLabel>
-                    <CommonButton
-                        className="custom-card-button"
-                        visible={deleteVisible}
-                        iconClassName="delete"
-                        onClick={modalConfirmAction}
-                        tooltipTitle={i18n.t('device.delete')}
-                    />
-                    <CommonLabel>{i18n.t('device.copyId')}</CommonLabel>
-                    <CommonButton
-                        className="custom-card-button"
-                        tooltipTitle={i18n.t('device.copyId')}
-                    >
+                <Button.Group className="ts-card-buttongroup">
+                    {
+                        shareVisible ? (
+                            <div className="ts-modal-button">
+                                <CommonLabel visible={shareVisible}>{isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}</CommonLabel>
+                                <CommonButton
+                                    className="ts-card-button"
+                                    shape="circle"
+                                    visible={shareVisible}
+                                    iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
+                                    tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
+                                    onClick={isPublic ? unassignConfirm : makePublicConfirm}
+                                />
+                            </div>
+                        ) : null
+                    }
+                    {
+                        assignVisible ? (
+                            <div className="ts-modal-button">
+                                <CommonLabel visible={assignVisible}>{isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}</CommonLabel>
+                                <CommonButton
+                                    className="ts-card-button"
+                                    shape="circle"
+                                    visible={assignVisible}
+                                    iconClassName={isAssign ? 'user-delete' : 'user-add'}
+                                    tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
+                                    onClick={isAssign ? unassignConfirm : assignCustomerModal}
+                                />
+                            </div>
+                        ) : null
+                    }
+                    <div className="ts-modal-button">
+                        <CommonLabel>{i18n.t('device.manage-credentials')}</CommonLabel>
+                        <CommonButton
+                            className="ts-card-button"
+                            shape="circle"
+                            iconClassName="key"
+                            onClick={credentialsModal}
+                            tooltipTitle={i18n.t('device.manage-credentials')}
+                        />
+                    </div>
+                    {
+                        deleteVisible ? (
+                            <div className="ts-modal-button">
+                                <CommonLabel visible={deleteVisible}>{i18n.t('device.delete')}</CommonLabel>
+                                <CommonButton
+                                    className="ts-card-button"
+                                    shape="circle"
+                                    visible={deleteVisible}
+                                    iconClassName="delete"
+                                    onClick={modalConfirmAction}
+                                    tooltipTitle={i18n.t('device.delete')}
+                                />
+                            </div>
+                        ) : null
+                    }
+                    <div className="ts-modal-button">
+                        <CommonLabel>{i18n.t('device.copyId')}</CommonLabel>
+                        <CommonButton
+                            className="ts-card-button"
+                            shape="circle"
+                            tooltipTitle={i18n.t('device.copyId')}
+                        >
+                            <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
+                        </CommonButton>
+                    </div>
+                    <div className="ts-modal-button">
+                        <CommonLabel>{i18n.t('device.copyAccessToken')}</CommonLabel>
+                        <CommonButton
+                            className="ts-card-button"
+                            shape="circle"
+                            tooltipTitle={i18n.t('device.copyAccessToken')}
+                        >
                         <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
-                    </CommonButton>
-                    <CommonLabel>{i18n.t('device.copyAccessToken')}</CommonLabel>
-                    <CommonButton
-                        className="custom-card-button"
-                        tooltipTitle={i18n.t('device.copyAccessToken')}
-                    >
-                        <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
-                    </CommonButton>
+                        </CommonButton>
+                    </div>
                 </Button.Group>
             );
         }
         return (
-            <Button.Group className="custom-card-buttongroup">
+            <Button.Group className="ts-card-buttongroup">
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     visible={shareVisible}
                     iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
@@ -158,7 +188,7 @@ class Devices extends Component {
                     onClick={isPublic ? unassignConfirm : makePublicConfirm}
                 />
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     visible={assignVisible}
                     iconClassName={isAssign ? 'user-delete' : 'user-add'}
@@ -166,14 +196,14 @@ class Devices extends Component {
                     onClick={isAssign ? unassignConfirm : assignCustomerModal}
                 />
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     iconClassName="key"
                     onClick={credentialsModal}
                     tooltipTitle={i18n.t('device.manage-credentials')}
                 />
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     visible={deleteVisible}
                     iconClassName="delete"
@@ -195,6 +225,7 @@ class Devices extends Component {
             return (
                 <CommonCard
                     key={id}
+                    className="ts-card"
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
                     title={name}
@@ -655,8 +686,13 @@ class Devices extends Component {
         const authority = this.state.authority === this.state.isCustomer;
         return (
             <Row>
-                 <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                    <Card className="ts-card-example" onClick={this.openAddDeviceModal}>
+                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                    <Card className="ts-card-new" onClick={this.openAddDeviceModal}>
+                        <div>
+                            <span>Create a
+                                <span className="point"> new device</span>
+                            </span>
+                        </div>
                     </Card>
                 </Col> 
                 {this.components()}
@@ -681,7 +717,7 @@ class Devices extends Component {
                         shape="circle"
                         visible={this.state.isCustomer}
                         tooltipTitle={i18n.t('device.add-device-text')}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="plus"
                         onClick={this.openAddDeviceModal}
                         size="large"
