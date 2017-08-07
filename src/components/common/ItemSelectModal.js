@@ -6,7 +6,7 @@ import axios from 'axios';
 import i18n from 'i18next';
 
 import storage from 'store/storages/localStorage';
-import config from '../../config';
+import config from '../../configs';
 import CommonModal from './CommonModal';
 
 const { apiHeaderPrefix } = config;

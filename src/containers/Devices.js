@@ -20,7 +20,7 @@ import * as actions from '../actions/device/devices';
 import * as customers from '../actions/customer/customers';
 import * as telemetry from '../actions/telemetry/telemetry';
 
-import config from '../config';
+import config from '../configs';
 
 const url = `${config.apServer}/api/tenant/devices`;
 

@@ -15,6 +15,7 @@ import ItemSelectModal from '../components/common/ItemSelectModal';
 
 import * as actions from '../actions/dashboard/dashboards';
 import * as customers from '../actions/customer/customers';
+import { urlConstants } from '../services/constants';
 
 class Dashboards extends Component {
 
@@ -447,7 +448,7 @@ class Dashboards extends Component {
                 />
                 <ItemSelectModal
                     ref={(c) => { this.assignDashboardModal = c; }}
-                    url={actions.TENANT_DASHBOARDS_URL}
+                    url={urlConstants.DASHBOARDS.TENANT_DASHBOARDS_URL}
                     multiple
                     labelField={'title'}
                     valueField={'id.id'}
