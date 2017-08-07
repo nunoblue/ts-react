@@ -214,19 +214,19 @@ class AttributeTable extends Component {
     NonSelectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = isServerShared ? (
-            <Button.Group className="custom-card-buttongroup">
-                <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickAddAttribute} tooltipTitle={i18n.t('attribute.add')}>
+            <Button.Group className="ts-attribute-buttongroup">
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickAddAttribute} tooltipTitle={i18n.t('attribute.add')}>
                     <i className="material-icons vertical-middle">add</i>
                 </CommonButton>
-                <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
                     <i className="material-icons vertical-middle">search</i>
                 </CommonButton>
-                <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickAttributeRefresh} tooltipTitle={i18n.t('actions.refresh')}>
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickAttributeRefresh} tooltipTitle={i18n.t('actions.refresh')}>
                     <i className="material-icons vertical-middle">refresh</i>
                 </CommonButton>
             </Button.Group>
         ) : (
-            <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
+            <CommonButton className="ts-card-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
                 <i className="material-icons vertical-middle">search</i>
             </CommonButton>
         );
@@ -257,11 +257,9 @@ class AttributeTable extends Component {
         const titleComponents = this.state.selectedRowKeys.length === 0 ? (
             <Layout.Header className="ts-dialog-title">
                 <Row>
-                    <Col span={20}>
+                    <Col span={24}>
                         <span className="ts-dialog-detail-title">{i18n.t(attributesScope.name)}</span>
-                    </Col>
-                    <Col span={4}>
-                        {this.NonSelectionComponents(type, attributesScope)}
+                        <span>{this.NonSelectionComponents(type, attributesScope)}</span>
                     </Col>
                 </Row>
             </Layout.Header>
