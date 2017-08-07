@@ -125,11 +125,19 @@ class AttributeTable extends Component {
     }
 
     handleSelectAttributesScope = (value) => {
-        if (this.state.attributesScope.value === types.attributesScope[value].value) {
+        let key;
+        if (value.key === types.attributesScope.client.value) {
+            key = 'client';
+        } else if (value.key === types.attributesScope.server.value) {
+            key = 'server';
+        } else if (value.key === types.attributesScope.shared.value) {
+            key = 'shared';
+        }
+        if (this.state.attributesScope.value === types.attributesScope[key].value) {
             return;
         }
         const { entity, subscribers } = this.props;
-        const attributesScope = types.attributesScope[value];
+        const attributesScope = types.attributesScope[key];
         if (attributesScope.clientSide) {
             const attributeScope = {
                 entityType: entity.entityType,
@@ -160,7 +168,7 @@ class AttributeTable extends Component {
     }
 
     handleClickAttributeRefresh = () => {
-
+        this.refreshAttributeTable();
     }
 
     hanldeDeleteAttrbiute = (idArray) => {
@@ -317,20 +325,21 @@ class AttributeTable extends Component {
         }],
     }
 
-    attributeSelector = (type, attributeScope) => {
+    attributeSelector = (type, attributesScope) => {
         const component = type === types.dataKeyType.attribute ? (
             <Select
-                value={i18n.t(attributeScope.name)}
-                defaultValue={i18n.t(attributeScope.name)}
+                labelInValue
+                value={{ key: attributesScope.value }}
+                defaultValue={{ key: types.attributesScope.client.value }}
                 onSelect={this.handleSelectAttributesScope}
             >
-                <Select.Option value="client">
+                <Select.Option key={types.attributesScope.client.value} value={types.attributesScope.client.value}>
                     {i18n.t(types.attributesScope.client.name)}
                 </Select.Option>
-                <Select.Option value="server">
+                <Select.Option key={types.attributesScope.server.value}value={types.attributesScope.server.value}>
                     {i18n.t(types.attributesScope.server.name)}
                 </Select.Option>
-                <Select.Option value="shared">
+                <Select.Option key={types.attributesScope.shared.value} value={types.attributesScope.shared.value}>
                     {i18n.t(types.attributesScope.shared.name)}
                 </Select.Option>
             </Select>
@@ -341,19 +350,19 @@ class AttributeTable extends Component {
     nonSelectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = isServerShared ? (
-                <Button.Group>
-                    <CommonButton shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
-                        <i className="material-icons vertical-middle">add</i>
-                    </CommonButton>
-                    <CommonButton shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
-                        <i className="material-icons vertical-middle">search</i>
-                    </CommonButton>
-                    <CommonButton shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
-                        <i className="material-icons vertical-middle">refresh</i>
-                    </CommonButton>
-                </Button.Group>
+            <Button.Group className="ts-attribute-buttongroup">
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
+                    <i className="material-icons vertical-middle">add</i>
+                </CommonButton>
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
+                    <i className="material-icons vertical-middle">search</i>
+                </CommonButton>
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickAttributeRefresh} tooltipTitle={i18n.t('attribute.add')}>
+                    <i className="material-icons vertical-middle">refresh</i>
+                </CommonButton>
+            </Button.Group>
         ) : (
-            <CommonButton shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
+            <CommonButton className="ts-card-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
                 <i className="material-icons vertical-middle">search</i>
             </CommonButton>
         );
@@ -363,15 +372,15 @@ class AttributeTable extends Component {
     selectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = (
-            <Button.Group>
+            <Button.Group className="ts-attribute-buttongroup">
                 {
                     isServerShared ? (
-                        <CommonButton onClick={this.handleClickDeleteConfirm} tooltipTitle={i18n.t('attribute.delete')}>
+                        <CommonButton className="ts-attribute-button" onClick={this.handleClickDeleteConfirm} tooltipTitle={i18n.t('attribute.delete')}>
                             <i className="material-icons vertical-middle">delete</i>
                         </CommonButton>
                     ) : null
                 }
-                <CommonButton onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('attribute.show-on-widget')}>
+                <CommonButton className="ts-attribute-button" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('attribute.show-on-widget')}>
                     <i className="material-icons vertical-middle">widgets</i>
                     {i18n.t('attribute.show-on-widget')}
                 </CommonButton>
@@ -384,18 +393,16 @@ class AttributeTable extends Component {
         const titleComponents = this.state.selectedRowKeys.length === 0 ? (
             <Layout.Header className="ts-dialog-title">
                 <Row>
-                    <Col span={20}>
+                    <Col span={24}>
                         <span className="ts-dialog-detail-title">{i18n.t(attributesScope.name)}</span>
-                    </Col>
-                    <Col span={4}>
-                        {this.nonSelectionComponents(type, attributesScope)}
+                        <span>{this.nonSelectionComponents(type, attributesScope)}</span>
                     </Col>
                 </Row>
             </Layout.Header>
         ) : (
             <Layout.Header className="ts-dialog-title">
                 <Row>
-                    <Col span={20}>
+                    <Col span={24}>
                         <span className="ts-dialog-detail-title">
                             {
                                 type === types.dataKeyType.attribute ?
@@ -403,9 +410,7 @@ class AttributeTable extends Component {
                                 : i18n.t('attribute.selected-telemetry', { count: this.state.selectedRowKeys.length })
                             }
                         </span>
-                    </Col>
-                    <Col span={4}>
-                        {this.selectionComponents(type, attributesScope)}
+                        <span>{this.selectionComponents(type, attributesScope)}</span>
                     </Col>
                 </Row>
             </Layout.Header>

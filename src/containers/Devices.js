@@ -22,7 +22,8 @@ import * as telemetry from '../actions/telemetry/telemetry';
 
 import config from '../configs';
 
-const url = `${config.apServer}/api/tenant/devices`;
+const tenantDeviceUrl = `${config.apServer}/api/tenant/devices`;
+const customerUrl = `${config.apServer}/api/customers`;
 
 class Devices extends Component {
 
@@ -39,6 +40,7 @@ class Devices extends Component {
         authority: this.context.currentUser.authority === 'TENANT_ADMIN',
         isCustomer: typeof this.props.match.params.customerId === 'undefined',
         selectedDevice: null,
+        assignDeviceId: '',
         dialogVisible: false,
     }
 
@@ -93,7 +95,7 @@ class Devices extends Component {
         }
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, name, deviceId);
         const credentialsModal = this.openCredentials.bind(this, deviceId);
-        const assignCustomerModal = this.openAssignCustomerModal.bind(this, deviceId);
+        const assignCustomerModal = this.assignCustomerModalHandler.show.bind(this, deviceId);
         const unassignConfirm = this.handleUnAssignConfirm.bind(this, name, deviceId, isPublic);
         const makePublicConfirm = this.handleMakePublicConfirm.bind(this, name, deviceId);
         if (isDialog) {
@@ -379,6 +381,18 @@ class Devices extends Component {
         },
     };
 
+    assignCustomerModalHandler = {
+        show: (id) => {
+            this.setState({
+                assignDeviceId: id,
+            });
+            this.assignCustomerModal.modal.onShow();
+        },
+        hide: () => {
+            this.assignCustomerModal.modal.onHide();
+        },
+    };
+
     openCredentials = (id) => {
         this.props.getDeviceCredentialsRequest(id).then((data) => {
             if (this.props.statusMessage === 'SUCCESS') {
@@ -395,28 +409,6 @@ class Devices extends Component {
     hideCredentials = () => {
         this.credentialsModal.form.resetFields();
         this.credentialsModal.modal.onHide();
-    }
-
-    openAssignCustomerModal = (deviceIdArray) => {
-        if (typeof deviceIdArray === 'object') {
-            deviceIdArray = this.state.checkedIdArray;
-        } else {
-            deviceIdArray = [deviceIdArray];
-        }
-        this.props.getCustomersRequest().then(() => {
-            if (this.props.customersStatusMessage === 'SUCCESS') {
-                this.assignCustomerModal.modal.onShow();
-                this.assignCustomerModal.initDatas(this.props.customers, deviceIdArray);
-            } else {
-                notification.error({
-                    message: this.props.customersErrorMessage,
-                });
-            }
-        });
-    }
-
-    hideAssignCustomers = () => {
-        this.assignCustomerModal.modal.onHide();
     }
 
     handleDeleteDevice = (id) => {
@@ -518,14 +510,15 @@ class Devices extends Component {
         });
     }
 
-    handleAssignCustomers = () => {
-        if (!Array.isArray(this.assignCustomerModal.deviceId)) {
-            const deviceId = this.assignCustomerModal.deviceId;
-            const customerId = this.assignCustomerModal.customerId;
+    handleAssignCustomers = (customerIdArray) => {
+        const idArray = this.state.checkedIdArray;
+        const customerId = customerIdArray;
+        if (idArray.length === 0) {
+            const deviceId = this.state.assignDeviceId;
             this.props.assignDeviceToCustomerRequest(customerId, deviceId).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
                     this.refershDeviceRequest();
-                    this.hideAssignCustomers();
+                    this.assignCustomerModalHandler.hide();
                 } else {
                     notification.error({
                         message: this.props.errorMessage,
@@ -533,12 +526,10 @@ class Devices extends Component {
                 }
             });
         } else {
-            const deviceId = this.assignCustomerModal.deviceId;
-            const customerId = this.assignCustomerModal.customerId;
-            this.props.multipleAssignDeviceToCustomerRequest(customerId, deviceId).then(() => {
+            this.props.multipleAssignDeviceToCustomerRequest(customerId, idArray).then(() => {
                 if (this.props.statusMessage === 'SUCCESS') {
                     this.refershDeviceRequest();
-                    this.hideAssignCustomers();
+                    this.assignCustomerModalHandler.hide();
                 } else {
                     notification.error({
                         message: this.props.errorMessage,
@@ -552,7 +543,6 @@ class Devices extends Component {
         this.props.unassignDeviceToCustomerRequest(deviceId).then(() => {
             if (this.props.statusMessage === 'SUCCESS') {
                 this.refershDeviceRequest();
-                this.hideAssignCustomers();
             } else {
                 notification.error({
                     message: this.props.errorMessage,
@@ -702,7 +692,7 @@ class Devices extends Component {
                         tooltipTitle={i18n.t('device.assign-devices-text', { count: this.state.checkedCount })}
                         className={this.state.checkedCount !== 0 ? 'ts-action-button ts-action-button-fadeIn-1' : 'ts-action-button ts-action-button-fadeOut-1'}
                         iconClassName="user-add"
-                        onClick={this.openAssignCustomerModal}
+                        onClick={this.assignCustomerModalHandler.show}
                         size="large"
                     />
                     <CommonButton
@@ -733,22 +723,18 @@ class Devices extends Component {
                     />
                 </div>
                 <AddDeviceModal
+                    className="ts-modal"
                     ref={(c) => { this.addModal = c; }}
                     onSave={this.handleSaveDevice}
                     onCancel={this.hideAddDeviceModal}
                     options={options}
                 />
                 <DeviceCredentialsModal
+                    className="ts-modal"
                     ref={(c) => { this.credentialsModal = c; }}
                     onSave={this.handleSaveCredentials}
                     onCancel={this.hideCredentials}
                     authority={authority}
-                />
-                <AssignCustomerModal
-                    ref={(c) => { this.assignCustomerModal = c; }}
-                    onSave={this.handleAssignCustomers}
-                    onCancel={this.hideAssignCustomers}
-                    onSearch={this.handleSearchCustomer}
                 />
                 <DetailDeviceDialog
                     ref={(c) => { this.detailDialog = c; }}
@@ -762,7 +748,7 @@ class Devices extends Component {
                 />
                 <ItemSelectModal
                     ref={(c) => { this.assignDeviceModal = c; }}
-                    url={url}
+                    url={tenantDeviceUrl}
                     multiple
                     labelField={'name'}
                     valueField={'id.id'}
@@ -770,6 +756,17 @@ class Devices extends Component {
                     message={i18n.t('device.assign-device-to-customer-text')}
                     title={i18n.t('device.assign-device-to-customer')}
                     onSelect={this.handleSelectDevice}
+                />
+                <ItemSelectModal
+                    ref={(c) => { this.assignCustomerModal = c; }}
+                    url={customerUrl}
+                    multiple={false}
+                    labelField={'name'}
+                    valueField={'id.id'}
+                    showSearch
+                    message={i18n.t('device.assign-device-to-customer-text')}
+                    title={i18n.t('device.assign-device-to-customer')}
+                    onSelect={this.handleAssignCustomers}
                 />
             </Row>
         );
