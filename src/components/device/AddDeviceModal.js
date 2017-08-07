@@ -10,6 +10,7 @@ class AddDeviceModal extends Component {
         const { onSave, onCancel, options } = this.props;
         return (
             <CommonModal
+                className={'ts-modal'}
                 ref={(c) => { this.modal = c; }}
                 title={i18n.t('device.add-device-text')}
                 onOk={onSave}

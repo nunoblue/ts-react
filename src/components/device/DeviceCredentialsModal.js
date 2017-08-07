@@ -54,6 +54,7 @@ class DeviceCredentialsModal extends Component {
     render() {
         return (
             <CommonModal
+                className={this.props.className}
                 ref={(c) => { this.modal = c; }}
                 title={i18n.t('device.device-credentials')}
                 onOk={this.props.onSave}
