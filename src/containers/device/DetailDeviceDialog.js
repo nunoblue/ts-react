@@ -99,7 +99,6 @@ class DetailDeviceDialog extends Component {
                 </Form.Item>
             ) : null;
         }
-        console.log(data);
         return (
             <CommonDialog
                 onClick={closeDialog}
