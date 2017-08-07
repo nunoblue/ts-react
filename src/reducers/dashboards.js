@@ -7,6 +7,7 @@ import {
     API_GET_DASHBOARD_SUCCESS,
     API_SAVE_DASHBOARD_SUCCESS,
     API_DELETE_DASHBOARD_SUCCESS,
+    API_GET_SERVERTIME_SUCCESS,
     CLEAR_DASHBOARDS,
 } from '../actions/dashboard/DashboardsTypes';
 
@@ -15,6 +16,7 @@ const initialState = {
     data: [],
     errorMessage: 'NONE',
     dashboard: {},
+    stDiff: 0,
 };
 
 export default function dashboards(state = initialState, action) {
@@ -62,6 +64,15 @@ export default function dashboards(state = initialState, action) {
             return update(state, {
                 statusMessage: {
                     $set: 'SUCCESS',
+                },
+            });
+        case API_GET_SERVERTIME_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+                stDiff: {
+                    $set: action.stDiff,
                 },
             });
         case CLEAR_DASHBOARDS:

@@ -1,12 +1,16 @@
-import Home from './components/Home';
-import Plugins from './containers/Plugins';
-import Rules from './containers/Rules';
-import Customers from './containers/Customers';
-import Widgets from './containers/Widgets';
-import Dashboards from './containers/Dashboards';
-import Devices from './containers/Devices';
-import Users from './containers/Users';
-import Admins from './containers/Admins';
+import Home from '../components/Home';
+import Plugins from '../containers/Plugins';
+import Rules from '../containers/Rules';
+import Customers from '../containers/Customers';
+import Widgets from '../containers/Widgets';
+import Dashboards from '../containers/Dashboards';
+import Devices from '../containers/Devices';
+import Users from '../containers/Users';
+import Admins from '../containers/Admins';
+
+import Dashboard from '../containers/dashboard/Dashboard';
+
+
 // import asyncComponent from './components/AsyncComponent';
 
 // const Home = asyncComponent(() => import('./components/Home').then(module => module.default), { name: 'Home' });
@@ -49,6 +53,10 @@ const TENANT_ADMIN = [
         component: Dashboards,
     },
     {
+        path: '/customers/:customerId/dashboards/:dashboardId',
+        component: Dashboard,
+    },
+    {
         path: '/devices',
         component: Devices,
     },
@@ -59,6 +67,10 @@ const TENANT_ADMIN = [
     {
         path: '/dashboards',
         component: Dashboards,
+    },
+    {
+        path: '/dashboards/:dashboardId',
+        component: Dashboard,
     },
 ];
 

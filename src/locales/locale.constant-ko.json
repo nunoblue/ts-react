@@ -580,10 +580,14 @@
         "description": "설명"
     },
     "timeinterval": {
-        "seconds-interval": "{ seconds, select, 1 {1 second} other {# seconds} }",
-        "minutes-interval": "{ minutes, select, 1 {1 minute} other {# minutes} }",
-        "hours-interval": "{ hours, select, 1 {1 hour} other {# hours} }",
-        "days-interval": "{ days, select, 1 {1 day} other {# days} }",
+        "seconds-interval": "{{value}} second",
+        "seconds-interval_plural": "{{value}} seconds",
+        "minutes-interval": "{{value}} minute",
+        "minutes-interval_plural": "{{value}} minutes",
+        "hours-interval": "{{value}} hour",
+        "hours-interval_plural": "{{value}} hours",
+        "days-interval": "{{value}} day",
+        "days-interval_plural": "{{value}} days",
         "days": "Days",
         "hours": "Hours",
         "minutes": "Minutes",

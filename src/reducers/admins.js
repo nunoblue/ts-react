@@ -5,6 +5,7 @@ import {
     API_ADMINS_SUCCESS,
     API_ADMINS_FAILURE,
     API_ADMIN_SETTINGS_SAVE,
+    CLEAR_ADMINS,
 } from '../actions/admin/AdminsTypes';
 
 const initialState = {
@@ -45,6 +46,8 @@ export default function admins(state = initialState, action) {
                     $set: 'SUCCESS',
                 },
             });
+        case CLEAR_ADMINS:
+            return initialState;
         default:
             return state;
     }

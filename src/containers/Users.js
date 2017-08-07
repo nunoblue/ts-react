@@ -40,6 +40,11 @@ class Users extends Component {
         return true;
     }
 
+    componentWillUnmount() {
+        const { clearUsersRequest } = this.props;
+        clearUsersRequest();
+    }
+
     buttonComponents = (email, id, isPublic, type) => {
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, email, id);
         const sendActivationMail = this.sendActivationMail.bind(this, email);
@@ -78,7 +83,6 @@ class Users extends Component {
             return (
                 <CommonCard
                     key={id}
-                    style={{ cursor: 'pointer' }}
                     title={<CommonCheckbox value={id} onChange={this.handleChecked}>{email}</CommonCheckbox>}
                     content={`${firstName} ${lastName}`}
                     onSelfEvent={closeDialog}
@@ -352,6 +356,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     deleteUserRequest: actions.deleteUserRequest,
     multipleDeleteUserRequest: actions.multipleDeleteUserRequest,
     sendActivationMailRequest: actions.sendActivationMailRequest,
+    clearUsersRequest: actions.clearUsersRequest,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users);

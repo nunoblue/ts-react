@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 import { Row, Modal, notification, Button } from 'antd';
 import i18n from 'i18next';
 
@@ -34,6 +35,7 @@ class Dashboards extends Component {
     }
 
     componentDidMount() {
+        console.log('Dashboards Render');
         this.refershDashboardRequest();
     }
 
@@ -50,8 +52,13 @@ class Dashboards extends Component {
         return true;
     }
 
+    componentWillUnmount() {
+        const { clearDashboardsRequest } = this.props;
+        clearDashboardsRequest();
+    }
+
     buttonComponents = (title, dashboardId, customerId) => {
-        const { shortInfo, match, t } = this.props;
+        const { shortInfo, match } = this.props;
         const { currentUser } = this.context;
         const tenantCustomerId = currentUser.customerId.id;
         const isPublic = shortInfo[customerId] ? shortInfo[customerId].isPublic : undefined;
@@ -59,11 +66,31 @@ class Dashboards extends Component {
         let shareVisible;
         let assignVisible;
         let deleteVisible;
+        let linkButton = (
+            <Link to={`/dashboards/${dashboardId}`}>
+                <CommonButton
+                    className="custom-card-button"
+                    shape="circle"
+                    iconClassName="search"
+                    tooltipTitle={i18n.t('dashboard.dashboard-details')}
+                />
+            </Link>
+        );
         if (this.state.authority) {
             if (match.params.customerId) {
                 shareVisible = false;
                 assignVisible = true;
                 deleteVisible = false;
+                linkButton = (
+                    <Link to={`/customers/${match.params.customerId}/dashboards/${dashboardId}`}>
+                        <CommonButton
+                            className="custom-card-button"
+                            shape="circle"
+                            iconClassName="search"
+                            tooltipTitle={i18n.t('dashboard.dashboard-details')}
+                        />
+                    </Link>
+                );
             } else {
                 shareVisible = isPublic;
                 assignVisible = !shareVisible;
@@ -78,12 +105,7 @@ class Dashboards extends Component {
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, dashboardId);
         return (
             <Button.Group className="custom-card-buttongroup">
-                <CommonButton
-                    className="custom-card-button"
-                    shape="circle"
-                    iconClassName="search"
-                    tooltipTitle={i18n.t('dashboard.dashboard-details')}
-                />
+                {linkButton}
                 <CommonButton
                     className="custom-card-button"
                     shape="circle"
@@ -127,7 +149,6 @@ class Dashboards extends Component {
             return (
                 <CommonCard
                     key={id}
-                    style={{ cursor: 'pointer' }}
                     title={<CommonCheckbox value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>}
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
@@ -166,13 +187,15 @@ class Dashboards extends Component {
                     message: this.props.errorMessage,
                 });
             }
-            this.props.data.map((data) => {
-                if (customerIdArray.indexOf(data.customerId.id) === -1 && currentUser.customerId.id !== data.customerId.id) {
-                    customerIdArray.push(data.customerId.id);
-                }
-            });
-            this.props.getCustomerShortInfoRequest(customerIdArray);
-            this.context.pageLoading();
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.props.data.map((data) => {
+                    if (customerIdArray.indexOf(data.customerId.id) === -1 && currentUser.customerId.id !== data.customerId.id) {
+                        customerIdArray.push(data.customerId.id);
+                    }
+                });
+                this.props.getCustomerShortInfoRequest(customerIdArray);
+                this.context.pageLoading();
+            }
         });
     }
 
@@ -452,8 +475,10 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     saveDashboardRequest: actions.saveDashboardRequest,
     deleteDashboardRequest: actions.deleteDashboardRequest,
     multipleDeleteDashboardRequest: actions.multipleDeleteDashboardRequest,
+    getServerTimeDiffRequest: actions.getServerTimeDiffRequest,
     getCustomerShortInfoRequest: customers.getCustomerShortInfoRequest,
     multipleAssignDashboardToCustomer: actions.multipleAssignDashboardToCustomer,
+    clearDashboardsRequest: actions.clearDashboardsRequest,
 }, dispatch);
 
 

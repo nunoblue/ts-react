@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Modal, notification, Button } from 'antd';
 import _ from 'lodash';
 
-import config from '../config';
+import config from '../configs';
 
 import CommonCard from '../components/common/CommonCard';
 import CommonButton from '../components/common/CommonButton';
@@ -38,6 +39,11 @@ class Rules extends Component {
             return false;
         }
         return true;
+    }
+
+    componentWillUnmount() {
+        const { clearRulesRequest } = this.props;
+        clearRulesRequest();
     }
 
     modalHandler = {
@@ -280,21 +286,18 @@ class Rules extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.rules.statusMessage,
-        data: state.rules.data,
-        erorrMessage: state.rules.errorMessage,
-    };
-};
+const mapStateToProps = state => ({
+    statusMessage: state.rules.statusMessage,
+    data: state.rules.data,
+    erorrMessage: state.rules.errorMessage,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getRulesRequest: () => dispatch(actions.getRulesRequest()),
-        saveRuleRequest: rule => dispatch(actions.saveRuleRequest(rule)),
-        deleteRulesRequest: idArray => dispatch(actions.deleteRulesRequest(idArray)),
-        activateRulesRequest: (id, state) => dispatch(actions.activateRuleRequest(id, state)),
-    };
-};
+const mapDispatchToProps = dispatch => bindActionCreators({
+    getRulesRequest: actions.getRulesRequest,
+    saveRuleRequest: actions.saveRuleRequest,
+    deleteRulesRequest: actions.deleteRulesRequest,
+    activateRulesRequest: actions.activateRuleRequest,
+    clearRulesRequest: actions.clearRulesRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Rules);

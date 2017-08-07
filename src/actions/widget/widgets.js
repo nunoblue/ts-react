@@ -1,17 +1,10 @@
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-
 import {
     API_WIDGETS,
     API_WIDGETS_SUCCESS,
     API_WIDGETS_FAILURE,
     CLEAR_WIDGETS,
 } from './WidgetsTypes';
-
-import config from '../../config';
-
-const apServer = config.apServer;
-const WIDGETS_URL = `${apServer}/api/widgetsBundles`;
+import { widgetService } from '../../services/api';
 
 function getWidgets() {
     return {
@@ -26,9 +19,10 @@ function getWidgetsSuccess(data) {
     };
 }
 
-function getWidgetsFailure() {
+function getWidgetsFailure(message) {
     return {
         type: API_WIDGETS_FAILURE,
+        errorMessage: message,
     };
 }
 
@@ -41,14 +35,10 @@ function clearWidgetsSuccess() {
 export const getWidgetsRequest = () => (dispatch) => {
     dispatch(getWidgets());
 
-    return axios.get(WIDGETS_URL, {
-        headers: {
-            'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-        },
-    }).then((response) => {
+    return widgetService.getWidgets().then((response) => {
         dispatch(getWidgetsSuccess(response.data));
     }).catch((error) => {
-        dispatch(getWidgetsFailure());
+        dispatch(getWidgetsFailure(error.message));
     });
 };
 

@@ -1,6 +1,3 @@
-import axios from 'axios';
-import storage from 'store/storages/localStorage';
-
 import {
     API_USERS,
     API_USERS_SUCCESS,
@@ -10,14 +7,7 @@ import {
     CLEAR_USERS,
     API_SEND_ACTIVATION_SUCCESS,
 } from './UsersTypes';
-
-import config from '../../config';
-
-const apServer = config.apServer;
-const USERS_URL = `${apServer}/api/customer`;
-const SAVE_USER_URL = `${apServer}/api/user`;
-const API_SEND_ACTIVATION_MAIL_URL = `${apServer}/api/user/sendActivationMail`;
-const DELETE_USER_URL = `${apServer}/api/user`;
+import { userService } from '../../services/api';
 
 function getUsers() {
     return {
@@ -66,19 +56,10 @@ function sendActivationMailSuccess() {
 export const getUsersRequest = (limit, textSearch, id) => {
     return (dispatch) => {
         dispatch(getUsers());
-        const params = {
-            limit,
-            textSearch,
-        };
-        return axios.get(`${USERS_URL}/${id}/users`, {
-            params,
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return userService.getUsers(limit, textSearch, id).then((response) => {
             dispatch(getUsersSuccess(response.data.data));
         }).catch((error) => {
-            dispatch(getUsersFailure(error.response.data.message));
+            dispatch(getUsersFailure(error.message));
         });
     };
 };
@@ -87,14 +68,10 @@ export const saveUserRequest = (data) => {
     return (dispatch) => {
         dispatch(getUsers());
 
-        return axios.post(SAVE_USER_URL, data, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return userService.saveUser(data).then(() => {
             dispatch(saveUserSuccess());
         }).catch((error) => {
-            dispatch(getUsersFailure(error.response.data.message));
+            dispatch(getUsersFailure(error.message));
         });
     };
 };
@@ -103,14 +80,10 @@ export const deleteUserRequest = (id) => {
     return (dispatch) => {
         dispatch(getUsers());
 
-        return axios.delete(`${DELETE_USER_URL}/${id}`, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then((response) => {
+        return userService.deleteUser(id).then(() => {
             dispatch(deleteUserSuccess());
         }).catch((error) => {
-            dispatch(getUsersFailure(error.response.data.message));
+            dispatch(getUsersFailure(error.message));
         });
     };
 };
@@ -118,31 +91,21 @@ export const deleteUserRequest = (id) => {
 export const multipleDeleteUserRequest = (idArray) => {
     return (dispatch) => {
         dispatch(getUsers());
-        return axios.all(idArray.map((id) => {
-            return axios.delete(`${DELETE_USER_URL}/${id}`, {
-                headers: {
-                    'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-                },
-            }).then((response) => {
-                dispatch(deleteUserSuccess());
-            }).catch((error) => {
-                dispatch(getUsersFailure(error.response.data.message));
-            });
-        }));
+        return userService.multipleDeleteUser(idArray).then(() => {
+            dispatch(deleteUserSuccess());
+        }).catch((error) => {
+            dispatch(getUsersFailure(error.message));
+        });
     };
 };
 
 export const sendActivationMailRequest = (email) => {
     return (dispatch) => {
         dispatch(getUsers());
-        return axios.post(`${API_SEND_ACTIVATION_MAIL_URL}?email=${email}`, null, {
-            headers: {
-                'X-Authorization': `Bearer ${storage.read('jwt_token')}`,
-            },
-        }).then(() => {
+        return userService.sendActivationMail(email).then(() => {
             dispatch(sendActivationMailSuccess());
         }).catch((error) => {
-            dispatch(getUsersFailure(error.response.data.message));
+            dispatch(getUsersFailure(error.message));
         });
     };
 };
