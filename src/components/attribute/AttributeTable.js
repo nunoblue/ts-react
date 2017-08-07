@@ -33,25 +33,34 @@ class AttributeTable extends Component {
     };
 
     componentWillMount() {
-        const data = this.attributeData.getData(this.props.subscriptions, this.props.entity.id, this.props.type, this.state.attributesScope.value);
+        const attributes = this.attributeData.getData(this.props.subscriptions, this.props.entity.id, this.props.type, this.state.attributesScope.value);
         this.setState({
-            attributes: data,
+            attributes,
         });
     }
 
-    componentDidMount() {
-
-    }
-
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
         if (nextProps.subscriptions) {
-            const data = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
+            if (this.state.attributesScope.clientSide) {
+                const attributes = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
+                this.setState({
+                    attributes,
+                });
+            }
+        }
+        if (nextProps.entity.id !== this.props.entity.id) {
             this.setState({
-                attributes: data,
+                selectedRowKeys: [],
+                attributesScope: this.props.type === types.dataKeyType.timeseries ? types.latestTelemetry : types.attributesScope.client,
+                attributes: {},
+                attributeModalDisbaled: false,
             });
         }
     }
+
+    isInt = n => (n !== '' && !isNaN(n) && Math.round(n) === n)
+
+    isFloat = n => (n !== '' && !isNaN(n) && Math.round(n) !== n)
 
     refreshAttributeTable = (scope) => {
         const { entity } = this.props;
@@ -84,6 +93,20 @@ class AttributeTable extends Component {
         });
     }
 
+    attributeSubscribe = (subscriber) => {
+        const { subscribe } = this.props;
+        subscribe(subscriber, true);
+    }
+
+    attributeUnsubscribe = (unsubscriber, subscriber) => {
+        const { unsubscribe } = this.props;
+        unsubscribe(unsubscriber).then(() => {
+            if (subscriber) {
+                this.attributeSubscribe(subscriber);
+            }
+        });
+    }
+
     handleChangeRowSelection = (selectedRowKeys) => {
         this.setState({ selectedRowKeys });
     }
@@ -102,9 +125,28 @@ class AttributeTable extends Component {
     }
 
     handleSelectAttributesScope = (value) => {
-        this.refreshAttributeTable(types.attributesScope[value]);
+        if (this.state.attributesScope.value === types.attributesScope[value].value) {
+            return;
+        }
+        const { entity, subscribers } = this.props;
+        const attributesScope = types.attributesScope[value];
+        if (attributesScope.clientSide) {
+            const attributeScope = {
+                entityType: entity.entityType,
+                entityId: entity.id,
+                scope: attributesScope.value,
+            };
+            this.attributeSubscribe(attributeScope);
+        } else {
+            const unsubscriberId = entity.entityType + entity.id + types.attributesScope.client.value;
+            const unsubscriber = subscribers[unsubscriberId];
+            if (unsubscriber) {
+                this.attributeUnsubscribe(unsubscriber);
+            }
+        }
+        this.refreshAttributeTable(attributesScope);
         this.setState({
-            attributesScope: types.attributesScope[value],
+            attributesScope,
             selectedRowKeys: [],
         });
     }
@@ -172,10 +214,6 @@ class AttributeTable extends Component {
             this.attributeModal.changeValue(key, 'Boolean', value);
         }
     }
-
-    isInt = n => (n !== '' && !isNaN(n) && Math.round(n) === n)
-
-    isFloat = n => (n !== '' && !isNaN(n) && Math.round(n) !== n)
 
     handleAddModalCancel = () => {
         this.attributeModal.form.resetFields();
@@ -279,10 +317,11 @@ class AttributeTable extends Component {
         }],
     }
 
-    attributeSelector = (type) => {
-        const attributeSelector = type === types.dataKeyType.attribute ? (
+    attributeSelector = (type, attributeScope) => {
+        const component = type === types.dataKeyType.attribute ? (
             <Select
-                defaultValue={i18n.t(types.attributesScope.client.name)}
+                value={i18n.t(attributeScope.name)}
+                defaultValue={i18n.t(attributeScope.name)}
                 onSelect={this.handleSelectAttributesScope}
             >
                 <Select.Option value="client">
@@ -296,15 +335,23 @@ class AttributeTable extends Component {
                 </Select.Option>
             </Select>
         ) : null;
-        return attributeSelector;
+        return component;
     }
 
-    NonSelectionComponents = (type, attributesScope) => {
+    nonSelectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = isServerShared ? (
-                <CommonButton shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
-                    <i className="material-icons vertical-middle">add</i>
-                </CommonButton>
+                <Button.Group>
+                    <CommonButton shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
+                        <i className="material-icons vertical-middle">add</i>
+                    </CommonButton>
+                    <CommonButton shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
+                        <i className="material-icons vertical-middle">search</i>
+                    </CommonButton>
+                    <CommonButton shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
+                        <i className="material-icons vertical-middle">refresh</i>
+                    </CommonButton>
+                </Button.Group>
         ) : (
             <CommonButton shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
                 <i className="material-icons vertical-middle">search</i>
@@ -313,7 +360,7 @@ class AttributeTable extends Component {
         return actionComponents;
     }
 
-    SelectionComponents = (type, attributesScope) => {
+    selectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = (
             <Button.Group>
@@ -341,7 +388,7 @@ class AttributeTable extends Component {
                         <span className="ts-dialog-detail-title">{i18n.t(attributesScope.name)}</span>
                     </Col>
                     <Col span={4}>
-                        {this.NonSelectionComponents(type, attributesScope)}
+                        {this.nonSelectionComponents(type, attributesScope)}
                     </Col>
                 </Row>
             </Layout.Header>
@@ -358,7 +405,7 @@ class AttributeTable extends Component {
                         </span>
                     </Col>
                     <Col span={4}>
-                        {this.SelectionComponents(type, attributesScope)}
+                        {this.selectionComponents(type, attributesScope)}
                     </Col>
                 </Row>
             </Layout.Header>
