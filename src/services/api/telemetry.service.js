@@ -24,5 +24,5 @@ export const saveEntityAttributes = (entityType, entityId, attributeScope, attri
 );
 
 export const deleteEntityAttributes = (entityType, entityId, attributeScope, keys) => (
-    client.delete(`${TELEMETRY.API_ATTRIBUTES_URL}/${entityType}/${entityId}/${attributeScope}`, { keys })
+    client.delete(`${TELEMETRY.API_ATTRIBUTES_URL}/${entityType}/${entityId}/${attributeScope}?keys=${keys}`)
 );

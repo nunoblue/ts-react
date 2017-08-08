@@ -9,6 +9,7 @@ import CommonButton from '../../components/common/CommonButton';
 import DeviceForm from '../../components/device/DeviceForm';
 import AttributeTable from '../../components/attribute/AttributeTable';
 import { types } from '../../utils/commons';
+import * as actions from '../../actions/telemetry/telemetry';
 
 class DetailDeviceDialog extends Component {
     state = {
@@ -70,7 +71,8 @@ class DetailDeviceDialog extends Component {
     }
 
     tabActionComponents = () => {
-        return (
+        const isDetail = this.state.activeKey === 'detail';
+        return isDetail ? (
             <CommonButton
                 className="ts-card-button"
                 shape="circle"
@@ -85,7 +87,7 @@ class DetailDeviceDialog extends Component {
                     )
                 }
             </CommonButton>
-        );
+        ) : null;
     }
 
     render() {
@@ -99,7 +101,6 @@ class DetailDeviceDialog extends Component {
                 </Form.Item>
             ) : null;
         }
-        console.log(data);
         return (
             <CommonDialog
                 onClick={closeDialog}
@@ -134,6 +135,9 @@ class DetailDeviceDialog extends Component {
                             subscriptions={subscriptions}
                             entity={data ? data.id : undefined}
                             type={types.dataKeyType.attribute}
+                            subscribers={this.props.subscribers}
+                            subscribe={this.props.subscribeWithObjectForAttribute}
+                            unsubscribe={this.props.unsubscribe}
                         />
                     </Tabs.TabPane>
                     <Tabs.TabPane tab={i18n.t('attribute.latest-telemetry')} key="latestData" disabled={this.state.editing}>
@@ -141,6 +145,9 @@ class DetailDeviceDialog extends Component {
                             subscriptions={subscriptions}
                             entity={data ? data.id : undefined}
                             type={types.dataKeyType.timeseries}
+                            subscribers={this.props.subscribers}
+                            subscribe={this.props.subscribeWithObjectForAttribute}
+                            unsubscribe={this.props.unsubscribe}
                         />
                     </Tabs.TabPane>
                     <Tabs.TabPane tab={i18n.t('device.events')} key="event" disabled={this.state.editing}>Content of Tab Pane 4</Tabs.TabPane>
@@ -153,13 +160,20 @@ class DetailDeviceDialog extends Component {
 const mapStateToProps = (state, ownProps) => {
     if (ownProps.visible) {
         return {
+            subscribers: state.telemetry.subscribers,
             isOpened: state.telemetry.isOpened,
             subscriptions: state.telemetry.subscriptions,
         };
     }
     return {
+        subscribers: state.telemetry.subscribers,
         isOpened: state.telemetry.isOpened,
     };
 };
 
-export default connect(mapStateToProps, null, null, { withRef: true })(DetailDeviceDialog);
+const mapDispatchToProps = dispatch => bindActionCreators({
+    subscribeWithObjectForAttribute: actions.subscribeWithObjectForAttribute,
+    unsubscribe: actions.unsubscribe,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(DetailDeviceDialog);

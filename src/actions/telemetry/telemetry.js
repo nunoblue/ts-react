@@ -7,10 +7,15 @@ import {
     WEBSOCKET_CONNECT,
     WEBSOCKET_DISCONNECT,
     WEBSOCKET_SEND,
+    SUBSCRIBERS,
+    SUBSCRIBER,
+    UNSUBSCRIBERS,
+    UNSUBSCRIBER,
 } from './TelemetryTypes';
 
 import config from '../../configs';
 import { types } from '../../utils/commons';
+import { dashboardService } from '../../services/api';
 import { isJwtTokenValid, refreshJwtRequest } from '../authentication/authentication';
 
 let lastCmdId = 0;
@@ -29,12 +34,13 @@ const disconnect = () => {
     };
 };
 
-const send = (payload) => {
+const send = (payload, isType) => {
     return {
         type: WEBSOCKET_SEND,
         payload: payload.cmdsWrapper,
         subscribers: payload.subscribers,
         subscriptions: payload.subscriptions,
+        isType,
     };
 };
 
@@ -87,7 +93,7 @@ const tryConnect = (dispatch) => {
     });
 };
 
-const subscribe = (subscriber, isOpened) => (dispatch) => {
+export const subscribe = (subscriber, isOpened) => (dispatch) => {
     const cmdsWrapper = {
         tsSubCmds: [],
         historyCmds: [],
@@ -115,10 +121,11 @@ const subscribe = (subscriber, isOpened) => (dispatch) => {
     }
     const payload = {
         cmdsWrapper,
-        subscribers: subscriber,
+        subscribers: { [subscriber.id]: subscriber },
+        subscriptions,
     };
     if (isOpened) {
-        dispatch(send(payload));
+        dispatch(send(payload, SUBSCRIBER));
     } else {
         tryConnect(dispatch).then(() => {
             dispatch(send(payload));
@@ -126,7 +133,7 @@ const subscribe = (subscriber, isOpened) => (dispatch) => {
     }
 };
 
-const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
+export const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
     const cmdsWrapper = {
         tsSubCmds: [],
         historyCmds: [],
@@ -160,10 +167,10 @@ const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
         subscriptions,
     };
     if (isOpened) {
-        dispatch(send(payload));
+        dispatch(send(payload, SUBSCRIBERS));
     } else {
         tryConnect(dispatch).then(() => {
-            dispatch(send(payload));
+            dispatch(send(payload, SUBSCRIBERS));
         });
     }
 };
@@ -183,32 +190,11 @@ export const unsubscribe = (subscriber) => (dispatch) => {
         }
         const payload = {
             cmdsWrapper,
-            subscribers: subscriber,
+            subscribers: { [subscriber.id]: subscriber },
         };
-        dispatch(send(payload));
+        dispatch(send(payload, UNSUBSCRIBER));
         resolve();
     });
-};
-
-export const subscribeWithObjectsForEntityAttributes = (attributeList, isOpened) => (dispatch) => {
-    const subscribers = {};
-    attributeList.forEach((attribute) => {
-        const subscriptionCommand = {
-            entityType: attribute.entityType,
-            entityId: attribute.entityId,
-            scope: attribute.scope,
-        };
-        const type = attribute.scope === types.latestTelemetry.value ?
-            types.dataKeyType.timeseries : types.dataKeyType.attribute;
-        const subscriptionId = attribute.entityType + attribute.entityId + attribute.scope;
-        const subscriber = {
-            id: subscriptionId,
-            subscriptionCommand,
-            type,
-        };
-        Object.assign(subscribers, { [subscriptionId]: subscriber });
-    });
-    subscribeWithObjects(subscribers, isOpened)(dispatch);
 };
 
 export const unsubscribeWithObjects = (subscribers) => (dispatch) => {
@@ -232,13 +218,144 @@ export const unsubscribeWithObjects = (subscribers) => (dispatch) => {
         });
         const payload = {
             cmdsWrapper,
-            subscribers: {},
+            subscribers,
         };
-        dispatch(send(payload));
+        dispatch(send(payload, UNSUBSCRIBERS));
         resolve();
     });
 };
 
+/**
+ * FOR ATTRIBUTE TELEMETRY ACTIONS
+ */
+export const subscribeWithObjectsForEntityAttributes = (attributeList, isOpened) => (dispatch) => {
+    const subscribers = {};
+    attributeList.forEach((attribute) => {
+        const subscriptionCommand = {
+            entityType: attribute.entityType,
+            entityId: attribute.entityId,
+            scope: attribute.scope,
+        };
+        const type = attribute.scope === types.latestTelemetry.value ?
+            types.dataKeyType.timeseries : types.dataKeyType.attribute;
+        const subscriptionId = attribute.entityType + attribute.entityId + attribute.scope;
+        const subscriber = {
+            id: subscriptionId,
+            subscriptionCommand,
+            type,
+        };
+        Object.assign(subscribers, { [subscriptionId]: subscriber });
+    });
+    subscribeWithObjects(subscribers, isOpened)(dispatch);
+};
+
+export const subscribeWithObjectForAttribute = (attribute, isOpened) => (dispatch) => {
+    const subscriptionCommand = {
+        entityType: attribute.entityType,
+        entityId: attribute.entityId,
+        scope: attribute.scope,
+    };
+    const type = attribute.scope === types.latestTelemetry.value ?
+        types.dataKeyType.timeseries : types.dataKeyType.attribute;
+    const subscriptionId = attribute.entityType + attribute.entityId + attribute.scope;
+    const subscriber = {
+        id: subscriptionId,
+        subscriptionCommand,
+        type,
+    };
+    Object.assign(subscriber, { [subscriptionId]: subscriber });
+    subscribe(subscriber, isOpened)(dispatch);
+};
+
 export const unsubscribeWithObjectsForEntityAttributes = (subscribers) => (dispatch) => {
     return unsubscribeWithObjects(subscribers)(dispatch);
+};
+
+const parseDataKeys = (dataSources) => {
+    
+};
+
+const createDataSourcesFromWidgets = (dataSources) => {
+
+};
+
+/**
+ * FOR DATASOURCE TELEMETRY ACTIONS
+ */
+export const subscribeWithObjctsForDataSources = (dataSources, dataKeys, timewindow, isOpened) => (dispatch) => {
+    const subscribers = {};
+    let stDiff = 0;
+    const ct1 = Date.now();
+    if (dataKeys.tsKeys.length > 0) {
+        dashboardService.getServerTime().then((response) => {
+            const ct2 = Date.now();
+            const st = response.data;
+            stDiff = Math.ceil(st - ((ct1 + ct2) / 2));
+        });
+        dataSources.forEach((dataSource) => {
+            console.log(dataSoruce);
+            if (timewindow.history) {
+                const historyCommand = {
+                    entityType: dataSource.entityType,
+                    entityId: dataSource.entityId,
+                    keys: dataKeys.tsKeys,
+                    startTs: timewindow.history.fixedWindow.startTimeMs,
+                    endTs: timewindow.history.fixedWindow.endTimeMs,
+                    interval: timewindow.history.interval,
+                    limit: timewindow.aggregation.limit,
+                    agg: timewindow.aggregation.type,
+                };
+                const subscriptionId = dataSource.entityType + dataSource.entityId + dataKeys.tsKeys;
+                const subscriber = {
+                    id: subscriptionId,
+                    historyCommand,
+                    type: types.dataKeyType.timeseries,
+                };
+                Object.assign(subscribers, { [subscriptionId]: subscriber });
+            } else {
+                const subscriptionId = dataSource.entityType + dataSource.entityId + dataKeys.tsKeys;
+                const subscriptionCommand = {
+                    entityType: dataSource.entityType,
+                    entityId: dataSource.entityId,
+                    keys: dataKeys.tsKeys,
+                };
+                if (dataSource.type === types.widgetType.timeseries.value) {
+                    let startTs = Date.now() + stDiff - timewindow.realtime.timewindowMs;
+                    const startDiff = startTs % timewindow.realtime.interval;
+                    let timeWindow = timewindow.realtime.timewindowMs;
+                    if (startDiff) {
+                        startTs -= startDiff;
+                        timeWindow += timewindow.realtime.interval;
+                    }
+                    subscriptionCommand.startTs = startTs;
+                    subscriptionCommand.timeWindow = timeWindow;
+                    subscriptionCommand.interval = timewindow.aggregation.interval;
+                    subscriptionCommand.limit = timewindow.aggregation.limit;
+                    subscriptionCommand.agg = timewindow.aggregation.type;
+                }
+                const subscriber = {
+                    id: subscriptionId,
+                    subscriptionCommand,
+                    type: types.dataKeyType.timeseries,
+                };
+                Object.assign(subscribers, { [subscriptionId]: subscriber });
+            }
+        });
+    }
+
+    // if (dataKeys.attrKeys.length > 0) {
+    //     const subscriptionId = dataSource.entityType + dataSource.entityId + attrKeys;
+    //     const subscriptionCommand = {
+    //         entityType: dataSource.entityType,
+    //         entityId: dataSource.entityId,
+    //         keys: dataKeys.attrKeys,
+    //     };
+
+    //     const subscriber = {
+    //         id: subscriptionId,
+    //         subscriptionCommand,
+    //         type: types.dataKeyType.attribute,
+    //     };
+    // }
+    subscribeWithObjects(subscribers, isOpened)(dispatch);
 };

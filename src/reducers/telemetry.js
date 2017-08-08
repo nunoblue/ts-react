@@ -6,6 +6,10 @@ import {
     WEBSOCKET_MESSAGE,
     WEBSOCKET_OPEN,
     WEBSOCKET_SEND,
+    SUBSCRIBERS,
+    SUBSCRIBER,
+    UNSUBSCRIBERS,
+    UNSUBSCRIBER,
 } from '../actions/telemetry/TelemetryTypes';
 
 const initialState = {
@@ -34,6 +38,7 @@ const telemetry = (state = initialState, action) => {
             const data = JSON.parse(action.payload.data);
             if (data) {
                 if (data.subscriptionId) {
+                    console.log(data);
                     const subscription = state.subscriptions[data.subscriptionId];
                     if (subscription) {
                         if (data.data) {
@@ -57,14 +62,41 @@ const telemetry = (state = initialState, action) => {
             }
             return state;
         case WEBSOCKET_SEND:
-            return update(state, {
-                subscribers: {
-                    $set: action.subscribers,
-                },
-                subscriptions: {
-                    $set: action.subscriptions,
-                },
-            });
+            if (action.isType === SUBSCRIBERS) {
+                return update(state, {
+                    subscribers: {
+                        $set: action.subscribers,
+                    },
+                    subscriptions: {
+                        $set: action.subscriptions,
+                    },
+                });
+            } else if (action.isType === SUBSCRIBER) {
+                return update(state, {
+                    subscribers: {
+                        $set: action.subscribers,
+                    },
+                    subscriptions: {
+                        $set: action.subscriptions,
+                    },
+                });
+            } else if (action.isType === UNSUBSCRIBERS) {
+                Object.keys(action.subscribers).forEach((id) => {
+                    delete state.subscribers[id];
+                });
+                return update(state, {
+                    subscribers: {
+                        $set: state.subscribers,
+                    },
+                });
+            } else if (action.isType === UNSUBSCRIBER) {
+                delete state.subscribers[Object.keys(action.subscribers)[0]];
+                return update(state, {
+                    subscribers: {
+                        $set: state.subscribers,
+                    },
+                });
+            }
         default:
             return state;
     }
