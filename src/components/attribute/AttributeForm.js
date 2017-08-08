@@ -74,7 +74,7 @@ class AttributeForm extends PureComponent {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { onPressEnter, disabled } = this.props;
+        const { onPressEnter, disabled, data } = this.props;
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -92,42 +92,48 @@ class AttributeForm extends PureComponent {
                     {
                         getFieldDecorator('key', {
                             rules: [{ required: true, message: i18n.t('attribute.key-required') }],
+                            initialValue: data.key,
                         })(
                             <Input onPressEnter={onPressEnter} disabled={disabled} />,
                         )
                     }
                 </Form.Item>
                 <Form.Item {...formItemLayout} label={i18n.t('value.type')}>
-                    <Select
-                        style={{ width: 80 }}
-                        defaultValue={i18n.t('value.string')}
-                        onSelect={this.handleSelectValueType}
-                    >
-                        <Select.Option
-                            key={i18n.t('value.string')}
-                            value={i18n.t('value.string')}
-                        >
-                            {i18n.t('value.string')}
-                        </Select.Option>
-                        <Select.Option
-                            key={i18n.t('value.integer')}
-                            value={i18n.t('value.integer')}
-                        >
-                            {i18n.t('value.integer')}
-                        </Select.Option>
-                        <Select.Option
-                            key={i18n.t('value.double')}
-                            value={i18n.t('value.double')}
-                        >
-                            {i18n.t('value.double')}
-                        </Select.Option>
-                        <Select.Option
-                            key={i18n.t('value.boolean')}
-                            value={i18n.t('value.boolean')}
-                        >
-                            {i18n.t('value.boolean')}
-                        </Select.Option>
-                    </Select>
+                    {
+                        getFieldDecorator('selectedType', {
+                            initialValue: data.selectedType,
+                        })(
+                            <Select
+                                style={{ width: 80 }}
+                                onSelect={this.handleSelectValueType}
+                            >
+                                <Select.Option
+                                    key={i18n.t('value.string')}
+                                    value={i18n.t('value.string')}
+                                >
+                                    {i18n.t('value.string')}
+                                </Select.Option>
+                                <Select.Option
+                                    key={i18n.t('value.integer')}
+                                    value={i18n.t('value.integer')}
+                                >
+                                    {i18n.t('value.integer')}
+                                </Select.Option>
+                                <Select.Option
+                                    key={i18n.t('value.double')}
+                                    value={i18n.t('value.double')}
+                                >
+                                    {i18n.t('value.double')}
+                                </Select.Option>
+                                <Select.Option
+                                    key={i18n.t('value.boolean')}
+                                    value={i18n.t('value.boolean')}
+                                >
+                                    {i18n.t('value.boolean')}
+                                </Select.Option>
+                            </Select>,
+                        )
+                    }
                 </Form.Item>
                 {
                     this.state.type === 'checkbox' ? (
@@ -135,9 +141,9 @@ class AttributeForm extends PureComponent {
                             {
                                 getFieldDecorator('checkedValue', {
                                     rules: [{ required: true }],
-                                    initialValue: false,
+                                    initialValue: data.value,
                                 })(
-                                    <Checkbox onChange={this.handleChangeChecked}>{this.state.checkedValue}</Checkbox>,
+                                    <Checkbox placeholder={this.state.placeholder} onChange={this.handleChangeChecked}>{this.state.checkedValue}</Checkbox>,
                                 )
                             }
                         </Form.Item>
@@ -146,8 +152,9 @@ class AttributeForm extends PureComponent {
                             {
                                 getFieldDecorator('value', {
                                     rules: [{ required: true, message: i18n.t('attribute.value-required') }],
+                                    initialValue: data.value,
                                 })(
-                                    <Input onChange={this.handleChangeInput} type={this.state.type} {...step} />,
+                                    <Input placeholder={this.state.placeholder} onChange={this.handleChangeInput} type={this.state.type} {...step} />,
                                 )
                             }
                         </Form.Item>

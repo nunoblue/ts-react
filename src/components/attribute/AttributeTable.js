@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Table, Row, Layout, Col, Select, Button, notification } from 'antd';
+import { Table, Row, Layout, Col, Select, Button, notification, Modal } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
 import i18n from 'i18next';
 import moment from 'moment';
 
 import CommonButton from '../common/CommonButton';
-import AttributeAddModal from '../attribute/AttributeAddModal';
+import AttributeModal from '../attribute/AttributeModal';
 import { types } from '../../utils/commons';
 import { telemetryService } from '../../services/api';
 
@@ -29,31 +29,52 @@ class AttributeTable extends Component {
         selectedRowKeys: [],  // Check here to configure the default column
         attributesScope: this.props.type === types.dataKeyType.timeseries ? types.latestTelemetry : types.attributesScope.client,
         attributes: {},
+        attributeModalDisbaled: false,
     };
 
-    componentDidMount() {
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const data = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
-        console.log(data);
+    componentWillMount() {
+        const attributes = this.attributeData.getData(this.props.subscriptions, this.props.entity.id, this.props.type, this.state.attributesScope.value);
         this.setState({
-            attributes: data,
+            attributes,
         });
     }
 
-    refreshAttributeTable = () => {
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.subscriptions) {
+            if (this.state.attributesScope.clientSide) {
+                const attributes = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
+                this.setState({
+                    attributes,
+                });
+            }
+        }
+        if (nextProps.entity.id !== this.props.entity.id) {
+            this.setState({
+                selectedRowKeys: [],
+                attributesScope: this.props.type === types.dataKeyType.timeseries ? types.latestTelemetry : types.attributesScope.client,
+                attributes: {},
+                attributeModalDisbaled: false,
+            });
+        }
+    }
+
+    isInt = n => (n !== '' && !isNaN(n) && Math.round(n) === n)
+
+    isFloat = n => (n !== '' && !isNaN(n) && Math.round(n) !== n)
+
+    refreshAttributeTable = (scope) => {
         const { entity } = this.props;
         const entityType = entity.entityType;
         const entityId = entity.id;
-        const attributesCope = this.state.attributesScope.value;
+        const attributesCope = typeof scope === 'undefined' ? this.state.attributesScope.value : scope.value;
         telemetryService.getEntityAttributes(entityType, entityId, attributesCope, { ignoreLoading: true })
         .then((response) => {
             const attributes = response.data;
             const dataSource = attributes.map((attribute) => {
+                const lastUpdateTs = moment(attribute.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
                 return {
                     key: attribute.key,
-                    lastUpdateTs: attribute.lastUpdateTs,
+                    lastUpdateTs,
                     attributeKey: attribute.key,
                     value: attribute.value,
                 };
@@ -72,6 +93,20 @@ class AttributeTable extends Component {
         });
     }
 
+    attributeSubscribe = (subscriber) => {
+        const { subscribe } = this.props;
+        subscribe(subscriber, true);
+    }
+
+    attributeUnsubscribe = (unsubscriber, subscriber) => {
+        const { unsubscribe } = this.props;
+        unsubscribe(unsubscriber).then(() => {
+            if (subscriber) {
+                this.attributeSubscribe(subscriber);
+            }
+        });
+    }
+
     handleChangeRowSelection = (selectedRowKeys) => {
         this.setState({ selectedRowKeys });
     }
@@ -82,16 +117,45 @@ class AttributeTable extends Component {
         if (selectedRowKeys.indexOf(key) !== -1) {
             const index = selectedRowKeys.indexOf(key);
             selectedRowKeys.splice(index, 1);
-            this.onSelectChange(selectedRowKeys);
+            this.handleChangeRowSelection(selectedRowKeys);
             return;
         }
         selectedRowKeys.push(key);
-        this.onSelectChange(selectedRowKeys);
+        this.handleChangeRowSelection(selectedRowKeys);
     }
 
     handleSelectAttributesScope = (value) => {
+        let key;
+        if (value.key === types.attributesScope.client.value) {
+            key = 'client';
+        } else if (value.key === types.attributesScope.server.value) {
+            key = 'server';
+        } else if (value.key === types.attributesScope.shared.value) {
+            key = 'shared';
+        }
+        if (this.state.attributesScope.value === types.attributesScope[key].value) {
+            return;
+        }
+        const { entity, subscribers } = this.props;
+        const attributesScope = types.attributesScope[key];
+        if (attributesScope.clientSide) {
+            const attributeScope = {
+                entityType: entity.entityType,
+                entityId: entity.id,
+                scope: attributesScope.value,
+            };
+            this.attributeSubscribe(attributeScope);
+        } else {
+            const unsubscriberId = entity.entityType + entity.id + types.attributesScope.client.value;
+            const unsubscriber = subscribers[unsubscriberId];
+            if (unsubscriber) {
+                this.attributeUnsubscribe(unsubscriber);
+            }
+        }
+        this.refreshAttributeTable(attributesScope);
         this.setState({
-            attributesScope: types.attributesScope[value],
+            attributesScope,
+            selectedRowKeys: [],
         });
     }
 
@@ -99,25 +163,78 @@ class AttributeTable extends Component {
 
     }
 
-    handleClickDeleteAttribute = () => {
-
-    }
-
-    handleClickAddAttribute = () => {
-        this.addModal.modal.onShow();
+    handleClickOpenAddModal = () => {
+        this.attributeModal.modal.onShow();
     }
 
     handleClickAttributeRefresh = () => {
+        this.refreshAttributeTable();
+    }
 
+    hanldeDeleteAttrbiute = (idArray) => {
+        const { entity } = this.props;
+        const entityId = entity.id;
+        const entityType = entity.entityType;
+        const attributesScope = this.state.attributesScope.value;
+        const keys = idArray.reduce((prev, curr, index) => {
+            if (index > 0) {
+                prev += ',';
+            }
+            return prev += curr;
+        });
+        telemetryService.deleteEntityAttributes(entityType, entityId, attributesScope, keys)
+        .then(() => {
+            this.refreshAttributeTable();
+        }).catch((error) => {
+            notification.error({
+                message: error.message,
+            });
+        });
+    }
+
+    handleClickDeleteConfirm = () => {
+        const newTitle = i18n.t('attribute.delete-attributes-title', { count: this.state.selectedRowKeys.length });
+        const newContent = i18n.t('attribute.delete-attributes-text');
+        const deleteEvent = this.hanldeDeleteAttrbiute.bind(this, this.state.selectedRowKeys);
+        return Modal.confirm({
+            title: newTitle,
+            content: newContent,
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
+            onOk: deleteEvent,
+        });
+    }
+
+    handleClickOpenModify = (record) => {
+        this.setState({
+            attributeModalDisbaled: true,
+        });
+        this.attributeModal.modal.onShow();
+        const key = record.attributeKey;
+        const value = record.value;
+        if (typeof value === 'string') {
+            this.attributeModal.changeValue(key, 'String', value);
+        } else if (this.isInt(value)) {
+            this.attributeModal.changeValue(key, 'Integer', value);
+        } else if (this.isFloat(value)) {
+            this.attributeModal.changeValue(key, 'Double', value);
+        } else if (typeof value === 'boolean') {
+            this.attributeModal.changeValue(key, 'Boolean', value);
+        }
     }
 
     handleAddModalCancel = () => {
-        this.addModal.modal.onHide();
+        this.attributeModal.form.resetFields();
+        this.attributeModal.initFields();
+        this.attributeModal.modal.onHide();
+        this.setState({
+            attributeModalDisbaled: false,
+        });
     }
 
     handleAddModalSave = () => {
         const { entity } = this.props;
-        const form = this.addModal.form;
+        const form = this.attributeModal.form;
         form.validateFields((err, values) => {
             if (err) {
                 return false;
@@ -128,8 +245,14 @@ class AttributeTable extends Component {
                     [values.key]: values.checkedValue,
                 };
             } else {
+                let value = values.value;
+                if (values.selectedType === 'Integer') {
+                    value = parseInt(values.value, 10);
+                } else if (values.selectedType === 'Double') {
+                    value = parseFloat(values.value);
+                }
                 attributeData = {
-                    [values.key]: values.value,
+                    [values.key]: value,
                 };
             }
             const entityType = entity.entityType;
@@ -144,7 +267,7 @@ class AttributeTable extends Component {
                 });
             });
         });
-        this.addModal.modal.onHide();
+        this.handleAddModalCancel();
     }
 
     attributeData = {
@@ -188,40 +311,53 @@ class AttributeTable extends Component {
         }, {
             title: i18n.t('attribute.value'),
             dataIndex: 'value',
+        }, {
+            key: 'edit',
+            render: (text, record) => {
+                const openModify = this.handleClickOpenModify.bind(this, record);
+                const action = this.props.type === types.dataKeyType.attribute && !this.state.attributesScope.clientSide ? (
+                    <CommonButton className="ts-card-button" shape="circle" onClick={openModify} tooltipTitle={i18n.t('details.toggle-edit-mode')}>
+                        <i className="material-icons margin-right-8 vertical-middle">mode_edit</i>
+                    </CommonButton>
+                ) : null;
+                return action;
+            },
         }],
     }
 
-    attributeSelector = (type) => {
-        const attributeSelector = type === types.dataKeyType.attribute ? (
+    attributeSelector = (type, attributesScope) => {
+        const component = type === types.dataKeyType.attribute ? (
             <Select
-                defaultValue={i18n.t(types.attributesScope.client.name)}
+                labelInValue
+                value={{ key: attributesScope.value }}
+                defaultValue={{ key: types.attributesScope.client.value }}
                 onSelect={this.handleSelectAttributesScope}
             >
-                <Select.Option value="client">
+                <Select.Option key={types.attributesScope.client.value} value={types.attributesScope.client.value}>
                     {i18n.t(types.attributesScope.client.name)}
                 </Select.Option>
-                <Select.Option value="server">
+                <Select.Option key={types.attributesScope.server.value}value={types.attributesScope.server.value}>
                     {i18n.t(types.attributesScope.server.name)}
                 </Select.Option>
-                <Select.Option value="shared">
+                <Select.Option key={types.attributesScope.shared.value} value={types.attributesScope.shared.value}>
                     {i18n.t(types.attributesScope.shared.name)}
                 </Select.Option>
             </Select>
         ) : null;
-        return attributeSelector;
+        return component;
     }
 
-    NonSelectionComponents = (type, attributesScope) => {
+    nonSelectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = isServerShared ? (
             <Button.Group className="ts-attribute-buttongroup">
-                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickAddAttribute} tooltipTitle={i18n.t('attribute.add')}>
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
                     <i className="material-icons vertical-middle">add</i>
                 </CommonButton>
-                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
                     <i className="material-icons vertical-middle">search</i>
                 </CommonButton>
-                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickAttributeRefresh} tooltipTitle={i18n.t('actions.refresh')}>
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickAttributeRefresh} tooltipTitle={i18n.t('attribute.add')}>
                     <i className="material-icons vertical-middle">refresh</i>
                 </CommonButton>
             </Button.Group>
@@ -233,18 +369,18 @@ class AttributeTable extends Component {
         return actionComponents;
     }
 
-    SelectionComponents = (type, attributesScope) => {
+    selectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = (
-            <Button.Group>
+            <Button.Group className="ts-attribute-buttongroup">
                 {
                     isServerShared ? (
-                        <CommonButton onClick={this.handleClickDeleteAttribute} tooltipTitle={i18n.t('attribute.delete')}>
+                        <CommonButton className="ts-attribute-button" onClick={this.handleClickDeleteConfirm} tooltipTitle={i18n.t('attribute.delete')}>
                             <i className="material-icons vertical-middle">delete</i>
                         </CommonButton>
                     ) : null
                 }
-                <CommonButton onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('attribute.show-on-widget')}>
+                <CommonButton className="ts-attribute-button" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('attribute.show-on-widget')}>
                     <i className="material-icons vertical-middle">widgets</i>
                     {i18n.t('attribute.show-on-widget')}
                 </CommonButton>
@@ -259,14 +395,14 @@ class AttributeTable extends Component {
                 <Row>
                     <Col span={24}>
                         <span className="ts-dialog-detail-title">{i18n.t(attributesScope.name)}</span>
-                        <span>{this.NonSelectionComponents(type, attributesScope)}</span>
+                        <span>{this.nonSelectionComponents(type, attributesScope)}</span>
                     </Col>
                 </Row>
             </Layout.Header>
         ) : (
             <Layout.Header className="ts-dialog-title">
                 <Row>
-                    <Col span={20}>
+                    <Col span={24}>
                         <span className="ts-dialog-detail-title">
                             {
                                 type === types.dataKeyType.attribute ?
@@ -274,9 +410,7 @@ class AttributeTable extends Component {
                                 : i18n.t('attribute.selected-telemetry', { count: this.state.selectedRowKeys.length })
                             }
                         </span>
-                    </Col>
-                    <Col span={4}>
-                        {this.SelectionComponents(type, attributesScope)}
+                        <span>{this.selectionComponents(type, attributesScope)}</span>
                     </Col>
                 </Row>
             </Layout.Header>
@@ -313,8 +447,9 @@ class AttributeTable extends Component {
                     rowSelection={rowSelection}
                     onRowClick={this.handleClickRow}
                 />
-                <AttributeAddModal
-                    ref={(c) => { this.addModal = c; }}
+                <AttributeModal
+                    ref={(c) => { this.attributeModal = c; }}
+                    disabled={this.state.attributeModalDisbaled}
                     onSave={this.handleAddModalSave}
                     onCancel={this.handleAddModalCancel}
                 />

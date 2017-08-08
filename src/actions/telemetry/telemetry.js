@@ -7,6 +7,10 @@ import {
     WEBSOCKET_CONNECT,
     WEBSOCKET_DISCONNECT,
     WEBSOCKET_SEND,
+    SUBSCRIBERS,
+    SUBSCRIBER,
+    UNSUBSCRIBERS,
+    UNSUBSCRIBER,
 } from './TelemetryTypes';
 
 import config from '../../configs';
@@ -29,12 +33,13 @@ const disconnect = () => {
     };
 };
 
-const send = (payload) => {
+const send = (payload, isType) => {
     return {
         type: WEBSOCKET_SEND,
         payload: payload.cmdsWrapper,
         subscribers: payload.subscribers,
         subscriptions: payload.subscriptions,
+        isType,
     };
 };
 
@@ -87,7 +92,7 @@ const tryConnect = (dispatch) => {
     });
 };
 
-const subscribe = (subscriber, isOpened) => (dispatch) => {
+export const subscribe = (subscriber, isOpened) => (dispatch) => {
     const cmdsWrapper = {
         tsSubCmds: [],
         historyCmds: [],
@@ -115,10 +120,11 @@ const subscribe = (subscriber, isOpened) => (dispatch) => {
     }
     const payload = {
         cmdsWrapper,
-        subscribers: subscriber,
+        subscribers: { [subscriber.id]: subscriber },
+        subscriptions,
     };
     if (isOpened) {
-        dispatch(send(payload));
+        dispatch(send(payload, SUBSCRIBER));
     } else {
         tryConnect(dispatch).then(() => {
             dispatch(send(payload));
@@ -126,7 +132,7 @@ const subscribe = (subscriber, isOpened) => (dispatch) => {
     }
 };
 
-const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
+export const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
     const cmdsWrapper = {
         tsSubCmds: [],
         historyCmds: [],
@@ -160,10 +166,10 @@ const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
         subscriptions,
     };
     if (isOpened) {
-        dispatch(send(payload));
+        dispatch(send(payload, SUBSCRIBERS));
     } else {
         tryConnect(dispatch).then(() => {
-            dispatch(send(payload));
+            dispatch(send(payload, SUBSCRIBERS));
         });
     }
 };
@@ -183,32 +189,11 @@ export const unsubscribe = (subscriber) => (dispatch) => {
         }
         const payload = {
             cmdsWrapper,
-            subscribers: subscriber,
+            subscribers: { [subscriber.id]: subscriber },
         };
-        dispatch(send(payload));
+        dispatch(send(payload, UNSUBSCRIBER));
         resolve();
     });
-};
-
-export const subscribeWithObjectsForEntityAttributes = (attributeList, isOpened) => (dispatch) => {
-    const subscribers = {};
-    attributeList.forEach((attribute) => {
-        const subscriptionCommand = {
-            entityType: attribute.entityType,
-            entityId: attribute.entityId,
-            scope: attribute.scope,
-        };
-        const type = attribute.scope === types.latestTelemetry.value ?
-            types.dataKeyType.timeseries : types.dataKeyType.attribute;
-        const subscriptionId = attribute.entityType + attribute.entityId + attribute.scope;
-        const subscriber = {
-            id: subscriptionId,
-            subscriptionCommand,
-            type,
-        };
-        Object.assign(subscribers, { [subscriptionId]: subscriber });
-    });
-    subscribeWithObjects(subscribers, isOpened)(dispatch);
 };
 
 export const unsubscribeWithObjects = (subscribers) => (dispatch) => {
@@ -232,11 +217,53 @@ export const unsubscribeWithObjects = (subscribers) => (dispatch) => {
         });
         const payload = {
             cmdsWrapper,
-            subscribers: {},
+            subscribers,
         };
-        dispatch(send(payload));
+        dispatch(send(payload, UNSUBSCRIBERS));
         resolve();
     });
+};
+
+/**
+ * FOR ATTRIBUTE TELEMETRY ACTIONS
+ */
+export const subscribeWithObjectsForEntityAttributes = (attributeList, isOpened) => (dispatch) => {
+    const subscribers = {};
+    attributeList.forEach((attribute) => {
+        const subscriptionCommand = {
+            entityType: attribute.entityType,
+            entityId: attribute.entityId,
+            scope: attribute.scope,
+        };
+        const type = attribute.scope === types.latestTelemetry.value ?
+            types.dataKeyType.timeseries : types.dataKeyType.attribute;
+        const subscriptionId = attribute.entityType + attribute.entityId + attribute.scope;
+        const subscriber = {
+            id: subscriptionId,
+            subscriptionCommand,
+            type,
+        };
+        Object.assign(subscribers, { [subscriptionId]: subscriber });
+    });
+    subscribeWithObjects(subscribers, isOpened)(dispatch);
+};
+
+export const subscribeWithObjectForAttribute = (attribute, isOpened) => (dispatch) => {
+    const subscriptionCommand = {
+        entityType: attribute.entityType,
+        entityId: attribute.entityId,
+        scope: attribute.scope,
+    };
+    const type = attribute.scope === types.latestTelemetry.value ?
+        types.dataKeyType.timeseries : types.dataKeyType.attribute;
+    const subscriptionId = attribute.entityType + attribute.entityId + attribute.scope;
+    const subscriber = {
+        id: subscriptionId,
+        subscriptionCommand,
+        type,
+    };
+    Object.assign(subscriber, { [subscriptionId]: subscriber });
+    subscribe(subscriber, isOpened)(dispatch);
 };
 
 export const unsubscribeWithObjectsForEntityAttributes = (subscribers) => (dispatch) => {
