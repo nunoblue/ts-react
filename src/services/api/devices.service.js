@@ -7,6 +7,12 @@ export const getTenantDevices = (limit, textSearch) => (
     client.get(DEVICES.TENANT_DEVICES_URL, { limit, textSearch })
 );
 
+export const getAllTextSerachTenantDevices = (limit, textSearchArray) => (
+    client.all(textSearchArray.map(textSearch => (
+        getTenantDevices(limit, textSearch)
+    )))
+);
+
 export const getCustomerDevices = (limit, textSearch, id) => (
     client.get(`${DEVICES.CUSTOMER_DEVICES_URL}/${id}/devices`, { limit, textSearch })
 );
