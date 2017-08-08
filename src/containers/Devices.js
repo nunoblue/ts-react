@@ -101,81 +101,97 @@ class Devices extends Component {
         if (isDialog) {
             return (
                 <Button.Group className="ts-card-buttongroup">
-                    {
-                        shareVisible ? (
+                    <Row>
+                        {
+                            shareVisible ? (
+                                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                                    <div className="ts-modal-button">
+                                        <CommonLabel visible={shareVisible}>{isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}</CommonLabel>
+                                        <CommonButton
+                                            className="ts-card-button"
+                                            shape="circle"
+                                            visible={shareVisible}
+                                            iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
+                                            tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
+                                            onClick={isPublic ? unassignConfirm : makePublicConfirm}
+                                        />
+                                    </div>
+                                </Col>
+                            ) : null
+                        }
+                        {
+                            assignVisible ? (
+                                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                                    <div className="ts-modal-button">
+                                        <CommonLabel visible={assignVisible}>{isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}</CommonLabel>
+                                        <CommonButton
+                                            className="ts-card-button"
+                                            shape="circle"
+                                            visible={assignVisible}
+                                            iconClassName={isAssign ? 'user-delete' : 'user-add'}
+                                            tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
+                                            onClick={isAssign ? unassignConfirm : assignCustomerModal}
+                                        />
+                                    </div>
+                                </Col>
+                            ) : null
+                        }
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
                             <div className="ts-modal-button">
-                                <CommonLabel visible={shareVisible}>{isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}</CommonLabel>
+                                <CommonLabel>{i18n.t('device.manage-credentials')}</CommonLabel>
                                 <CommonButton
                                     className="ts-card-button"
                                     shape="circle"
-                                    visible={shareVisible}
-                                    iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
-                                    tooltipTitle={isPublic ? i18n.t('device.make-private') : i18n.t('device.make-public')}
-                                    onClick={isPublic ? unassignConfirm : makePublicConfirm}
+                                    iconClassName="key"
+                                    onClick={credentialsModal}
+                                    tooltipTitle={i18n.t('device.manage-credentials')}
                                 />
                             </div>
-                        ) : null
-                    }
-                    {
-                        assignVisible ? (
+                        </Col>
+                        {
+                            deleteVisible ? (
+                                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                                    <div className="ts-modal-button">
+                                        <CommonLabel visible={deleteVisible}>{i18n.t('device.delete')}</CommonLabel>
+                                        <CommonButton
+                                            className="ts-card-button"
+                                            shape="circle"
+                                            visible={deleteVisible}
+                                            iconClassName="delete"
+                                            onClick={modalConfirmAction}
+                                            tooltipTitle={i18n.t('device.delete')}
+                                        />
+                                    </div>
+                                </Col>
+                            ) : null
+                        }
+                    </Row>
+                    <Row>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={12}>
                             <div className="ts-modal-button">
-                                <CommonLabel visible={assignVisible}>{isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}</CommonLabel>
+                                <CommonLabel>{i18n.t('device.copyId')}</CommonLabel>
                                 <CommonButton
                                     className="ts-card-button"
                                     shape="circle"
-                                    visible={assignVisible}
-                                    iconClassName={isAssign ? 'user-delete' : 'user-add'}
-                                    tooltipTitle={isAssign ? i18n.t('device.unassign-from-customer') : i18n.t('device.assign-to-customer')}
-                                    onClick={isAssign ? unassignConfirm : assignCustomerModal}
-                                />
+                                    tooltipTitle={i18n.t('device.copyId')}
+                                >
+                                    <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
+                                </CommonButton>
                             </div>
-                        ) : null
-                    }
-                    <div className="ts-modal-button">
-                        <CommonLabel>{i18n.t('device.manage-credentials')}</CommonLabel>
-                        <CommonButton
-                            className="ts-card-button"
-                            shape="circle"
-                            iconClassName="key"
-                            onClick={credentialsModal}
-                            tooltipTitle={i18n.t('device.manage-credentials')}
-                        />
-                    </div>
-                    {
-                        deleteVisible ? (
+                        </Col>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={12}>
                             <div className="ts-modal-button">
-                                <CommonLabel visible={deleteVisible}>{i18n.t('device.delete')}</CommonLabel>
+                                <CommonLabel>{i18n.t('device.copyAccessToken')}</CommonLabel>
                                 <CommonButton
                                     className="ts-card-button"
                                     shape="circle"
-                                    visible={deleteVisible}
-                                    iconClassName="delete"
-                                    onClick={modalConfirmAction}
-                                    tooltipTitle={i18n.t('device.delete')}
-                                />
+                                    tooltipTitle={i18n.t('device.copyAccessToken')}
+                                >
+                                <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
+                                </CommonButton>
                             </div>
-                        ) : null
-                    }
-                    <div className="ts-modal-button">
-                        <CommonLabel>{i18n.t('device.copyId')}</CommonLabel>
-                        <CommonButton
-                            className="ts-card-button"
-                            shape="circle"
-                            tooltipTitle={i18n.t('device.copyId')}
-                        >
-                            <i className="material-icons vertical-middle">assignment_return</i>
-                        </CommonButton>
-                    </div>
-                    <div className="ts-modal-button">
-                        <CommonLabel>{i18n.t('device.copyAccessToken')}</CommonLabel>
-                        <CommonButton
-                            className="ts-card-button"
-                            shape="circle"
-                            tooltipTitle={i18n.t('device.copyAccessToken')}
-                        >
-                        <i className="material-icons vertical-middle">assignment_return</i>
-                        </CommonButton>
-                    </div>
+                        </Col>
+                    </Row>
                 </Button.Group>
             );
         }

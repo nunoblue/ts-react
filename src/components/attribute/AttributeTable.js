@@ -10,6 +10,7 @@ import CommonButton from '../common/CommonButton';
 import AttributeModal from '../attribute/AttributeModal';
 import { types } from '../../utils/commons';
 import { telemetryService } from '../../services/api';
+import PlotlyChart from '../chart/PlotlyChart';
 
 class AttributeTable extends Component {
 
@@ -30,6 +31,7 @@ class AttributeTable extends Component {
         attributesScope: this.props.type === types.dataKeyType.timeseries ? types.latestTelemetry : types.attributesScope.client,
         attributes: {},
         attributeModalDisbaled: false,
+        widgetMode: false,
     };
 
     componentWillMount() {
@@ -107,6 +109,12 @@ class AttributeTable extends Component {
         });
     }
 
+    handleClickChangeWidgetMode = () => {
+        this.setState({
+            widgetMode: true,
+        });
+    }
+
     handleChangeRowSelection = (selectedRowKeys) => {
         this.setState({ selectedRowKeys });
     }
@@ -160,8 +168,17 @@ class AttributeTable extends Component {
     }
 
     handleClickSearchKey = () => {
+        console.log('handleClickSearchKey============', this.state.selectedRowKeys);
+        this.setState({
+            showChart: true,
+        });
+    };
 
-    }
+    handleBackToTable = () => {
+        this.setState({
+            showChart: false,
+        });
+    };
 
     handleClickOpenAddModal = () => {
         this.attributeModal.modal.onShow();
@@ -344,38 +361,38 @@ class AttributeTable extends Component {
                 </Select.Option>
             </Select>
         ) : null;
-        return component;
+        return attributeSelector;
     }
 
-    nonSelectionComponents = (type, attributesScope) => {
+    NonSelectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = isServerShared ? (
-            <Button.Group className="ts-attribute-buttongroup">
-                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
+            <Button.Group className="custom-card-buttongroup">
+                <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickAddAttribute} tooltipTitle={i18n.t('attribute.add')}>
                     <i className="material-icons vertical-middle">add</i>
                 </CommonButton>
-                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
+                <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
                     <i className="material-icons vertical-middle">search</i>
                 </CommonButton>
-                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickAttributeRefresh} tooltipTitle={i18n.t('attribute.add')}>
+                <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickAttributeRefresh} tooltipTitle={i18n.t('actions.refresh')}>
                     <i className="material-icons vertical-middle">refresh</i>
                 </CommonButton>
             </Button.Group>
         ) : (
-            <CommonButton className="ts-card-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
+            <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
                 <i className="material-icons vertical-middle">search</i>
             </CommonButton>
         );
         return actionComponents;
     }
 
-    selectionComponents = (type, attributesScope) => {
+    SelectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = (
-            <Button.Group className="ts-attribute-buttongroup">
+            <Button.Group>
                 {
                     isServerShared ? (
-                        <CommonButton className="ts-attribute-button" onClick={this.handleClickDeleteConfirm} tooltipTitle={i18n.t('attribute.delete')}>
+                        <CommonButton onClick={this.handleClickDeleteAttribute} tooltipTitle={i18n.t('attribute.delete')}>
                             <i className="material-icons vertical-middle">delete</i>
                         </CommonButton>
                     ) : null

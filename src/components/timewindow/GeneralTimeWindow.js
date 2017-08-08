@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import i18n from 'i18next';
 import {
     Popover,
@@ -121,9 +120,7 @@ class GeneralTimeWindow extends Component {
     handleClickUpdate = () => {
         const { activeKey } = this.state;
         console.log(this.props[activeKey]);
-        this.setState({
-            visible: !this.state.visible,
-        });
+        this.handleChangeVisible();
     }
 
     handleChangeVisible = () => {

@@ -15,6 +15,7 @@ import {
 
 import config from '../../configs';
 import { types } from '../../utils/commons';
+import { dashboardService } from '../../services/api';
 import { isJwtTokenValid, refreshJwtRequest } from '../authentication/authentication';
 
 let lastCmdId = 0;
@@ -268,4 +269,93 @@ export const subscribeWithObjectForAttribute = (attribute, isOpened) => (dispatc
 
 export const unsubscribeWithObjectsForEntityAttributes = (subscribers) => (dispatch) => {
     return unsubscribeWithObjects(subscribers)(dispatch);
+};
+
+const parseDataKeys = (dataSources) => {
+    
+};
+
+const createDataSourcesFromWidgets = (dataSources) => {
+
+};
+
+/**
+ * FOR DATASOURCE TELEMETRY ACTIONS
+ */
+export const subscribeWithObjctsForDataSources = (dataSources, dataKeys, timewindow, isOpened) => (dispatch) => {
+    const subscribers = {};
+    let stDiff = 0;
+    const ct1 = Date.now();
+    if (dataKeys.tsKeys.length > 0) {
+        dashboardService.getServerTime().then((response) => {
+            const ct2 = Date.now();
+            const st = response.data;
+            stDiff = Math.ceil(st - ((ct1 + ct2) / 2));
+        });
+        dataSources.forEach((dataSource) => {
+            console.log(dataSoruce);
+            if (timewindow.history) {
+                const historyCommand = {
+                    entityType: dataSource.entityType,
+                    entityId: dataSource.entityId,
+                    keys: dataKeys.tsKeys,
+                    startTs: timewindow.history.fixedWindow.startTimeMs,
+                    endTs: timewindow.history.fixedWindow.endTimeMs,
+                    interval: timewindow.history.interval,
+                    limit: timewindow.aggregation.limit,
+                    agg: timewindow.aggregation.type,
+                };
+                const subscriptionId = dataSource.entityType + dataSource.entityId + dataKeys.tsKeys;
+                const subscriber = {
+                    id: subscriptionId,
+                    historyCommand,
+                    type: types.dataKeyType.timeseries,
+                };
+                Object.assign(subscribers, { [subscriptionId]: subscriber });
+            } else {
+                const subscriptionId = dataSource.entityType + dataSource.entityId + dataKeys.tsKeys;
+                const subscriptionCommand = {
+                    entityType: dataSource.entityType,
+                    entityId: dataSource.entityId,
+                    keys: dataKeys.tsKeys,
+                };
+                if (dataSource.type === types.widgetType.timeseries.value) {
+                    let startTs = Date.now() + stDiff - timewindow.realtime.timewindowMs;
+                    const startDiff = startTs % timewindow.realtime.interval;
+                    let timeWindow = timewindow.realtime.timewindowMs;
+                    if (startDiff) {
+                        startTs -= startDiff;
+                        timeWindow += timewindow.realtime.interval;
+                    }
+                    subscriptionCommand.startTs = startTs;
+                    subscriptionCommand.timeWindow = timeWindow;
+                    subscriptionCommand.interval = timewindow.aggregation.interval;
+                    subscriptionCommand.limit = timewindow.aggregation.limit;
+                    subscriptionCommand.agg = timewindow.aggregation.type;
+                }
+                const subscriber = {
+                    id: subscriptionId,
+                    subscriptionCommand,
+                    type: types.dataKeyType.timeseries,
+                };
+                Object.assign(subscribers, { [subscriptionId]: subscriber });
+            }
+        });
+    }
+
+    // if (dataKeys.attrKeys.length > 0) {
+    //     const subscriptionId = dataSource.entityType + dataSource.entityId + attrKeys;
+    //     const subscriptionCommand = {
+    //         entityType: dataSource.entityType,
+    //         entityId: dataSource.entityId,
+    //         keys: dataKeys.attrKeys,
+    //     };
+
+    //     const subscriber = {
+    //         id: subscriptionId,
+    //         subscriptionCommand,
+    //         type: types.dataKeyType.attribute,
+    //     };
+    // }
+    subscribeWithObjects(subscribers, isOpened)(dispatch);
 };
