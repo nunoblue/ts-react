@@ -38,7 +38,6 @@ const telemetry = (state = initialState, action) => {
             const data = JSON.parse(action.payload.data);
             if (data) {
                 if (data.subscriptionId) {
-                    console.log(data);
                     const subscription = state.subscriptions[data.subscriptionId];
                     if (subscription) {
                         if (data.data) {
@@ -74,26 +73,37 @@ const telemetry = (state = initialState, action) => {
             } else if (action.isType === SUBSCRIBER) {
                 return update(state, {
                     subscribers: {
-                        $set: action.subscribers,
+                        $merge: action.subscribers,
                     },
                     subscriptions: {
-                        $set: action.subscriptions,
+                        $merge: action.subscriptions,
                     },
                 });
             } else if (action.isType === UNSUBSCRIBERS) {
                 Object.keys(action.subscribers).forEach((id) => {
+                    const cmdId = state.subscribers[id].subscriptionCommand.cmdId;
+                    delete state.subscriptions[cmdId];
                     delete state.subscribers[id];
                 });
                 return update(state, {
                     subscribers: {
                         $set: state.subscribers,
                     },
+                    subscriptions: {
+                        $set: state.subscriptions,
+                    },
                 });
             } else if (action.isType === UNSUBSCRIBER) {
-                delete state.subscribers[Object.keys(action.subscribers)[0]];
+                const id = Object.keys(action.subscribers)[0];
+                const cmdId = action.subscribers[id].subscriptionCommand.cmdId;
+                delete state.subscriptions[cmdId];
+                delete state.subscribers[id];
                 return update(state, {
                     subscribers: {
                         $set: state.subscribers,
+                    },
+                    subscriptions: {
+                        $set: state.subscriptions,
                     },
                 });
             }

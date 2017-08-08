@@ -11,7 +11,9 @@ import DashboardGridLayout from '../../components/dashboard/DashboardGridLayout'
 import GeneralTimeWindow from '../../components/timewindow/GeneralTimeWindow';
 import { types } from '../../utils/commons';
 import * as actions from '../../actions/dashboard/dashboards';
+import * as telemetry from '../../actions/telemetry/telemetry';
 import { deviceService } from '../../services/api';
+import stateToProps from '../../components/StateToProps';
 
 class Dashboard extends Component {
     static contextTypes = {
@@ -36,7 +38,7 @@ class Dashboard extends Component {
 
     refershDashboardRequest = () => {
         this.context.pageLoading();
-        const { match } = this.props;
+        const { match, isOpened, timewindow } = this.props;
         const dashboardId = match.params.dashboardId;
         this.props.getDashboardRequest(dashboardId).then(() => {
             if (this.props.statusMessage === 'FAILURE') {
@@ -61,14 +63,35 @@ class Dashboard extends Component {
                         });
                         Object.keys(widgets).forEach((widgetId) => {
                             const dataSources = widgets[widgetId].config.datasources;
-                            dataSources.map((dataSource) => {
-                                console.log(dataSource.dataKeys);
+                            dataSources.forEach((dataSource) => {
                                 if (dataSource.entityAliasId === entityAliasId) {
                                     console.log(dataSource);
+                                    let tsKeys = '';
+                                    let attrKeys = '';
+                                    dataSource.dataKeys.forEach((dataKey) => {
+                                        if (dataKey.type === types.dataKeyType.timeseries) {
+                                            if (tsKeys.length !== 0) {
+                                                tsKeys += ',';
+                                            }
+                                            tsKeys += dataKey.name;
+                                        } else {
+                                            if (attrKeys.length !== 0) {
+                                                attrKeys += ',';
+                                            }
+                                            attrKeys += dataKey.name;
+                                        }
+                                    });
+                                    const newDataSources = response.data.data.map((device) => {
+                                        return {
+                                            entityType: device.id.entityType,
+                                            entityId: device.id.id,
+                                            tsKeys,
+                                            attrKeys,
+                                        };
+                                    });
+                                    console.log(this.props);
+                                    this.props.subscribeWithObjctsForDataSources(newDataSources, timewindow, isOpened);
                                 }
-                            });
-                            this.setState({
-                                dataSources,
                             });
                         });
                     });
@@ -182,6 +205,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     getDashboardRequest: actions.getDashboardRequest,
     clearDashboardsRequest: actions.clearDashboardsRequest,
+    subscribeWithObjctsForDataSources: telemetry.subscribeWithObjctsForDataSources,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+const StateToPropsDashboard = stateToProps([{ timewindow: GeneralTimeWindow }])(Dashboard, true);
+
+export default connect(mapStateToProps, mapDispatchToProps)(StateToPropsDashboard);
