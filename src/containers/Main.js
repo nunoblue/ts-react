@@ -125,7 +125,7 @@ class Main extends Component {
                 >
                     <div className="main-logo">
                         <Link to="/home">
-                            <img src="images/tsLogo.png" alt="ThingStar Logo" />
+                            <img src="/images/tsLogo.png" alt="ThingStar Logo" />
                         </Link>
                     </div>
                     <MenuList authority={currentUser.authority} selectedKey={this.props.location.pathname} />

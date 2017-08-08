@@ -6,16 +6,12 @@ import { Row, Card, Table, notification } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
 import i18n from 'i18next';
 import moment from 'moment';
-import { Responsive, WidthProvider } from 'react-grid-layout';
-import _ from 'lodash';
 
-import '../../../less/example-styles.css';
-
-import * as actions from '../../actions/dashboard/dashboards';
+import DashboardGridLayout from '../../components/dashboard/DashboardGridLayout';
 import GeneralTimeWindow from '../../components/timewindow/GeneralTimeWindow';
 import { types } from '../../utils/commons';
-
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
+import * as actions from '../../actions/dashboard/dashboards';
+import { deviceService } from '../../services/api';
 
 class Dashboard extends Component {
     static contextTypes = {
@@ -23,23 +19,8 @@ class Dashboard extends Component {
         pageLoading: PropTypes.func,
     }
 
-    static propTypes = {
-        onLayoutChange: PropTypes.func.isRequired,
-    }
-
-    static defaultProps = {
-        className: 'layout',
-        // isDraggable: false,
-        // isResizable: false,
-        breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
-        cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
-        rowHeight: 30,
-        onLayoutChange: () => {},
-    }
-
     state = {
         timewindowVisible: false,
-        layouts: {},
         attributesScope: types.attributesScope.client,
     }
 
@@ -53,19 +34,6 @@ class Dashboard extends Component {
         clearDashboardsRequest();
     }
 
-    onLayoutChange = (layout, layouts) => {
-        this.setState({ layouts });
-        this.props.onLayoutChange(layout, layouts);
-    }
-
-    generateLayout = () => {
-        const p = this.props;
-        return _.map(new Array(p.items), (item, i) => {
-            const y = _.result(p, 'y') || Math.ceil(Math.random() * 4) + 1;
-            return { x: i * 2 % 12, y: Math.floor(i / 6) * y, w: 2, h: y, i: i.toString() };
-        });
-    }
-
     refershDashboardRequest = () => {
         this.context.pageLoading();
         const { match } = this.props;
@@ -77,6 +45,34 @@ class Dashboard extends Component {
                 });
             }
             if (this.props.statusMessage === 'SUCCESS') {
+                const entityAliases = this.props.dashboard.configuration.entityAliases;
+                const widgets = this.props.dashboard.configuration.widgets;
+                Object.keys(entityAliases).forEach((entityAliasId) => {
+                    const filterName = entityAliases[entityAliasId].filter.entityNameFilter;
+                    const resolveMultiple = entityAliases[entityAliasId].filter.resolveMultiple || false;
+                    deviceService.getTenantDevices(100, filterName).then((response) => {
+                        this.setState({
+                            entityAliases: {
+                                [entityAliasId]: {
+                                    resolveMultiple,
+                                    devices: response.data.data,
+                                },
+                            },
+                        });
+                        Object.keys(widgets).forEach((widgetId) => {
+                            const dataSources = widgets[widgetId].config.datasources;
+                            dataSources.map((dataSource) => {
+                                console.log(dataSource.dataKeys);
+                                if (dataSource.entityAliasId === entityAliasId) {
+                                    console.log(dataSource);
+                                }
+                            });
+                            this.setState({
+                                dataSources,
+                            });
+                        });
+                    });
+                });
                 this.context.pageLoading();
             }
         });
@@ -133,47 +129,41 @@ class Dashboard extends Component {
             <Row>
                 <Row>
                     <GeneralTimeWindow />
+                    <DashboardGridLayout>
+                        <div key="1" data-grid={{ w: 2, h: 3, x: 0, y: 0 }}>
+                            <Card className="text">
+                                <Table
+                                    columns={this.attributeData.columns}
+                                    dataSource={data.dataSource}
+                                    locale={{ emptyText: i18n.t('attribute.no-data') }}
+                                    pagination={{
+                                        total: data.rowLength,
+                                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                                        defaultPageSize: 5,
+                                        defaultCurrent: 1,
+                                        showSizeChanger: true,
+                                        showQuickJumper: true,
+                                        pageSizeOptions: ['5', '10', '15', '20', '25', '30'],
+                                        locale: enUS.Pagination,
+                                        onChange: (page, pageSize) => { },
+                                    }}
+                                />
+                            </Card>
+                        </div>
+                        <div key="2" data-grid={{ w: 2, h: 3, x: 2, y: 0 }}>
+                            <Card className="text">2</Card>
+                        </div>
+                        <div key="3" data-grid={{ w: 2, h: 3, x: 4, y: 0 }}>
+                            <Card className="text">3</Card>
+                        </div>
+                        <div key="4" data-grid={{ w: 2, h: 3, x: 6, y: 0 }}>
+                            <Card className="text">4</Card>
+                        </div>
+                        <div key="5" data-grid={{ w: 2, h: 3, x: 8, y: 0 }}>
+                            <Card className="text">5</Card>
+                        </div>
+                    </DashboardGridLayout>
                 </Row>
-                <ResponsiveReactGridLayout
-                    ref={(c) => { this.rrgl = c; }}
-                    className="layout"
-                    layouts={this.state.layouts}
-                    onLayoutChange={this.onLayoutChange}
-                    {...this.props}
-                >
-                    <div key="1" data-grid={{ w: 2, h: 3, x: 0, y: 0 }}>
-                        <Card className="text">
-                            <Table
-                                columns={this.attributeData.columns}
-                                dataSource={data.dataSource}
-                                locale={{ emptyText: i18n.t('attribute.no-data') }}
-                                pagination={{
-                                    total: data.rowLength,
-                                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-                                    defaultPageSize: 5,
-                                    defaultCurrent: 1,
-                                    showSizeChanger: true,
-                                    showQuickJumper: true,
-                                    pageSizeOptions: ['5', '10', '15', '20', '25', '30'],
-                                    locale: enUS.Pagination,
-                                    onChange: (page, pageSize) => { },
-                                }}
-                            />
-                        </Card>
-                    </div>
-                    <div key="2" data-grid={{ w: 2, h: 3, x: 2, y: 0 }}>
-                        <Card className="text">2</Card>
-                    </div>
-                    <div key="3" data-grid={{ w: 2, h: 3, x: 4, y: 0 }}>
-                        <Card className="text">3</Card>
-                    </div>
-                    <div key="4" data-grid={{ w: 2, h: 3, x: 6, y: 0 }}>
-                        <Card className="text">4</Card>
-                    </div>
-                    <div key="5" data-grid={{ w: 2, h: 3, x: 8, y: 0 }}>
-                        <Card className="text">5</Card>
-                    </div>
-                </ResponsiveReactGridLayout>
             </Row>
         );
     }

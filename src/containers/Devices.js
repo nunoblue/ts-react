@@ -747,6 +747,7 @@ class Devices extends Component {
                     onCancelDialogEdit={this.onCancelDialogEdit}
                 />
                 <ItemSelectModal
+                    className="ts-modal"
                     ref={(c) => { this.assignDeviceModal = c; }}
                     url={tenantDeviceUrl}
                     multiple
@@ -758,6 +759,7 @@ class Devices extends Component {
                     onSelect={this.handleSelectDevice}
                 />
                 <ItemSelectModal
+                    className="ts-modal"
                     ref={(c) => { this.assignCustomerModal = c; }}
                     url={customerUrl}
                     multiple={false}
