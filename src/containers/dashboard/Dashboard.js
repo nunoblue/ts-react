@@ -6,6 +6,7 @@ import { Row, Card, Table, notification } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
 import i18n from 'i18next';
 import moment from 'moment';
+import _ from 'lodash';
 
 import DashboardGridLayout from '../../components/dashboard/DashboardGridLayout';
 import GeneralTimeWindow from '../../components/timewindow/GeneralTimeWindow';
@@ -13,7 +14,6 @@ import { types } from '../../utils/commons';
 import * as actions from '../../actions/dashboard/dashboards';
 import * as telemetry from '../../actions/telemetry/telemetry';
 import { deviceService } from '../../services/api';
-import stateToProps from '../../components/StateToProps';
 
 class Dashboard extends Component {
     static contextTypes = {
@@ -38,7 +38,7 @@ class Dashboard extends Component {
 
     refershDashboardRequest = () => {
         this.context.pageLoading();
-        const { match, isOpened, timewindow } = this.props;
+        const { match, isOpened } = this.props;
         const dashboardId = match.params.dashboardId;
         this.props.getDashboardRequest(dashboardId).then(() => {
             if (this.props.statusMessage === 'FAILURE') {
@@ -52,49 +52,72 @@ class Dashboard extends Component {
                 Object.keys(entityAliases).forEach((entityAliasId) => {
                     const filterName = entityAliases[entityAliasId].filter.entityNameFilter;
                     const resolveMultiple = entityAliases[entityAliasId].filter.resolveMultiple || false;
-                    deviceService.getTenantDevices(100, filterName).then((response) => {
-                        this.setState({
-                            entityAliases: {
-                                [entityAliasId]: {
-                                    resolveMultiple,
-                                    devices: response.data.data,
+                    const retDataSources = [];
+                    if (filterName) {
+                        deviceService.getTenantDevices(100, filterName).then((response) => {
+                            this.setState({
+                                entityAliases: {
+                                    [entityAliasId]: {
+                                        resolveMultiple,
+                                        devices: response.data.data,
+                                    },
                                 },
-                            },
-                        });
-                        Object.keys(widgets).forEach((widgetId) => {
-                            const dataSources = widgets[widgetId].config.datasources;
-                            dataSources.forEach((dataSource) => {
-                                if (dataSource.entityAliasId === entityAliasId) {
-                                    console.log(dataSource);
-                                    let tsKeys = '';
-                                    let attrKeys = '';
-                                    dataSource.dataKeys.forEach((dataKey) => {
-                                        if (dataKey.type === types.dataKeyType.timeseries) {
-                                            if (tsKeys.length !== 0) {
-                                                tsKeys += ',';
-                                            }
-                                            tsKeys += dataKey.name;
-                                        } else {
-                                            if (attrKeys.length !== 0) {
-                                                attrKeys += ',';
-                                            }
-                                            attrKeys += dataKey.name;
-                                        }
-                                    });
-                                    const newDataSources = response.data.data.map((device) => {
-                                        return {
-                                            entityType: device.id.entityType,
-                                            entityId: device.id.id,
-                                            tsKeys,
-                                            attrKeys,
-                                        };
-                                    });
-                                    console.log(this.props);
-                                    this.props.subscribeWithObjctsForDataSources(newDataSources, timewindow, isOpened);
-                                }
                             });
+                            Object.keys(widgets).forEach((widgetId) => {
+                                const dataSources = widgets[widgetId].config.datasources;
+                                const widgetType = widgets[widgetId].type;
+                                dataSources.forEach((dataSource) => {
+                                    if (dataSource.entityAliasId === entityAliasId) {
+                                        let tsKeys = '';
+                                        let attrKeys = '';
+                                        console.log(dataSource.dataKeys);
+                                        dataSource.dataKeys.forEach((dataKey) => {
+                                            if (dataKey.type === types.dataKeyType.timeseries) {
+                                                if (tsKeys.length !== 0) {
+                                                    tsKeys += ',';
+                                                }
+                                                tsKeys += dataKey.name;
+                                            } else {
+                                                if (attrKeys.length !== 0) {
+                                                    attrKeys += ',';
+                                                }
+                                                attrKeys += dataKey.name;
+                                            }
+                                        });
+                                        console.log(tsKeys, attrKeys);
+                                        let newDataSources = [];
+                                        if (resolveMultiple) {
+                                            newDataSources = response.data.data.map((device) => {
+                                                return {
+                                                    entityType: device.id.entityType,
+                                                    entityId: device.id.id,
+                                                    tsKeys,
+                                                    attrKeys,
+                                                    type: widgetType,
+                                                };
+                                            });
+                                        } else {
+                                            const notResolveDataSource = {
+                                                entityType: response.data.data[0].id.entityType,
+                                                entityId: response.data.data[0].id.id,
+                                                tsKeys,
+                                                attrKeys,
+                                                type: widgetType,
+                                            };
+                                            newDataSources.push(notResolveDataSource);
+                                        }
+                                        _.mergeWith(retDataSources, newDataSources);
+                                    }
+                                });
+                            });
+                            console.log(retDataSources);
+                            return retDataSources;
+                        }).then((dataSources) => {
+                            if (dataSources.length > 0) {
+                                this.props.subscribeWithObjctsForDataSources(dataSources, this.timewindow.state);
+                            }
                         });
-                    });
+                    }
                 });
                 this.context.pageLoading();
             }
@@ -151,7 +174,7 @@ class Dashboard extends Component {
         return (
             <Row>
                 <Row>
-                    <GeneralTimeWindow />
+                    <GeneralTimeWindow ref={(c) => { this.timewindow = c; }} />
                     <DashboardGridLayout>
                         <div key="1" data-grid={{ w: 2, h: 3, x: 0, y: 0 }}>
                             <Card className="text">
@@ -206,8 +229,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     getDashboardRequest: actions.getDashboardRequest,
     clearDashboardsRequest: actions.clearDashboardsRequest,
     subscribeWithObjctsForDataSources: telemetry.subscribeWithObjctsForDataSources,
+    tryConnect: telemetry.tryConnect,
 }, dispatch);
 
-const StateToPropsDashboard = stateToProps([{ timewindow: GeneralTimeWindow }])(Dashboard, true);
-
-export default connect(mapStateToProps, mapDispatchToProps)(StateToPropsDashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
