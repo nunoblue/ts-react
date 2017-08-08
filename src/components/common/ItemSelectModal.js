@@ -204,6 +204,7 @@ class ItemSelectModal extends Component {
 
         return (
             <CommonModal
+                className={this.props.className}
                 ref={(c) => { this.modal = c; }}
                 title={title}
                 onOk={this.handleSelect}
