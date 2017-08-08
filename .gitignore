@@ -63,8 +63,8 @@ typings/
 # React Asset
 !/public
 /public/*
-!/public/assets/*
-!/public/images/*
+!/public/assets
+!/public/images
 
 # VS Code Setting Ignore
 .vscode
