@@ -733,12 +733,14 @@ class Devices extends Component {
                     />
                 </div>
                 <AddDeviceModal
+                    className={'ts-modal'}
                     ref={(c) => { this.addModal = c; }}
                     onSave={this.handleSaveDevice}
                     onCancel={this.hideAddDeviceModal}
                     options={options}
                 />
                 <DeviceCredentialsModal
+                    className={'ts-modal'}
                     ref={(c) => { this.credentialsModal = c; }}
                     onSave={this.handleSaveCredentials}
                     onCancel={this.hideCredentials}
