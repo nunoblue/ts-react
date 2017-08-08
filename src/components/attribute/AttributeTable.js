@@ -446,7 +446,7 @@ class AttributeTable extends Component {
             <Row>
                 {this.attributeSelector(type, attributesScope)}
                 <Table
-                    className="ts-table"
+                    className="ts-table-wrapper"
                     columns={this.attributeData.columns}
                     dataSource={attributes.dataSource}
                     title={() => this.titleComponents(type, attributesScope)}
