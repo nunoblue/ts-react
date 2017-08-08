@@ -10,6 +10,7 @@ import CommonButton from '../common/CommonButton';
 import AttributeAddModal from '../attribute/AttributeAddModal';
 import { types } from '../../utils/commons';
 import { telemetryService } from '../../services/api';
+import PlotlyChart from '../chart/PlotlyChart';
 
 class AttributeTable extends Component {
 
@@ -29,6 +30,7 @@ class AttributeTable extends Component {
         selectedRowKeys: [],  // Check here to configure the default column
         attributesScope: this.props.type === types.dataKeyType.timeseries ? types.latestTelemetry : types.attributesScope.client,
         attributes: {},
+        showChart: false,
     };
 
     componentDidMount() {
@@ -96,8 +98,17 @@ class AttributeTable extends Component {
     }
 
     handleClickSearchKey = () => {
+        console.log('handleClickSearchKey============', this.state.selectedRowKeys);
+        this.setState({
+            showChart: true,
+        });
+    };
 
-    }
+    handleBackToTable = () => {
+        this.setState({
+            showChart: false,
+        });
+    };
 
     handleClickDeleteAttribute = () => {
 
@@ -286,15 +297,16 @@ class AttributeTable extends Component {
         return titleComponents;
     }
 
-    render() {
+    tableComponents = () => {
         const { type } = this.props;
         const { attributesScope, attributes } = this.state;
         const rowSelection = {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.handleChangeRowSelection,
         };
+
         return (
-            <Row>
+            <div>
                 {this.attributeSelector(type, attributesScope)}
                 <Table
                     columns={this.attributeData.columns}
@@ -320,6 +332,24 @@ class AttributeTable extends Component {
                     onSave={this.handleAddModalSave}
                     onCancel={this.handleAddModalCancel}
                 />
+            </div>
+        );
+    };
+
+    chartComponents = () => {
+        return (
+            <div>
+                <Button onClick={this.handleBackToTable}>Back</Button>
+                <PlotlyChart />
+            </div>
+        );
+    };
+
+    render() {
+        const { showChart } = this.state;
+        return (
+            <Row>
+                { showChart ? this.chartComponents() : this.tableComponents()}
             </Row>
         );
     }
