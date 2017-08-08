@@ -163,7 +163,7 @@ class Devices extends Component {
                             shape="circle"
                             tooltipTitle={i18n.t('device.copyId')}
                         >
-                            <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
+                            <i className="material-icons vertical-middle">assignment_return</i>
                         </CommonButton>
                     </div>
                     <div className="ts-modal-button">
@@ -173,7 +173,7 @@ class Devices extends Component {
                             shape="circle"
                             tooltipTitle={i18n.t('device.copyAccessToken')}
                         >
-                        <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
+                        <i className="material-icons vertical-middle">assignment_return</i>
                         </CommonButton>
                     </div>
                 </Button.Group>

@@ -49,7 +49,7 @@ class MenuList extends Component {
                     return (
                         <Menu.Item key={`/${key}`}>
                             <Link to={`/${key}`}>
-                                <i className="material-icons margin-right-8 vertical-middle">{TENANT_ADMIN_MENU[key][0]}</i>
+                                <i className="material-icons vertical-middle">{TENANT_ADMIN_MENU[key][0]}</i>
                                 <span className="nav-text">{i18n.t(TENANT_ADMIN_MENU[key][1])}</span>
                             </Link>
                         </Menu.Item>
@@ -60,7 +60,7 @@ class MenuList extends Component {
                     return (
                         <Menu.Item key={`/${key}`}>
                             <Link to={`/${key}`}>
-                                <i className="material-icons margin-right-8 vertical-middle">{CUSTOMER_USER_MENU[key][0]}</i>
+                                <i className="material-icons vertical-middle">{CUSTOMER_USER_MENU[key][0]}</i>
                                 <span className="nav-text">{i18n.t(CUSTOMER_USER_MENU[key][1])}</span>
                             </Link>
                         </Menu.Item>
@@ -74,7 +74,7 @@ class MenuList extends Component {
                                 key={`/${key}`}
                                 title={
                                     <span>
-                                        <i className="material-icons margin-right-8 vertical-middle">{SYS_ADMIN_MENU[key][0]}</i>
+                                        <i className="material-icons vertical-middle">{SYS_ADMIN_MENU[key][0]}</i>
                                         <span className="nav-text">{i18n.t(SYS_ADMIN_MENU[key][1])}</span>
                                     </span>
                                 }
@@ -84,7 +84,7 @@ class MenuList extends Component {
                                         return (
                                             <Menu.Item key={`/${subKey}`}>
                                                 <Link to={`/${subKey}`}>
-                                                    <i className="material-icons margin-right-8 vertical-middle">{SYS_ADMIN_MENU[key][2][subKey][0]}</i>
+                                                    <i className="material-icons vertical-middle">{SYS_ADMIN_MENU[key][2][subKey][0]}</i>
                                                     <span className="nav-text">{i18n.t(SYS_ADMIN_MENU[key][2][subKey][1])}</span>
                                                 </Link>
                                             </Menu.Item>
@@ -97,7 +97,7 @@ class MenuList extends Component {
                     return (
                         <Menu.Item key={`/${key}`}>
                             <Link to={`/${key}`}>
-                                <i className="material-icons margin-right-8 vertical-middle">{SYS_ADMIN_MENU[key][0]}</i>
+                                <i className="material-icons vertical-middle">{SYS_ADMIN_MENU[key][0]}</i>
                                 <span className="nav-text">{i18n.t(SYS_ADMIN_MENU[key][1])}</span>
                             </Link>
                         </Menu.Item>
