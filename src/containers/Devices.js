@@ -723,22 +723,14 @@ class Devices extends Component {
                     />
                 </div>
                 <AddDeviceModal
-<<<<<<< HEAD
-                    className={'ts-modal'}
-=======
                     className="ts-modal"
->>>>>>> 5349b5cc3fb3631e692a6b6d9b0d3e77f80fa037
                     ref={(c) => { this.addModal = c; }}
                     onSave={this.handleSaveDevice}
                     onCancel={this.hideAddDeviceModal}
                     options={options}
                 />
                 <DeviceCredentialsModal
-<<<<<<< HEAD
-                    className={'ts-modal'}
-=======
                     className="ts-modal"
->>>>>>> 5349b5cc3fb3631e692a6b6d9b0d3e77f80fa037
                     ref={(c) => { this.credentialsModal = c; }}
                     onSave={this.handleSaveCredentials}
                     onCancel={this.hideCredentials}
@@ -755,6 +747,7 @@ class Devices extends Component {
                     onCancelDialogEdit={this.onCancelDialogEdit}
                 />
                 <ItemSelectModal
+                    className="ts-modal"
                     ref={(c) => { this.assignDeviceModal = c; }}
                     url={tenantDeviceUrl}
                     multiple
@@ -766,6 +759,7 @@ class Devices extends Component {
                     onSelect={this.handleSelectDevice}
                 />
                 <ItemSelectModal
+                    className="ts-modal"
                     ref={(c) => { this.assignCustomerModal = c; }}
                     url={customerUrl}
                     multiple={false}
