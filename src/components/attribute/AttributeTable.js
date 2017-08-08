@@ -361,38 +361,38 @@ class AttributeTable extends Component {
                 </Select.Option>
             </Select>
         ) : null;
-        return attributeSelector;
+        return component;
     }
 
-    NonSelectionComponents = (type, attributesScope) => {
+    nonSelectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = isServerShared ? (
-            <Button.Group className="custom-card-buttongroup">
-                <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickAddAttribute} tooltipTitle={i18n.t('attribute.add')}>
+            <Button.Group className="ts-attribute-buttongroup">
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
                     <i className="material-icons vertical-middle">add</i>
                 </CommonButton>
-                <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
                     <i className="material-icons vertical-middle">search</i>
                 </CommonButton>
-                <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickAttributeRefresh} tooltipTitle={i18n.t('actions.refresh')}>
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickAttributeRefresh} tooltipTitle={i18n.t('attribute.add')}>
                     <i className="material-icons vertical-middle">refresh</i>
                 </CommonButton>
             </Button.Group>
         ) : (
-            <CommonButton className="custom-card-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
+            <CommonButton className="ts-card-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('action.search')}>
                 <i className="material-icons vertical-middle">search</i>
             </CommonButton>
         );
         return actionComponents;
     }
 
-    SelectionComponents = (type, attributesScope) => {
+    selectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
         const actionComponents = (
-            <Button.Group>
+            <Button.Group className="ts-attribute-buttongroup">
                 {
                     isServerShared ? (
-                        <CommonButton onClick={this.handleClickDeleteAttribute} tooltipTitle={i18n.t('attribute.delete')}>
+                        <CommonButton className="ts-attribute-button" onClick={this.handleClickDeleteConfirm} tooltipTitle={i18n.t('attribute.delete')}>
                             <i className="material-icons vertical-middle">delete</i>
                         </CommonButton>
                     ) : null

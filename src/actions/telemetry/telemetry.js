@@ -282,30 +282,29 @@ const createDataSourcesFromWidgets = (dataSources) => {
 /**
  * FOR DATASOURCE TELEMETRY ACTIONS
  */
-export const subscribeWithObjctsForDataSources = (dataSources, dataKeys, timewindow, isOpened) => (dispatch) => {
+export const subscribeWithObjctsForDataSources = (dataSources, timewindow, isOpened) => (dispatch) => {
     const subscribers = {};
     let stDiff = 0;
     const ct1 = Date.now();
-    if (dataKeys.tsKeys.length > 0) {
-        dashboardService.getServerTime().then((response) => {
-            const ct2 = Date.now();
-            const st = response.data;
-            stDiff = Math.ceil(st - ((ct1 + ct2) / 2));
-        });
-        dataSources.forEach((dataSource) => {
-            console.log(dataSoruce);
+    dashboardService.getServerTime().then((response) => {
+        const ct2 = Date.now();
+        const st = response.data;
+        stDiff = Math.ceil(st - ((ct1 + ct2) / 2));
+    });
+    dataSources.forEach((dataSource) => {
+        if (dataSource.tsKeys.length > 0) {
             if (timewindow.history) {
                 const historyCommand = {
                     entityType: dataSource.entityType,
                     entityId: dataSource.entityId,
-                    keys: dataKeys.tsKeys,
+                    keys: dataSource.tsKeys,
                     startTs: timewindow.history.fixedWindow.startTimeMs,
                     endTs: timewindow.history.fixedWindow.endTimeMs,
                     interval: timewindow.history.interval,
                     limit: timewindow.aggregation.limit,
                     agg: timewindow.aggregation.type,
                 };
-                const subscriptionId = dataSource.entityType + dataSource.entityId + dataKeys.tsKeys;
+                const subscriptionId = dataSource.entityType + dataSource.entityId + dataSource.tsKeys;
                 const subscriber = {
                     id: subscriptionId,
                     historyCommand,
@@ -313,11 +312,11 @@ export const subscribeWithObjctsForDataSources = (dataSources, dataKeys, timewin
                 };
                 Object.assign(subscribers, { [subscriptionId]: subscriber });
             } else {
-                const subscriptionId = dataSource.entityType + dataSource.entityId + dataKeys.tsKeys;
+                const subscriptionId = dataSource.entityType + dataSource.entityId + dataSource.tsKeys;
                 const subscriptionCommand = {
                     entityType: dataSource.entityType,
                     entityId: dataSource.entityId,
-                    keys: dataKeys.tsKeys,
+                    keys: dataSource.tsKeys,
                 };
                 if (dataSource.type === types.widgetType.timeseries.value) {
                     let startTs = Date.now() + stDiff - timewindow.realtime.timewindowMs;
@@ -340,22 +339,22 @@ export const subscribeWithObjctsForDataSources = (dataSources, dataKeys, timewin
                 };
                 Object.assign(subscribers, { [subscriptionId]: subscriber });
             }
-        });
-    }
+        }
+        if (dataSource.attrKeys.length > 0) {
+            const subscriptionId = dataSource.entityType + dataSource.entityId + dataSource.attrKeys;
+            const subscriptionCommand = {
+                entityType: dataSource.entityType,
+                entityId: dataSource.entityId,
+                keys: dataSource.attrKeys,
+            };
 
-    // if (dataKeys.attrKeys.length > 0) {
-    //     const subscriptionId = dataSource.entityType + dataSource.entityId + attrKeys;
-    //     const subscriptionCommand = {
-    //         entityType: dataSource.entityType,
-    //         entityId: dataSource.entityId,
-    //         keys: dataKeys.attrKeys,
-    //     };
-
-    //     const subscriber = {
-    //         id: subscriptionId,
-    //         subscriptionCommand,
-    //         type: types.dataKeyType.attribute,
-    //     };
-    // }
+            const subscriber = {
+                id: subscriptionId,
+                subscriptionCommand,
+                type: types.dataKeyType.attribute,
+            };
+            Object.assign(subscribers, { [subscriptionId]: subscriber });
+        }
+    });
     subscribeWithObjects(subscribers, isOpened)(dispatch);
 };
