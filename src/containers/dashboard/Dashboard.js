@@ -123,7 +123,7 @@ class Dashboard extends Component {
                                     newDataSources.push(notResolveDataSource);
                                 }
                                 if (newDataSources.length > 0) {
-                                    this.props.subscribeWithObjctsForDataSources(newDataSources, this.timewindow.state);
+                                    this.props.subscribeWithObjectsForDataSources(newDataSources, this.timewindow.state);
                                 }
                             }
                         });
@@ -253,7 +253,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     getDashboardRequest: actions.getDashboardRequest,
     clearDashboardsRequest: actions.clearDashboardsRequest,
     subscribeWithObjects: telemetry.subscribeWithObjects,
-    subscribeWithObjectsForDataSources: telemetry.subscribeWithObjctsForDataSources,
+    subscribeWithObjectsForDataSources: telemetry.subscribeWithObjectsForDataSources,
     unsubscribeWithObjects: telemetry.unsubscribeWithObjects,
     updateWithTimewindowForDataSources: telemetry.updateWithTimewindowForDataSources,
 }, dispatch);
