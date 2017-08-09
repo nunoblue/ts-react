@@ -51,16 +51,16 @@ class Users extends Component {
         return (
             <Button.Group>
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     visible={type === 'dialog'}
                     onClick={sendActivationMail}
                     tooltipTitle={i18n.t('user.resend-activation')}
                 >
-                    <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
+                    <i className="material-icons vertical-middle">assignment_return</i>
                 </CommonButton>
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     visible={!isPublic}
                     iconClassName="delete"
@@ -309,7 +309,7 @@ class Users extends Component {
                 {this.components()}
                 <div className="footer-buttons">
                     <CommonButton
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="delete"
                         shape="circle"
                         visible={this.state.checkedCount !== 0}
@@ -320,7 +320,7 @@ class Users extends Component {
                     <CommonButton
                         shape="circle"
                         tooltipTitle={i18n.t('user.add')}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="plus"
                         onClick={this.openAddUserModal}
                         size="large"
