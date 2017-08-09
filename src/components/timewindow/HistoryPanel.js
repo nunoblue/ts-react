@@ -177,7 +177,7 @@ class HistoryPanel extends Component {
                     </Radio.Group>
                 </Row>
                 <Row>
-                    <AggregationSelect />
+                    <AggregationSelect onChangeAggregation={this.props.onChangeAggregation} />
                 </Row>
                 <Row>
                     {
@@ -186,6 +186,7 @@ class HistoryPanel extends Component {
                                 min={times.MIN_LIMIT}
                                 max={times.MAX_LIMIT}
                                 step={1}
+                                defaultValue={this.props.aggregation.limit}
                                 onAfterChange={this.props.onChangeAggregationLimit}
                             />
                         ) : (

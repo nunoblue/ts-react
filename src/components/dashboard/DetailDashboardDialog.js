@@ -12,7 +12,7 @@ class DetailDashboardDialog extends Component {
         type: 'dialog',
         editing: false,
         title: null,
-        attributesScope: types.attributesScope.client,
+        activeKey: 'detail',
     }
 
     handleClickEdit = () => {
@@ -22,12 +22,14 @@ class DetailDashboardDialog extends Component {
         }
         this.setState({
             editing: !this.state.editing,
+            activeKey: 'detail',
         });
     }
 
     changeEdit = () => {
         this.setState({
             editing: !this.state.editing,
+            title: null,
         });
     }
 
@@ -45,14 +47,50 @@ class DetailDashboardDialog extends Component {
     }
 
     handleSave = () => {
-        const type = 'dialog';
-        this.props.onSave(type);
+        this.props.onSave(this.state.type);
     }
 
     handleTitleChange = (value) => {
         this.setState({
             title: value,
         });
+    }
+
+    handleChangeActiveTabs = (value) => {
+        this.setState({
+            activeKey: value,
+        });
+    }
+
+    footerComponents = () => {
+        return (
+            this.state.editing ? (
+                <CommonButton className="ts-card-button" onClick={this.handleSave}>
+                    <i className="material-icons vertical-middle">save</i>
+                    {i18n.t('action.apply-changes')}
+                </CommonButton>
+            ) : null
+        );
+    }
+
+    tabActionComponents = () => {
+        const isDetail = this.state.activeKey === 'detail';
+        return isDetail ? (
+            <CommonButton
+                className="ts-card-button"
+                shape="circle"
+                tooltipTitle={i18n.t('details.toggle-edit-mode')}
+                onClick={this.handleClickEdit}
+            >
+                {
+                    !this.state.editing ? (
+                        <i className="material-icons vertical-middle">mode_edit</i>
+                    ) : (
+                        <i className="material-icons vertical-middle">close</i>
+                    )
+                }
+            </CommonButton>
+        ) : null;
     }
 
     render() {
@@ -67,26 +105,28 @@ class DetailDashboardDialog extends Component {
             >
                 <Row>
                     {data ? buttonComponents(data.title, data.id.id, data.customerId.id) : null}
-                    <Switch checkedChildren={i18n.t('action.edit')} unCheckedChildren={i18n.t('action.view')} checked={this.state.editing} onChange={this.changeEdit}>
-                        {i18n.t('details.toggle-edit-mode')}
-                    </Switch>
                 </Row>
-                <DashboardForm
-                    ref={(c) => { this.form = c; }}
-                    onPressEnter={onPressEnter}
-                    options={options}
-                    disabled={!this.state.editing}
-                    titleChangeEvent={this.handleTitleChange}
-                    data={data || null}
-                />
-                {
-                    this.state.editing ? (
-                        <CommonButton className="ts-dialog-button" onClick={this.handleSave}>
-                            <i className="material-icons margin-right-8 vertical-middle">save</i>
-                            {i18n.t('action.apply-changes')}
-                        </CommonButton>
-                    ) : null
-                }
+                <Switch checkedChildren={i18n.t('action.edit')} unCheckedChildren={i18n.t('action.view')} checked={this.state.editing} onChange={this.changeEdit}>
+                    {i18n.t('details.toggle-edit-mode')}
+                </Switch>
+                <Row>
+                    <DashboardForm
+                        ref={(c) => { this.form = c; }}
+                        onPressEnter={onPressEnter}
+                        options={options}
+                        disabled={!this.state.editing}
+                        titleChangeEvent={this.handleTitleChange}
+                        data={data || null}
+                    />
+                    {
+                        this.state.editing ? (
+                            <CommonButton className="ts-card-button" onClick={this.handleSave}>
+                                <i className="material-icons margin-right-8 vertical-middle">save</i>
+                                {i18n.t('action.apply-changes')}
+                            </CommonButton>
+                        ) : null
+                    }
+                </Row>
             </CommonDialog>
         );
     }

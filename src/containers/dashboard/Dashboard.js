@@ -140,6 +140,9 @@ class Dashboard extends Component {
             unsubscribeWithObjects,
             updateWithTimewindowForDataSources,
         } = this.props;
+        if (Object.keys(subscribers).length === 0) {
+            return;
+        }
         const copySubscribers = _.cloneDeep(subscribers);
         unsubscribeWithObjects(subscribers).then(() => {
             const newSubscribers = updateWithTimewindowForDataSources(copySubscribers, timewindow);

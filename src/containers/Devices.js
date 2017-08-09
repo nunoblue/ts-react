@@ -9,6 +9,7 @@ import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
 import CommonLabel from '../components/common/CommonLabel';
+import CreateCard from '../components/common/CreateCard';
 import ItemSelectModal from '../components/common/ItemSelectModal';
 import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
@@ -690,15 +691,11 @@ class Devices extends Component {
         const authority = this.state.authority === this.state.isCustomer;
         return (
             <Row>
-                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                    <Card className="ts-card-new" onClick={this.openAddDeviceModal}>
-                        <div>
-                            <span>Create a
-                                <span className="point"> new device</span>
-                            </span>
-                        </div>
-                    </Card>
-                </Col> 
+                {
+                    authority ? (
+                        <CreateCard onClick={this.openAddDeviceModal} type={'device'} />
+                    ) : null
+                }
                 {this.components()}
                 <div className="footer-buttons">
                     <CommonButton
