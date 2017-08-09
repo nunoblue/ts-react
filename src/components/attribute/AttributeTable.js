@@ -38,7 +38,7 @@ class AttributeTable extends Component {
             intervals: 1000,
             realtime: {
                 interval: 1000,
-                timewindowMs: 61000,
+                timewindowMs: 60000,
             },
             aggregation: {
                 type: 'NONE',
@@ -228,6 +228,20 @@ class AttributeTable extends Component {
         this.setState({
             showChart: false,
             attributes: {},
+        });
+    };
+
+    handleUpdateTimeWindow = (timeWindow) => {
+        console.log('handleUpdateTime==================', timeWindow);
+        const {
+            subscribeWithObjects,
+            unsubscribeWithObjects,
+            updateWithTimewindowForDataSources,
+        } = this.props;
+        const copySubscribers = _.cloneDeep(subscribers);
+        unsubscribeWithObjects(subscribers).then(() => {
+            const newSubscribers = updateWithTimewindowForDataSources(copySubscribers, timeWindow);
+            subscribeWithObjects(newSubscribers);
         });
     };
 
@@ -542,6 +556,7 @@ class AttributeTable extends Component {
                 <span style={{ display: 'flex' }}>
                     <GeneralTimeWindow
                         ref={(c) => { this.timeWindow = c; }}
+                        onClickUpdate={this.handleUpdateTimeWindow}
                     />
                     <Button onClick={this.handleBackToTable}>Back</Button>
                 </span>

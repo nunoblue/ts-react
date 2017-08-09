@@ -148,7 +148,10 @@ class DetailDeviceDialog extends Component {
                             subscribers={this.props.subscribers}
                             subscribe={this.props.subscribeWithObjectForAttribute}
                             subscribeDataSources={this.props.subscribeWithObjectsForDataSources}
+                            updateWithTimewindowForDataSources={this.props.updateWithTimewindowForDataSources}
+                            subscribeWithObjects={this.props.subscribeWithObjects}
                             unsubscribe={this.props.unsubscribe}
+                            unsubscribeWithObjects={this.props.unsubscribeWithObjects}
                         />
                     </Tabs.TabPane>
                     <Tabs.TabPane tab={i18n.t('device.events')} key="event" disabled={this.state.editing}>Content of Tab Pane 4</Tabs.TabPane>
@@ -175,7 +178,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => bindActionCreators({
     subscribeWithObjectForAttribute: actions.subscribeWithObjectForAttribute,
     subscribeWithObjectsForDataSources: actions.subscribeWithObjectsForDataSources,
+    updateWithTimewindowForDataSources: actions.updateWithTimewindowForDataSources,
+    subscribeWithObjects: actions.subscribeWithObjects,
     unsubscribe: actions.unsubscribe,
+    unsubscribeWithObjects: actions.unsubscribeWithObjects,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(DetailDeviceDialog);
