@@ -44,6 +44,7 @@ class AttributeTable extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log('nextProps', nextProps);
         if (nextProps.subscriptions) {
             if (this.state.attributesScope.clientSide) {
                 const attributes = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
@@ -188,19 +189,15 @@ class AttributeTable extends Component {
             type: types.widgetType.timeseries.value,
         };
 
-
-
         const timeWindow = {
+            intervals: 1000,
             realtime: {
-                intervals: 1000,
-                realtime: {
-                    interval: 1000,
-                    timewindowMs: 61000,
-                },
-                aggregation: {
-                    type: 'NONE',
-                    limit: 200,
-                },
+                interval: 1000,
+                timewindowMs: 61000,
+            },
+            aggregation: {
+                type: 'NONE',
+                limit: 200,
             },
         }
 

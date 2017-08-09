@@ -344,7 +344,7 @@ export const subscribeWithObjectsForDataSources = (dataSources, timewindow, open
                 Object.assign(subscribers, { [subscriptionId]: subscriber });
             }
         }
-        if (dataSource.attrKeys.length > 0) {
+        if (dataSource.attrKeys && dataSource.attrKeys.length > 0) {
             const subscriptionId = dataSource.entityType + dataSource.entityId + dataSource.attrKeys;
             const subscriptionCommand = {
                 entityType: dataSource.entityType,
