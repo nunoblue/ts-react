@@ -169,7 +169,6 @@ export const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
     if (isOpened) {
         dispatch(send(payload, SUBSCRIBERS));
     } else {
-        // const messageSend = send.bind(this, payload, SUBSCRIBERS);
         tryConnect(dispatch).then(() => {
             dispatch(send(payload, SUBSCRIBERS));
         });
