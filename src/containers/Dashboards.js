@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
-import { Row, Modal, notification, Button } from 'antd';
+import { Row, Modal, notification, Button, Col } from 'antd';
 import i18n from 'i18next';
 
 import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
+import CreateCard from '../components/common/CreateCard';
 import AddDashboardModal from '../components/dashboard/AddDashboardModal';
 import DetailDashboardDialog from '../components/dashboard/DetailDashboardDialog';
 import ItemSelectModal from '../components/common/ItemSelectModal';
@@ -115,20 +116,36 @@ class Dashboards extends Component {
                     iconClassName="export"
                     tooltipTitle={i18n.t('dashboard.export')}
                 />
-                <CommonButton
-                    className="ts-card-button"
-                    shape="circle"
-                    visible={shareVisible}
-                    iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
-                    tooltipTitle={isPublic ? '대시보드 공유 해제' : '대시보드 공유'}
-                />
-                <CommonButton
-                    className="ts-card-button"
-                    shape="circle"
-                    visible={assignVisible}
-                    iconClassName={isAssign ? 'user-delete' : 'user-add'}
-                    tooltipTitle={isAssign ? i18n.t('dashboard.unassign-from-customer') : i18n.t('dashboard.assign-to-customer')}
-                />
+                {
+                    shareVisible ? (
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <CommonButton
+                                    className="ts-card-button"
+                                    shape="circle"
+                                    visible={shareVisible}
+                                    iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
+                                    tooltipTitle={isPublic ? i18n.t('dashboard.make-private') : i18n.t('dashboard.make-public')}
+                                />
+                            </div>
+                        </Col>
+                    ) : null
+                }
+                {
+                    assignVisible ? (
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <CommonButton
+                                    className="ts-card-button"
+                                    shape="circle"
+                                    visible={assignVisible}
+                                    iconClassName={isAssign ? 'user-delete' : 'user-add'}
+                                    tooltipTitle={isAssign ? i18n.t('dashboard.unassign-from-customer') : i18n.t('dashboard.assign-to-customer')}
+                                />
+                            </div>
+                        </Col>
+                    ) : null
+                }
                 <CommonButton
                     className="ts-card-button"
                     shape="circle"
@@ -151,11 +168,12 @@ class Dashboards extends Component {
             return (
                 <CommonCard
                     key={id}
-                    title={<CommonCheckbox value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>}
+                    title={title}
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
                     isCardDown={!this.state.dialogVisible}
                 >
+                    <CommonCheckbox checkedCount={this.state.checkedCount} value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>
                     {this.buttonComponents(title, id, customerId)}
                 </CommonCard>
             );
@@ -402,8 +420,14 @@ class Dashboards extends Component {
     }
 
     render() {
+        const authority = this.state.authority === this.state.isCustomer;
         return (
             <Row>
+                {
+                    authority ? (
+                        <CreateCard onClick={this.openAddDeviceModal} type={'dashboard'} />
+                    ) : null
+                }
                 {this.components()}
                 <div className="footer-buttons">
                     <CommonButton

@@ -9,6 +9,7 @@ import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
 import CommonLabel from '../components/common/CommonLabel';
+import CreateCard from '../components/common/CreateCard';
 import ItemSelectModal from '../components/common/ItemSelectModal';
 import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';
@@ -53,6 +54,8 @@ class Devices extends Component {
         } else if (nextState.selectedDevice !== this.state.selectedDevice) {
             return true;
         } else if (nextState.dialogVisible !== this.state.dialogVisible) {
+            return true;
+        } else if (nextProps.types !== this.props.types) {
             return true;
         } else if (nextProps.shortInfo === this.props.shortInfo) {
             return false;
@@ -289,15 +292,14 @@ class Devices extends Component {
                     }
                 });
                 this.props.getCustomerShortInfoRequest(customerIdArray);
-                this.context.pageLoading();
-            }
-        });
-
-        this.props.getDeviceTypesRequest().then(() => {
-            if (this.props.statusMessage !== 'SUCCESS') {
-                notification.error({
-                    message: this.props.errorMessage,
+                this.props.getDeviceTypesRequest().then(() => {
+                    if (this.props.statusMessage !== 'SUCCESS') {
+                        notification.error({
+                            message: this.props.errorMessage,
+                        });
+                    }
                 });
+                this.context.pageLoading();
             }
         });
     }
@@ -689,15 +691,11 @@ class Devices extends Component {
         const authority = this.state.authority === this.state.isCustomer;
         return (
             <Row>
-                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                    <Card className="ts-card-new" onClick={this.openAddDeviceModal}>
-                        <div>
-                            <span>Create a
-                                <span className="point"> new device</span>
-                            </span>
-                        </div>
-                    </Card>
-                </Col> 
+                {
+                    authority ? (
+                        <CreateCard onClick={this.openAddDeviceModal} type={'device'} />
+                    ) : null
+                }
                 {this.components()}
                 <div className="footer-buttons">
                     <CommonButton
