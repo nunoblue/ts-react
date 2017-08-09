@@ -32,6 +32,7 @@ class AttributeTable extends Component {
         attributes: {},
         attributeModalDisbaled: false,
         widgetMode: false,
+        showChart: false,
     };
 
     componentWillMount() {
@@ -168,9 +169,29 @@ class AttributeTable extends Component {
     }
 
     handleClickSearchKey = () => {
-        console.log('handleClickSearchKey============', this.state.selectedRowKeys);
+        const { entity, subscribers } = this.props;
+        const unsubscriberId = `${entity.entityType}${entity.id}LATEST_TELEMETRY`;
+        const unsubscriber = subscribers[unsubscriberId];
+        if (unsubscriber) {
+            this.attributeUnsubscribe(unsubscriber);
+        }
+
+        const tsScope = {
+            agg: 'NONE',
+            entityType: entity.entityType,
+            entityId: entity.id,
+            interval: 1000,
+            keys: this.state.selectedRowKeys.join(),
+            limit: 200,
+            startTs: 1502187787000,
+            timeWindow: 61000,
+        };
+
+        this.attributeSubscribe(tsScope);
+
         this.setState({
             showChart: true,
+            attributes: {},
         });
     };
 
@@ -433,9 +454,9 @@ class AttributeTable extends Component {
             </Layout.Header>
         );
         return titleComponents;
-    }
+    };
 
-    render() {
+    tableComponents = () => {
         const { type } = this.props;
         const { attributesScope, attributes } = this.state;
         const rowSelection = {
@@ -453,7 +474,7 @@ class AttributeTable extends Component {
                     pagination={{
                         total: attributes.rowLength,
                         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-                        defaultPageSize: 5,
+                        defaultPageSize: 10,
                         defaultCurrent: 1,
                         showSizeChanger: true,
                         showQuickJumper: true,
@@ -470,6 +491,24 @@ class AttributeTable extends Component {
                     onSave={this.handleAddModalSave}
                     onCancel={this.handleAddModalCancel}
                 />
+            </Row>
+        );
+    };
+
+    chartComponents = () => {
+        return (
+            <div>
+                <Button onClick={this.handleBackToTable}>Back</Button>
+                <PlotlyChart attributes={this.state.attributes} />
+            </div>
+        );
+    };
+
+    render() {
+        const { showChart } = this.state;
+        return (
+            <Row>
+                { showChart ? this.chartComponents() : this.tableComponents()}
             </Row>
         );
     }

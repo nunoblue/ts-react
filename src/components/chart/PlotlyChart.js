@@ -6,6 +6,7 @@
 // 차트 레이아웃
 // 라인 컬러 정의
 // 이벤트 정의(like click)
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -15,6 +16,7 @@ class PlotlyChart extends Component {
         xData: PropTypes.array,             // Array in Array... eg. [[1,2,3], [2,4,1]]
         yData: PropTypes.array,             // Array in Array... eg. [[1,2,3], [2,4,1]]
         onPlotChartClick: PropTypes.func,
+        attributes: PropTypes.object,
     };
 
     static defaultProps = {
@@ -29,13 +31,19 @@ class PlotlyChart extends Component {
     };
 
     componentDidMount() {
-        console.log('PlotlyChart componentDidMount=================');
+        console.log('PlotlyChart componentDidMount=================', 'subscription', this.props.subscriptions);
         this.drawPlot();
+        console.log(this.props.attributes);
     }
 
     componentDidUpdate() {
-        console.log('PlotlyChart componentDidUpdate=================');
+        console.log('PlotlyChart componentDidUpdate=================', 'subscription', this.props.subscriptions);
         this.drawPlot();
+        console.log(this.props.attributes);
+    }
+
+    componentWillUnmount() {
+
     }
 
     drawPlot = () => {
