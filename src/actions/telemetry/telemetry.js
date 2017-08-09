@@ -286,14 +286,20 @@ export const subscribeWithObjctsForDataSources = (dataSources, timewindow, opene
     dataSources.forEach((dataSource) => {
         if (dataSource.tsKeys.length > 0) {
             if (timewindow.history) {
+                let limit = timewindow.aggregation.limit;
+                const interval = parseInt(timewindow.history.interval, 10);
+                if (timewindow.aggregation.type !== types.aggregation.none.value) {
+                    const timewindowMs = parseInt(timewindow.history.timewindowMs, 10);
+                    limit = Math.ceil(timewindowMs / interval);
+                }
                 const historyCommand = {
                     entityType: dataSource.entityType,
                     entityId: dataSource.entityId,
                     keys: dataSource.tsKeys,
-                    startTs: timewindow.history.fixedWindow.startTimeMs,
-                    endTs: timewindow.history.fixedWindow.endTimeMs,
-                    interval: timewindow.history.interval,
-                    limit: timewindow.aggregation.limit,
+                    startTs: parseInt(timewindow.history.fixedWindow.startTimeMs, 10),
+                    endTs: parseInt(timewindow.history.fixedWindow.endTimeMs, 10),
+                    interval,
+                    limit,
                     agg: timewindow.aggregation.type,
                 };
                 const subscriptionId = dataSource.entityType + dataSource.entityId + dataSource.tsKeys;
@@ -320,10 +326,14 @@ export const subscribeWithObjctsForDataSources = (dataSources, timewindow, opene
                         startTs -= startDiff;
                         timeWindow += interval;
                     }
+                    let limit = timewindow.aggregation.limit;
+                    if (timewindow.aggregation.type !== types.aggregation.none.value) {
+                        limit = Math.ceil(timeWindow / interval);
+                    }
                     subscriptionCommand.startTs = startTs;
                     subscriptionCommand.timeWindow = timeWindow;
-                    subscriptionCommand.interval = timewindow.aggregation.interval;
-                    subscriptionCommand.limit = timewindow.aggregation.limit;
+                    subscriptionCommand.interval = interval;
+                    subscriptionCommand.limit = limit;
                     subscriptionCommand.agg = timewindow.aggregation.type;
                 }
                 const subscriber = {

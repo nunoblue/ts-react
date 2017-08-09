@@ -38,7 +38,7 @@ class Dashboard extends Component {
 
     refershDashboardRequest = () => {
         this.context.pageLoading();
-        const { match, isOpened } = this.props;
+        const { match } = this.props;
         const dashboardId = match.params.dashboardId;
         this.props.getDashboardRequest(dashboardId).then(() => {
             if (this.props.statusMessage === 'FAILURE') {
@@ -52,7 +52,6 @@ class Dashboard extends Component {
                 Object.keys(entityAliases).forEach((entityAliasId) => {
                     const filterName = entityAliases[entityAliasId].filter.entityNameFilter;
                     const resolveMultiple = entityAliases[entityAliasId].filter.resolveMultiple || false;
-                    const retDataSources = [];
                     if (filterName) {
                         deviceService.getTenantDevices(100, filterName).then((response) => {
                             this.setState({
@@ -70,7 +69,6 @@ class Dashboard extends Component {
                                     if (dataSource.entityAliasId === entityAliasId) {
                                         let tsKeys = '';
                                         let attrKeys = '';
-                                        console.log(dataSource.dataKeys);
                                         dataSource.dataKeys.forEach((dataKey) => {
                                             if (dataKey.type === types.dataKeyType.timeseries) {
                                                 if (tsKeys.length !== 0) {
@@ -84,7 +82,6 @@ class Dashboard extends Component {
                                                 attrKeys += dataKey.name;
                                             }
                                         });
-                                        console.log(tsKeys, attrKeys);
                                         let newDataSources = [];
                                         if (resolveMultiple) {
                                             newDataSources = response.data.data.map((device) => {
@@ -106,7 +103,6 @@ class Dashboard extends Component {
                                             };
                                             newDataSources.push(notResolveDataSource);
                                         }
-                                        console.log(newDataSources);
                                         if (newDataSources.length > 0) {
                                             this.props.subscribeWithObjctsForDataSources(newDataSources, this.timewindow.state);
                                         }
