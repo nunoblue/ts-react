@@ -106,16 +106,13 @@ class Dashboard extends Component {
                                             };
                                             newDataSources.push(notResolveDataSource);
                                         }
-                                        _.mergeWith(retDataSources, newDataSources);
+                                        console.log(newDataSources);
+                                        if (newDataSources.length > 0) {
+                                            this.props.subscribeWithObjctsForDataSources(newDataSources, this.timewindow.state);
+                                        }
                                     }
                                 });
                             });
-                            console.log(retDataSources);
-                            return retDataSources;
-                        }).then((dataSources) => {
-                            if (dataSources.length > 0) {
-                                this.props.subscribeWithObjctsForDataSources(dataSources, this.timewindow.state);
-                            }
                         });
                     }
                 });
@@ -229,7 +226,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     getDashboardRequest: actions.getDashboardRequest,
     clearDashboardsRequest: actions.clearDashboardsRequest,
     subscribeWithObjctsForDataSources: telemetry.subscribeWithObjctsForDataSources,
-    tryConnect: telemetry.tryConnect,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

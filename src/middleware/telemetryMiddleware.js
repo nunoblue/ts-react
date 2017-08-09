@@ -115,9 +115,9 @@ const telemetryMiddleware = () => {
      */
     const send = (payload) => {
         if (websocket) {
-            // waitForSocketConnection(() => {
+            waitForSocketConnection(() => {
                 websocket.send(JSON.stringify(payload));
-            // });
+            });
         } else {
             console.warn('WebSocket is closed, ignoring. Trigger a WEBSOCKET_CONNECT first');
         }
@@ -131,6 +131,16 @@ const telemetryMiddleware = () => {
         switch (action.type) {
             // User request to connect
             case WEBSOCKET_CONNECT:
+                if (websocket) {
+                    next(action);
+                    if (websocket.readyState === 2 || websocket.readyState === 3) {
+                        console.warn('WebSocket is closed, ignoring. Trigger a WEBSOCKET_CONNECT first');
+                        break;
+                    }
+                    return new Promise((resolve, reject) => {
+                        resolve(true);
+                    });
+                }
                 if (!websocket) {
                     const promise = initialize(store, action);
                     next(action);
