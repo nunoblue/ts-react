@@ -38,7 +38,7 @@ class Title extends Component {
         if (path.length <= 2) {
             components = (
                 <Breadcrumb.Item>
-                    <i className="material-icons margin-right-8 vertical-middle">{PATH_NAME[path[1]][0]}</i>
+                    <i className="material-icons vertical-middle">{PATH_NAME[path[1]][0]}</i>
                     {i18n.t(PATH_NAME[path[1]][1])}
                 </Breadcrumb.Item>
             );
@@ -48,14 +48,14 @@ class Title extends Component {
                     if (str === 'settings') {
                         return (
                             <Breadcrumb.Item key={str}>
-                                <i className="material-icons margin-right-8 vertical-middle">{PATH_NAME[str][0]}</i>
+                                <i className="material-icons vertical-middle">{PATH_NAME[str][0]}</i>
                                 {(path.length - 1) !== i ? <Link to={`/${path[1]}/general`}>{i18n.t(PATH_NAME[str][1])}</Link> : i18n.t(PATH_NAME[str][1])}
                             </Breadcrumb.Item>
                         );
                     }
                     return (
                         <Breadcrumb.Item key={str}>
-                            <i className="material-icons margin-right-8 vertical-middle">{PATH_NAME[str][0]}</i>
+                            <i className="material-icons vertical-middle">{PATH_NAME[str][0]}</i>
                             {(path.length - 1) !== i ? <Link to={`/${path[i]}`}>{i18n.t(PATH_NAME[str][1])}</Link> : i18n.t(PATH_NAME[str][1])}
                         </Breadcrumb.Item>
                     );
