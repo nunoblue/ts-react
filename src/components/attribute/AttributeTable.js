@@ -34,6 +34,19 @@ class AttributeTable extends Component {
         attributeModalDisbaled: false,
         widgetMode: false,
         showChart: false,
+        timeWindow: {
+            intervals: 1000,
+            realtime: {
+                interval: 1000,
+                timewindowMs: 61000,
+            },
+            aggregation: {
+                type: 'NONE',
+                limit: 200,
+            },
+            startTs: null,
+            endTs: null,
+        },
     };
 
     componentWillMount() {
@@ -44,7 +57,6 @@ class AttributeTable extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log('nextProps', nextProps);
         if (nextProps.subscriptions) {
             if (this.state.attributesScope.clientSide) {
                 const attributes = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
@@ -185,19 +197,8 @@ class AttributeTable extends Component {
             type: types.widgetType.timeseries.value,
         };
 
-        const timeWindow = {            // Realtime default parameter
-            intervals: 1000,
-            realtime: {
-                interval: 1000,
-                timewindowMs: 61000,
-            },
-            aggregation: {
-                type: 'NONE',
-                limit: 200,
-            },
-        };
-
         const { subscribeDataSources } = this.props;
+        const { timeWindow } = this.state;
         subscribeDataSources([tsScope], timeWindow);
 
         this.setState({
@@ -223,6 +224,7 @@ class AttributeTable extends Component {
         this.attributeSubscribe(latestTelemetryScope);
         this.setState({
             showChart: false,
+            attributes: {},
         });
     };
 
@@ -344,24 +346,34 @@ class AttributeTable extends Component {
                     return value.type === type;
                 }
             }).filter((value) => {
-                return value.subscriptionCommand.scope === attributesScope;
+                return value.subscriptionCommand.scope === attributesScope || value.subscriptionCommand.keys;
             });
             if (pickSubscription.length === 0) {
                 return dataSource;
             }
             const attributes = Object.values(pickSubscription)[0].attributes;
-            dataSource = Object.keys(attributes).map((key) => {
-                const lastUpdateTs = moment(attributes[key][0].lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
-                return {
-                    key,
-                    lastUpdateTs,
-                    attributeKey: key,
-                    value: attributes[key][0].value,
-                };
-            });
+            const keys = Object.values(pickSubscription)[0].subscriptionCommand.keys;
+            const startTs = Object.values(pickSubscription)[0].subscriptionCommand.startTs;
+            const endTs = Object.values(pickSubscription)[0].subscriptionCommand.endTs;
+            if (keys) {
+                dataSource = attributes;
+            } else {
+                dataSource = Object.keys(attributes).map((key) => {
+                    const lastUpdateTs = moment(attributes[key][0].lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
+                    return {
+                        key,
+                        lastUpdateTs,
+                        attributeKey: key,
+                        value: attributes[key][0].value,
+                    };
+                });
+            }
+
             const data = {
                 dataSource,
                 rowLength: dataSource.length,
+                startTs,
+                endTs,
             };
             return data;
         },
@@ -524,11 +536,16 @@ class AttributeTable extends Component {
     chartComponents = () => {
         return (
             <div>
-                <Button onClick={this.handleBackToTable}>Back</Button>
-                <GeneralTimeWindow
-                    ref={(c) => { this.timeWindow = c; }}
+                <span style={{ display: 'flex' }}>
+                    <GeneralTimeWindow
+                        ref={(c) => { this.timeWindow = c; }}
+                    />
+                    <Button onClick={this.handleBackToTable}>Back</Button>
+                </span>
+                <PlotlyChart
+                    attributes={this.state.attributes}
+                    timeWindow={this.state.timeWindow}
                 />
-                <PlotlyChart attributes={this.state.attributes} />
             </div>
         );
     };

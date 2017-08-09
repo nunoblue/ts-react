@@ -9,54 +9,110 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
+import moment from 'moment';
+
+import { lineSeriesColor } from "../../utils/chartColors";
 
 class PlotlyChart extends Component {
     static propTypes = {
         // type: PropTypes.string.isRequired,
-        xData: PropTypes.array,             // Array in Array... eg. [[1,2,3], [2,4,1]]
-        yData: PropTypes.array,             // Array in Array... eg. [[1,2,3], [2,4,1]]
         onPlotChartClick: PropTypes.func,
         attributes: PropTypes.object,
+        timeWindow: PropTypes.object,
     };
 
     static defaultProps = {
-        // xData: [],
-        xData: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
-        // yData: [],
-        yData: [[1, 2, 5, 6, 7, 3, 4, 8, 9, 4]],
         onPlotChartClick: null,
     };
 
     state = {
-    };
-
-    componentDidMount() {
-        console.log('PlotlyChart componentDidMount=================', 'subscription', this.props.subscriptions);
-        this.drawPlot();
-        console.log(this.props.attributes);
+        isUpdate: false,
     }
 
-    componentDidUpdate() {
-        console.log('PlotlyChart componentDidUpdate=================', 'subscription', this.props.subscriptions);
+    componentDidMount() {
         this.drawPlot();
-        console.log(this.props.attributes);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (JSON.stringify(prevProps) !== JSON.stringify(this.props)) {
+            this.drawPlot();
+        }
     }
 
     componentWillUnmount() {
 
     }
 
-    drawPlot = () => {
-        const trace1 = {
-            x: this.props.xData[0],
-            y: this.props.yData[0],
-            line: { color: 'rgb(31, 119, 180)', shape: 'spline' },
-            mode: 'lines',
-            name: 'Measurement',
-            type: 'scatter',
+    shouldComponentUpdata(nextProps, nextState) {
+        if (this.state.isUpdate !== nextState.isUpdate) {
+            return false;
         }
-        const data = [trace1];
-        Plotly.newPlot('plotly', data);       // eslint-disable-line no-undef
+        return true;
+    }
+
+    drawPlot = () => {
+        // console.log('drawPlot', JSON.stringify(this.props.attributes), 'timeWindow', JSON.stringify(this.props.timeWindow));
+        const { attributes: {dataSource, startTs}, timeWindow } = this.props;
+        const isRealtime = !_.isEmpty(timeWindow.realtime);
+        const { isUpdate } = this.state;
+
+        if (!dataSource) {
+            return;
+        }
+
+        let data = [];
+        const xTraces = [];
+        const yTraces = [];
+        const traceArray = [];
+        if (isRealtime && dataSource) {
+            const { interval, timewindowMs } = timeWindow;
+            const xLength = Math.floor(timewindowMs / interval);
+            if (isUpdate) {
+                Object.keys(dataSource).forEach((key, i) => {
+                    const attr = dataSource[key];
+                    const x = [];
+                    const y = [];
+                    _.eachRight(attr, (obj) => {
+                        x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
+                        y.push(obj.value);
+                    });
+                    xTraces.push(x);
+                    yTraces.push(y);
+                    traceArray.push(i);
+                });
+            } else {
+                data = Object.keys(dataSource).map((key, i) => {
+                    const attr = dataSource[key];
+                    const x = [];
+                    const y = [];
+                    _.eachRight(attr, (obj) => {
+                        x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
+                        y.push(obj.value);
+                    });
+
+                    const trace = {
+                        x,
+                        y,
+                        line: { color: lineSeriesColor[i % 12], shape: 'spline' },
+                        mode: 'lines',
+                        name: key,
+                        type: 'scatter',
+                    }
+                    return trace;
+                });
+            }
+        }
+        if (isUpdate) {
+            Plotly.extendTraces('plotly', { x: xTraces, y: yTraces }, traceArray);      // eslint-disable-line no-undef
+        } else {
+            Plotly.newPlot('plotly', data);       // eslint-disable-line no-undef
+            if (!isUpdate && !_.isEmpty(data)) {
+                this.setState({
+                    isUpdate: true,
+                });
+            }
+        }
     };
 
     render() {
