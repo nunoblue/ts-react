@@ -147,6 +147,7 @@ class DetailDeviceDialog extends Component {
                             type={types.dataKeyType.timeseries}
                             subscribers={this.props.subscribers}
                             subscribe={this.props.subscribeWithObjectForAttribute}
+                            subscribeDataSources={this.props.subscribeWithObjectsForDataSources}
                             unsubscribe={this.props.unsubscribe}
                         />
                     </Tabs.TabPane>
@@ -173,6 +174,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     subscribeWithObjectForAttribute: actions.subscribeWithObjectForAttribute,
+    subscribeWithObjectsForDataSources: actions.subscribeWithObjectsForDataSources,
     unsubscribe: actions.unsubscribe,
 }, dispatch);
 

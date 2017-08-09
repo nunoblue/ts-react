@@ -16,7 +16,7 @@ const i18nClient = i18n
     .use(LanguageDetector)
     .init({
         load: 'all',
-        whitelist: ['en-US', 'ko-KR', 'ru-RU', 'zh-CN', 'es-ES'],
+        whitelist: ['en-US', 'ko', 'ko-KR', 'ru-RU', 'zh-CN', 'es-ES'],
         nonExplicitWhitelist: false,
         lngs: ['en-US', 'ko-KR', 'ru-RU', 'zh-CN', 'es-ES'],
         fallbackLng: 'en-US',
@@ -34,6 +34,9 @@ const i18nClient = i18n
             },
             'ru-RU': {
                 'locale.constant': translationRu,
+            },
+            ko: {
+                'locale.constant': translationKo,
             },
             'ko-KR': {
                 'locale.constant': translationKo,

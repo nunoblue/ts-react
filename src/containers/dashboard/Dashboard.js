@@ -253,7 +253,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     getDashboardRequest: actions.getDashboardRequest,
     clearDashboardsRequest: actions.clearDashboardsRequest,
     subscribeWithObjects: telemetry.subscribeWithObjects,
-    subscribeWithObjctsForDataSources: telemetry.subscribeWithObjctsForDataSources,
+    subscribeWithObjectsForDataSources: telemetry.subscribeWithObjctsForDataSources,
     unsubscribeWithObjects: telemetry.unsubscribeWithObjects,
     updateWithTimewindowForDataSources: telemetry.updateWithTimewindowForDataSources,
 }, dispatch);

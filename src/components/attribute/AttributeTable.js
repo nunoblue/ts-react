@@ -11,6 +11,7 @@ import AttributeModal from '../attribute/AttributeModal';
 import { types } from '../../utils/commons';
 import { telemetryService } from '../../services/api';
 import PlotlyChart from '../chart/PlotlyChart';
+import GeneralTimeWindow from '../timewindow/GeneralTimeWindow';
 
 class AttributeTable extends Component {
 
@@ -32,6 +33,20 @@ class AttributeTable extends Component {
         attributes: {},
         attributeModalDisbaled: false,
         widgetMode: false,
+        showChart: false,
+        timeWindow: {
+            intervals: 1000,
+            realtime: {
+                interval: 1000,
+                timewindowMs: 61000,
+            },
+            aggregation: {
+                type: 'NONE',
+                limit: 200,
+            },
+            startTs: null,
+            endTs: null,
+        },
     };
 
     componentWillMount() {
@@ -60,9 +75,9 @@ class AttributeTable extends Component {
         }
     }
 
-    isInt = n => (n !== '' && !isNaN(n) && Math.round(n) === n)
+    isInt = n => (n !== '' && !isNaN(n) && Math.round(n) === n);
 
-    isFloat = n => (n !== '' && !isNaN(n) && Math.round(n) !== n)
+    isFloat = n => (n !== '' && !isNaN(n) && Math.round(n) !== n);
 
     refreshAttributeTable = (scope) => {
         this.setState({
@@ -171,25 +186,58 @@ class AttributeTable extends Component {
     }
 
     handleClickSearchKey = () => {
-        console.log('handleClickSearchKey============', this.state.selectedRowKeys);
+        const { entity, subscribers } = this.props;
+        const unsubscriberId = `${entity.entityType}${entity.id}LATEST_TELEMETRY`;
+        const unsubscriber = subscribers[unsubscriberId];
+        if (unsubscriber) {
+            this.attributeUnsubscribe(unsubscriber);
+        }
+
+        const tsScope = {
+            entityType: entity.entityType,
+            entityId: entity.id,
+            tsKeys: this.state.selectedRowKeys.join(),
+            type: types.widgetType.timeseries.value,
+        };
+
+        const { subscribeDataSources } = this.props;
+        const { timeWindow } = this.state;
+        subscribeDataSources([tsScope], timeWindow);
+
         this.setState({
             showChart: true,
+            attributes: {},
         });
     };
 
     handleBackToTable = () => {
+        const { entity, subscribers } = this.props;
+        const unsubscriberId = `${entity.entityType}${entity.id}${this.state.selectedRowKeys.join()}`;
+        const unsubscriber = subscribers[unsubscriberId];
+        if (unsubscriber) {
+            this.attributeUnsubscribe(unsubscriber);
+        }
+
+        const latestTelemetryScope = {
+            entityType: 'DEVICE',
+            entityId: entity.id,
+            scope: 'LATEST_TELEMETRY',
+        };
+
+        this.attributeSubscribe(latestTelemetryScope);
         this.setState({
             showChart: false,
+            attributes: {},
         });
     };
 
     handleClickOpenAddModal = () => {
         this.attributeModal.modal.onShow();
-    }
+    };
 
     handleClickAttributeRefresh = () => {
         this.refreshAttributeTable();
-    }
+    };
 
     hanldeDeleteAttrbiute = (idArray) => {
         const { entity } = this.props;
@@ -210,7 +258,7 @@ class AttributeTable extends Component {
                 message: error.message,
             });
         });
-    }
+    };
 
     handleClickDeleteConfirm = () => {
         const newTitle = i18n.t('attribute.delete-attributes-title', { count: this.state.selectedRowKeys.length });
@@ -223,7 +271,7 @@ class AttributeTable extends Component {
             cancelText: i18n.t('action.no'),
             onOk: deleteEvent,
         });
-    }
+    };
 
     handleClickOpenModify = (record) => {
         this.setState({
@@ -288,7 +336,7 @@ class AttributeTable extends Component {
             });
         });
         this.handleAddModalCancel();
-    }
+    };
 
     attributeData = {
         getData: (subscriptions, entityId, type, attributesScope) => {
@@ -301,24 +349,34 @@ class AttributeTable extends Component {
                     return value.type === type;
                 }
             }).filter((value) => {
-                return value.subscriptionCommand.scope === attributesScope;
+                return value.subscriptionCommand.scope === attributesScope || value.subscriptionCommand.keys;
             });
             if (pickSubscription.length === 0) {
                 return dataSource;
             }
             const attributes = Object.values(pickSubscription)[0].attributes;
-            dataSource = Object.keys(attributes).map((key) => {
-                const lastUpdateTs = moment(attributes[key][0].lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
-                return {
-                    key,
-                    lastUpdateTs,
-                    attributeKey: key,
-                    value: attributes[key][0].value,
-                };
-            });
+            const keys = Object.values(pickSubscription)[0].subscriptionCommand.keys;
+            const startTs = Object.values(pickSubscription)[0].subscriptionCommand.startTs;
+            const endTs = Object.values(pickSubscription)[0].subscriptionCommand.endTs;
+            if (keys) {
+                dataSource = attributes;
+            } else {
+                dataSource = Object.keys(attributes).map((key) => {
+                    const lastUpdateTs = moment(attributes[key][0].lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
+                    return {
+                        key,
+                        lastUpdateTs,
+                        attributeKey: key,
+                        value: attributes[key][0].value,
+                    };
+                });
+            }
+
             const data = {
                 dataSource,
                 rowLength: dataSource.length,
+                startTs,
+                endTs,
             };
             return data;
         },
@@ -343,7 +401,7 @@ class AttributeTable extends Component {
                 return action;
             },
         }],
-    }
+    };
 
     attributeSelector = (type, attributesScope) => {
         const component = type === types.dataKeyType.attribute ? (
@@ -365,7 +423,7 @@ class AttributeTable extends Component {
             </Select>
         ) : null;
         return component;
-    }
+    };
 
     nonSelectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
@@ -436,9 +494,9 @@ class AttributeTable extends Component {
             </Layout.Header>
         );
         return titleComponents;
-    }
+    };
 
-    render() {
+    tableComponents = () => {
         const { type } = this.props;
         const { attributesScope, attributes } = this.state;
         const rowSelection = {
@@ -457,7 +515,7 @@ class AttributeTable extends Component {
                     pagination={{
                         total: attributes.rowLength,
                         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-                        defaultPageSize: 5,
+                        defaultPageSize: 10,
                         defaultCurrent: 1,
                         showSizeChanger: true,
                         showQuickJumper: true,
@@ -474,6 +532,32 @@ class AttributeTable extends Component {
                     onSave={this.handleAddModalSave}
                     onCancel={this.handleAddModalCancel}
                 />
+            </Row>
+        );
+    };
+
+    chartComponents = () => {
+        return (
+            <div>
+                <span style={{ display: 'flex' }}>
+                    <GeneralTimeWindow
+                        ref={(c) => { this.timeWindow = c; }}
+                    />
+                    <Button onClick={this.handleBackToTable}>Back</Button>
+                </span>
+                <PlotlyChart
+                    attributes={this.state.attributes}
+                    timeWindow={this.state.timeWindow}
+                />
+            </div>
+        );
+    };
+
+    render() {
+        const { showChart } = this.state;
+        return (
+            <Row>
+                { showChart ? this.chartComponents() : this.tableComponents()}
             </Row>
         );
     }
