@@ -63,9 +63,9 @@ class AttributeTable extends Component {
         }
     }
 
-    isInt = n => (n !== '' && !isNaN(n) && Math.round(n) === n)
+    isInt = n => (n !== '' && !isNaN(n) && Math.round(n) === n);
 
-    isFloat = n => (n !== '' && !isNaN(n) && Math.round(n) !== n)
+    isFloat = n => (n !== '' && !isNaN(n) && Math.round(n) !== n);
 
     refreshAttributeTable = (scope) => {
         const { entity } = this.props;
@@ -171,10 +171,6 @@ class AttributeTable extends Component {
     }
 
     handleClickSearchKey = () => {
-        this.setState({
-            showChart: true,
-            attributes: {},
-        });
         const { entity, subscribers } = this.props;
         const unsubscriberId = `${entity.entityType}${entity.id}LATEST_TELEMETRY`;
         const unsubscriber = subscribers[unsubscriberId];
@@ -189,7 +185,7 @@ class AttributeTable extends Component {
             type: types.widgetType.timeseries.value,
         };
 
-        const timeWindow = {
+        const timeWindow = {            // Realtime default parameter
             intervals: 1000,
             realtime: {
                 interval: 1000,
@@ -199,22 +195,32 @@ class AttributeTable extends Component {
                 type: 'NONE',
                 limit: 200,
             },
-        }
+        };
 
-        // const timeWindow = this.timeWindow.state;
         const { subscribeDataSources } = this.props;
         subscribeDataSources([tsScope], timeWindow);
+
+        this.setState({
+            showChart: true,
+            attributes: {},
+        });
     };
 
     handleBackToTable = () => {
-        const { entity } = this.props;
+        const { entity, subscribers } = this.props;
+        const unsubscriberId = `${entity.entityType}${entity.id}${this.state.selectedRowKeys.join()}`;
+        const unsubscriber = subscribers[unsubscriberId];
+        if (unsubscriber) {
+            this.attributeUnsubscribe(unsubscriber);
+        }
+
         const latestTelemetryScope = {
             entityType: 'DEVICE',
             entityId: entity.id,
             scope: 'LATEST_TELEMETRY',
         };
-        // this.attributeSubscribe(latestTelemetryScope);
 
+        this.attributeSubscribe(latestTelemetryScope);
         this.setState({
             showChart: false,
         });
@@ -222,11 +228,11 @@ class AttributeTable extends Component {
 
     handleClickOpenAddModal = () => {
         this.attributeModal.modal.onShow();
-    }
+    };
 
     handleClickAttributeRefresh = () => {
         this.refreshAttributeTable();
-    }
+    };
 
     hanldeDeleteAttrbiute = (idArray) => {
         const { entity } = this.props;
@@ -247,7 +253,7 @@ class AttributeTable extends Component {
                 message: error.message,
             });
         });
-    }
+    };
 
     handleClickDeleteConfirm = () => {
         const newTitle = i18n.t('attribute.delete-attributes-title', { count: this.state.selectedRowKeys.length });
@@ -260,7 +266,7 @@ class AttributeTable extends Component {
             cancelText: i18n.t('action.no'),
             onOk: deleteEvent,
         });
-    }
+    };
 
     handleClickOpenModify = (record) => {
         this.setState({
@@ -325,7 +331,7 @@ class AttributeTable extends Component {
             });
         });
         this.handleAddModalCancel();
-    }
+    };
 
     attributeData = {
         getData: (subscriptions, entityId, type, attributesScope) => {
@@ -380,7 +386,7 @@ class AttributeTable extends Component {
                 return action;
             },
         }],
-    }
+    };
 
     attributeSelector = (type, attributesScope) => {
         const component = type === types.dataKeyType.attribute ? (
@@ -402,7 +408,7 @@ class AttributeTable extends Component {
             </Select>
         ) : null;
         return component;
-    }
+    };
 
     nonSelectionComponents = (type, attributesScope) => {
         const isServerShared = attributesScope.name === types.attributesScope.server.name || attributesScope.name === types.attributesScope.shared.name;
