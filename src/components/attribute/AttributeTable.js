@@ -65,6 +65,9 @@ class AttributeTable extends Component {
     isFloat = n => (n !== '' && !isNaN(n) && Math.round(n) !== n)
 
     refreshAttributeTable = (scope) => {
+        this.setState({
+            selectedRowKeys: [],
+        });
         const { entity } = this.props;
         const entityType = entity.entityType;
         const entityId = entity.id;

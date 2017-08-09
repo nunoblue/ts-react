@@ -522,6 +522,18 @@ export const times = {
         });
         return nearest.value;
     },
+    closestName: (intervals, intervalMs) => {
+        const nearest = intervals.reduce((prev, curr) => {
+            return (Math.abs(curr.value - intervalMs) < Math.abs(prev.value - intervalMs)) ? curr : prev;
+        });
+        return nearest.name.text;
+    },
+    closestValue: (intervals, intervalMs) => {
+        const nearest = intervals.reduce((prev, curr) => {
+            return (Math.abs(curr.value - intervalMs) < Math.abs(prev.value - intervalMs)) ? curr : prev;
+        });
+        return nearest.name.value;
+    },
     SECOND,
     MINUTE,
     HOUR,

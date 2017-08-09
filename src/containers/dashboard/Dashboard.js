@@ -13,7 +13,7 @@ import GeneralTimeWindow from '../../components/timewindow/GeneralTimeWindow';
 import { types } from '../../utils/commons';
 import * as actions from '../../actions/dashboard/dashboards';
 import * as telemetry from '../../actions/telemetry/telemetry';
-import { deviceService } from '../../services/api';
+import { deviceService, telemetryService } from '../../services/api';
 
 class Dashboard extends Component {
     static contextTypes = {
@@ -32,7 +32,7 @@ class Dashboard extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.subscriptions);
+        // console.log(nextProps.subscriptions);
     }
 
     componentWillUnmount() {
@@ -52,8 +52,9 @@ class Dashboard extends Component {
                 });
             }
             if (this.props.statusMessage === 'SUCCESS') {
-                const entityAliases = this.props.dashboard.configuration.entityAliases;
-                const widgets = this.props.dashboard.configuration.widgets;
+                const configuration = this.props.dashboard.configuration || null;
+                const entityAliases = configuration ? configuration.entityAliases : null;
+                const widgets = configuration ? configuration.widgets : null;
                 this.subscribeDataSources(entityAliases, widgets);
                 this.context.pageLoading();
             }
@@ -132,6 +133,11 @@ class Dashboard extends Component {
         });
     }
 
+    updateTimewindowDataSources = (timewindow) => {
+        const { subscribers } = this.props;
+        console.log(subscribers);
+    }
+
     attributeData = {
         getData: (subscriptions, entityId, type, attributeScope) => {
             let dataSource = [];
@@ -182,7 +188,7 @@ class Dashboard extends Component {
         return (
             <Row>
                 <Row>
-                    <GeneralTimeWindow ref={(c) => { this.timewindow = c; }} />
+                    <GeneralTimeWindow ref={(c) => { this.timewindow = c; }} onClickUpdate={this.updateTimewindowDataSources} />
                     <DashboardGridLayout>
                         <div key="1" data-grid={{ w: 2, h: 3, x: 0, y: 0 }}>
                             <Card className="text">
