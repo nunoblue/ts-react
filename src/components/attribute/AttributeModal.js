@@ -36,6 +36,7 @@ class AttributeModal extends Component {
     render() {
         return (
             <CommonModal
+                className="ts-modal"
                 ref={(c) => { this.modal = c; }}
                 title={i18n.t('attribute.add')}
                 onOk={this.props.onSave}

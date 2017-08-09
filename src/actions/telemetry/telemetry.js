@@ -19,6 +19,7 @@ import { dashboardService } from '../../services/api';
 import { isJwtTokenValid, refreshJwtRequest } from '../authentication/authentication';
 
 let lastCmdId = 0;
+let isOpened = false;
 const connect = (url) => {
     return {
         type: WEBSOCKET_CONNECT,
@@ -80,14 +81,24 @@ const nextCmdId = () => {
     return lastCmdId;
 };
 
-const tryConnect = (dispatch) => {
+export const tryConnect = () => (dispatch) => {
     if (isJwtTokenValid()) {
         const token = storage.read('jwt_token');
-        return dispatch(connect(`${config.telemetryUri}?token=${token}`));
+        if (isOpened) {
+            return;
+        }
+        return dispatch(connect(`${config.telemetryUri}?token=${token}`)).then(() => {
+            isOpened = true;
+        });
     }
     return refreshJwtRequest.then(() => {
         const token = storage.read('jwt_token');
-        return dispatch(connect(`${config.telemetryUri}?token=${token}`));
+        if (isOpened) {
+            return;
+        }
+        return dispatch(connect(`${config.telemetryUri}?token=${token}`)).then(() => {
+            isOpened = true;
+        });
     }).catch((error) => {
         console.log(error.response.data);
     });
@@ -127,7 +138,7 @@ export const subscribe = (subscriber, isOpened) => (dispatch) => {
     if (isOpened) {
         dispatch(send(payload, SUBSCRIBER));
     } else {
-        tryConnect(dispatch).then(() => {
+        tryConnect()(dispatch).then(() => {
             dispatch(send(payload));
         });
     }
@@ -169,7 +180,7 @@ export const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
     if (isOpened) {
         dispatch(send(payload, SUBSCRIBERS));
     } else {
-        tryConnect(dispatch).then(() => {
+        tryConnect()(dispatch).then(() => {
             dispatch(send(payload, SUBSCRIBERS));
         });
     }
@@ -267,16 +278,8 @@ export const subscribeWithObjectForAttribute = (attribute, isOpened) => (dispatc
     subscribe(subscriber, isOpened)(dispatch);
 };
 
-export const unsubscribeWithObjectsForEntityAttributes = (subscribers) => (dispatch) => {
+export const unsubscribeWithObjectsForEntityAttributes = subscribers => (dispatch) => {
     return unsubscribeWithObjects(subscribers)(dispatch);
-};
-
-const parseDataKeys = (dataSources) => {
-    
-};
-
-const createDataSourcesFromWidgets = (dataSources) => {
-
 };
 
 /**
@@ -319,12 +322,14 @@ export const subscribeWithObjctsForDataSources = (dataSources, timewindow, isOpe
                     keys: dataSource.tsKeys,
                 };
                 if (dataSource.type === types.widgetType.timeseries.value) {
-                    let startTs = Date.now() + stDiff - timewindow.realtime.timewindowMs;
-                    const startDiff = startTs % timewindow.realtime.interval;
-                    let timeWindow = timewindow.realtime.timewindowMs;
+                    const timewindowMs = parseInt(timewindow.realtime.timewindowMs, 10);
+                    const interval = parseInt(timewindow.realtime.interval, 10);
+                    let startTs = Date.now() + stDiff - timewindowMs;
+                    const startDiff = startTs % interval;
+                    let timeWindow = timewindowMs;
                     if (startDiff) {
                         startTs -= startDiff;
-                        timeWindow += timewindow.realtime.interval;
+                        timeWindow += interval;
                     }
                     subscriptionCommand.startTs = startTs;
                     subscriptionCommand.timeWindow = timeWindow;
@@ -357,4 +362,8 @@ export const subscribeWithObjctsForDataSources = (dataSources, timewindow, isOpe
         }
     });
     subscribeWithObjects(subscribers, isOpened)(dispatch);
+};
+
+export const subscribeWithObjctForDataSource = (subscriber, isOpened) => (dispatch) => {
+
 };

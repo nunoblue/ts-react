@@ -63,7 +63,7 @@ class DetailDeviceDialog extends Component {
         return (
             this.state.editing ? (
                 <CommonButton className="ts-card-button" onClick={this.handleSave}>
-                    <i className="material-icons margin-right-8 vertical-middle">save</i>
+                    <i className="material-icons vertical-middle">save</i>
                     {i18n.t('action.apply-changes')}
                 </CommonButton>
             ) : null
@@ -81,9 +81,9 @@ class DetailDeviceDialog extends Component {
             >
                 {
                     !this.state.editing ? (
-                        <i className="material-icons margin-right-8 vertical-middle">mode_edit</i>
+                        <i className="material-icons vertical-middle">mode_edit</i>
                     ) : (
-                        <i className="material-icons margin-right-8 vertical-middle">close</i>
+                        <i className="material-icons vertical-middle">close</i>
                     )
                 }
             </CommonButton>

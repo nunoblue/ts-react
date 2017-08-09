@@ -355,7 +355,7 @@ class AttributeTable extends Component {
                 const openModify = this.handleClickOpenModify.bind(this, record);
                 const action = this.props.type === types.dataKeyType.attribute && !this.state.attributesScope.clientSide ? (
                     <CommonButton className="ts-card-button" shape="circle" onClick={openModify} tooltipTitle={i18n.t('details.toggle-edit-mode')}>
-                        <i className="material-icons margin-right-8 vertical-middle">mode_edit</i>
+                        <i className="material-icons vertical-middle">mode_edit</i>
                     </CommonButton>
                 ) : null;
                 return action;
@@ -467,6 +467,7 @@ class AttributeTable extends Component {
             <Row>
                 {this.attributeSelector(type, attributesScope)}
                 <Table
+                    className="ts-table-wrapper"
                     columns={this.attributeData.columns}
                     dataSource={attributes.dataSource}
                     title={() => this.titleComponents(type, attributesScope)}

@@ -13,7 +13,7 @@ const stateToProps = (mixins) => (ProxyComponent, logging) => {
                     console.log('{props}', this.props);
                     console.log('{state}', this.state);
                     console.log('{handlers}', this.handlers);
-                    console.log('{name}', Mixin.name);
+                    console.log('{name}', MixinComponent.name);
                 }
                 let newHandlers;
                 let newState;
