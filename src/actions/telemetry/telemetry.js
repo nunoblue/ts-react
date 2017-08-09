@@ -273,6 +273,69 @@ export const subscribeWithObjectForAttribute = (attribute, isOpened) => (dispatc
 /**
  * FOR DATASOURCE TELEMETRY ACTIONS
  */
+const updateToHistoryTimewindow = (dataSource, timewindow) => {
+    let limit = timewindow.aggregation.limit;
+    const interval = parseInt(timewindow.history.interval, 10);
+    if (timewindow.aggregation.type !== types.aggregation.none.value) {
+        const timewindowMs = parseInt(timewindow.history.timewindowMs, 10);
+        limit = Math.ceil(timewindowMs / interval);
+    }
+    const keys = dataSource.keys || dataSource.tsKeys;
+    const historyCommand = {
+        entityType: dataSource.entityType,
+        entityId: dataSource.entityId,
+        keys,
+        startTs: parseInt(timewindow.history.fixedTimewindow.startTimeMs, 10),
+        endTs: parseInt(timewindow.history.fixedTimewindow.endTimeMs, 10),
+        interval,
+        limit,
+        agg: timewindow.aggregation.type,
+    };
+    const subscriptionId = `${dataSource.entityType}${dataSource.entityId}${keys}`;
+    const subscriber = {
+        id: subscriptionId,
+        historyCommand,
+        type: types.dataKeyType.timeseries,
+    };
+    return { [subscriptionId]: subscriber };
+};
+
+const updateToRealtimeTimewindow = (dataSource, timewindow, stDiff) => {
+    const keys = dataSource.keys || dataSource.tsKeys;
+    const subscriptionCommand = {
+        entityType: dataSource.entityType,
+        entityId: dataSource.entityId,
+        keys,
+    };
+    if (dataSource.type === types.widgetType.timeseries.value) {
+        const timewindowMs = parseInt(timewindow.realtime.timewindowMs, 10);
+        const interval = parseInt(timewindow.realtime.interval, 10);
+        let startTs = Date.now() + stDiff - timewindowMs;
+        const startDiff = startTs % interval;
+        let timeWindow = timewindowMs;
+        if (startDiff) {
+            startTs -= startDiff;
+            timeWindow += interval;
+        }
+        let limit = timewindow.aggregation.limit;
+        if (timewindow.aggregation.type !== types.aggregation.none.value) {
+            limit = Math.ceil(timeWindow / interval);
+        }
+        subscriptionCommand.startTs = startTs;
+        subscriptionCommand.timeWindow = timeWindow;
+        subscriptionCommand.interval = interval;
+        subscriptionCommand.limit = limit;
+        subscriptionCommand.agg = timewindow.aggregation.type;
+    }
+    const subscriptionId = `${dataSource.entityType}${dataSource.entityId}${keys}`;
+    const subscriber = {
+        id: subscriptionId,
+        subscriptionCommand,
+        type: types.dataKeyType.timeseries,
+    };
+    return { [subscriptionId]: subscriber };
+};
+
 export const subscribeWithObjctsForDataSources = (dataSources, timewindow, isOpened) => (dispatch) => {
     const subscribers = {};
     let stDiff = 0;
@@ -285,62 +348,11 @@ export const subscribeWithObjctsForDataSources = (dataSources, timewindow, isOpe
     dataSources.forEach((dataSource) => {
         if (dataSource.tsKeys.length > 0) {
             if (timewindow.history) {
-                let limit = timewindow.aggregation.limit;
-                const interval = parseInt(timewindow.history.interval, 10);
-                if (timewindow.aggregation.type !== types.aggregation.none.value) {
-                    const timewindowMs = parseInt(timewindow.history.timewindowMs, 10);
-                    limit = Math.ceil(timewindowMs / interval);
-                }
-                const historyCommand = {
-                    entityType: dataSource.entityType,
-                    entityId: dataSource.entityId,
-                    keys: dataSource.tsKeys,
-                    startTs: parseInt(timewindow.history.fixedWindow.startTimeMs, 10),
-                    endTs: parseInt(timewindow.history.fixedWindow.endTimeMs, 10),
-                    interval,
-                    limit,
-                    agg: timewindow.aggregation.type,
-                };
-                const subscriptionId = dataSource.entityType + dataSource.entityId + dataSource.tsKeys;
-                const subscriber = {
-                    id: subscriptionId,
-                    historyCommand,
-                    type: types.dataKeyType.timeseries,
-                };
-                Object.assign(subscribers, { [subscriptionId]: subscriber });
+                const newDataSource = updateToHistoryTimewindow(dataSource, timewindow);
+                Object.assign(subscribers, newDataSource);
             } else {
-                const subscriptionId = dataSource.entityType + dataSource.entityId + dataSource.tsKeys;
-                const subscriptionCommand = {
-                    entityType: dataSource.entityType,
-                    entityId: dataSource.entityId,
-                    keys: dataSource.tsKeys,
-                };
-                if (dataSource.type === types.widgetType.timeseries.value) {
-                    const timewindowMs = parseInt(timewindow.realtime.timewindowMs, 10);
-                    const interval = parseInt(timewindow.realtime.interval, 10);
-                    let startTs = Date.now() + stDiff - timewindowMs;
-                    const startDiff = startTs % interval;
-                    let timeWindow = timewindowMs;
-                    if (startDiff) {
-                        startTs -= startDiff;
-                        timeWindow += interval;
-                    }
-                    let limit = timewindow.aggregation.limit;
-                    if (timewindow.aggregation.type !== types.aggregation.none.value) {
-                        limit = Math.ceil(timeWindow / interval);
-                    }
-                    subscriptionCommand.startTs = startTs;
-                    subscriptionCommand.timeWindow = timeWindow;
-                    subscriptionCommand.interval = interval;
-                    subscriptionCommand.limit = limit;
-                    subscriptionCommand.agg = timewindow.aggregation.type;
-                }
-                const subscriber = {
-                    id: subscriptionId,
-                    subscriptionCommand,
-                    type: types.dataKeyType.timeseries,
-                };
-                Object.assign(subscribers, { [subscriptionId]: subscriber });
+                const newDataSource = updateToRealtimeTimewindow(dataSource, timewindow, stDiff);
+                Object.assign(subscribers, newDataSource);
             }
         }
         if (dataSource.attrKeys && dataSource.attrKeys.length > 0) {
@@ -350,7 +362,6 @@ export const subscribeWithObjctsForDataSources = (dataSources, timewindow, isOpe
                 entityId: dataSource.entityId,
                 keys: dataSource.attrKeys,
             };
-
             const subscriber = {
                 id: subscriptionId,
                 subscriptionCommand,
@@ -362,6 +373,37 @@ export const subscribeWithObjctsForDataSources = (dataSources, timewindow, isOpe
     subscribeWithObjects(subscribers, isOpened)(dispatch);
 };
 
-export const subscribeWithObjctForDataSource = (subscriber, isOpened) => (dispatch) => {
-
+export const updateWithTimewindowForDataSources = (subscribers, timewindow) => (dispatch) => {
+    if (!subscribers || Object.keys(subscribers).length === 0) {
+        return subscribers;
+    }
+    let stDiff = 0;
+    const ct1 = Date.now();
+    dashboardService.getServerTime().then((response) => {
+        const ct2 = Date.now();
+        const st = response.data;
+        stDiff = Math.ceil(st - ((ct1 + ct2) / 2));
+    });
+    const newSubscribers = _.transform(subscribers, (result, value, key) => {
+        if (value.type === types.dataKeyType.timeseries) {
+            if (timewindow.history) {
+                if (value.subscriptionCommand) {
+                    value.subscriptionCommand.type = value.type;
+                    result[key] = updateToHistoryTimewindow(value.subscriptionCommand, timewindow)[key];
+                } else {
+                    value.historyCommand.type = value.type;
+                    result[key] = updateToHistoryTimewindow(value.historyCommand, timewindow)[key];
+                }
+            } else {
+                if (value.subscriptionCommand) {
+                    value.subscriptionCommand.type = value.type;
+                    result[key] = updateToRealtimeTimewindow(value.subscriptionCommand, timewindow, stDiff)[key];
+                } else {
+                    value.historyCommand.type = value.type;
+                    result[key] = updateToRealtimeTimewindow(value.historyCommand, timewindow, stDiff)[key];
+                }
+            }
+        }
+    });
+    return newSubscribers;
 };

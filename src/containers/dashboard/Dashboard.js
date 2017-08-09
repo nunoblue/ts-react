@@ -134,8 +134,17 @@ class Dashboard extends Component {
     }
 
     updateTimewindowDataSources = (timewindow) => {
-        const { subscribers } = this.props;
-        console.log(subscribers);
+        const {
+            subscribers,
+            subscribeWithObjects,
+            unsubscribeWithObjects,
+            updateWithTimewindowForDataSources,
+        } = this.props;
+        const copySubscribers = _.cloneDeep(subscribers);
+        unsubscribeWithObjects(subscribers).then(() => {
+            const newSubscribers = updateWithTimewindowForDataSources(copySubscribers, timewindow);
+            subscribeWithObjects(newSubscribers);
+        });
     }
 
     attributeData = {
@@ -243,8 +252,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     getDashboardRequest: actions.getDashboardRequest,
     clearDashboardsRequest: actions.clearDashboardsRequest,
+    subscribeWithObjects: telemetry.subscribeWithObjects,
     subscribeWithObjctsForDataSources: telemetry.subscribeWithObjctsForDataSources,
     unsubscribeWithObjects: telemetry.unsubscribeWithObjects,
+    updateWithTimewindowForDataSources: telemetry.updateWithTimewindowForDataSources,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
