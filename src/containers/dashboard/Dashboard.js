@@ -114,7 +114,7 @@ class Dashboard extends Component {
                             return retDataSources;
                         }).then((dataSources) => {
                             if (dataSources.length > 0) {
-                                this.props.subscribeWithObjctsForDataSources(dataSources, this.timewindow.state);
+                                this.props.subscribeWithObjectsForDataSources(dataSources, this.timewindow.state);
                             }
                         });
                     }
@@ -228,7 +228,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => bindActionCreators({
     getDashboardRequest: actions.getDashboardRequest,
     clearDashboardsRequest: actions.clearDashboardsRequest,
-    subscribeWithObjctsForDataSources: telemetry.subscribeWithObjctsForDataSources,
+    subscribeWithObjectsForDataSources: telemetry.subscribeWithObjectsForDataSources,
     tryConnect: telemetry.tryConnect,
 }, dispatch);
 

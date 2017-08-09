@@ -66,7 +66,7 @@ class GeneralTimeWindow extends Component {
 
     render() {
         const { children } = this.props;
-        const buttonComponent = children || <CommonButton onClick={this.handleChangeVisible} />;
+        const buttonComponent = children || <CommonButton onClick={this.handleChangeVisible}>조회기간 설정</CommonButton>;
         return (
             <Popover
                 placement="topLeft"

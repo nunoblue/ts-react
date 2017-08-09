@@ -11,6 +11,7 @@ import AttributeModal from '../attribute/AttributeModal';
 import { types } from '../../utils/commons';
 import { telemetryService } from '../../services/api';
 import PlotlyChart from '../chart/PlotlyChart';
+import GeneralTimeWindow from '../timewindow/GeneralTimeWindow';
 
 class AttributeTable extends Component {
 
@@ -169,6 +170,10 @@ class AttributeTable extends Component {
     }
 
     handleClickSearchKey = () => {
+        this.setState({
+            showChart: true,
+            attributes: {},
+        });
         const { entity, subscribers } = this.props;
         const unsubscriberId = `${entity.entityType}${entity.id}LATEST_TELEMETRY`;
         const unsubscriber = subscribers[unsubscriberId];
@@ -177,25 +182,42 @@ class AttributeTable extends Component {
         }
 
         const tsScope = {
-            agg: 'NONE',
             entityType: entity.entityType,
             entityId: entity.id,
-            interval: 1000,
-            keys: this.state.selectedRowKeys.join(),
-            limit: 200,
-            startTs: 1502187787000,
-            timeWindow: 61000,
+            tsKeys: this.state.selectedRowKeys.join(),
+            type: types.widgetType.timeseries.value,
         };
 
-        this.attributeSubscribe(tsScope);
 
-        this.setState({
-            showChart: true,
-            attributes: {},
-        });
+
+        const timeWindow = {
+            realtime: {
+                intervals: 1000,
+                realtime: {
+                    interval: 1000,
+                    timewindowMs: 61000,
+                },
+                aggregation: {
+                    type: 'NONE',
+                    limit: 200,
+                },
+            },
+        }
+
+        // const timeWindow = this.timeWindow.state;
+        const { subscribeDataSources } = this.props;
+        subscribeDataSources([tsScope], timeWindow);
     };
 
     handleBackToTable = () => {
+        const { entity } = this.props;
+        const latestTelemetryScope = {
+            entityType: 'DEVICE',
+            entityId: entity.id,
+            scope: 'LATEST_TELEMETRY',
+        };
+        // this.attributeSubscribe(latestTelemetryScope);
+
         this.setState({
             showChart: false,
         });
@@ -500,6 +522,9 @@ class AttributeTable extends Component {
         return (
             <div>
                 <Button onClick={this.handleBackToTable}>Back</Button>
+                <GeneralTimeWindow
+                    ref={(c) => { this.timeWindow = c; }}
+                />
                 <PlotlyChart attributes={this.state.attributes} />
             </div>
         );

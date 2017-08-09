@@ -51,9 +51,9 @@ class PlotlyChart extends Component {
             x: this.props.xData[0],
             y: this.props.yData[0],
             line: { color: 'rgb(31, 119, 180)', shape: 'spline' },
-            mode: "lines",
-            name: "Measurement",
-            type: "scatter",
+            mode: 'lines',
+            name: 'Measurement',
+            type: 'scatter',
         }
         const data = [trace1];
         Plotly.newPlot('plotly', data);       // eslint-disable-line no-undef
