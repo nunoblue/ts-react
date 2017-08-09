@@ -38,6 +38,7 @@ const telemetry = (state = initialState, action) => {
             const data = JSON.parse(action.payload.data);
             if (data) {
                 if (data.subscriptionId) {
+                    console.log(data);
                     const subscription = state.subscriptions[data.subscriptionId];
                     if (subscription) {
                         if (data.data) {
@@ -64,10 +65,10 @@ const telemetry = (state = initialState, action) => {
             if (action.isType === SUBSCRIBERS) {
                 return update(state, {
                     subscribers: {
-                        $set: action.subscribers,
+                        $merge: action.subscribers,
                     },
                     subscriptions: {
-                        $set: action.subscriptions,
+                        $merge: action.subscriptions,
                     },
                 });
             } else if (action.isType === SUBSCRIBER) {
