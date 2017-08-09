@@ -56,10 +56,10 @@ class Customers extends Component {
     buttonComponents = (title, id, isPublic) => {
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
         return (
-            <Button.Group className="custom-card-buttongroup">
+            <Button.Group className="ts-card-buttongroup">
                 <Link to={`/customers/${id}/users`}>
                     <CommonButton
-                        className="custom-card-button"
+                        className="ts-card-button"
                         shape="circle"
                         visible={!isPublic}
                         iconClassName="user-add"
@@ -68,7 +68,7 @@ class Customers extends Component {
                 </Link>
                 <Link to={`/customers/${id}/devices`}>
                     <CommonButton
-                        className="custom-card-button"
+                        className="ts-card-button"
                         shape="circle"
                         iconClassName="tablet"
                         tooltipTitle={i18n.t('customer.manage-customer-devices')}
@@ -76,14 +76,14 @@ class Customers extends Component {
                 </Link>
                 <Link to={`/customers/${id}/dashboards`}>
                     <CommonButton
-                        className="custom-card-button"
+                        className="ts-card-button"
                         shape="circle"
                         iconClassName="layout"
                         tooltipTitle={i18n.t('customer.manage-customer-dashboards')}
                     />
                 </Link>
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     visible={!isPublic}
                     iconClassName="delete"
@@ -305,14 +305,14 @@ class Customers extends Component {
                         visible={this.state.checkedCount !== 0}
                         shape="circle"
                         tooltipTitle={i18n.t('customer.delete-customers-action-title')}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="delete"
                         onClick={this.handleMultipleDeleteConfirm}
                         size="large"
                     />
                     <CommonButton
                         tooltipTitle={i18n.t('customer.add')}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         shape="circle"
                         iconClassName="plus"
                         onClick={this.openAddCustomerModal}

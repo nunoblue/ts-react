@@ -232,17 +232,17 @@ class Plugins extends Component {
         const deleteConfirm = this.handleDeleteConfirm.bind(this, name, id);
         const changeState = this.handlePluginState.bind(this, id, state);
         return (
-            <Button.Group className="custom-card-buttongroup">
+            <Button.Group className="ts-card-buttongroup">
                 <CommonButton
                     visible={plugin && nullUID !== plugin.tenantId.id}
-                    className="custom-card-button"
+                    className="ts-card-button"
                     iconClassName={state === 'ACTIVE' ? 'pause' : 'caret-right'}
                     tooltipTitle={state === 'ACTIVE' ? i18n.t('plugin.suspend') : i18n.t('plugin.activate')}
                     onClick={changeState}
                 />
                 <CommonButton
                     visible={plugin && nullUID !== plugin.tenantId.id}
-                    className="custom-card-button"
+                    className="ts-card-button"
                     iconClassName="delete"
                     tooltipTitle={i18n.t('plugin.delete')}
                     onClick={deleteConfirm}
@@ -260,7 +260,7 @@ class Plugins extends Component {
                     <CommonButton
                         visible={this.state.checkedCount > 0}
                         tooltipTitle={`규칙 ${this.state.checkedCount}건 삭제`}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="delete"
                         onClick={this.handleDeleteConfirm}
                         size="large"
@@ -268,7 +268,7 @@ class Plugins extends Component {
                     />
                     <CommonButton
                         tooltipTitle={i18n.t('plugin.add')}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="plus"
                         onClick={this.modalHandler.show}
                         size="large"
