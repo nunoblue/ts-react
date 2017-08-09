@@ -351,12 +351,12 @@ class AttributeTable extends Component {
             }
             const attributes = Object.values(pickSubscription)[0].attributes;
             dataSource = Object.keys(attributes).map((key) => {
-                const lastUpdateTs = moment(attributes[key].lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
+                const lastUpdateTs = moment(attributes[key][0].lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
                 return {
                     key,
                     lastUpdateTs,
                     attributeKey: key,
-                    value: attributes[key].value,
+                    value: attributes[key][0].value,
                 };
             });
             const data = {

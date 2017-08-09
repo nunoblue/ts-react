@@ -31,9 +31,14 @@ class Dashboard extends Component {
         this.refershDashboardRequest();
     }
 
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps.subscriptions);
+    }
+
     componentWillUnmount() {
-        const { clearDashboardsRequest } = this.props;
+        const { clearDashboardsRequest, unsubscribeWithObjects, subscribers } = this.props;
         clearDashboardsRequest();
+        unsubscribeWithObjects(subscribers);
     }
 
     refershDashboardRequest = () => {
@@ -49,70 +54,80 @@ class Dashboard extends Component {
             if (this.props.statusMessage === 'SUCCESS') {
                 const entityAliases = this.props.dashboard.configuration.entityAliases;
                 const widgets = this.props.dashboard.configuration.widgets;
-                Object.keys(entityAliases).forEach((entityAliasId) => {
-                    const filterName = entityAliases[entityAliasId].filter.entityNameFilter;
-                    const resolveMultiple = entityAliases[entityAliasId].filter.resolveMultiple || false;
-                    if (filterName) {
-                        deviceService.getTenantDevices(100, filterName).then((response) => {
-                            this.setState({
-                                entityAliases: {
-                                    [entityAliasId]: {
-                                        resolveMultiple,
-                                        devices: response.data.data,
-                                    },
-                                },
-                            });
-                            Object.keys(widgets).forEach((widgetId) => {
-                                const dataSources = widgets[widgetId].config.datasources;
-                                const widgetType = widgets[widgetId].type;
-                                dataSources.forEach((dataSource) => {
-                                    if (dataSource.entityAliasId === entityAliasId) {
-                                        let tsKeys = '';
-                                        let attrKeys = '';
-                                        dataSource.dataKeys.forEach((dataKey) => {
-                                            if (dataKey.type === types.dataKeyType.timeseries) {
-                                                if (tsKeys.length !== 0) {
-                                                    tsKeys += ',';
-                                                }
-                                                tsKeys += dataKey.name;
-                                            } else {
-                                                if (attrKeys.length !== 0) {
-                                                    attrKeys += ',';
-                                                }
-                                                attrKeys += dataKey.name;
-                                            }
-                                        });
-                                        let newDataSources = [];
-                                        if (resolveMultiple) {
-                                            newDataSources = response.data.data.map((device) => {
-                                                return {
-                                                    entityType: device.id.entityType,
-                                                    entityId: device.id.id,
-                                                    tsKeys,
-                                                    attrKeys,
-                                                    type: widgetType,
-                                                };
-                                            });
-                                        } else {
-                                            const notResolveDataSource = {
-                                                entityType: response.data.data[0].id.entityType,
-                                                entityId: response.data.data[0].id.id,
-                                                tsKeys,
-                                                attrKeys,
-                                                type: widgetType,
-                                            };
-                                            newDataSources.push(notResolveDataSource);
+                this.subscribeDataSources(entityAliases, widgets);
+                this.context.pageLoading();
+            }
+        });
+    }
+
+    subscribeDataSources = (entityAliases, widgets) => {
+        if (!entityAliases || Object.keys(entityAliases).length === 0) {
+            return;
+        }
+        Object.keys(entityAliases).forEach((entityAliasId) => {
+            const filterName = entityAliases[entityAliasId].filter.entityNameFilter;
+            const resolveMultiple = entityAliases[entityAliasId].filter.resolveMultiple || false;
+            if (filterName) {
+                deviceService.getTenantDevices(100, filterName).then((response) => {
+                    this.setState({
+                        entityAliases: {
+                            [entityAliasId]: {
+                                resolveMultiple,
+                                devices: response.data.data,
+                            },
+                        },
+                    });
+                    if (!widgets || Object.keys(widgets).length === 0) {
+                        return;
+                    }
+                    Object.keys(widgets).forEach((widgetId) => {
+                        const dataSources = widgets[widgetId].config.datasources;
+                        const widgetType = widgets[widgetId].type;
+                        dataSources.forEach((dataSource) => {
+                            if (dataSource.entityAliasId === entityAliasId) {
+                                let tsKeys = '';
+                                let attrKeys = '';
+                                dataSource.dataKeys.forEach((dataKey) => {
+                                    if (dataKey.type === types.dataKeyType.timeseries) {
+                                        if (tsKeys.length !== 0) {
+                                            tsKeys += ',';
                                         }
-                                        if (newDataSources.length > 0) {
-                                            this.props.subscribeWithObjctsForDataSources(newDataSources, this.timewindow.state);
+                                        tsKeys += dataKey.name;
+                                    } else {
+                                        if (attrKeys.length !== 0) {
+                                            attrKeys += ',';
                                         }
+                                        attrKeys += dataKey.name;
                                     }
                                 });
-                            });
+                                let newDataSources = [];
+                                if (resolveMultiple) {
+                                    newDataSources = response.data.data.map((device) => {
+                                        return {
+                                            entityType: device.id.entityType,
+                                            entityId: device.id.id,
+                                            tsKeys,
+                                            attrKeys,
+                                            type: widgetType,
+                                        };
+                                    });
+                                } else {
+                                    const notResolveDataSource = {
+                                        entityType: response.data.data[0].id.entityType,
+                                        entityId: response.data.data[0].id.id,
+                                        tsKeys,
+                                        attrKeys,
+                                        type: widgetType,
+                                    };
+                                    newDataSources.push(notResolveDataSource);
+                                }
+                                if (newDataSources.length > 0) {
+                                    this.props.subscribeWithObjctsForDataSources(newDataSources, this.timewindow.state);
+                                }
+                            }
                         });
-                    }
+                    });
                 });
-                this.context.pageLoading();
             }
         });
     }
@@ -215,6 +230,7 @@ const mapStateToProps = (state, ownProps) => {
         dashboard: state.dashboards.dashboard,
         isOpened: state.telemetry.isOpened,
         subscriptions: state.telemetry.subscriptions,
+        subscribers: state.telemetry.subscribers,
     };
 };
 
@@ -222,7 +238,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     getDashboardRequest: actions.getDashboardRequest,
     clearDashboardsRequest: actions.clearDashboardsRequest,
     subscribeWithObjectsForDataSources: telemetry.subscribeWithObjectsForDataSources,
-    tryConnect: telemetry.tryConnect,
+    unsubscribeWithObjects: telemetry.unsubscribeWithObjects,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

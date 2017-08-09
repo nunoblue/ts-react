@@ -198,6 +198,9 @@ export const unsubscribe = (subscriber) => (dispatch) => {
 };
 
 export const unsubscribeWithObjects = (subscribers) => (dispatch) => {
+    if (!subscribers || Object.keys(subscribers).length === 0) {
+        return;
+    }
     const cmdsWrapper = {
         tsSubCmds: [],
         historyCmds: [],
@@ -267,14 +270,10 @@ export const subscribeWithObjectForAttribute = (attribute, isOpened) => (dispatc
     subscribe(subscriber, isOpened)(dispatch);
 };
 
-export const unsubscribeWithObjectsForEntityAttributes = subscribers => (dispatch) => {
-    return unsubscribeWithObjects(subscribers)(dispatch);
-};
-
 /**
  * FOR DATASOURCE TELEMETRY ACTIONS
  */
-export const subscribeWithObjectsForDataSources = (dataSources, timewindow, opened) => (dispatch) => {
+export const subscribeWithObjectsForDataSources = (dataSources, timewindow, isOpened) => (dispatch) => {
     const subscribers = {};
     let stDiff = 0;
     const ct1 = Date.now();
@@ -360,7 +359,7 @@ export const subscribeWithObjectsForDataSources = (dataSources, timewindow, open
             Object.assign(subscribers, { [subscriptionId]: subscriber });
         }
     });
-    subscribeWithObjects(subscribers, opened)(dispatch);
+    subscribeWithObjects(subscribers, isOpened)(dispatch);
 };
 
 export const subscribeWithObjctForDataSource = (subscriber, isOpened) => (dispatch) => {

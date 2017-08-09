@@ -62,11 +62,9 @@ class Devices extends Component {
     }
 
     componentWillUnmount() {
-        const { subscribers, clearDevicesRequest } = this.props;
+        const { subscribers, clearDevicesRequest, unsubscribeWithObjects } = this.props;
         clearDevicesRequest();
-        if (Object.keys(subscribers).length !== 0) {
-            this.props.unsubscribeWithObjectsForEntityAttributes(subscribers);
-        }
+        unsubscribeWithObjects(subscribers);
     }
 
     buttonComponents = (name, deviceId, customerId, isDialog) => {
@@ -603,7 +601,7 @@ class Devices extends Component {
         if (Object.keys(subscribers).length === 0) {
             this.props.subscribeWithObjectsForEntityAttributes(attributeList, isOpened);
         } else {
-            this.props.unsubscribeWithObjectsForEntityAttributes(subscribers).then(() => {
+            this.props.unsubscribeWithObjects(subscribers).then(() => {
                 this.props.subscribeWithObjectsForEntityAttributes(attributeList, isOpened);
             });
         }
@@ -818,7 +816,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     getCustomerShortInfoRequest: customers.getCustomerShortInfoRequest,
     getCustomersRequest: customers.getCustomersRequest,
     subscribeWithObjectsForEntityAttributes: telemetry.subscribeWithObjectsForEntityAttributes,
-    unsubscribeWithObjectsForEntityAttributes: telemetry.unsubscribeWithObjectsForEntityAttributes,
+    unsubscribeWithObjects: telemetry.unsubscribeWithObjects,
     assignDeviceToCustomerRequest: actions.assignDeviceToCustomerRequest,
     unassignDeviceToCustomerRequest: actions.unassignDeviceToCustomerRequest,
     makeDevicePublicRequest: actions.makeDevicePublicRequest,

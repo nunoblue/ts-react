@@ -38,7 +38,6 @@ const telemetry = (state = initialState, action) => {
             const data = JSON.parse(action.payload.data);
             if (data) {
                 if (data.subscriptionId) {
-                    console.log(data);
                     const subscription = state.subscriptions[data.subscriptionId];
                     if (subscription) {
                         if (data.data) {
@@ -47,10 +46,13 @@ const telemetry = (state = initialState, action) => {
                                     [data.subscriptionId]: {
                                         attributes: {
                                             $set: _.transform(data.data, (result, value, key) => {
-                                                result[key] = {
-                                                    lastUpdateTs: value[0][0],
-                                                    value: value[0][1],
-                                                };
+                                                const telemetryArray = value.map((timeseries) => {
+                                                    return {
+                                                        lastUpdateTs: timeseries[0],
+                                                        value: timeseries[1],
+                                                    };
+                                                });
+                                                result[key] = telemetryArray;
                                             }),
                                         },
                                     },
