@@ -19,7 +19,6 @@ import { dashboardService } from '../../services/api';
 import { isJwtTokenValid, refreshJwtRequest } from '../authentication/authentication';
 
 let lastCmdId = 0;
-let isOpened = false;
 const connect = (url) => {
     return {
         type: WEBSOCKET_CONNECT,
@@ -81,24 +80,14 @@ const nextCmdId = () => {
     return lastCmdId;
 };
 
-export const tryConnect = () => (dispatch) => {
+const tryConnect = (dispatch) => {
     if (isJwtTokenValid()) {
         const token = storage.read('jwt_token');
-        if (isOpened) {
-            return;
-        }
-        return dispatch(connect(`${config.telemetryUri}?token=${token}`)).then(() => {
-            isOpened = true;
-        });
+        return dispatch(connect(`${config.telemetryUri}?token=${token}`));
     }
     return refreshJwtRequest.then(() => {
         const token = storage.read('jwt_token');
-        if (isOpened) {
-            return;
-        }
-        return dispatch(connect(`${config.telemetryUri}?token=${token}`)).then(() => {
-            isOpened = true;
-        });
+        return dispatch(connect(`${config.telemetryUri}?token=${token}`));
     }).catch((error) => {
         console.log(error.response.data);
     });
@@ -138,8 +127,8 @@ export const subscribe = (subscriber, isOpened) => (dispatch) => {
     if (isOpened) {
         dispatch(send(payload, SUBSCRIBER));
     } else {
-        tryConnect()(dispatch).then(() => {
-            dispatch(send(payload));
+        tryConnect(dispatch).then(() => {
+            dispatch(send(payload, SUBSCRIBER));
         });
     }
 };
@@ -180,7 +169,7 @@ export const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
     if (isOpened) {
         dispatch(send(payload, SUBSCRIBERS));
     } else {
-        tryConnect()(dispatch).then(() => {
+        tryConnect(dispatch).then(() => {
             dispatch(send(payload, SUBSCRIBERS));
         });
     }
@@ -285,7 +274,7 @@ export const unsubscribeWithObjectsForEntityAttributes = subscribers => (dispatc
 /**
  * FOR DATASOURCE TELEMETRY ACTIONS
  */
-export const subscribeWithObjectsForDataSources = (dataSources, timewindow, isOpened) => (dispatch) => {
+export const subscribeWithObjectsForDataSources = (dataSources, timewindow, opened) => (dispatch) => {
     const subscribers = {};
     let stDiff = 0;
     const ct1 = Date.now();
@@ -297,14 +286,20 @@ export const subscribeWithObjectsForDataSources = (dataSources, timewindow, isOp
     dataSources.forEach((dataSource) => {
         if (dataSource.tsKeys.length > 0) {
             if (timewindow.history) {
+                let limit = timewindow.aggregation.limit;
+                const interval = parseInt(timewindow.history.interval, 10);
+                if (timewindow.aggregation.type !== types.aggregation.none.value) {
+                    const timewindowMs = parseInt(timewindow.history.timewindowMs, 10);
+                    limit = Math.ceil(timewindowMs / interval);
+                }
                 const historyCommand = {
                     entityType: dataSource.entityType,
                     entityId: dataSource.entityId,
                     keys: dataSource.tsKeys,
-                    startTs: timewindow.history.fixedWindow.startTimeMs,
-                    endTs: timewindow.history.fixedWindow.endTimeMs,
-                    interval: timewindow.history.interval,
-                    limit: timewindow.aggregation.limit,
+                    startTs: parseInt(timewindow.history.fixedWindow.startTimeMs, 10),
+                    endTs: parseInt(timewindow.history.fixedWindow.endTimeMs, 10),
+                    interval,
+                    limit,
                     agg: timewindow.aggregation.type,
                 };
                 const subscriptionId = dataSource.entityType + dataSource.entityId + dataSource.tsKeys;
@@ -331,10 +326,14 @@ export const subscribeWithObjectsForDataSources = (dataSources, timewindow, isOp
                         startTs -= startDiff;
                         timeWindow += interval;
                     }
+                    let limit = timewindow.aggregation.limit;
+                    if (timewindow.aggregation.type !== types.aggregation.none.value) {
+                        limit = Math.ceil(timeWindow / interval);
+                    }
                     subscriptionCommand.startTs = startTs;
                     subscriptionCommand.timeWindow = timeWindow;
-                    subscriptionCommand.interval = timewindow.aggregation.interval;
-                    subscriptionCommand.limit = timewindow.aggregation.limit;
+                    subscriptionCommand.interval = interval;
+                    subscriptionCommand.limit = limit;
                     subscriptionCommand.agg = timewindow.aggregation.type;
                 }
                 const subscriber = {
@@ -361,7 +360,7 @@ export const subscribeWithObjectsForDataSources = (dataSources, timewindow, isOp
             Object.assign(subscribers, { [subscriptionId]: subscriber });
         }
     });
-    subscribeWithObjects(subscribers, isOpened)(dispatch);
+    subscribeWithObjects(subscribers, opened)(dispatch);
 };
 
 export const subscribeWithObjctForDataSource = (subscriber, isOpened) => (dispatch) => {
