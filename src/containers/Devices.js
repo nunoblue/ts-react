@@ -54,6 +54,8 @@ class Devices extends Component {
             return true;
         } else if (nextState.dialogVisible !== this.state.dialogVisible) {
             return true;
+        } else if (nextProps.types !== this.props.types) {
+            return true;
         } else if (nextProps.shortInfo === this.props.shortInfo) {
             return false;
         }
@@ -289,15 +291,14 @@ class Devices extends Component {
                     }
                 });
                 this.props.getCustomerShortInfoRequest(customerIdArray);
-                this.context.pageLoading();
-            }
-        });
-
-        this.props.getDeviceTypesRequest().then(() => {
-            if (this.props.statusMessage !== 'SUCCESS') {
-                notification.error({
-                    message: this.props.errorMessage,
+                this.props.getDeviceTypesRequest().then(() => {
+                    if (this.props.statusMessage !== 'SUCCESS') {
+                        notification.error({
+                            message: this.props.errorMessage,
+                        });
+                    }
                 });
+                this.context.pageLoading();
             }
         });
     }
