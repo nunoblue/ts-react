@@ -9,7 +9,6 @@ import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
 import CommonLabel from '../components/common/CommonLabel';
-import AssignCustomerModal from '../components/device/AssignCustomerModal';
 import ItemSelectModal from '../components/common/ItemSelectModal';
 import AddDeviceModal from '../components/device/AddDeviceModal';
 import DeviceCredentialsModal from '../components/device/DeviceCredentialsModal';

@@ -71,7 +71,7 @@ class Dashboards extends Component {
         let linkButton = (
             <Link to={`/dashboards/${dashboardId}`}>
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     iconClassName="search"
                     tooltipTitle={i18n.t('dashboard.dashboard-details')}
@@ -86,7 +86,7 @@ class Dashboards extends Component {
                 linkButton = (
                     <Link to={`/customers/${match.params.customerId}/dashboards/${dashboardId}`}>
                         <CommonButton
-                            className="custom-card-button"
+                            className="ts-card-button"
                             shape="circle"
                             iconClassName="search"
                             tooltipTitle={i18n.t('dashboard.dashboard-details')}
@@ -106,31 +106,31 @@ class Dashboards extends Component {
 
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, dashboardId);
         return (
-            <Button.Group className="custom-card-buttongroup">
+            <Button.Group className="ts-card-buttongroup">
                 {linkButton}
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     visible={this.state.authority}
                     iconClassName="export"
                     tooltipTitle={i18n.t('dashboard.export')}
                 />
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     visible={shareVisible}
                     iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
                     tooltipTitle={isPublic ? '대시보드 공유 해제' : '대시보드 공유'}
                 />
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     visible={assignVisible}
                     iconClassName={isAssign ? 'user-delete' : 'user-add'}
                     tooltipTitle={isAssign ? i18n.t('dashboard.unassign-from-customer') : i18n.t('dashboard.assign-to-customer')}
                 />
                 <CommonButton
-                    className="custom-card-button"
+                    className="ts-card-button"
                     shape="circle"
                     visible={deleteVisible}
                     iconClassName="delete"
@@ -410,7 +410,7 @@ class Dashboards extends Component {
                         shape="circle"
                         visible={this.state.checkedCount !== 0}
                         tooltipTitle={i18n.t('dashboard.delete-dashboards-action-title', { count: this.state.checkedCount })}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="delete"
                         onClick={this.handleMultipleDeleteConfirm}
                         size="large"
@@ -419,7 +419,7 @@ class Dashboards extends Component {
                         shape="circle"
                         visible={this.state.isCustomer}
                         tooltipTitle={i18n.t('dashboard.add-dashboard-text')}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="plus"
                         onClick={this.openAddDashboardModal}
                         size="large"
@@ -428,7 +428,7 @@ class Dashboards extends Component {
                         shape="circle"
                         visible={!this.state.isCustomer}
                         tooltipTitle={i18n.t('dashboard.assign-new-dashboard')}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="plus"
                         onClick={this.assignDashboardModalHandler.show}
                         size="large"

@@ -6,22 +6,43 @@ import {
     Col,
     Tabs,
 } from 'antd';
+import moment from 'moment';
 
 import HistoryPanel from './HistoryPanel';
 import RealTimePanel from './RealTimePanel';
 import CommonButton from '../common/CommonButton';
 import stateToProps from '../StateToProps';
+import { times } from '../../utils/commons';
 
 class GeneralTimeWindow extends Component {
     state = {
         visible: false,
         activeKey: 'realtime',
+        timeLabel: `${i18n.t('timewindow.realtime')}-${i18n.t('timewindow.last-prefix')} ${i18n.t('timeinterval.minutes-interval', { value: 1 })}`,
+    }
+
+    shouldComponentUpdate(prevProps, prevState) {
+        if (prevState.visible !== this.state.visible) {
+            return true;
+        } else if (prevProps.history !== this.props.history) {
+            return true;
+        } else if (prevProps.realtime !== this.props.realtime) {
+            return true;
+        }
+        return false;
     }
 
     handleClickUpdate = () => {
+        const { onClickUpdate } = this.props;
         const { activeKey } = this.state;
-        console.log(this.props[activeKey]);
+        if (typeof onClickUpdate !== 'undefined') {
+            this.props.onClickUpdate(this.props[activeKey]);
+        }
         this.handleChangeVisible();
+        const timeLabel = this.timeLabel();
+        this.setState({
+            timeLabel,
+        });
     }
 
     handleChangeVisible = () => {
@@ -64,9 +85,46 @@ class GeneralTimeWindow extends Component {
         );
     }
 
+    timeLabel = () => {
+        const { activeKey } = this.state;
+        let label;
+        if (activeKey === 'realtime') {
+            const timewindowMs = this.props[activeKey].realtime.timewindowMs;
+            const name = times.closestName(times.predefIntervals, timewindowMs);
+            const value = times.closestValue(times.predefIntervals, timewindowMs);
+            label = (
+                `${i18n.t('timewindow.realtime')}-${i18n.t('timewindow.last-prefix')} ${i18n.t(name, { value })}`
+            );
+        } else {
+            const historyType = this.props[activeKey].history.historyType;
+            const timewindowMs = this.props[activeKey].history.timewindowMs;
+            if (historyType === 0) {
+                const name = times.closestName(times.predefIntervals, timewindowMs);
+                const value = times.closestValue(times.predefIntervals, timewindowMs);
+                label = (
+                    `${i18n.t('timewindow.history')}-${i18n.t('timewindow.last-prefix')} ${i18n.t(name, { value })}`
+                );
+            } else {
+                const startTime = moment(this.props[activeKey].history.fixedTimewindow.startTimeMs).format('YYYY-MM-DD HH:mm:ss');
+                const endTime = moment(this.props[activeKey].history.fixedTimewindow.endTimeMs).format('YYYY-MM-DD HH:mm:ss');
+                label = (
+                    `${i18n.t('timewindow.history')}-${i18n.t('timewindow.period', { startTime, endTime })}`
+                );
+            }
+        }
+        return label;
+    }
+
     render() {
         const { children } = this.props;
-        const buttonComponent = children || <CommonButton onClick={this.handleChangeVisible}>조회기간 설정</CommonButton>;
+        const buttonComponent = children || (
+            <CommonButton
+                className="ts-card-button"
+                onClick={this.handleChangeVisible}
+            >
+                {this.state.timeLabel}
+            </CommonButton>
+        );
         return (
             <Popover
                 placement="topLeft"

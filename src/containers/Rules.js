@@ -215,17 +215,17 @@ class Rules extends Component {
         const deleteConfirm = this.handleDeleteConfirm.bind(this, name, id);
         const handleState = this.handleRuleState.bind(this, id, state);
         return (
-            <Button.Group className="custom-card-buttongroup">
+            <Button.Group className="ts-card-buttongroup">
                 <CommonButton
                     visible={rule && nullUID !== rule.tenantId.id}
-                    className="custom-card-button"
+                    className="ts-card-button"
                     iconClassName={state === 'ACTIVE' ? 'pause' : 'caret-right'}
                     tooltipTitle={state === 'ACTIVE' ? '규칙 비활성화' : '규칙 활성화'}
                     onClick={handleState}
                 />
                 <CommonButton
                     visible={rule && nullUID !== rule.tenantId.id}
-                    className="custom-card-button"
+                    className="ts-card-button"
                     iconClassName="delete"
                     tooltipTitle="규칙 삭제"
                     onClick={deleteConfirm}
@@ -253,7 +253,7 @@ class Rules extends Component {
                     <CommonButton
                         visible={this.state.checkedCount > 0}
                         tooltipTitle={`규칙 ${this.state.checkedCount}건 삭제`}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="delete"
                         onClick={this.handleDeleteConfirm}
                         size="large"
@@ -261,7 +261,7 @@ class Rules extends Component {
                     />
                     <CommonButton
                         tooltipTitle="규칙 추가"
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="plus"
                         onClick={handleShowAddModal}
                         size="large"
