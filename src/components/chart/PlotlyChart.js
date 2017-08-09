@@ -20,6 +20,7 @@ class PlotlyChart extends Component {
         onPlotChartClick: PropTypes.func,
         attributes: PropTypes.object,
         timeWindow: PropTypes.object,
+        redrawChart: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -32,6 +33,15 @@ class PlotlyChart extends Component {
 
     componentDidMount() {
         this.drawPlot();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (JSON.stringify(nextProps.timeWindow) !== JSON.stringify(this.props.timeWindow)) {
+            console.log('componentWillReceiveProps', JSON.stringify(nextProps.timeWindow), JSON.stringify(this.props.timeWindow))
+            this.setState({
+                isUpdate: false,
+            });
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -66,8 +76,6 @@ class PlotlyChart extends Component {
         const traceArray = [];
         let time = null;
         if (isRealtime && dataSource) {
-            const { interval, timewindowMs } = timeWindow;
-            const xLength = Math.floor(timewindowMs / interval);
             if (isUpdate) {
                 Object.keys(dataSource).forEach((key, i) => {
                     const attr = dataSource[key];
@@ -105,8 +113,11 @@ class PlotlyChart extends Component {
             }
         }
         if (isUpdate) {
-            const olderTime = time.setMinutes(time.getMinutes() - 1);
-            const futureTime = time.setMinutes(time.getMinutes() + 1);
+            const { interval, timewindowMs } = timeWindow;
+            const xLength = Math.floor(timewindowMs / interval);
+            const diff = xLength >= 60 ? Math.floor(xLength / 60) : 1;
+            const olderTime = time.setMinutes(time.getMinutes() - diff);
+            const futureTime = time.setMinutes(time.getMinutes() + diff);
 
             const rangeView = {
                 xaxis: {

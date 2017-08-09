@@ -34,6 +34,7 @@ class AttributeTable extends Component {
         attributeModalDisbaled: false,
         widgetMode: false,
         showChart: false,
+        redrawChart: false,
         timeWindow: {
             intervals: 1000,
             realtime: {
@@ -58,6 +59,7 @@ class AttributeTable extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.subscriptions) {
+            console.log('nextProps.subscriptions', nextProps.subscriptions);
             if (this.state.attributesScope.clientSide) {
                 const attributes = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
                 this.setState({
@@ -232,16 +234,22 @@ class AttributeTable extends Component {
     };
 
     handleUpdateTimeWindow = (timeWindow) => {
-        console.log('handleUpdateTime==================', timeWindow);
         const {
+            subscribers,
             subscribeWithObjects,
             unsubscribeWithObjects,
             updateWithTimewindowForDataSources,
         } = this.props;
+        if (Object.keys(subscribers).length === 0) {
+            return;
+        }
         const copySubscribers = _.cloneDeep(subscribers);
         unsubscribeWithObjects(subscribers).then(() => {
             const newSubscribers = updateWithTimewindowForDataSources(copySubscribers, timeWindow);
             subscribeWithObjects(newSubscribers);
+        });
+        this.setState({
+            timeWindow,
         });
     };
 
@@ -354,6 +362,7 @@ class AttributeTable extends Component {
 
     attributeData = {
         getData: (subscriptions, entityId, type, attributesScope) => {
+            console.log(subscriptions)
             let dataSource = [];
             if (typeof subscriptions === 'undefined' || Object.keys(subscriptions).length === 0) {
                 return dataSource;
@@ -551,6 +560,8 @@ class AttributeTable extends Component {
     };
 
     chartComponents = () => {
+        const { attributes, timeWindow, redrawChart } = this.state;
+        console.log('attributes====================', attributes);
         return (
             <div>
                 <span style={{ display: 'flex' }}>
@@ -561,8 +572,9 @@ class AttributeTable extends Component {
                     <Button onClick={this.handleBackToTable}>Back</Button>
                 </span>
                 <PlotlyChart
-                    attributes={this.state.attributes}
-                    timeWindow={this.state.timeWindow}
+                    attributes={attributes}
+                    timeWindow={timeWindow}
+                    redrawChart={redrawChart}
                 />
             </div>
         );
