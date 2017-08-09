@@ -18,6 +18,7 @@ class GeneralTimeWindow extends Component {
     state = {
         visible: false,
         activeKey: 'realtime',
+        timeLabel: `${i18n.t('timewindow.realtime')}-${i18n.t('timewindow.last-prefix')} ${i18n.t('timeinterval.minutes-interval', { value: 1 })}`,
     }
 
     shouldComponentUpdate(prevProps, prevState) {
@@ -38,6 +39,10 @@ class GeneralTimeWindow extends Component {
             this.props.onClickUpdate(this.props[activeKey]);
         }
         this.handleChangeVisible();
+        const timeLabel = this.timeLabel();
+        this.setState({
+            timeLabel,
+        });
     }
 
     handleChangeVisible = () => {
@@ -117,7 +122,7 @@ class GeneralTimeWindow extends Component {
                 className="ts-card-button"
                 onClick={this.handleChangeVisible}
             >
-                {this.timeLabel()}
+                {this.state.timeLabel}
             </CommonButton>
         );
         return (
