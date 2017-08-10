@@ -421,14 +421,14 @@ class AttributeTable extends Component {
                         </CommonButton>
                     );
                 }
-                if (record.key === 'accX') {
+                // if (record.key === 'accX') {
                     // const openAnomalyChart = this.
-                    return (
-                        <CommonButton className="ts-card-button" shape="circle" onClick={openAnomalyChart} tooltipTitle="이상감지">
-                            <i className="material-icons vertical-middle">insert_chart</i>
-                        </CommonButton>
-                    );
-                }
+                    // return (
+                        {/*<CommonButton className="ts-card-button" shape="circle" onClick={openAnomalyChart} tooltipTitle="이상감지">*/}
+                            {/*<i className="material-icons vertical-middle">insert_chart</i>*/}
+                        {/*</CommonButton>*/}
+                    // );
+                // }
                 return null;
             },
         }],
