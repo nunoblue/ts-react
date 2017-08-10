@@ -18,7 +18,7 @@ class PlotlyChart extends Component {
     static propTypes = {
         // type: PropTypes.string.isRequired,
         onPlotChartClick: PropTypes.func,
-        attributes: PropTypes.object,
+        attributes: PropTypes.any,
         timeWindow: PropTypes.object,
         redrawChart: PropTypes.bool,
     };

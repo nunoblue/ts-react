@@ -186,7 +186,7 @@ class AttributeTable extends Component {
         });
     }
 
-    handleClickSearchKey = (selectedKeys) => {
+    handleClickSearchKey = () => {
         const { entity, subscribers } = this.props;
         const unsubscriberId = `${entity.entityType}${entity.id}LATEST_TELEMETRY`;
         const unsubscriber = subscribers[unsubscriberId];
@@ -197,7 +197,7 @@ class AttributeTable extends Component {
         const tsScope = {
             entityType: entity.entityType,
             entityId: entity.id,
-            tsKeys: selectedKeys || this.state.selectedRowKeys.join(),
+            tsKeys: this.state.selectedRowKeys.join(),
             type: types.widgetType.timeseries.value,
         };
 
@@ -251,6 +251,10 @@ class AttributeTable extends Component {
             timeWindow,
         });
     };
+
+    handleOpenAnomalyChart = (record) => {
+        console.log(record);
+    }
 
     handleClickOpenAddModal = () => {
         this.attributeModal.modal.onShow();
@@ -421,14 +425,14 @@ class AttributeTable extends Component {
                         </CommonButton>
                     );
                 }
-                // if (record.key === 'accX') {
-                    // const openAnomalyChart = this.
-                    // return (
-                        {/*<CommonButton className="ts-card-button" shape="circle" onClick={openAnomalyChart} tooltipTitle="이상감지">*/}
-                            {/*<i className="material-icons vertical-middle">insert_chart</i>*/}
-                        {/*</CommonButton>*/}
-                    // );
-                // }
+                if (record.key === 'accX') {
+                    const openAnomalyChart = this.handleOpenAnomalyChart.bind(this, record);
+                    return (
+                        <CommonButton className="ts-card-button" shape="circle" onClick={openAnomalyChart} tooltipTitle="이상감지">
+                            <i className="material-icons vertical-middle">insert_chart</i>
+                        </CommonButton>
+                    );
+                }
                 return null;
             },
         }],
@@ -534,7 +538,6 @@ class AttributeTable extends Component {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.handleChangeRowSelection,
         };
-        console.log(this.attributeData.columns, attributes.dataSource);
 
         return (
             <Row>
