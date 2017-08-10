@@ -189,11 +189,13 @@ export const unsubscribe = (subscriber) => (dispatch) => {
         attrSubCmds: [],
     };
     return new Promise((resolve, reject) => {
-        Object.assign(subscriber.subscriptionCommand, { unsubscribe: true });
-        if (subscriber.type === types.dataKeyType.timeseries) {
-            cmdsWrapper.tsSubCmds.push(subscriber.subscriptionCommand);
-        } else {
-            cmdsWrapper.attrSubCmds.push(subscriber.subscriptionCommand);
+        if (subscriber.subscriptionCommand) {
+            Object.assign(subscriber.subscriptionCommand, { unsubscribe: true });
+            if (subscriber.type === types.dataKeyType.timeseries) {
+                cmdsWrapper.tsSubCmds.push(subscriber.subscriptionCommand);
+            } else {
+                cmdsWrapper.attrSubCmds.push(subscriber.subscriptionCommand);
+            }
         }
         const payload = {
             cmdsWrapper,
@@ -222,8 +224,6 @@ export const unsubscribeWithObjects = (subscribers) => (dispatch) => {
                 } else {
                     cmdsWrapper.attrSubCmds.push(subscribers[id].subscriptionCommand);
                 }
-            } else if (subscribers[id].historyCommand) {
-                
             }
         });
         const payload = {

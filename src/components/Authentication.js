@@ -48,7 +48,6 @@ class Authentication extends Component {
                         <Form.Item>
                             {
                                 getFieldDecorator('username', {
-                                    
                                     rules: [
                                         { type: 'email', message: 'The input is not valid E-mail!' },
                                         { required: true, message: i18n.t('common.enter-username') },
