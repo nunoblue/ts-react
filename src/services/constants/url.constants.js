@@ -93,6 +93,8 @@ export const DEVICES = {
     DEVICE_TYPES_URL: '/api/device/types',
     DEVICE_CREDENTIALS_URL: '/api/device',
     SAVE_CREDENTIALS_URL: '/api/device/credentials',
+    GET_DEVICE_URL: '/api/device',
+    GET_DEVICES_URL: '/api/devices',
     SAVE_DEVICE_URL: '/api/device',
     DELETE_DEVICE_URL: '/api/device',
     MAKE_DEVICE_PUBLIC_URL: '/api/customer/public/device',

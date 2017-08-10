@@ -9,6 +9,7 @@ class AddCustomerModal extends Component {
     render() {
         return (
             <CommonModal
+                className={this.props.className}
                 ref={(c) => { this.modal = c; }}
                 title={i18n.t('customer.add-customer-text')}
                 onOk={this.props.onSave}

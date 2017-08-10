@@ -209,7 +209,12 @@ class AttributeTable extends Component {
 
     handleBackToTable = () => {
         const { entity, subscribers } = this.props;
-        const unsubscriberId = `${entity.entityType}${entity.id}${this.state.selectedRowKeys.join()}`;
+        const { selectedRowKeys } = this.state;
+        const anomalyKeys = `${selectedRowKeys},${selectedRowKeys}_anomaly,${selectedRowKeys}_upper,`
+                          + `${selectedRowKeys}_lower,${selectedRowKeys}_mchanged`;
+        const unsubscriberId = this.state.isAnomaly ?
+            `${entity.entityType}${entity.id}${anomalyKeys}` :
+            `${entity.entityType}${entity.id}${selectedRowKeys.join()}`;
         const unsubscriber = subscribers[unsubscriberId];
         if (unsubscriber) {
             this.attributeUnsubscribe(unsubscriber);

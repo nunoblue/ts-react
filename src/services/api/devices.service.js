@@ -17,6 +17,14 @@ export const getCustomerDevices = (limit, textSearch, id) => (
     client.get(`${DEVICES.CUSTOMER_DEVICES_URL}/${id}/devices`, { limit, textSearch })
 );
 
+export const getDevice = (deviceId, ignoreErrors) => (
+    client.get(`${DEVICES.GET_DEVICE_URL}/${deviceId}`, { ignoreErrors })
+);
+
+export const getDevices = deviceIds => (
+    client.get(`${DEVICES.GET_DEVICES_URL}`, { deviceIds })
+);
+
 export const getDeviceTypes = () => (
     client.get(DEVICES.DEVICE_TYPES_URL)
 );
