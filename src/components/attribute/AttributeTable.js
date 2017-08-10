@@ -266,6 +266,10 @@ class AttributeTable extends Component {
         });
     };
 
+    handleOpenAnomalyChart = (record) => {
+        console.log(record);
+    }
+
     handleClickOpenAddModal = () => {
         this.attributeModal.modal.onShow();
     };
@@ -445,13 +449,23 @@ class AttributeTable extends Component {
         }, {
             key: 'edit',
             render: (text, record) => {
-                const openModify = this.handleClickOpenModify.bind(this, record);
-                const action = this.props.type === types.dataKeyType.attribute && !this.state.attributesScope.clientSide ? (
-                    <CommonButton className="ts-card-button" shape="circle" onClick={openModify} tooltipTitle={i18n.t('details.toggle-edit-mode')}>
-                        <i className="material-icons vertical-middle">mode_edit</i>
-                    </CommonButton>
-                ) : null;
-                return action;
+                if (this.props.type === types.dataKeyType.attribute && !this.state.attributesScope.clientSide) {
+                    const openModify = this.handleClickOpenModify.bind(this, record);
+                    return (
+                        <CommonButton className="ts-card-button" shape="circle" onClick={openModify} tooltipTitle={i18n.t('details.toggle-edit-mode')}>
+                            <i className="material-icons vertical-middle">mode_edit</i>
+                        </CommonButton>
+                    );
+                }
+                if (record.key === 'accX') {
+                    const openAnomalyChart = this.handleOpenAnomalyChart.bind(this, record);
+                    return (
+                        <CommonButton className="ts-card-button" shape="circle" onClick={openAnomalyChart} tooltipTitle="이상감지">
+                            <i className="material-icons vertical-middle">insert_chart</i>
+                        </CommonButton>
+                    );
+                }
+                return null;
             },
         }],
     };
@@ -556,6 +570,7 @@ class AttributeTable extends Component {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.handleChangeRowSelection,
         };
+
         return (
             <Row>
                 {this.attributeSelector(type, attributesScope)}
