@@ -20,8 +20,8 @@ class HistoryPanel extends Component {
             },
         },
         aggregation: {
-            type: types.aggregation.avg.value,
-            limit: times.AVG_LIMIT,
+            type: this.props.aggregation ? this.props.aggregation.type : types.aggregation.avg.value,
+            limit: this.props.aggregation ? this.props.aggregation.limit : times.AVG_LIMIT,
         },
     }
 

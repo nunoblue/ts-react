@@ -259,8 +259,10 @@ class AttributeTable extends Component {
                         subscribeWithObjects(newSubscribers);
                     });
                 } else {
-                    const newSubscribers = updateWithTimewindowForDataSources({ [copySubscriber.id]: copySubscriber }, timeWindow);
-                    subscribeWithObjects(newSubscribers);
+                    unsubscribe(subscriber[0]).then(() => {
+                        const newSubscribers = updateWithTimewindowForDataSources({ [copySubscriber.id]: copySubscriber }, timeWindow);
+                        subscribeWithObjects(newSubscribers);
+                    });
                 }
             }
         }
