@@ -59,7 +59,6 @@ class AttributeTable extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.subscriptions) {
-            console.log('nextProps.subscriptions', nextProps.subscriptions);
             if (this.state.attributesScope.clientSide) {
                 const attributes = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
                 this.setState({
@@ -237,17 +236,31 @@ class AttributeTable extends Component {
         const {
             subscribers,
             subscribeWithObjects,
-            unsubscribeWithObjects,
+            unsubscribe,
             updateWithTimewindowForDataSources,
         } = this.props;
         if (Object.keys(subscribers).length === 0) {
             return;
         }
-        const copySubscribers = _.cloneDeep(subscribers);
-        unsubscribeWithObjects(subscribers).then(() => {
-            const newSubscribers = updateWithTimewindowForDataSources(copySubscribers, timeWindow);
-            subscribeWithObjects(newSubscribers);
-        });
+        if (this.state.attributesScope.value !== types.attributesScope.client.value) {
+            const subscriber = Object.keys(subscribers).filter((id) => {
+                return subscribers[id].type === types.dataKeyType.timeseries;
+            }).map((id) => {
+                return subscribers[id];
+            });
+            if (subscriber.length > 0) {
+                const copySubscriber = _.cloneDeep(subscriber[0]);
+                if (copySubscriber.subscriptionCommand) {
+                    unsubscribe(subscriber[0]).then(() => {
+                        const newSubscribers = updateWithTimewindowForDataSources({ [copySubscriber.id]: copySubscriber }, timeWindow);
+                        subscribeWithObjects(newSubscribers);
+                    });
+                } else {
+                    const newSubscribers = updateWithTimewindowForDataSources({ [copySubscriber.id]: copySubscriber }, timeWindow);
+                    subscribeWithObjects(newSubscribers);
+                }
+            }
+        }
         this.setState({
             timeWindow,
         });
@@ -362,25 +375,42 @@ class AttributeTable extends Component {
 
     attributeData = {
         getData: (subscriptions, entityId, type, attributesScope) => {
-            console.log(subscriptions)
             let dataSource = [];
             if (typeof subscriptions === 'undefined' || Object.keys(subscriptions).length === 0) {
                 return dataSource;
             }
             const pickSubscription = Object.values(subscriptions).filter((value) => {
-                if (value.subscriptionCommand.entityId === entityId) {
-                    return value.type === type;
+                if (value.subscriptionCommand) {
+                    if (value.subscriptionCommand.entityId === entityId) {
+                        return value.type === type;
+                    }
+                } else if (value.historyCommand) {
+                    if (value.historyCommand.entityId === entityId) {
+                        return value.type === type;
+                    }
                 }
             }).filter((value) => {
-                return value.subscriptionCommand.scope === attributesScope || value.subscriptionCommand.keys;
+                if (value.subscriptionCommand) {
+                    return value.subscriptionCommand.scope === attributesScope || value.subscriptionCommand.keys;
+                } else if (value.historyCommand) {
+                    return value.historyCommand.keys;
+                }
             });
             if (pickSubscription.length === 0) {
                 return dataSource;
             }
             const attributes = Object.values(pickSubscription)[0].attributes;
-            const keys = Object.values(pickSubscription)[0].subscriptionCommand.keys;
-            const startTs = Object.values(pickSubscription)[0].subscriptionCommand.startTs;
-            const endTs = Object.values(pickSubscription)[0].subscriptionCommand.endTs;
+            let keys;
+            let startTs;
+            let endTs;
+            if (Object.values(pickSubscription)[0].subscriptionCommand) {
+                keys = Object.values(pickSubscription)[0].subscriptionCommand.keys;
+                startTs = Object.values(pickSubscription)[0].subscriptionCommand.startTs;
+            } else if (Object.values(pickSubscription)[0].historyCommand) {
+                keys = Object.values(pickSubscription)[0].historyCommand.keys;
+                startTs = Object.values(pickSubscription)[0].historyCommand.startTs;
+                endTs = Object.values(pickSubscription)[0].historyCommand.endTs;
+            }
             if (keys) {
                 dataSource = attributes;
             } else {
@@ -561,7 +591,6 @@ class AttributeTable extends Component {
 
     chartComponents = () => {
         const { attributes, timeWindow, redrawChart } = this.state;
-        console.log('attributes====================', attributes);
         return (
             <div>
                 <span style={{ display: 'flex' }}>

@@ -67,8 +67,8 @@ class DetailCustomerDialog extends Component {
                 <Tabs defaultActiveKey="1">
                     <Tabs.TabPane tab={i18n.t('customer.details')} key="1">
                         <Row>
-                            {data ? buttonComponents(data.title, data.id.id, isPublic) : null}
-                            <CommonButton className="ts-dialog-button">
+                            {data ? buttonComponents(data.title, data.id.id, isPublic, true) : null}
+                            <CommonButton className="ts-card-button">
                                 <i className="material-icons margin-right-8 vertical-middle">assignment_return</i>
                                 {i18n.t('customer.copyId')}
                             </CommonButton>
@@ -89,7 +89,7 @@ class DetailCustomerDialog extends Component {
                         />
                         {
                             !isPublic && this.state.editing ? (
-                                <CommonButton className="ts-dialog-button" onClick={this.handleSave}>
+                                <CommonButton className="ts-card-button" onClick={this.handleSave}>
                                     <i className="material-icons margin-right-8 vertical-middle">save</i>
                                     {i18n.t('action.apply-changes')}
                                 </CommonButton>

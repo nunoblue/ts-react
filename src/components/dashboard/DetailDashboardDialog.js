@@ -104,7 +104,7 @@ class DetailDashboardDialog extends Component {
                 tooltipTitle={i18n.t('action.close')}
             >
                 <Row>
-                    {data ? buttonComponents(data.title, data.id.id, data.customerId.id) : null}
+                    {data ? buttonComponents(data.title, data.id.id, data.customerId.id, true) : null}
                 </Row>
                 <Switch checkedChildren={i18n.t('action.edit')} unCheckedChildren={i18n.t('action.view')} checked={this.state.editing} onChange={this.changeEdit}>
                     {i18n.t('details.toggle-edit-mode')}
