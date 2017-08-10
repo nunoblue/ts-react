@@ -37,7 +37,7 @@ const disconnect = () => {
 const send = (payload, isType) => {
     return {
         type: WEBSOCKET_SEND,
-        payload: payload.cmdsWrapper,
+        payload: payload.cmdsWrapper || null,
         subscribers: payload.subscribers,
         subscriptions: payload.subscriptions,
         isType,
@@ -183,17 +183,21 @@ export const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
 };
 
 export const unsubscribe = (subscriber) => (dispatch) => {
-    const cmdsWrapper = {
+    let cmdsWrapper = {
         tsSubCmds: [],
         historyCmds: [],
         attrSubCmds: [],
     };
     return new Promise((resolve, reject) => {
-        Object.assign(subscriber.subscriptionCommand, { unsubscribe: true });
-        if (subscriber.type === types.dataKeyType.timeseries) {
-            cmdsWrapper.tsSubCmds.push(subscriber.subscriptionCommand);
+        if (subscriber.subscriptionCommand) {
+            Object.assign(subscriber.subscriptionCommand, { unsubscribe: true });
+            if (subscriber.type === types.dataKeyType.timeseries) {
+                cmdsWrapper.tsSubCmds.push(subscriber.subscriptionCommand);
+            } else {
+                cmdsWrapper.attrSubCmds.push(subscriber.subscriptionCommand);
+            }
         } else {
-            cmdsWrapper.attrSubCmds.push(subscriber.subscriptionCommand);
+            cmdsWrapper = null;
         }
         const payload = {
             cmdsWrapper,
@@ -222,8 +226,6 @@ export const unsubscribeWithObjects = (subscribers) => (dispatch) => {
                 } else {
                     cmdsWrapper.attrSubCmds.push(subscribers[id].subscriptionCommand);
                 }
-            } else if (subscribers[id].historyCommand) {
-                
             }
         });
         const payload = {
@@ -381,7 +383,6 @@ export const subscribeWithObjectsForDataSources = (dataSources, timewindow, isOp
 };
 
 export const updateWithTimewindowForDataSources = (subscribers, timewindow) => (dispatch) => {
-    console.log(subscribers);
     if (!subscribers || Object.keys(subscribers).length === 0) {
         return subscribers;
     }

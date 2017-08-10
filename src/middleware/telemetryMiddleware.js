@@ -153,7 +153,9 @@ const telemetryMiddleware = () => {
                 break;
             // User request to send a message
             case WEBSOCKET_SEND:
-                send(action.payload);
+                if (action.payload) {
+                    send(action.payload);
+                }
                 next(action);
                 break;
             default:

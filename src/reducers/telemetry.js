@@ -84,7 +84,12 @@ const telemetry = (state = initialState, action) => {
                 });
             } else if (action.isType === UNSUBSCRIBERS) {
                 Object.keys(action.subscribers).forEach((id) => {
-                    const cmdId = state.subscribers[id].subscriptionCommand.cmdId;
+                    let cmdId;
+                    if (state.subscribers[id].subscriptionCommand) {
+                        cmdId = state.subscribers[id].subscriptionCommand.cmdId;
+                    } else {
+                        cmdId = state.subscribers[id].historyCommand.cmdId;
+                    }
                     delete state.subscriptions[cmdId];
                     delete state.subscribers[id];
                 });
@@ -98,7 +103,12 @@ const telemetry = (state = initialState, action) => {
                 });
             } else if (action.isType === UNSUBSCRIBER) {
                 const id = Object.keys(action.subscribers)[0];
-                const cmdId = action.subscribers[id].subscriptionCommand.cmdId;
+                let cmdId;
+                if (action.subscribers[id].subscriptionCommand) {
+                    cmdId = action.subscribers[id].subscriptionCommand.cmdId;
+                } else {
+                    cmdId = action.subscribers[id].historyCommand.cmdId;
+                }
                 delete state.subscriptions[cmdId];
                 delete state.subscribers[id];
                 return update(state, {

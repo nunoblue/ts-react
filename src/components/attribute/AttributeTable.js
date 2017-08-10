@@ -32,7 +32,6 @@ class AttributeTable extends Component {
         attributesScope: this.props.type === types.dataKeyType.timeseries ? types.latestTelemetry : types.attributesScope.client,
         attributes: {},
         attributeModalDisbaled: false,
-        widgetMode: false,
         showChart: false,
         redrawChart: false,
         timeWindow: {
@@ -48,6 +47,7 @@ class AttributeTable extends Component {
             startTs: null,
             endTs: null,
         },
+        isAnomaly: false,
     };
 
     componentWillMount() {
@@ -72,6 +72,7 @@ class AttributeTable extends Component {
                 attributesScope: this.props.type === types.dataKeyType.timeseries ? types.latestTelemetry : types.attributesScope.client,
                 attributes: {},
                 attributeModalDisbaled: false,
+                showChart: false,
             });
         }
     }
@@ -125,12 +126,6 @@ class AttributeTable extends Component {
             if (subscriber) {
                 this.attributeSubscribe(subscriber);
             }
-        });
-    }
-
-    handleClickChangeWidgetMode = () => {
-        this.setState({
-            widgetMode: true,
         });
     }
 
@@ -208,6 +203,7 @@ class AttributeTable extends Component {
         this.setState({
             showChart: true,
             attributes: {},
+            isAnomaly: false,
         });
     };
 
@@ -229,6 +225,7 @@ class AttributeTable extends Component {
         this.setState({
             showChart: false,
             attributes: {},
+            selectedRowKeys: [],
         });
     };
 
@@ -256,8 +253,10 @@ class AttributeTable extends Component {
                         subscribeWithObjects(newSubscribers);
                     });
                 } else {
-                    const newSubscribers = updateWithTimewindowForDataSources({ [copySubscriber.id]: copySubscriber }, timeWindow);
-                    subscribeWithObjects(newSubscribers);
+                    unsubscribe(subscriber[0]).then(() => {
+                        const newSubscribers = updateWithTimewindowForDataSources({ [copySubscriber.id]: copySubscriber }, timeWindow);
+                        subscribeWithObjects(newSubscribers);
+                    });
                 }
             }
         }
@@ -267,7 +266,33 @@ class AttributeTable extends Component {
     };
 
     handleOpenAnomalyChart = (record) => {
-        console.log(record);
+        const { entity, subscribers } = this.props;
+        const unsubscriberId = `${entity.entityType}${entity.id}LATEST_TELEMETRY`;
+        const unsubscriber = subscribers[unsubscriberId];
+        if (unsubscriber) {
+            this.attributeUnsubscribe(unsubscriber);
+        }
+
+        const { key } = record;
+        const keys = `${key},${key}_anomaly,${key}_upper,${key}_lower,${key}_mchanged`;
+        const tsScope = {
+            entityType: entity.entityType,
+            entityId: entity.id,
+            tsKeys: keys,
+            type: types.widgetType.timeseries.value,
+        };
+
+        const { subscribeDataSources } = this.props;
+        const { timeWindow } = this.state;
+        subscribeDataSources([tsScope], timeWindow);
+
+        this.setState({
+            showChart: true,
+            attributes: {},
+            isAnomaly: true,
+            selectedRowKeys: keys.split(','),
+        });
+
     }
 
     handleClickOpenAddModal = () => {
@@ -605,7 +630,7 @@ class AttributeTable extends Component {
     };
 
     chartComponents = () => {
-        const { attributes, timeWindow, redrawChart } = this.state;
+        const { attributes, timeWindow, redrawChart, isAnomaly } = this.state;
         return (
             <div>
                 <span style={{ display: 'flex' }}>
@@ -619,6 +644,7 @@ class AttributeTable extends Component {
                     attributes={attributes}
                     timeWindow={timeWindow}
                     redrawChart={redrawChart}
+                    isAnomaly={isAnomaly}
                 />
             </div>
         );
