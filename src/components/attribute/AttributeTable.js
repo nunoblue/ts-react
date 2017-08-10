@@ -487,7 +487,7 @@ class AttributeTable extends Component {
                         </CommonButton>
                     );
                 }
-                if (record.key === 'accX') {
+                if (record.key === 'grms') {
                     const openAnomalyChart = this.handleOpenAnomalyChart.bind(this, record);
                     return (
                         <CommonButton className="ts-card-button" shape="circle" onClick={openAnomalyChart} tooltipTitle="이상감지">
