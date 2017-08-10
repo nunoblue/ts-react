@@ -21,6 +21,7 @@ class PlotlyChart extends Component {
         attributes: PropTypes.any,
         timeWindow: PropTypes.object,
         redrawChart: PropTypes.bool,
+        isAnomaly: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -61,7 +62,17 @@ class PlotlyChart extends Component {
     }
 
     drawPlot = () => {
-        const { attributes: {dataSource, startTs}, timeWindow } = this.props;
+        const { isAnomaly } = this.props;
+
+        if (isAnomaly) {
+            this.drawAnomalyPlot();
+        } else {
+            this.drawBasicPlot();
+        }
+    };
+
+    drawBasicPlot = () => {
+        const { attributes: {dataSource, startTs}, timeWindow, isAnomaly } = this.props;
         const isRealtime = !_.isEmpty(timeWindow.realtime);
         const { isUpdate } = this.state;
 
@@ -133,6 +144,16 @@ class PlotlyChart extends Component {
                     });
                 }
             }
+        }
+    };
+
+    drawAnomalyPlot = () => {
+        const { attributes: {dataSource, startTs}, timeWindow, isAnomaly } = this.props;
+        const isRealtime = !_.isEmpty(timeWindow.realtime);
+        const { isUpdate } = this.state;
+
+        if (!dataSource) {
+            return;
         }
     };
 
