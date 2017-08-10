@@ -37,7 +37,7 @@ const disconnect = () => {
 const send = (payload, isType) => {
     return {
         type: WEBSOCKET_SEND,
-        payload: payload.cmdsWrapper,
+        payload: payload.cmdsWrapper || null,
         subscribers: payload.subscribers,
         subscriptions: payload.subscriptions,
         isType,
@@ -183,7 +183,7 @@ export const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
 };
 
 export const unsubscribe = (subscriber) => (dispatch) => {
-    const cmdsWrapper = {
+    let cmdsWrapper = {
         tsSubCmds: [],
         historyCmds: [],
         attrSubCmds: [],
@@ -196,6 +196,8 @@ export const unsubscribe = (subscriber) => (dispatch) => {
             } else {
                 cmdsWrapper.attrSubCmds.push(subscriber.subscriptionCommand);
             }
+        } else {
+            cmdsWrapper = null;
         }
         const payload = {
             cmdsWrapper,
@@ -381,7 +383,6 @@ export const subscribeWithObjectsForDataSources = (dataSources, timewindow, isOp
 };
 
 export const updateWithTimewindowForDataSources = (subscribers, timewindow) => (dispatch) => {
-    console.log(subscribers);
     if (!subscribers || Object.keys(subscribers).length === 0) {
         return subscribers;
     }

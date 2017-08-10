@@ -32,7 +32,6 @@ class AttributeTable extends Component {
         attributesScope: this.props.type === types.dataKeyType.timeseries ? types.latestTelemetry : types.attributesScope.client,
         attributes: {},
         attributeModalDisbaled: false,
-        widgetMode: false,
         showChart: false,
         redrawChart: false,
         timeWindow: {
@@ -72,6 +71,7 @@ class AttributeTable extends Component {
                 attributesScope: this.props.type === types.dataKeyType.timeseries ? types.latestTelemetry : types.attributesScope.client,
                 attributes: {},
                 attributeModalDisbaled: false,
+                showChart: false,
             });
         }
     }
@@ -125,12 +125,6 @@ class AttributeTable extends Component {
             if (subscriber) {
                 this.attributeSubscribe(subscriber);
             }
-        });
-    }
-
-    handleClickChangeWidgetMode = () => {
-        this.setState({
-            widgetMode: true,
         });
     }
 
