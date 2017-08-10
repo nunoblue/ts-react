@@ -231,6 +231,7 @@ class AttributeTable extends Component {
         this.setState({
             showChart: false,
             attributes: {},
+            selectedRowKeys: [],
         });
     };
 
@@ -293,6 +294,7 @@ class AttributeTable extends Component {
             showChart: true,
             attributes: {},
             isAnomaly: true,
+            selectedRowKeys: keys.split(','),
         });
 
     }
