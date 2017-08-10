@@ -45,7 +45,7 @@ const telemetry = (state = initialState, action) => {
                                 subscriptions: {
                                     [data.subscriptionId]: {
                                         attributes: {
-                                            $set: _.transform(data.data, (result, value, key) => {
+                                            $merge: _.transform(data.data, (result, value, key) => {
                                                 const telemetryArray = value.map((timeseries) => {
                                                     return {
                                                         lastUpdateTs: timeseries[0],

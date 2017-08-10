@@ -277,6 +277,7 @@ class Plugins extends Component {
                 </div>
 
                 <AddPluginModal
+                    className="ts-modal"
                     ref={(c) => { this.addModal = c; }}
                     pluginComponents={this.props.pluginComponents}
                     onSave={this.handleSavePlugin}

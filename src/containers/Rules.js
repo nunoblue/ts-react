@@ -243,6 +243,7 @@ class Rules extends Component {
             <Row>
                 { this.components() }
                 <AddRuleModal
+                    className="ts-modal"
                     ref={(c) => { this.addModal = c; }}
                     onSave={this.handleSaveRule}
                     onCancel={this.modalHandler.hide}

@@ -111,6 +111,7 @@ class AddRuleModal extends Component {
 
         return (
             <CommonModal
+                className={this.props.className}
                 ref={(c) => { this.modal = c; }}
                 title={isEdit ? `${rule.name} 규칙 수정` : '규칙 추가'}
                 onOk={this.props.onSave}
