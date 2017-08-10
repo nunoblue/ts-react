@@ -344,7 +344,6 @@ const updateToRealtimeTimewindow = (dataSource, timewindow, stDiff) => {
 };
 
 export const subscribeWithObjectsForDataSources = (dataSources, timewindow, isOpened) => (dispatch) => {
-    console.log(dataSources);
     const subscribers = {};
     let stDiff = 0;
     const ct1 = Date.now();
