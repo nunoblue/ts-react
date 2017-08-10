@@ -37,7 +37,6 @@ class PlotlyChart extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (JSON.stringify(nextProps.timeWindow) !== JSON.stringify(this.props.timeWindow)) {
-            console.log('componentWillReceiveProps', JSON.stringify(nextProps.timeWindow), JSON.stringify(this.props.timeWindow))
             this.setState({
                 isUpdate: false,
             });
@@ -90,6 +89,22 @@ class PlotlyChart extends Component {
                     yTraces.push(y);
                     traceArray.push(i);
                 });
+
+                const { realtime: { interval }, realtime: { timewindowMs } } = timeWindow;
+                const xLength = Math.floor(parseFloat(timewindowMs / interval));
+                const diff = xLength >= 60 ? Math.floor(parseFloat(xLength / 60)) : 1;
+                const olderTime = time.setMinutes(time.getMinutes() - diff);
+                const futureTime = time.setMinutes(time.getMinutes() + diff);
+
+                const rangeView = {
+                    xaxis: {
+                        type: 'date',
+                        range: [olderTime, futureTime],
+                    },
+                };
+
+                Plotly.relayout('plotly', rangeView);
+                Plotly.extendTraces('plotly', { x: xTraces, y: yTraces }, traceArray);      // eslint-disable-line no-undef
             } else {
                 data = Object.keys(dataSource).map((key, i) => {
                     const attr = dataSource[key];
@@ -110,30 +125,13 @@ class PlotlyChart extends Component {
                     }
                     return trace;
                 });
-            }
-        }
-        if (isUpdate) {
-            const { interval, timewindowMs } = timeWindow;
-            const xLength = Math.floor(timewindowMs / interval);
-            const diff = xLength >= 60 ? Math.floor(xLength / 60) : 1;
-            const olderTime = time.setMinutes(time.getMinutes() - diff);
-            const futureTime = time.setMinutes(time.getMinutes() + diff);
 
-            const rangeView = {
-                xaxis: {
-                    type: 'date',
-                    range: [olderTime, futureTime],
-                },
-            };
-
-            Plotly.relayout('plotly', rangeView);
-            Plotly.extendTraces('plotly', { x: xTraces, y: yTraces }, traceArray);      // eslint-disable-line no-undef
-        } else {
-            Plotly.newPlot('plotly', data);       // eslint-disable-line no-undef
-            if (!isUpdate && !_.isEmpty(data)) {
-                this.setState({
-                    isUpdate: true,
-                });
+                Plotly.newPlot('plotly', data);       // eslint-disable-line no-undef
+                if (!isUpdate && !_.isEmpty(data)) {
+                    this.setState({
+                        isUpdate: true,
+                    });
+                }
             }
         }
     };

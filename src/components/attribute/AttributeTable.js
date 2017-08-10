@@ -59,7 +59,6 @@ class AttributeTable extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.subscriptions) {
-            console.log('nextProps.subscriptions', nextProps.subscriptions);
             if (this.state.attributesScope.clientSide) {
                 const attributes = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
                 this.setState({
@@ -187,7 +186,7 @@ class AttributeTable extends Component {
         });
     }
 
-    handleClickSearchKey = () => {
+    handleClickSearchKey = (selectedKeys) => {
         const { entity, subscribers } = this.props;
         const unsubscriberId = `${entity.entityType}${entity.id}LATEST_TELEMETRY`;
         const unsubscriber = subscribers[unsubscriberId];
@@ -198,7 +197,7 @@ class AttributeTable extends Component {
         const tsScope = {
             entityType: entity.entityType,
             entityId: entity.id,
-            tsKeys: this.state.selectedRowKeys.join(),
+            tsKeys: selectedKeys || this.state.selectedRowKeys.join(),
             type: types.widgetType.timeseries.value,
         };
 
@@ -362,7 +361,6 @@ class AttributeTable extends Component {
 
     attributeData = {
         getData: (subscriptions, entityId, type, attributesScope) => {
-            console.log(subscriptions)
             let dataSource = [];
             if (typeof subscriptions === 'undefined' || Object.keys(subscriptions).length === 0) {
                 return dataSource;
@@ -415,13 +413,23 @@ class AttributeTable extends Component {
         }, {
             key: 'edit',
             render: (text, record) => {
-                const openModify = this.handleClickOpenModify.bind(this, record);
-                const action = this.props.type === types.dataKeyType.attribute && !this.state.attributesScope.clientSide ? (
-                    <CommonButton className="ts-card-button" shape="circle" onClick={openModify} tooltipTitle={i18n.t('details.toggle-edit-mode')}>
-                        <i className="material-icons vertical-middle">mode_edit</i>
-                    </CommonButton>
-                ) : null;
-                return action;
+                if (this.props.type === types.dataKeyType.attribute && !this.state.attributesScope.clientSide) {
+                    const openModify = this.handleClickOpenModify.bind(this, record);
+                    return (
+                        <CommonButton className="ts-card-button" shape="circle" onClick={openModify} tooltipTitle={i18n.t('details.toggle-edit-mode')}>
+                            <i className="material-icons vertical-middle">mode_edit</i>
+                        </CommonButton>
+                    );
+                }
+                if (record.key === 'accX') {
+                    // const openAnomalyChart = this.
+                    return (
+                        <CommonButton className="ts-card-button" shape="circle" onClick={openAnomalyChart} tooltipTitle="이상감지">
+                            <i className="material-icons vertical-middle">insert_chart</i>
+                        </CommonButton>
+                    );
+                }
+                return null;
             },
         }],
     };
@@ -526,6 +534,8 @@ class AttributeTable extends Component {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.handleChangeRowSelection,
         };
+        console.log(this.attributeData.columns, attributes.dataSource);
+
         return (
             <Row>
                 {this.attributeSelector(type, attributesScope)}
@@ -561,7 +571,6 @@ class AttributeTable extends Component {
 
     chartComponents = () => {
         const { attributes, timeWindow, redrawChart } = this.state;
-        console.log('attributes====================', attributes);
         return (
             <div>
                 <span style={{ display: 'flex' }}>
