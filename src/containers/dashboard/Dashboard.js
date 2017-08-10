@@ -55,6 +55,8 @@ class Dashboard extends Component {
                 const configuration = this.props.dashboard.configuration || null;
                 const entityAliases = configuration ? configuration.entityAliases : null;
                 const widgets = configuration ? configuration.widgets : null;
+                console.log(entityAliases);
+                console.log(widgets);
                 this.subscribeDataSources(entityAliases, widgets);
                 this.context.pageLoading();
             }
@@ -122,6 +124,7 @@ class Dashboard extends Component {
                                     };
                                     newDataSources.push(notResolveDataSource);
                                 }
+                                console.log(newDataSources);
                                 if (newDataSources.length > 0) {
                                     this.props.subscribeWithObjectsForDataSources(newDataSources, this.timewindow.state);
                                 }

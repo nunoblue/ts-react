@@ -9,6 +9,7 @@ import i18n from 'i18next';
 import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
 import CommonCard from '../components/common/CommonCard';
+import CommonLabel from '../components/common/CommonLabel';
 import CreateCard from '../components/common/CreateCard';
 import AddDashboardModal from '../components/dashboard/AddDashboardModal';
 import DetailDashboardDialog from '../components/dashboard/DetailDashboardDialog';
@@ -60,7 +61,7 @@ class Dashboards extends Component {
         clearDashboardsRequest();
     }
 
-    buttonComponents = (title, dashboardId, customerId) => {
+    buttonComponents = (title, dashboardId, customerId, isDialog) => {
         const { shortInfo, match } = this.props;
         const { currentUser } = this.context;
         const tenantCustomerId = currentUser.customerId.id;
@@ -104,8 +105,73 @@ class Dashboards extends Component {
             assignVisible = false;
             deleteVisible = false;
         }
-
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, dashboardId);
+        if (isDialog) {
+            return (
+                <Button.Group className="ts-card-buttongroup">
+                    <Row>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                {linkButton}
+                            </div>
+                        </Col>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <CommonButton
+                                    className="ts-card-button"
+                                    shape="circle"
+                                    visible={this.state.authority}
+                                    iconClassName="export"
+                                    tooltipTitle={i18n.t('dashboard.export')}
+                                />
+                            </div>
+                        </Col>
+                        {
+                            shareVisible ? (
+                                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                                    <div className="ts-modal-button">
+                                        <CommonButton
+                                            className="ts-card-button"
+                                            shape="circle"
+                                            visible={shareVisible}
+                                            iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
+                                            tooltipTitle={isPublic ? i18n.t('dashboard.make-private') : i18n.t('dashboard.make-public')}
+                                        />
+                                    </div>
+                                </Col>
+                            ) : null
+                        }
+                        {
+                            assignVisible ? (
+                                <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                                    <div className="ts-modal-button">
+                                        <CommonButton
+                                            className="ts-card-button"
+                                            shape="circle"
+                                            visible={assignVisible}
+                                            iconClassName={isAssign ? 'user-delete' : 'user-add'}
+                                            tooltipTitle={isAssign ? i18n.t('dashboard.unassign-from-customer') : i18n.t('dashboard.assign-to-customer')}
+                                        />
+                                    </div>
+                                </Col>
+                            ) : null
+                        }
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <CommonButton
+                                    className="ts-card-button"
+                                    shape="circle"
+                                    visible={deleteVisible}
+                                    iconClassName="delete"
+                                    onClick={modalConfirmAction}
+                                    tooltipTitle={i18n.t('dashboard.delete')}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                </Button.Group>
+            );
+        }
         return (
             <Button.Group className="ts-card-buttongroup">
                 {linkButton}
@@ -116,36 +182,20 @@ class Dashboards extends Component {
                     iconClassName="export"
                     tooltipTitle={i18n.t('dashboard.export')}
                 />
-                {
-                    shareVisible ? (
-                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                            <div className="ts-modal-button">
-                                <CommonButton
-                                    className="ts-card-button"
-                                    shape="circle"
-                                    visible={shareVisible}
-                                    iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
-                                    tooltipTitle={isPublic ? i18n.t('dashboard.make-private') : i18n.t('dashboard.make-public')}
-                                />
-                            </div>
-                        </Col>
-                    ) : null
-                }
-                {
-                    assignVisible ? (
-                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
-                            <div className="ts-modal-button">
-                                <CommonButton
-                                    className="ts-card-button"
-                                    shape="circle"
-                                    visible={assignVisible}
-                                    iconClassName={isAssign ? 'user-delete' : 'user-add'}
-                                    tooltipTitle={isAssign ? i18n.t('dashboard.unassign-from-customer') : i18n.t('dashboard.assign-to-customer')}
-                                />
-                            </div>
-                        </Col>
-                    ) : null
-                }
+                <CommonButton
+                    className="ts-card-button"
+                    shape="circle"
+                    visible={shareVisible}
+                    iconClassName={isPublic ? 'cloud-download-o' : 'cloud-upload-o'}
+                    tooltipTitle={isPublic ? i18n.t('dashboard.make-private') : i18n.t('dashboard.make-public')}
+                />
+                <CommonButton
+                    className="ts-card-button"
+                    shape="circle"
+                    visible={assignVisible}
+                    iconClassName={isAssign ? 'user-delete' : 'user-add'}
+                    tooltipTitle={isAssign ? i18n.t('dashboard.unassign-from-customer') : i18n.t('dashboard.assign-to-customer')}
+                />
                 <CommonButton
                     className="ts-card-button"
                     shape="circle"
@@ -168,12 +218,13 @@ class Dashboards extends Component {
             return (
                 <CommonCard
                     key={id}
+                    className="ts-card"
                     title={title}
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
                     isCardDown={!this.state.dialogVisible}
                 >
-                    <CommonCheckbox checkedCount={this.state.checkedCount} value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>
+                    <CommonCheckbox checkedCount={this.state.checkedCount} value={id} onChange={this.handleChecked} />
                     {this.buttonComponents(title, id, customerId)}
                 </CommonCard>
             );
@@ -425,16 +476,15 @@ class Dashboards extends Component {
             <Row>
                 {
                     authority ? (
-                        <CreateCard onClick={this.openAddDeviceModal} type={'dashboard'} />
+                        <CreateCard onClick={this.openAddDashboardModal} type={'dashboard'} />
                     ) : null
                 }
                 {this.components()}
                 <div className="footer-buttons">
                     <CommonButton
                         shape="circle"
-                        visible={this.state.checkedCount !== 0}
                         tooltipTitle={i18n.t('dashboard.delete-dashboards-action-title', { count: this.state.checkedCount })}
-                        className="ts-card-button"
+                        className={this.state.checkedCount !== 0 ? 'ts-action-button ts-action-button-fadeIn-1' : 'ts-action-button ts-action-button-fadeOut-1'}
                         iconClassName="delete"
                         onClick={this.handleMultipleDeleteConfirm}
                         size="large"
@@ -459,11 +509,13 @@ class Dashboards extends Component {
                     />
                 </div>
                 <AddDashboardModal
+                    className="ts-modal"
                     ref={(c) => { this.addModal = c; }}
                     onSave={this.handleSaveDashboard}
                     onCancel={this.hideAddDashboardModal}
                 />
                 <DetailDashboardDialog
+                    className="ts-modal"
                     ref={(c) => { this.detailDialog = c; }}
                     data={this.state.selectedDashboard}
                     visible={this.state.dialogVisible}
@@ -472,6 +524,7 @@ class Dashboards extends Component {
                     buttonComponents={this.buttonComponents}
                 />
                 <ItemSelectModal
+                    className="ts-modal"
                     ref={(c) => { this.assignDashboardModal = c; }}
                     url={`${config.apServer}${urlConstants.DASHBOARDS.TENANT_DASHBOARDS_URL}`}
                     multiple

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Row, Col, Input } from 'antd';
+
+import CommonButton from './common/CommonButton';
 
 class Authentication extends Component {
     static propTypes = {

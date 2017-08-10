@@ -244,11 +244,11 @@ class Devices extends Component {
                 <CommonCard
                     key={id}
                     className="ts-card"
-                    onSelfEvent={closeDialog}
-                    onNextEvent={openDialog}
                     title={name}
                     isCardDown={!this.state.dialogVisible}
                     content={type.toUpperCase()}
+                    onSelfEvent={closeDialog}
+                    onNextEvent={openDialog}
                 >
                     <CommonCheckbox checkedCount={this.state.checkedCount} value={id} onChange={this.handleChecked} />
                     {this.buttonComponents(name, id, customerId)}
@@ -727,7 +727,7 @@ class Devices extends Component {
                         shape="circle"
                         visible={!this.state.isCustomer}
                         tooltipTitle={i18n.t('device.assign-new-device')}
-                        className="custom-card-button"
+                        className="ts-card-button"
                         iconClassName="plus"
                         onClick={this.assignDeviceModalHandler.show}
                         size="large"
