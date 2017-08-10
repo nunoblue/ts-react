@@ -157,6 +157,13 @@ export const subscribeWithObjects = (subscribers, isOpened) => (dispatch) => {
                 cmdsWrapper.attrSubCmds.push(subscribers[id].subscriptionCommand);
             }
         } else if (subscribers[id].historyCommand) {
+            Object.assign(subscriptions, {
+                [cmdId]: {
+                    historyCommand: subscribers[id].historyCommand,
+                    attributes: subscribers[id].attributes || {},
+                    type: subscribers[id].type || '',
+                },
+            });
             Object.assign(subscribers[id].historyCommand, { cmdId });
             cmdsWrapper.historyCmds.push(subscribers[id].historyCommand);
         }
@@ -374,6 +381,7 @@ export const subscribeWithObjectsForDataSources = (dataSources, timewindow, isOp
 };
 
 export const updateWithTimewindowForDataSources = (subscribers, timewindow) => (dispatch) => {
+    console.log(subscribers);
     if (!subscribers || Object.keys(subscribers).length === 0) {
         return subscribers;
     }

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Form, Row, Input } from 'antd';
+import i18n from 'i18next';
+
+import CommonButton from './common/CommonButton';
 
 class Authentication extends Component {
     static propTypes = {
@@ -17,122 +20,59 @@ class Authentication extends Component {
         },
     }
 
-    state = {
-        username: '',
-        password: '',
-    }
-
-    handleChange = (e) => {
-        const nextState = {};
-        nextState[e.target.name] = e.target.value;
-        this.setState(nextState);
-    }
-
     handleLogin = () => {
-        const id = this.state.username;
-        const pw = this.state.password;
-
-        this.props.onLogin(id, pw).then((success) => {
-            if (!success) {
-                this.setState({
-                    password: '',
-                });
+        const { form } = this.props;
+        form.validateFields((err, values) => {
+            if (err) {
+                return false;
             }
+            const username = values.username;
+            const password = values.password;
+            this.props.onLogin(username, password).then((success) => {
+                if (!success) {
+                    this.setState({
+                        password: '',
+                    });
+                }
+            });
         });
-    }
-
-    handleRegister = () => {
-        const id = this.state.username;
-        const pw = this.state.password;
-
-        this.props.onRegister(id, pw).then((result) => {
-            if (!result) {
-                this.setState({
-                    username: '',
-                    password: '',
-                });
-            }
-        });
-    }
-
-    handleKeyPress = (e) => {
-        if (e.charCode === 13) {
-            if (this.props.mode) {
-                this.handleLogin();
-            } else {
-                this.handleRegister();
-            }
-        }
     }
 
     render() {
-        const inputBoxes = (
-            <div>
-                <div className="input-field col s12 username">
-                    <label>Username</label>
-                    <input
-                        name="username"
-                        type="text"
-                        className="validate"
-                        onChange={this.handleChange}
-                        value={this.state.username}
-                    />
-                </div>
-                <div className="input-field col s12">
-                    <label>Password</label>
-                    <input
-                        name="password"
-                        type="password"
-                        className="validate"
-                        onChange={this.handleChange}
-                        value={this.state.password}
-                        onKeyPress={this.handleKeyPress}
-                    />
-                </div>
-            </div>
-        );
-
-        const loginView = (
-            <div>
-                <div className="card-content">
-                    <div className="row">
-                        {inputBoxes}
-                        <a className="waves-effect waves-light btn" onClick={this.handleLogin}>SUBMIT</a>
-                    </div>
-                </div>
-
-
-                <div className="footer">
-                    <div className="card-content">
-                        <div className="right" >
-                        New Here? <Link to="/register">Create an account</Link>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        );
-
-        const registerView = (
-            <div className="card-content">
-                <div className="row">
-                    {inputBoxes}
-                    <a className="waves-effect waves-light btn" onClick={this.handleRegister}>CREATE</a>
-                </div>
-            </div>
-        );
-
+        const { getFieldDecorator } = this.props.form;
         return (
-            <div className="auth">
-                <div className="card">
-                    <div className="header blue white-text center">
-                        <div className="card-content">{this.props.mode ? 'LOGIN' : 'REGISTER'}</div>
-                    </div>
-                    {this.props.mode ? loginView : registerView }
+            <div className="ts-login-form">
+                <div className="ts-login-logo">
+                    <img alt="/images/tsLogo.png" src="/images/tsLogo.png" />
+                    <form>
+                        <Form.Item>
+                            {
+                                getFieldDecorator('username', {
+                                    
+                                    rules: [
+                                        { type: 'email', message: 'The input is not valid E-mail!' },
+                                        { required: true, message: i18n.t('common.enter-username') },
+                                    ],
+                                })(<Input type="email" size="large" onPressEnter={this.handleLogin} placeholder={i18n.t('login.username')} />)
+                            }
+                        </Form.Item>
+                        <Form.Item>
+                            {
+                                getFieldDecorator('password', {
+                                    rules: [{ required: true, message: i18n.t('common.enter-password') }],
+                                })(<Input size="large" type="password" onPressEnter={this.handleLogin} placeholder={i18n.t('common.password')} />)
+                            }
+                        </Form.Item>
+                        <Row>
+                            <CommonButton type="primary" size="large" onClick={this.handleLogin}>
+                                {i18n.t('login.sign-in')}
+                            </CommonButton>
+                        </Row>
+                    </form>
                 </div>
             </div>
         );
     }
 }
 
-export default Authentication;
+export default Form.create()(Authentication);

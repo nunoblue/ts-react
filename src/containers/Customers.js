@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
-import { Row, Modal, notification, Button } from 'antd';
+import { Row, Modal, notification, Button, Col } from 'antd';
 import i18n from 'i18next';
 
 import CommonCard from '../components/common/CommonCard';
 import CommonButton from '../components/common/CommonButton';
 import CommonCheckbox from '../components/common/CommonCheckbox';
+import CreateCard from '../components/common/CreateCard';
 import AddCustomerModal from '../components/customer/AddCustomerModal';
 import DetailCustomerDialog from '../components/customer/DetailCustomerDialog';
 
@@ -53,8 +54,65 @@ class Customers extends Component {
         clearCustomersRequest();
     }
 
-    buttonComponents = (title, id, isPublic) => {
+    buttonComponents = (title, id, isPublic, isDialog) => {
         const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
+        if (isDialog) {
+            return (
+                <Button.Group className="ts-card-buttongroup">
+                    <Row>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <Link to={`/customers/${id}/users`}>
+                                    <CommonButton
+                                        className="ts-card-button"
+                                        shape="circle"
+                                        visible={!isPublic}
+                                        iconClassName="user-add"
+                                        tooltipTitle={i18n.t('customer.manage-customer-users')}
+                                    />
+                                </Link>
+                            </div>
+                        </Col>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <Link to={`/customers/${id}/devices`}>
+                                    <CommonButton
+                                        className="ts-card-button"
+                                        shape="circle"
+                                        iconClassName="tablet"
+                                        tooltipTitle={i18n.t('customer.manage-customer-devices')}
+                                    />
+                                </Link>
+                            </div>
+                        </Col>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <Link to={`/customers/${id}/dashboards`}>
+                                    <CommonButton
+                                        className="ts-card-button"
+                                        shape="circle"
+                                        iconClassName="layout"
+                                        tooltipTitle={i18n.t('customer.manage-customer-dashboards')}
+                                    />
+                                </Link>
+                            </div>
+                        </Col>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <CommonButton
+                                    className="ts-card-button"
+                                    shape="circle"
+                                    visible={!isPublic}
+                                    iconClassName="delete"
+                                    onClick={modalConfirmAction}
+                                    tooltipTitle={i18n.t('customer.delete')}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                </Button.Group>
+            );
+        }
         return (
             <Button.Group className="ts-card-buttongroup">
                 <Link to={`/customers/${id}/users`}>
@@ -105,11 +163,14 @@ class Customers extends Component {
             return (
                 <CommonCard
                     key={id}
-                    title={<CommonCheckbox value={id} onChange={this.handleChecked}>{title}</CommonCheckbox>}
+                    className="ts-card"
+                    title={title}
                     content={address}
+                    isCardDown={!this.state.dialogVisible}
                     onSelfEvent={closeDialog}
                     onNextEvent={openDialog}
                 >
+                    <CommonCheckbox checkedCount={this.state.checkedCount} value={id} onChange={this.handleChecked} />
                     {this.buttonComponents(title, id, isPublic)}
                 </CommonCard>
             );
@@ -299,13 +360,14 @@ class Customers extends Component {
     render() {
         return (
             <Row>
+                <CreateCard onClick={this.openAddCustomerModal} type={'customer'} />
                 {this.components()}
                 <div className="footer-buttons">
                     <CommonButton
                         visible={this.state.checkedCount !== 0}
                         shape="circle"
                         tooltipTitle={i18n.t('customer.delete-customers-action-title')}
-                        className="ts-card-button"
+                        className={this.state.checkedCount !== 0 ? 'ts-action-button ts-action-button-fadeIn-1' : 'ts-action-button ts-action-button-fadeOut-1'}
                         iconClassName="delete"
                         onClick={this.handleMultipleDeleteConfirm}
                         size="large"
@@ -320,11 +382,13 @@ class Customers extends Component {
                     />
                 </div>
                 <AddCustomerModal
+                    className="ts-modal"
                     ref={(c) => { this.addModal = c; }}
                     onSave={this.handleSaveCustomer}
                     onCancel={this.hideAddCustomerModal}
                 />
                 <DetailCustomerDialog
+                    className="ts-modal"
                     ref={(c) => { this.detailDialog = c; }}
                     data={this.state.selectedCustomer}
                     visible={this.state.dialogVisible}
