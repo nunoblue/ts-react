@@ -355,12 +355,20 @@ class TimeInterval extends Component {
                     }
                 }
             }
-            const intervalMs = this.calculateIntervalMs(value, prevValue, minutes, seconds);
-            if (intervalMs !== false) {
+            if (value > 7300) {
+                const intervalMs = this.calculateIntervalMs(7300, prevValue, minutes, seconds);
                 this.setState({
-                    [current]: value,
+                    [current]: 7300,
                     intervalMs,
                 });
+            } else {
+                const intervalMs = this.calculateIntervalMs(value, prevValue, minutes, seconds);
+                if (intervalMs !== false) {
+                    this.setState({
+                        [current]: value,
+                        intervalMs,
+                    });
+                }
             }
         }
     }

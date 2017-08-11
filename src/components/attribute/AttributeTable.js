@@ -6,6 +6,7 @@ import enUS from 'antd/lib/locale-provider/en_US';
 import i18n from 'i18next';
 import moment from 'moment';
 
+import CommonLabel from '../common/CommonLabel';
 import CommonButton from '../common/CommonButton';
 import AttributeModal from '../attribute/AttributeModal';
 import { types } from '../../utils/commons';
@@ -479,7 +480,9 @@ class AttributeTable extends Component {
             dataIndex: 'value',
             width: 200,
             render: (text, record) => {
-                console.log(text, record);
+                if (text.length > 40) {
+                    return <CommonLabel className="ts-label" tooltipTitle={text} tooltipClassName="ts-tooltip">{text}</CommonLabel>;
+                }
                 return text;
             },
         }, {
