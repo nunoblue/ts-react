@@ -758,9 +758,56 @@
     }
 }
 
+.ts-label {
+    // display: block;
+    // display: -webkit-box;
+    // text-align: left;
+    // -webkit-box-orient: vertical;
+    // -webkit-line-clamp: 3;
+    // word-wrap: break-word;
+    // text-overflow: ellipsis;
+    // overflow: hidden;
 
+    // display: block; /* Fallback for non-webkit */
+    // display: -webkit-box;
+    // height: 3.6em; /* Fallback for non-webkit */
+    // margin: 0 auto;
+    // -webkit-line-clamp: 3;
+    // -webkit-box-orient: vertical;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
 
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+    line-height: 1.2em;
+    max-height: 3.6em; 
+    word-wrap: break-word;
+    // text-align: justify;
+    margin-right: -1em;
+    padding-right: 1em;
+    &:before {
+        content: '...';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+    &:after {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 1em;
+        height: 1em;
+        margin-top: 0.2em;
+        background: white;
+    }
+}
 
+.ts-tooltip {
+    max-height: 200px;
+    overflow-y: auto;
+}
 
 
 

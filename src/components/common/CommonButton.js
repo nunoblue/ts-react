@@ -25,14 +25,14 @@ class CommonButton extends Component {
         let component = null;
         if (this.props.visible) {
             component = (
-                <Tooltip title={this.props.tooltipTitle} autoAdjustOverflow>
-                    <div className={this.props.className}>
-                        <Button shape={this.props.shape} type={this.props.type} size={this.props.size} onClick={this.props.onClick}>
+                <div className={this.props.className}>
+                    <Button shape={this.props.shape} type={this.props.type} size={this.props.size} onClick={this.props.onClick}>
+                        <Tooltip title={this.props.tooltipTitle} autoAdjustOverflow>
                             <Icon type={this.props.iconClassName} />
                             {this.props.children}
-                        </Button>
-                    </div>
-                </Tooltip>
+                        </Tooltip>
+                    </Button>
+                </div>
             );
         }
         return (
