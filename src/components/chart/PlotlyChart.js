@@ -21,7 +21,7 @@ const seriesStyle = {
     },
     anomaly: {
         mode: 'markers',
-        type: 'scatter'
+        type: 'scatter',
     },
     upper: {
         fill: 'tonexty',
@@ -158,7 +158,7 @@ class PlotlyChart extends Component {
                         y,
                         line: { color: lineSeriesColor[i % 12], shape: 'spline' },
                         name: key,
-                    }
+                    };
                     const copyTrace = Object.assign(trace, seriesStyle.basic);
                     return copyTrace;
                 });
@@ -220,6 +220,11 @@ class PlotlyChart extends Component {
                     const x = [];
                     const y = [];
                     _.eachRight(attr, (obj) => {
+                        if (type === 'anomaly') {
+                            if (parseFloat(obj.value) < 50) {
+                                return;
+                            }
+                        }
                         x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
                         y.push(obj.value);
                         time = new Date(obj.lastUpdateTs);
@@ -271,6 +276,11 @@ class PlotlyChart extends Component {
                     const x = [];
                     const y = [];
                     _.eachRight(attr, (obj) => {
+                        if (type === 'anomaly') {
+                            if (parseFloat(obj.value) < 50) {
+                                return;
+                            }
+                        }
                         x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
                         y.push(obj.value);
                     });
@@ -335,6 +345,11 @@ class PlotlyChart extends Component {
                 const x = [];
                 const y = [];
                 _.eachRight(attr, (obj) => {
+                    if (type === 'anomaly') {
+                        if (parseFloat(obj.value) < 50) {
+                            return;
+                        }
+                    }
                     x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
                     y.push(obj.value);
                 });
