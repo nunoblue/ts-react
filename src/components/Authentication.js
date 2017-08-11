@@ -42,43 +42,45 @@ class Authentication extends Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <div className="ts-login-form">
-                <div className="ts-login-logo">
-                    <img alt="ThingStar Symbol" src="/images/symbol.png" />
-                </div>
-                <div className="ts-login">
-                    <a href="../">
-                        Thing
-                        <span>Star</span>
-                        <i>V 1.0</i>
-                    </a>
-                </div>
-                <div className="nest">
-                    <div className="inner">
-                        <div className="nest-body">
-                            <form>
-                                <Form.Item>
-                                    {
-                                        getFieldDecorator('username', {
-                                            rules: [
-                                                { type: 'email', message: 'The input is not valid E-mail!' },
-                                                { required: true, message: i18n.t('common.enter-username') },
-                                            ],
-                                        })(<Input type="email" size="large" onPressEnter={this.handleLogin} placeholder={i18n.t('login.username')} />)
-                                    }
-                                </Form.Item>
-                                <Form.Item>
-                                    {
-                                        getFieldDecorator('password', {
-                                            rules: [{ required: true, message: i18n.t('common.enter-password') }],
-                                        })(<Input size="large" type="password" onPressEnter={this.handleLogin} placeholder={i18n.t('common.password')} />)
-                                    }
-                                </Form.Item>
-                                <Row>
-                                    <CommonButton type="primary" size="large" onClick={this.handleLogin}>
-                                        {i18n.t('login.sign-in')}
-                                    </CommonButton>
-                                </Row>
-                            </form>
+                <div className="outer">
+                    <div className="ts-login-logo">
+                        <img alt="ThingStar Symbol" src="/images/symbol.png" />
+                    </div>
+                    <div className="ts-login">
+                        <a href="../">
+                            Thing
+                            <span>Star</span>
+                            <i>V 1.0</i>
+                        </a>
+                    </div>
+                    <div className="nest">
+                        <div className="inner">
+                            <div className="nest-body">
+                                <form>
+                                    <Form.Item>
+                                        {
+                                            getFieldDecorator('username', {
+                                                rules: [
+                                                    { type: 'email', message: 'The input is not valid E-mail!' },
+                                                    { required: true, message: i18n.t('common.enter-username') },
+                                                ],
+                                            })(<Input type="email" size="large" onPressEnter={this.handleLogin} placeholder={i18n.t('login.username')} />)
+                                        }
+                                    </Form.Item>
+                                    <Form.Item>
+                                        {
+                                            getFieldDecorator('password', {
+                                                rules: [{ required: true, message: i18n.t('common.enter-password') }],
+                                            })(<Input size="large" type="password" onPressEnter={this.handleLogin} placeholder={i18n.t('common.password')} />)
+                                        }
+                                    </Form.Item>
+                                    <Row>
+                                        <CommonButton type="primary" size="large" onClick={this.handleLogin}>
+                                            {i18n.t('login.sign-in')}
+                                        </CommonButton>
+                                    </Row>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

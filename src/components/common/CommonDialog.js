@@ -57,7 +57,7 @@ class CommonDialog extends Component {
         const { children, title, subTitle, tooltipTitle, footer } = this.props;
         const visible = typeof this.props.visible === 'undefined' ? this.state.visible : this.props.visible;
         return (
-            <Layout className={visible ? 'ts-dialog ts-dialog-show' : 'ts-dialog ts-dialog-hide'} style={{ display: !visible ? 'none' : 'flex' }}>
+            <Layout className={visible ? 'ts-dialog ts-dialog-show' : 'ts-dialog ts-dialog-hide'}>
                 <Layout.Header className="ts-dialog-title">
                     <Row>
                         <Col span={20}>

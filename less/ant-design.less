@@ -457,16 +457,48 @@
     }
 }
 
+// .ts-dialog {
+//     padding: 0px !important;
+//     width: 0;
+//     transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+//     position: fixed;
+//     background: #404040;
+//     right: 0;
+//     bottom: 0;
+//     top: 64px;
+//     z-index: 100;
+//     box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+//     &.ts-dialog-show {
+//         width: 40vw;
+//     }
+//     &.ts-dialog-hide {
+//         width: 0vw;
+//     }
+//     .ant-btn-group {
+//         display: flex;
+//     }
+// }
+
 .ts-dialog {
     float: right;
     position: fixed;
     right: 0;
-    width: 45%;
+    width: 0;
+    
     // max-width: 600px;
     height: 100vh;
     background: #FFF !important;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
     z-index: 100;
+    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+    &.ts-dialog-show {
+        width: 40vw;
+        display: flex;
+    }
+    &.ts-dialog-hide {
+        width: 0vw;
+        display: none;
+    }
 
     .ts-dialog-title {
         padding: 0 0 0 20px;
@@ -720,42 +752,12 @@
     }
 }
 
-// .ts-dialog .ant-tabs-content .ant-tabs-bar .ant-tabs-nav-container {
-//     background: #FFF;
-// }
-// .ts-dialog .ant-tabs-content .ant-tabs-bar .ant-tabs-nav-container .ant-tabs-nav.ant-tabs-nav-animated > .ant-tabs-tab-active.ant-tabs-tab {
-//     color: red !important;
-// }
-
-// .ts-dialog .ant-tabs-content .ant-tabs-bar .ant-tabs-nav-container .ant-tabs-ink-bar {
-//     background: red !important;
-// }
 
 
 
 
 
-// .ts-dialog {
-//     padding: 0px !important;
-//     width: 0;
-//     transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
-//     position: fixed;
-//     background: #404040;
-//     right: 0;
-//     bottom: 0;
-//     top: 64px;
-//     z-index: 100;
-//     box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
-//     &.ts-dialog-show {
-//         width: 40vw;
-//     }
-//     &.ts-dialog-hide {
-//         width: 0vw;
-//     }
-//     .ant-btn-group {
-//         display: flex;
-//     }
-// }
+
 
 .ts-action-button {
     margin: 8px 0;
@@ -1121,11 +1123,12 @@
     // margin: -160px 0 0 -160px;
     width: 100vw;
     height: 100vh;
-    // padding: 36px;
+    padding: 150px;
     // box-shadow: 0 0 100px rgba(0,0,0,.08);
     background: #EAEEF1 !important;
     display: table;
 
+    
     .ant-btn-primary {
         width: 100%;
         background-color: #FF9800;
@@ -1189,9 +1192,9 @@
         .inner {
             position: relative;
             background: #FFF;
-            margin-top: 20px;
+            margin: 20px;
             padding: 40px;
-            width: 33.333%;
+            width: 400px;
             border-radius: 3px;
             box-shadow: 0 20px 0 -10px rgba(255, 255, 255, 0.7), 0 40px 0 -20px rgba(255, 255, 255, 0.4);
         }
@@ -1212,7 +1215,5 @@
             }
         }
     }
-
-
 
 }
