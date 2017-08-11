@@ -35,6 +35,7 @@ class AttributeTable extends Component {
         attributeModalDisbaled: false,
         showChart: false,
         redrawChart: false,
+        timeWindowVisible: false,
         timeWindow: {
             intervals: 1000,
             realtime: {
@@ -77,6 +78,32 @@ class AttributeTable extends Component {
                 attributeModalDisbaled: false,
                 showChart: false,
                 searchMode: false,
+                searchKey: '',
+            });
+        }
+        if (nextProps.activeKey !== this.props.activeKey) {
+            const subscriberIdArray = Object.keys(nextProps.subscribers).filter((id) => nextProps.subscribers[id].type === nextProps.type);
+            if (subscriberIdArray.length !== 0) {
+                const subscriberId = subscriberIdArray[0];
+                const command = nextProps.subscribers[subscriberId].subscriptionCommand || nextProps.subscribers[subscriberId].historyCommand;
+                const isKeys = command.keys || false;
+                if (isKeys) {
+                    nextProps.unsubscribe(nextProps.subscribers[subscriberId]).then(() => {
+                        const latestTelemetryScope = {
+                            entityType: nextProps.entity.entityType,
+                            entityId: nextProps.entity.id,
+                            scope: this.state.attributesScope.value,
+                        };
+                        nextProps.subscribe(latestTelemetryScope);
+                    });
+                }
+            }
+            const attributes = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
+            this.setState({
+                selectedRowKeys: [],
+                showChart: false,
+                timeWindowVisible: false,
+                attributes,
             });
         }
     }
@@ -319,12 +346,26 @@ class AttributeTable extends Component {
 
     handleSearchKey = (value) => {
         if (typeof value === 'object') {
+            const newDataSource = this.state.attributes.dataSource.filter((data) => {
+                if (value.target.value.length !== 0 && data.key.indexOf(value.target.value) !== -1) {
+                    return true;
+                }
+            });
+            Object.assign(this.state.attributes, { dataSource: newDataSource });
             this.setState({
                 searchKey: value.target.value,
+                attributes: this.state.attributes,
             });
         } else {
+            const newDataSource = this.state.attributes.dataSource.filter((data) => {
+                if (value.length !== 0 && data.key.indexOf(value) !== -1) {
+                    return true;
+                }
+            });
+            Object.assign(this.state.attributes, { dataSource: newDataSource });
             this.setState({
                 searchKey: value,
+                attributes: this.state.attributes,
             });
         }
     }
@@ -471,7 +512,7 @@ class AttributeTable extends Component {
             } else {
                 dataSource = Object.keys(attributes).map((key) => {
                     const lastUpdateTs = moment(attributes[key][0].lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
-                    if (this.state.searchKey.length !== 0 && key.match(`/^.*${this.state.searchKey}.*$/`)) {
+                    if (this.state.searchKey.length !== 0 && key.indexOf(this.state.searchKey) !== -1) {
                         return {
                             key,
                             lastUpdateTs,
@@ -700,6 +741,7 @@ class AttributeTable extends Component {
                     <GeneralTimeWindow
                         ref={(c) => { this.timeWindow = c; }}
                         onClickUpdate={this.handleUpdateTimeWindow}
+                        visible={this.state.timeWindowVisible}
                     />
                     <Button onClick={this.handleBackToTable}>Back</Button>
                 </span>
