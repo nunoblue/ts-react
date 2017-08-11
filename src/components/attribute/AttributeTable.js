@@ -470,12 +470,18 @@ class AttributeTable extends Component {
         columns: [{
             title: i18n.t('attribute.last-update-time'),
             dataIndex: 'lastUpdateTs',
+            width: 150,
         }, {
             title: i18n.t('attribute.key'),
             dataIndex: 'attributeKey',
         }, {
             title: i18n.t('attribute.value'),
             dataIndex: 'value',
+            width: 200,
+            render: (text, record) => {
+                console.log(text, record);
+                return text;
+            },
         }, {
             key: 'edit',
             render: (text, record) => {
@@ -487,7 +493,7 @@ class AttributeTable extends Component {
                         </CommonButton>
                     );
                 }
-                if (record.key === 'grms') {
+                if (record.key === 'accX') {
                     const openAnomalyChart = this.handleOpenAnomalyChart.bind(this, record);
                     return (
                         <CommonButton className="ts-card-button" shape="circle" onClick={openAnomalyChart} tooltipTitle="이상감지">
@@ -635,7 +641,7 @@ class AttributeTable extends Component {
     };
 
     chartComponents = () => {
-        const { attributes, timeWindow, redrawChart, isAnomaly } = this.state;
+        const { attributes, timeWindow, redrawChart, isAnomaly, selectedRowKeys } = this.state;
         return (
             <div>
                 <span style={{ display: 'flex' }}>
@@ -650,6 +656,7 @@ class AttributeTable extends Component {
                     timeWindow={timeWindow}
                     redrawChart={redrawChart}
                     isAnomaly={isAnomaly}
+                    yAxisTitle={isAnomaly ? selectedRowKeys[0] : ''}
                 />
             </div>
         );

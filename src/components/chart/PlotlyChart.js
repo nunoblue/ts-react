@@ -49,6 +49,7 @@ class PlotlyChart extends Component {
         timeWindow: PropTypes.object,
         redrawChart: PropTypes.bool,
         isAnomaly: PropTypes.bool,
+        yAxisTitle: PropTypes.string,
     };
 
     static defaultProps = {
@@ -261,6 +262,7 @@ class PlotlyChart extends Component {
                                         color: 'rgb(23, 190, 207)',
                                         width: 2,
                                     },
+                                    yref: 'y2',
                                 });
                             }
                         });
@@ -278,7 +280,8 @@ class PlotlyChart extends Component {
                         y,
                         line: { color: lineSeriesColor[i % 12], shape: 'spline' },
                         name: key,
-                    }
+                        yaxis: type === 'anomaly' ? 'y2' : 'y1',
+                    };
 
                     const copyTrace = Object.assign(trace, seriesStyle[type]);
                     return copyTrace;
@@ -286,6 +289,14 @@ class PlotlyChart extends Component {
 
                 const layout = {
                     shapes,
+                    yaxis1: {
+                        title: this.props.yAxisTitle,
+                    },
+                    yaxis2: {
+                        title: 'Anomaly',
+                        overlaying: 'y',
+                        side: 'right',
+                    },
                 };
 
                 Plotly.newPlot('plotly', data, layout);       // eslint-disable-line no-undef
@@ -314,6 +325,7 @@ class PlotlyChart extends Component {
                                     color: 'rgb(23, 190, 207)',
                                     width: 2,
                                 },
+                                yref: 'y2',
                             });
                         }
                     });
@@ -332,13 +344,22 @@ class PlotlyChart extends Component {
                     y,
                     line: { color: lineSeriesColor[i % 12], shape: 'spline' },
                     name: key,
-                }
+                    yaxis: type === 'anomaly' ? 'y2' : 'y1',
+                };
                 const copyTrace = Object.assign(trace, seriesStyle[type]);
                 return copyTrace;
             });
 
             const layout = {
                 shapes,
+                yaxis1: {
+                    title: this.props.yAxisTitle,
+                },
+                yaxis2: {
+                    title: 'Anomaly',
+                    overlaying: 'y',
+                    side: 'right',
+                },
             };
 
             Plotly.newPlot('plotly', data, layout);       // eslint-disable-line no-undef
