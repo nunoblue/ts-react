@@ -288,7 +288,7 @@ class PlotlyChart extends Component {
                     const trace = {
                         x,
                         y,
-                        line: { color: anomalySeriesColor[i % 2], shape: 'linear' },
+                        line: { color: anomalySeriesColor[i % 2], shape: type !== 'anomaly' ? 'linear' : 'markers' },
                         name: key,
                         yaxis: type === 'anomaly' ? 'y2' : 'y1',
                     };
@@ -306,6 +306,7 @@ class PlotlyChart extends Component {
                         title: 'Anomaly',
                         overlaying: 'y',
                         side: 'right',
+                        range: [40, 100],
                     },
                 };
 
