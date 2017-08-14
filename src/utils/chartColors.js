@@ -12,6 +12,11 @@ const lineSeriesColor = [
     'rgb(213, 62, 79)',
 ];
 
+const anomalySeriesColor = [
+    'rgb(253, 174, 97)',
+    'rgb(213, 62, 79)',
+];
+
 const colorBlindSafeSeriesColor = [
     'rgb(165, 0, 38)',
     'rgb(215, 48, 39)',
@@ -26,4 +31,4 @@ const colorBlindSafeSeriesColor = [
     'rgb(49, 54, 149)',
 ];
 
-export { lineSeriesColor, colorBlindSafeSeriesColor };
+export { lineSeriesColor, anomalySeriesColor };

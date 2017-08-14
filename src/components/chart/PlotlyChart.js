@@ -12,16 +12,18 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { lineSeriesColor } from "../../utils/chartColors";
+import { lineSeriesColor, anomalySeriesColor } from "../../utils/chartColors";
 
 const seriesStyle = {
     basic: {
         mode: 'lines',
         type: 'scatter',
+        connectgaps: false,
     },
     anomaly: {
         mode: 'markers',
         type: 'scatter',
+        connectgaps: false,
     },
     upper: {
         fill: 'tonexty',
@@ -30,6 +32,7 @@ const seriesStyle = {
         marker: { color: '444' },
         mode: 'lines',
         type: 'scatter',
+        connectgaps: false,
     },
     lower: {
         fillcolor: 'rgba(0,100,80,0.1)',
@@ -37,6 +40,7 @@ const seriesStyle = {
         marker: { color: '444' },
         mode: 'lines',
         type: 'scatter',
+        connectgaps: false,
     },
 
 }
@@ -62,6 +66,7 @@ class PlotlyChart extends Component {
 
     state = {
         isUpdate: false,
+        lastUpdateTs : null,
     };
 
     componentDidMount() {
@@ -116,15 +121,20 @@ class PlotlyChart extends Component {
         const yTraces = [];
         const traceArray = [];
         let time = null;
+        let lastUpdateTs = null;
         if (isUpdate) {
             Object.keys(dataSource).forEach((key, i) => {
                 const attr = dataSource[key];
                 const x = [];
                 const y = [];
                 _.eachRight(attr, (obj) => {
+                    if (this.state.lastUpdateTs > moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss')) {
+                        return;
+                    }
                     x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
                     y.push(obj.value);
                     time = new Date(obj.lastUpdateTs);
+                    lastUpdateTs = moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
                 });
                 xTraces.push(x);
                 yTraces.push(y);
@@ -154,12 +164,13 @@ class PlotlyChart extends Component {
                 _.eachRight(attr, (obj) => {
                     x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
                     y.push(obj.value);
+                    lastUpdateTs = moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
                 });
 
                 const trace = {
                     x,
                     y,
-                line: { color: lineSeriesColor[i % 12], shape: 'spline' },
+                    line: { color: lineSeriesColor[i % 12], shape: 'linear' },
                     name: key,
                 };
                 const copyTrace = Object.assign(trace, seriesStyle.basic);
@@ -172,6 +183,9 @@ class PlotlyChart extends Component {
                 });
             }
         }
+        this.setState({
+            lastUpdateTs,
+        });
     };
 
     drawAnomalyPlot = () => {
@@ -187,6 +201,7 @@ class PlotlyChart extends Component {
         const traceArray = [];
         const shapes = [];
         let time = null;
+        let lastUpdateTs = null;
         if (isRealtime) {
             const { isUpdate } = this.state;
             if (isUpdate) {
@@ -200,6 +215,9 @@ class PlotlyChart extends Component {
                     const x = [];
                     const y = [];
                     _.eachRight(attr, (obj) => {
+                        if (this.state.lastUpdateTs > moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss')) {
+                            return;
+                        }
                         if (type === 'anomaly') {
                             if (parseFloat(obj.value) < 50) {
                                 return;
@@ -208,6 +226,7 @@ class PlotlyChart extends Component {
                         x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
                         y.push(obj.value);
                         time = new Date(obj.lastUpdateTs);
+                        lastUpdateTs = moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
                     });
                     xTraces.push(x);
                     yTraces.push(y);
@@ -263,12 +282,13 @@ class PlotlyChart extends Component {
                         }
                         x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
                         y.push(obj.value);
+                        lastUpdateTs = moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
                     });
 
                     const trace = {
                         x,
                         y,
-                        line: { color: lineSeriesColor[i % 12], shape: 'spline' },
+                        line: { color: anomalySeriesColor[i % 2], shape: 'linear' },
                         name: key,
                         yaxis: type === 'anomaly' ? 'y2' : 'y1',
                     };
@@ -297,6 +317,9 @@ class PlotlyChart extends Component {
                 }
             }
         }
+        this.setState({
+            lastUpdateTs,
+        });
     };
 
     render() {
