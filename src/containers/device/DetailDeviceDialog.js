@@ -132,6 +132,7 @@ class DetailDeviceDialog extends Component {
                     </Tabs.TabPane>
                     <Tabs.TabPane tab={i18n.t('attribute.attributes')} key="attribute" disabled={this.state.editing}>
                         <AttributeTable
+                            activeKey={this.state.activeKey}
                             subscriptions={subscriptions}
                             entity={data ? data.id : undefined}
                             type={types.dataKeyType.attribute}
@@ -142,6 +143,7 @@ class DetailDeviceDialog extends Component {
                     </Tabs.TabPane>
                     <Tabs.TabPane tab={i18n.t('attribute.latest-telemetry')} key="latestData" disabled={this.state.editing}>
                         <AttributeTable
+                            activeKey={this.state.activeKey}
                             subscriptions={subscriptions}
                             entity={data ? data.id : undefined}
                             type={types.dataKeyType.timeseries}

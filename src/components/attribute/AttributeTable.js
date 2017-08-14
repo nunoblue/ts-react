@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Table, Row, Layout, Col, Select, Button, notification, Modal } from 'antd';
+import { Table, Row, Layout, Col, Select, Button, notification, Modal, Input } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
 import i18n from 'i18next';
 import moment from 'moment';
 
+import CommonLabel from '../common/CommonLabel';
 import CommonButton from '../common/CommonButton';
 import AttributeModal from '../attribute/AttributeModal';
 import { types } from '../../utils/commons';
@@ -34,6 +35,7 @@ class AttributeTable extends Component {
         attributeModalDisbaled: false,
         showChart: false,
         redrawChart: false,
+        timeWindowVisible: false,
         timeWindow: {
             intervals: 1000,
             realtime: {
@@ -48,6 +50,8 @@ class AttributeTable extends Component {
             endTs: null,
         },
         isAnomaly: false,
+        searchMode: false,
+        searchKey: '',
     };
 
     componentWillMount() {
@@ -73,6 +77,33 @@ class AttributeTable extends Component {
                 attributes: {},
                 attributeModalDisbaled: false,
                 showChart: false,
+                searchMode: false,
+                searchKey: '',
+            });
+        }
+        if (nextProps.activeKey !== this.props.activeKey) {
+            const subscriberIdArray = Object.keys(nextProps.subscribers).filter((id) => nextProps.subscribers[id].type === nextProps.type);
+            if (subscriberIdArray.length !== 0) {
+                const subscriberId = subscriberIdArray[0];
+                const command = nextProps.subscribers[subscriberId].subscriptionCommand || nextProps.subscribers[subscriberId].historyCommand;
+                const isKeys = command.keys || false;
+                if (isKeys) {
+                    nextProps.unsubscribe(nextProps.subscribers[subscriberId]).then(() => {
+                        const latestTelemetryScope = {
+                            entityType: nextProps.entity.entityType,
+                            entityId: nextProps.entity.id,
+                            scope: this.state.attributesScope.value,
+                        };
+                        nextProps.subscribe(latestTelemetryScope);
+                    });
+                }
+            }
+            const attributes = this.attributeData.getData(nextProps.subscriptions, nextProps.entity.id, nextProps.type, this.state.attributesScope.value);
+            this.setState({
+                selectedRowKeys: [],
+                showChart: false,
+                timeWindowVisible: false,
+                attributes,
             });
         }
     }
@@ -181,7 +212,7 @@ class AttributeTable extends Component {
         });
     }
 
-    handleClickSearchKey = () => {
+    handleClickWidgetMode = () => {
         const { entity, subscribers } = this.props;
         const unsubscriberId = `${entity.entityType}${entity.id}LATEST_TELEMETRY`;
         const unsubscriber = subscribers[unsubscriberId];
@@ -297,7 +328,6 @@ class AttributeTable extends Component {
             isAnomaly: true,
             selectedRowKeys: keys.split(','),
         });
-
     }
 
     handleClickOpenAddModal = () => {
@@ -307,6 +337,38 @@ class AttributeTable extends Component {
     handleClickAttributeRefresh = () => {
         this.refreshAttributeTable();
     };
+
+    handleClickSearchKey = () => {
+        this.setState({
+            searchMode: !this.state.searchMode,
+        });
+    }
+
+    handleSearchKey = (value) => {
+        if (typeof value === 'object') {
+            const newDataSource = this.state.attributes.dataSource.filter((data) => {
+                if (value.target.value.length !== 0 && data.key.indexOf(value.target.value) !== -1) {
+                    return true;
+                }
+            });
+            Object.assign(this.state.attributes, { dataSource: newDataSource });
+            this.setState({
+                searchKey: value.target.value,
+                attributes: this.state.attributes,
+            });
+        } else {
+            const newDataSource = this.state.attributes.dataSource.filter((data) => {
+                if (value.length !== 0 && data.key.indexOf(value) !== -1) {
+                    return true;
+                }
+            });
+            Object.assign(this.state.attributes, { dataSource: newDataSource });
+            this.setState({
+                searchKey: value,
+                attributes: this.state.attributes,
+            });
+        }
+    }
 
     hanldeDeleteAttrbiute = (idArray) => {
         const { entity } = this.props;
@@ -450,6 +512,14 @@ class AttributeTable extends Component {
             } else {
                 dataSource = Object.keys(attributes).map((key) => {
                     const lastUpdateTs = moment(attributes[key][0].lastUpdateTs).format('YYYY-MM-DD HH:mm:ss');
+                    if (this.state.searchKey.length !== 0 && key.indexOf(this.state.searchKey) !== -1) {
+                        return {
+                            key,
+                            lastUpdateTs,
+                            attributeKey: key,
+                            value: attributes[key][0].value,
+                        };
+                    }
                     return {
                         key,
                         lastUpdateTs,
@@ -479,6 +549,9 @@ class AttributeTable extends Component {
             dataIndex: 'value',
             width: 200,
             render: (text, record) => {
+                if (text.length > 40) {
+                    return <CommonLabel className="ts-label" tooltipTitle={text} tooltipClassName="ts-tooltip">{text}</CommonLabel>;
+                }
                 return text;
             },
         }, {
@@ -534,7 +607,7 @@ class AttributeTable extends Component {
                 <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
                     <i className="material-icons vertical-middle">add</i>
                 </CommonButton>
-                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickOpenAddModal} tooltipTitle={i18n.t('attribute.add')}>
+                <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('attribute.add')}>
                     <i className="material-icons vertical-middle">search</i>
                 </CommonButton>
                 <CommonButton className="ts-attribute-button" shape="circle" onClick={this.handleClickAttributeRefresh} tooltipTitle={i18n.t('attribute.add')}>
@@ -560,7 +633,7 @@ class AttributeTable extends Component {
                         </CommonButton>
                     ) : null
                 }
-                <CommonButton className="ts-attribute-button" onClick={this.handleClickSearchKey} tooltipTitle={i18n.t('attribute.show-on-widget')}>
+                <CommonButton className="ts-attribute-button" onClick={this.handleClickWidgetMode} tooltipTitle={i18n.t('attribute.show-on-widget')}>
                     <i className="material-icons vertical-middle">widgets</i>
                     {i18n.t('attribute.show-on-widget')}
                 </CommonButton>
@@ -570,28 +643,49 @@ class AttributeTable extends Component {
     }
 
     titleComponents = (type, attributesScope) => {
-        const titleComponents = this.state.selectedRowKeys.length === 0 ? (
+        if (this.state.searchMode) {
+            const titleComponents = (
+                <Layout.Header className="ts-dialog-title">
+                    <Row>
+                        <Col span={20}>
+                            <Input.Search
+                                placeholder={i18n.t('common.enter-search')}
+                                onChange={this.handleSearchKey}
+                                onSearch={this.handleSearchKey}
+                            />
+                        </Col>
+                        <Col span={4}>
+                            <CommonButton className="ts-card-button" shape="circle" onClick={this.handleClickSearchKey}>
+                                <i className="material-icons vertical-middle">close</i>
+                            </CommonButton>
+                        </Col>
+                    </Row>
+                </Layout.Header>
+            );
+            return titleComponents;
+        }
+        const titleComponents = (
             <Layout.Header className="ts-dialog-title">
                 <Row>
-                    <Col span={24}>
-                        <span className="ts-dialog-detail-title">{i18n.t(attributesScope.name)}</span>
-                        <span>{this.nonSelectionComponents(type, attributesScope)}</span>
-                    </Col>
-                </Row>
-            </Layout.Header>
-        ) : (
-            <Layout.Header className="ts-dialog-title">
-                <Row>
-                    <Col span={24}>
-                        <span className="ts-dialog-detail-title">
-                            {
-                                type === types.dataKeyType.attribute ?
-                                i18n.t('attribute.selected-attributes', { count: this.state.selectedRowKeys.length })
-                                : i18n.t('attribute.selected-telemetry', { count: this.state.selectedRowKeys.length })
-                            }
-                        </span>
-                        <span>{this.selectionComponents(type, attributesScope)}</span>
-                    </Col>
+                    {
+                        this.state.selectedRowKeys.length === 0 ? (
+                            <Col span={24}>
+                                <span className="ts-dialog-detail-title">{i18n.t(attributesScope.name)}</span>
+                                <span>{this.nonSelectionComponents(type, attributesScope)}</span>
+                            </Col>
+                        ) : (
+                            <Col span={24}>
+                                <span className="ts-dialog-detail-title">
+                                    {
+                                        type === types.dataKeyType.attribute ?
+                                        i18n.t('attribute.selected-attributes', { count: this.state.selectedRowKeys.length })
+                                        : i18n.t('attribute.selected-telemetry', { count: this.state.selectedRowKeys.length })
+                                    }
+                                </span>
+                                <span>{this.selectionComponents(type, attributesScope)}</span>
+                            </Col>
+                        )
+                    }
                 </Row>
             </Layout.Header>
         );
@@ -647,6 +741,7 @@ class AttributeTable extends Component {
                     <GeneralTimeWindow
                         ref={(c) => { this.timeWindow = c; }}
                         onClickUpdate={this.handleUpdateTimeWindow}
+                        visible={this.state.timeWindowVisible}
                     />
                     <Button onClick={this.handleBackToTable}>Back</Button>
                 </span>

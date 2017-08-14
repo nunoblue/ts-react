@@ -134,7 +134,7 @@ class GeneralTimeWindow extends Component {
                 arrowPointAtCenter
                 content={this.contents()}
                 trigger="click"
-                visible={this.state.visible}
+                visible={this.props.visible || this.state.visible}
             >
                 {buttonComponent}
             </Popover>

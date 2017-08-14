@@ -21,7 +21,7 @@ const seriesStyle = {
     },
     anomaly: {
         mode: 'markers',
-        type: 'scatter'
+        type: 'scatter',
     },
     upper: {
         fill: 'tonexty',
@@ -159,13 +159,12 @@ class PlotlyChart extends Component {
                 const trace = {
                     x,
                     y,
-                    line: { color: lineSeriesColor[i % 12], shape: 'spline' },
+                line: { color: lineSeriesColor[i % 12], shape: 'spline' },
                     name: key,
-                }
+                };
                 const copyTrace = Object.assign(trace, seriesStyle.basic);
                 return copyTrace;
             });
-            console.log('isRealtime', isRealtime, 'isUpdate', isUpdate);
             Plotly.newPlot('plotly', data);       // eslint-disable-line no-undef
             if (isRealtime && !isUpdate && !_.isEmpty(data)) {
                 this.setState({
@@ -201,6 +200,11 @@ class PlotlyChart extends Component {
                     const x = [];
                     const y = [];
                     _.eachRight(attr, (obj) => {
+                        if (type === 'anomaly') {
+                            if (parseFloat(obj.value) < 50) {
+                                return;
+                            }
+                        }
                         x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
                         y.push(obj.value);
                         time = new Date(obj.lastUpdateTs);
@@ -252,6 +256,11 @@ class PlotlyChart extends Component {
                     const x = [];
                     const y = [];
                     _.eachRight(attr, (obj) => {
+                        if (type === 'anomaly') {
+                            if (parseFloat(obj.value) < 50) {
+                                return;
+                            }
+                        }
                         x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
                         y.push(obj.value);
                     });
