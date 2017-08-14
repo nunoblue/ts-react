@@ -45,7 +45,10 @@ class PlotlyChart extends Component {
     static propTypes = {
         // type: PropTypes.string.isRequired,
         onPlotChartClick: PropTypes.func,
-        attributes: PropTypes.any,
+        attributes: PropTypes.oneOfType([
+            PropTypes.array,
+            PropTypes.object,
+        ]),
         timeWindow: PropTypes.object,
         redrawChart: PropTypes.bool,
         isAnomaly: PropTypes.bool,
@@ -53,12 +56,13 @@ class PlotlyChart extends Component {
     };
 
     static defaultProps = {
+        attributes: {},
         onPlotChartClick: null,
     };
 
     state = {
         isUpdate: false,
-    }
+    };
 
     componentDidMount() {
         this.drawPlot();
@@ -100,8 +104,9 @@ class PlotlyChart extends Component {
     };
 
     drawBasicPlot = () => {
-        const { attributes: {dataSource, startTs}, timeWindow, isAnomaly } = this.props;
+        const { attributes: { dataSource }, timeWindow, } = this.props;
         const isRealtime = !_.isEmpty(timeWindow.realtime);
+        const { isUpdate } = this.state;
         if (!dataSource) {
             return;
         }
@@ -111,66 +116,37 @@ class PlotlyChart extends Component {
         const yTraces = [];
         const traceArray = [];
         let time = null;
-        if (isRealtime && dataSource) {
-            const { isUpdate } = this.state;
-            if (isUpdate) {
-                Object.keys(dataSource).forEach((key, i) => {
-                    const attr = dataSource[key];
-                    const x = [];
-                    const y = [];
-                    _.eachRight(attr, (obj) => {
-                        x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
-                        y.push(obj.value);
-                        time = new Date(obj.lastUpdateTs);
-                    });
-                    xTraces.push(x);
-                    yTraces.push(y);
-                    traceArray.push(i);
+        if (isUpdate) {
+            Object.keys(dataSource).forEach((key, i) => {
+                const attr = dataSource[key];
+                const x = [];
+                const y = [];
+                _.eachRight(attr, (obj) => {
+                    x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
+                    y.push(obj.value);
+                    time = new Date(obj.lastUpdateTs);
                 });
+                xTraces.push(x);
+                yTraces.push(y);
+                traceArray.push(i);
+            });
 
-                const { realtime: { interval }, realtime: { timewindowMs } } = timeWindow;
-                const xLength = Math.floor(parseFloat(timewindowMs / interval));
-                const diff = xLength >= 60 ? Math.floor(parseFloat(xLength / 60)) : 1;
-                const olderTime = time.setMinutes(time.getMinutes() - diff);
-                const futureTime = time.setMinutes(time.getMinutes() + diff);
+            const { realtime: { interval }, realtime: { timewindowMs } } = timeWindow;
+            const xLength = Math.floor(parseFloat(timewindowMs / interval));
+            const diff = xLength >= 60 ? Math.floor(parseFloat(xLength / 60)) : 1;
+            const olderTime = time.setMinutes(time.getMinutes() - diff);
+            const futureTime = time.setMinutes(time.getMinutes() + diff);
 
-                const rangeView = {
-                    xaxis: {
-                        type: 'date',
-                        range: [olderTime, futureTime],
-                    },
-                };
+            const rangeView = {
+                xaxis: {
+                    type: 'date',
+                    range: [olderTime, futureTime],
+                },
+            };
 
-                Plotly.relayout('plotly', rangeView);
-                Plotly.extendTraces('plotly', { x: xTraces, y: yTraces }, traceArray);      // eslint-disable-line no-undef
-            } else {
-                data = Object.keys(dataSource).map((key, i) => {
-                    const attr = dataSource[key];
-                    const x = [];
-                    const y = [];
-                    _.eachRight(attr, (obj) => {
-                        x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
-                        y.push(obj.value);
-                    });
-
-                    const trace = {
-                        x,
-                        y,
-                        line: { color: lineSeriesColor[i % 12], shape: 'spline' },
-                        name: key,
-                    }
-                    const copyTrace = Object.assign(trace, seriesStyle.basic);
-                    return copyTrace;
-                });
-
-                Plotly.newPlot('plotly', data);       // eslint-disable-line no-undef
-                if (!isUpdate && !_.isEmpty(data)) {
-                    this.setState({
-                        isUpdate: true,
-                    });
-                }
-            }
-        } else if (!isRealtime) {
+            Plotly.relayout('plotly', rangeView);
+            Plotly.extendTraces('plotly', { x: xTraces, y: yTraces }, traceArray);      // eslint-disable-line no-undef
+        } else {
             data = Object.keys(dataSource).map((key, i) => {
                 const attr = dataSource[key];
                 const x = [];
@@ -185,17 +161,22 @@ class PlotlyChart extends Component {
                     y,
                     line: { color: lineSeriesColor[i % 12], shape: 'spline' },
                     name: key,
-                };
+                }
                 const copyTrace = Object.assign(trace, seriesStyle.basic);
                 return copyTrace;
             });
-
+            console.log('isRealtime', isRealtime, 'isUpdate', isUpdate);
             Plotly.newPlot('plotly', data);       // eslint-disable-line no-undef
+            if (isRealtime && !isUpdate && !_.isEmpty(data)) {
+                this.setState({
+                    isUpdate: true,
+                });
+            }
         }
     };
 
     drawAnomalyPlot = () => {
-        const { attributes: {dataSource, startTs}, timeWindow, isAnomaly } = this.props;
+        const { attributes: { dataSource }, timeWindow } = this.props;
         const isRealtime = !_.isEmpty(timeWindow.realtime);
         if (!dataSource) {
             return;
@@ -207,7 +188,7 @@ class PlotlyChart extends Component {
         const traceArray = [];
         const shapes = [];
         let time = null;
-        if (isRealtime && dataSource) {
+        if (isRealtime) {
             const { isUpdate } = this.state;
             if (isUpdate) {
                 Object.keys(dataSource).forEach((key, i) => {
@@ -300,69 +281,12 @@ class PlotlyChart extends Component {
                 };
 
                 Plotly.newPlot('plotly', data, layout);       // eslint-disable-line no-undef
-                if (!isUpdate && !_.isEmpty(data)) {
+                if (isRealtime && !isUpdate && !_.isEmpty(data)) {
                     this.setState({
                         isUpdate: true,
                     });
                 }
             }
-        } else if (!isRealtime) {
-            data = Object.keys(dataSource).map((key, i) => {
-                const attr = dataSource[key];
-                const lastIndex = key.lastIndexOf('_');
-                const type = lastIndex > -1 ? key.substring(lastIndex + 1, key.length) : 'basic';
-
-                if (type === 'mchanged') {
-                    _.eachRight(attr, (obj) => {
-                        if (obj.value === 'true') {
-                            shapes.push({
-                                type: 'line',
-                                x0: moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'),
-                                y0: 0,
-                                x1: moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'),
-                                y1: 100,
-                                line: {
-                                    color: 'rgb(23, 190, 207)',
-                                    width: 2,
-                                },
-                                yref: 'y2',
-                            });
-                        }
-                    });
-                    return {};
-                }
-
-                const x = [];
-                const y = [];
-                _.eachRight(attr, (obj) => {
-                    x.push(moment(obj.lastUpdateTs).format('YYYY-MM-DD HH:mm:ss'));
-                    y.push(obj.value);
-                });
-
-                const trace = {
-                    x,
-                    y,
-                    line: { color: lineSeriesColor[i % 12], shape: 'spline' },
-                    name: key,
-                    yaxis: type === 'anomaly' ? 'y2' : 'y1',
-                };
-                const copyTrace = Object.assign(trace, seriesStyle[type]);
-                return copyTrace;
-            });
-
-            const layout = {
-                shapes,
-                yaxis1: {
-                    title: this.props.yAxisTitle,
-                },
-                yaxis2: {
-                    title: 'Anomaly',
-                    overlaying: 'y',
-                    side: 'right',
-                },
-            };
-
-            Plotly.newPlot('plotly', data, layout);       // eslint-disable-line no-undef
         }
     };
 
