@@ -14,7 +14,7 @@ const rootElement = document.getElementById('root');
 moment.locale(i18nClient.language);
 const render = (Component) => {
     ReactDOM.render(
-        <Provider store={store}>
+        <Provider store={store()}>
             <AppContainer>
                 <Component />
             </AppContainer>

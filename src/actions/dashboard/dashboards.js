@@ -1,3 +1,4 @@
+import { createAction } from 'redux-actions';
 import {
     TENANT_DASHBOARDS,
     TENANT_DASHBOARDS_SUCCESS,
@@ -195,9 +196,7 @@ export const makeDashboardPublicRequest = dashboardId => (dispatch) => {
     });
 };
 
-export const clearDashboardsRequest = () => (dispatch) => {
-    dispatch(clearDashboardsSuccess());
-};
+export const clearDashboardsRequest = createAction(CLEAR_DASHBOARDS);
 
 export const getPublicDashboardLinkRequest = (dashboardId, customerId) => {
     let url = config.locationUrl;
