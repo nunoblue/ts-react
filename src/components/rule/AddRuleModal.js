@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 import { Collapse } from 'antd';
 import _ from 'lodash';
 

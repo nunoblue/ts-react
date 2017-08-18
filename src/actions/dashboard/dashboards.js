@@ -204,14 +204,3 @@ export const getPublicDashboardLinkRequest = (dashboardId, customerId) => {
     url += `/dashboards/${dashboardId}?publicId=${customerId}`;
     return url;
 };
-
-export const multipleAssignDashboardToCustomer = (customerId, idArray) => {
-    return (dispatch) => {
-        dispatch(getDashboards());
-        return dashboardService.multipleAssignDashboard(customerId, idArray).then(() => {
-            dispatch(saveDashboardSuccess());
-        }).catch((error) => {
-            dispatch(getDashboardsFailure(error.message));
-        });
-    };
-};

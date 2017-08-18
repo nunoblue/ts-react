@@ -578,14 +578,6 @@ class Devices extends Component {
         });
     }
 
-    handleSearchCustomer = (textSearch) => {
-        this.props.getCustomersRequest(this.state.limit, textSearch).then(() => {
-            if (this.props.customersStatusMessage === 'SUCCESS') {
-                this.assignCustomerModal.setDatas(this.props.customers);
-            }
-        });
-    };
-
     subscribeWithObjectsForDeviceAttributes = (selectedDeviceId) => {
         const { isOpened, subscribers } = this.props;
         const clientScope = {

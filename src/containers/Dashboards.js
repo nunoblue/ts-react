@@ -20,6 +20,8 @@ import * as customers from '../actions/customer/customers';
 import { urlConstants } from '../services/constants';
 import config from '../configs';
 
+const customerUrl = `${config.apServer}/api/customers`;
+
 class Dashboards extends Component {
 
     static contextTypes = {
@@ -35,6 +37,7 @@ class Dashboards extends Component {
         authority: this.context.currentUser.authority === 'TENANT_ADMIN',
         isCustomer: typeof this.props.match.params.customerId === 'undefined',
         selectedDashboard: null,
+        assignDashboardId: '',
         dialogVisible: false,
     }
 
@@ -396,6 +399,18 @@ class Dashboards extends Component {
         },
     };
 
+    assignCustomerModalHandler = {
+        show: (id) => {
+            this.setState({
+                assignDashboardId: id,
+            });
+            this.assignCustomerModal.modal.onShow();
+        },
+        hide: () => {
+            this.assignCustomerModal.modal.onHide();
+        },
+    };
+
     handleSelectDevice = (selectedIds) => {
         const customerId = this.props.match.params.customerId;
         this.props.multipleAssignDashboardToCustomer(customerId, selectedIds).then(() => {
@@ -409,6 +424,59 @@ class Dashboards extends Component {
             }
         });
     };
+
+    handleAssignCustomers = (customerIdArray) => {
+        const idArray = this.state.checkedIdArray;
+        const customerId = customerIdArray;
+        if (idArray.length === 0) {
+            const dashboardId = this.state.assignDashboardId;
+            this.props.assignDashboardToCustomerRequest(customerId, dashboardId).then(() => {
+                if (this.props.statusMessage === 'SUCCESS') {
+                    this.refershDashboardRequest();
+                    this.assignCustomerModalHandler.hide();
+                } else {
+                    notification.error({
+                        message: this.props.errorMessage,
+                    });
+                }
+            });
+        } else {
+            this.props.multipleAssignDashboardToCustomerRequest(customerId, idArray).then(() => {
+                if (this.props.statusMessage === 'SUCCESS') {
+                    this.refershDashboardRequest();
+                    this.assignCustomerModalHandler.hide();
+                } else {
+                    notification.error({
+                        message: this.props.errorMessage,
+                    });
+                }
+            });
+        }
+    }
+
+    handleUnAssignCustomers = (dashboardId) => {
+        this.props.unassignDashboardToCustomerRequest(dashboardId).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.refershDashboardRequest();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
+    }
+
+    handleMakeDashboardPublic = (deviceId) => {
+        this.props.makeDashboardPublicRequest(deviceId).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.refershDashboardRequest();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
+    }
 
     openDetailDialog = (selectedId) => {
         const { shortInfo } = this.props;
@@ -483,8 +551,16 @@ class Dashboards extends Component {
                 <div className="footer-buttons">
                     <CommonButton
                         shape="circle"
-                        tooltipTitle={i18n.t('dashboard.delete-dashboards-action-title', { count: this.state.checkedCount })}
+                        tooltipTitle={i18n.t('dashboard.assign-dashboards-text', { count: this.state.checkedCount })}
                         className={this.state.checkedCount !== 0 ? 'ts-action-button ts-action-button-fadeIn-1' : 'ts-action-button ts-action-button-fadeOut-1'}
+                        iconClassName="user-add"
+                        onClick={this.assignCustomerModalHandler.show}
+                        size="large"
+                    />
+                    <CommonButton
+                        shape="circle"
+                        tooltipTitle={i18n.t('dashboard.delete-dashboards-action-title', { count: this.state.checkedCount })}
+                        className={this.state.checkedCount !== 0 ? 'ts-action-button ts-action-button-fadeIn-2' : 'ts-action-button ts-action-button-fadeOut-2'}
                         iconClassName="delete"
                         onClick={this.handleMultipleDeleteConfirm}
                         size="large"
@@ -535,6 +611,18 @@ class Dashboards extends Component {
                     title={i18n.t('dashboard.assign-dashboard-to-customer')}
                     onSelect={this.handleSelectDevice}
                 />
+                <ItemSelectModal
+                    className="ts-modal"
+                    ref={(c) => { this.assignCustomerModal = c; }}
+                    url={customerUrl}
+                    multiple={false}
+                    labelField={'name'}
+                    valueField={'id.id'}
+                    showSearch
+                    message={i18n.t('dashboard.assign-dashboard-to-customer-text')}
+                    title={i18n.t('dashboard.assign-dashboard-to-customer')}
+                    onSelect={this.handleAssignCustomers}
+                />
             </Row>
         );
     }
@@ -556,7 +644,10 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     multipleDeleteDashboardRequest: actions.multipleDeleteDashboardRequest,
     getServerTimeDiffRequest: actions.getServerTimeDiffRequest,
     getCustomerShortInfoRequest: customers.getCustomerShortInfoRequest,
-    multipleAssignDashboardToCustomer: actions.multipleAssignDashboardToCustomer,
+    assignDashboardToCustomerRequest: actions.assignDashboardToCustomerRequest,
+    multipleAssignDashboardToCustomerRequest: actions.multipleAssignDashboardToCustomerRequest,
+    unassignDashboardToCustomerRequest: actions.unassignDashboardToCustomerRequest,
+    makeDashboardPublicRequest: actions.makeDashboardPublicRequest,
     clearDashboardsRequest: actions.clearDashboardsRequest,
 }, dispatch);
 

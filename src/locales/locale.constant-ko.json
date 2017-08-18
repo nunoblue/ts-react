@@ -188,7 +188,7 @@
         "add-dashboard-text": "대시보드 추가",
         "assign-dashboards": "대시보드 지정",
         "assign-new-dashboard": "새 대시보드 할당",
-        "assign-dashboards-text": "{ count, select, 1 {대시보드 1개} other {대시보드 #개} }를 커스터머 할당",
+        "assign-dashboards-text": "대시보드 {{count}}개를 커스터머에 할당",
         "delete-dashboards": "대시보드 삭제",
         "unassign-dashboards": "대시보드 할당 취소",
         "unassign-dashboards-action-title": "{ count, select, 1 {대시보드 1개} other {대시보드 #개} }를 커스터머 할당 취소",

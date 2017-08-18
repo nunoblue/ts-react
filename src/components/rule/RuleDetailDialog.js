@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Tabs, Switch, Row, Collapse } from 'antd';
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 
 import CommonDialog from '../common/CommonDialog';
 import CommonButton from '../common/CommonButton';
