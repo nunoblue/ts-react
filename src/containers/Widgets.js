@@ -10,15 +10,22 @@ import CommonButton from '../components/common/CommonButton';
 import * as actions from '../actions/widget/widgets';
 
 class Widgets extends Component {
+    state = {
+        visible: false,
+    }
 
     componentDidMount() {
-        console.log('Widgets Render');
-        this.props.getWidgetsRequest();
+        this.refreshWidgets();
     }
 
     componentWillUnmount() {
         const { clearWidgetsRequest } = this.props;
         clearWidgetsRequest();
+    }
+
+    refreshWidgets = () => {
+        this.props.getWidgetsRequest();
+        console.log(this.props.statusMessage);
     }
 
     components = () => {

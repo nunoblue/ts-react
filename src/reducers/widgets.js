@@ -1,11 +1,6 @@
 import update from 'immutability-helper';
 
-import {
-    API_WIDGETS,
-    API_WIDGETS_SUCCESS,
-    API_WIDGETS_FAILURE,
-    CLEAR_WIDGETS,
-} from '../actions/widget/WidgetsTypes';
+import * as WidgetsTypes from '../actions/widget/WidgetsTypes';
 
 const initialState = {
     statusMessage: 'INIT',
@@ -15,13 +10,13 @@ const initialState = {
 
 export default function widgets(state = initialState, action) {
     switch (action.type) {
-        case API_WIDGETS:
+        case WidgetsTypes.API_WIDGETS.REQUEST:
             return update(state, {
                 statusMessage: {
                     $set: 'WAITING',
                 },
             });
-        case API_WIDGETS_SUCCESS:
+        case WidgetsTypes.API_WIDGETS.SUCCESS:
             return update(state, {
                 statusMessage: {
                     $set: 'SUCCESS',
@@ -30,7 +25,7 @@ export default function widgets(state = initialState, action) {
                     $set: action.data,
                 },
             });
-        case API_WIDGETS_FAILURE:
+        case WidgetsTypes.API_WIDGETS.FAILURE:
             return update(state, {
                 statusMessage: {
                     $set: 'FAILURE',
@@ -39,7 +34,13 @@ export default function widgets(state = initialState, action) {
                     $set: action.errorMessage,
                 },
             });
-        case CLEAR_WIDGETS:
+        case WidgetsTypes.CLEAR_WIDGETS.REQUEST:
+            return update(state, {
+                statusMessage: {
+                    $set: 'WAITING',
+                },
+            });
+        case WidgetsTypes.CLEAR_WIDGETS.SUCCESS:
             return initialState;
         default:
             return state;

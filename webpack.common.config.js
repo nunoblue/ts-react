@@ -10,7 +10,7 @@ module.exports = {
                 include: path.resolve(__dirname, 'src'),
                 options: {
                     presets: [['es2015', { loose: true, modules: false }], 'stage-0', 'react'],
-                    plugins: ['react-hot-loader/babel', 'syntax-dynamic-import', ['import', { libraryName: 'antd', style: true }], 'transform-decorators-legacy'],
+                    plugins: ['syntax-async-functions', 'react-hot-loader/babel', 'syntax-dynamic-import', ['import', { libraryName: 'antd', style: true }], 'transform-decorators-legacy'],
                 },
                 exclude: /node_modules/,
             },

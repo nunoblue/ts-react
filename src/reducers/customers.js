@@ -59,6 +59,9 @@ const customers = (state = initialState, action) => {
             });
         case API_CUSTOMERS_SHORT_INFO_SUCCESS:
             return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
                 shortInfo: {
                     $merge: action.shortInfo,
                 },
