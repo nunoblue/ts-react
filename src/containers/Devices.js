@@ -33,7 +33,7 @@ class Devices extends Component {
     }
 
     state = {
-        limit: 30,
+        limit: 40,
         textSearch: '',
         checkedCount: 0,
         checkedIdArray: [],
