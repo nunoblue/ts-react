@@ -12,7 +12,6 @@ module.exports = merge(baseConfig, {
 
     entry: {
         bundle: [
-            'babel-polyfill',
             'react-hot-loader/patch',
             `webpack-dev-server/client?http://${host}:${devPort}`,
             'webpack/hot/only-dev-server',

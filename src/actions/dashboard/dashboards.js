@@ -1,4 +1,3 @@
-import { createAction } from 'redux-actions';
 import {
     TENANT_DASHBOARDS,
     TENANT_DASHBOARDS_SUCCESS,
@@ -11,7 +10,7 @@ import {
     API_MAKE_PUBLIC_DASHBOARD,
     API_UNASSIGN_DASHBOARD_CUSTOMER,
     CLEAR_DASHBOARDS,
- } from './DashboardsTypes';
+} from './DashboardsTypes';
 import { dashboardService } from '../../services/api';
 import config from '../../configs';
 
@@ -196,7 +195,9 @@ export const makeDashboardPublicRequest = dashboardId => (dispatch) => {
     });
 };
 
-export const clearDashboardsRequest = createAction(CLEAR_DASHBOARDS);
+export const clearDashboardsRequest = () => (dispatch) => {
+    dispatch(clearDashboardsSuccess());
+};
 
 export const getPublicDashboardLinkRequest = (dashboardId, customerId) => {
     let url = config.locationUrl;

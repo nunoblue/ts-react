@@ -1,9 +1,9 @@
+import createRequestTypes from '../actions';
+
 /**
  * WIDGETS
  */
-export const API_WIDGETS = 'API_WIDGETS';
-export const API_WIDGETS_SUCCESS = 'API_WIDGETS_SUCCESS';
-export const API_WIDGETS_FAILURE = 'API_WIDGETS_FAILURE';
-export const API_SAVE_WIDGET_SUCCESS = 'API_SAVE_WIDGET_SUCCESS';
-export const API_DELETE_WIDGET_SUCCESS = 'API_DELETE_WIDGET_SUCCESS';
-export const CLEAR_WIDGETS = 'CLEAR_WIDGETS';
+export const API_WIDGETS = createRequestTypes('API_WIDGETS');
+export const API_SAVE_WIDGET = createRequestTypes('API_SAVE_WIDGET');
+export const API_DELETE_WIDGET = createRequestTypes('API_DELETE_WIDGET');
+export const CLEAR_WIDGETS = createRequestTypes('CLEAR_WIDGETS');
