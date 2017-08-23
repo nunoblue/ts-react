@@ -4,25 +4,27 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseConfig = require('./webpack.common.config.js');
 
-const devPort = 3001;
+const devPort = 8081;
+const host = 'localhost';
 
 module.exports = merge(baseConfig, {
     devtool: 'eval-source-map',
 
     entry: {
         bundle: [
+            'babel-polyfill',
             'react-hot-loader/patch',
-            'webpack-dev-server/client?http://localhost:'+devPort,
+            `webpack-dev-server/client?http://${host}:${devPort}`,
             'webpack/hot/only-dev-server',
-            path.resolve(__dirname, 'src/index.js')
-        ]
+            path.resolve(__dirname, 'src/index.js'),
+        ],
     },
 
     output: {
         path: path.resolve(__dirname, 'public'),
         publicPath: '/',
-        filename: '[name].js',
-        chunkFilename: '[id].[hash:8].js'
+        filename: '[name].[hash:16].js',
+        chunkFilename: '[id].[hash:16].js',
     },
 
     devServer: {
@@ -32,13 +34,14 @@ module.exports = merge(baseConfig, {
         hot: true,
         publicPath: '/',
         historyApiFallback: true,
+        host,
         // proxy: {
-        //     "**": {
-        //         target: "http://localhost:8080/api",
+        //     '**': {
+        //         target: 'http://localhost:8080/',
         //         secure: false,
-        //         prependPath: false
-        //     }
-        // }
+        //         prependPath: false,
+        //     },
+        // },
     },
 
     plugins: [
@@ -50,14 +53,14 @@ module.exports = merge(baseConfig, {
             minChunks: function (module) {
                 // this assumes your vendor imports exist in the node_modules directory
                 return module.context && module.context.indexOf('node_modules') !== -1;
-            }
+            },
         }),
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: __dirname + '/src/index.html'
+            template: `${__dirname}/src/index.html`,
         }),
         new webpack.EnvironmentPlugin({
-            NODE_ENV: 'development'
+            NODE_ENV: 'development',
         }),
     ],
 });

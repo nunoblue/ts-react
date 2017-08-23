@@ -1,14 +1,20 @@
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 
 import {
     API_CUSTOMERS,
     API_CUSTOMERS_SUCCESS,
-    API_CUSTOMERS_FAILURE
-} from '../actions/ActionTypes';
+    API_CUSTOMERS_FAILURE,
+    API_SAVE_CUSTOMER_SUCCESS,
+    API_DELETE_CUSTOMER_SUCCESS,
+    API_CUSTOMERS_SHORT_INFO_SUCCESS,
+    CLEAR_CUSTOMERS,
+} from '../actions/customer/CustomersTypes';
 
 const initialState = {
     statusMessage: 'INIT',
     data: [],
+    erorrMessage: 'NONE',
+    shortInfo: {},
 };
 
 const customers = (state = initialState, action) => {
@@ -35,8 +41,33 @@ const customers = (state = initialState, action) => {
                 statusMessage: {
                     $set: 'FAILURE',
                 },
+                errorMessage: {
+                    $set: action.errorMessage,
+                },
             });
-
+        case API_SAVE_CUSTOMER_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_DELETE_CUSTOMER_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_CUSTOMERS_SHORT_INFO_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+                shortInfo: {
+                    $merge: action.shortInfo,
+                },
+            });
+        case CLEAR_CUSTOMERS:
+            return initialState;
         default:
             return state;
     }

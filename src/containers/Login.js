@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { notification } from 'antd';
 
 import Authentication from '../components/Authentication';
-import * as actions from '../actions/authentication';
+import * as actions from '../actions/authentication/authentication';
 
 class Login extends Component {
 
@@ -13,21 +15,24 @@ class Login extends Component {
 
     handleLogin = (id, pw) => {
         const request = this.props.loginRequest(id, pw).then(() => {
-            if (this.props.statusMessage === 'SUCCESS') {
-                Materialize.toast(`Welcome, ${id}!`, 2000);
-                this.props.history.push('/home');
+            if (this.props.login.statusMessage === 'SUCCESS') {
+                this.props.getUserRequest().then(() => {
+                    if (this.props.validate.statusMessage === 'SUCCESS') {
+                        this.props.history.push('/home');
+                    }
+                });
                 return true;
-            } else {
-                const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
-                Materialize.toast($toastContent, 2000);
-                return false;
             }
+            notification.error({
+                message: this.props.errorMessage,
+            });
+            return false;
         });
         return request;
     }
 
     render() {
-        const validate = this.props.validate === 'SUCCESS';
+        const validate = this.props.validate.statusMessage === 'SUCCESS';
         if (validate) {
             return <Redirect to="/home" />;
         }
@@ -35,23 +40,23 @@ class Login extends Component {
         return (
             <div>
                 <Authentication
-                mode={true}
-                onLogin={this.handleLogin}
+                    mode={true}
+                    onLogin={this.handleLogin}
                 />
             </div>
         );
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.authentication.login.statusMessage,
-        validate: state.authentication.validate.statusMessage,
-    };
-};
-const mapDispatchToProps = (dispatch) => {
-    return {
-        loginRequest: (id, pw) => dispatch(actions.loginRequest(id, pw)),
-    };
-};
+const mapStateToProps = (state) => ({
+    login: state.authentication.login,
+    validate: state.authentication.validate,
+    errorMessage: state.authentication.errorMessage,
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    loginRequest: actions.loginRequest,
+    getUserRequest: actions.getUserRequest,
+}, dispatch);
+
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

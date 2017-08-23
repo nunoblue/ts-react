@@ -1,64 +1,418 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
+import { Row, Modal, notification, Button, Col } from 'antd';
+import i18n from 'i18next';
 
-import Card from '../components/Card';
-import CardButton from '../components/CardButton';
+import CommonCard from '../components/common/CommonCard';
+import CommonButton from '../components/common/CommonButton';
+import CommonCheckbox from '../components/common/CommonCheckbox';
+import CreateCard from '../components/common/CreateCard';
+import AddCustomerModal from '../components/customer/AddCustomerModal';
+import DetailCustomerDialog from '../components/customer/DetailCustomerDialog';
 
-import * as actions from '../actions/customers';
+import * as actions from '../actions/customer/customers';
 
 class Customers extends Component {
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            limit: 40,
-            textSearch: '',
-        };
+    static contextTypes = {
+        currentUser: PropTypes.object,
+        pageLoading: PropTypes.func,
     }
+
+    state = {
+        limit: 40,
+        textSearch: '',
+        checkedCount: 0,
+        checkedIdArray: [],
+        selectedCustomer: null,
+        dialogVisible: false,
+    };
 
     componentDidMount() {
         console.log('Customers Render');
-        const limit = this.state.limit;
-        const textSearch = this.state.textSearch;
-        this.props.getCustomersRequest(limit, textSearch);
+        this.refershCustomerRequest();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextState.checkedCount !== this.state.checkedCount) {
+            return true;
+        } else if (nextState.selectedCustomer !== this.state.selectedCustomer) {
+            return true;
+        } else if (nextState.dialogVisible !== this.state.dialogVisible) {
+            return true;
+        } else if (nextProps.data === this.props.data) {
+            return false;
+        }
+        return true;
+    }
+
+    componentWillUnmount() {
+        const { clearCustomersRequest } = this.props;
+        clearCustomersRequest();
+    }
+
+    buttonComponents = (title, id, isPublic, isDialog) => {
+        const modalConfirmAction = this.handleDeleteConfirm.bind(this, title, id);
+        if (isDialog) {
+            return (
+                <Button.Group className="ts-card-buttongroup">
+                    <Row>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <Link to={`/customers/${id}/users`}>
+                                    <CommonButton
+                                        className="ts-card-button"
+                                        shape="circle"
+                                        visible={!isPublic}
+                                        iconClassName="user-add"
+                                        tooltipTitle={i18n.t('customer.manage-customer-users')}
+                                    />
+                                </Link>
+                            </div>
+                        </Col>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <Link to={`/customers/${id}/devices`}>
+                                    <CommonButton
+                                        className="ts-card-button"
+                                        shape="circle"
+                                        iconClassName="tablet"
+                                        tooltipTitle={i18n.t('customer.manage-customer-devices')}
+                                    />
+                                </Link>
+                            </div>
+                        </Col>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <Link to={`/customers/${id}/dashboards`}>
+                                    <CommonButton
+                                        className="ts-card-button"
+                                        shape="circle"
+                                        iconClassName="layout"
+                                        tooltipTitle={i18n.t('customer.manage-customer-dashboards')}
+                                    />
+                                </Link>
+                            </div>
+                        </Col>
+                        <Col xs={24} sm={12} md={12} lg={8} xl={6}>
+                            <div className="ts-modal-button">
+                                <CommonButton
+                                    className="ts-card-button"
+                                    shape="circle"
+                                    visible={!isPublic}
+                                    iconClassName="delete"
+                                    onClick={modalConfirmAction}
+                                    tooltipTitle={i18n.t('customer.delete')}
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                </Button.Group>
+            );
+        }
+        return (
+            <Button.Group className="ts-card-buttongroup">
+                <Link to={`/customers/${id}/users`}>
+                    <CommonButton
+                        className="ts-card-button"
+                        shape="circle"
+                        visible={!isPublic}
+                        iconClassName="user-add"
+                        tooltipTitle={i18n.t('customer.manage-customer-users')}
+                    />
+                </Link>
+                <Link to={`/customers/${id}/devices`}>
+                    <CommonButton
+                        className="ts-card-button"
+                        shape="circle"
+                        iconClassName="tablet"
+                        tooltipTitle={i18n.t('customer.manage-customer-devices')}
+                    />
+                </Link>
+                <Link to={`/customers/${id}/dashboards`}>
+                    <CommonButton
+                        className="ts-card-button"
+                        shape="circle"
+                        iconClassName="layout"
+                        tooltipTitle={i18n.t('customer.manage-customer-dashboards')}
+                    />
+                </Link>
+                <CommonButton
+                    className="ts-card-button"
+                    shape="circle"
+                    visible={!isPublic}
+                    iconClassName="delete"
+                    onClick={modalConfirmAction}
+                    tooltipTitle={i18n.t('customer.delete')}
+                />
+            </Button.Group>
+        );
     }
 
     components = () => {
         const components = this.props.data.map((data) => {
             const title = data.title;
-            const description = data.additionalInfo ? (data.additionalInfo.description || '') : '';
+            const address = data.address || '';
             const id = data.id.id;
+            const isPublic = data.additionalInfo ? (data.additionalInfo.isPublic || false) : false;
+            const openDialog = this.openDetailDialog.bind(this, id);
+            const closeDialog = this.closeDetailDialog;
             return (
-                <Card key={id} title={title} description={description} buttonTooltip="Customer Delete" />
+                <CommonCard
+                    key={id}
+                    className="ts-card"
+                    title={title}
+                    content={address}
+                    isCardDown={!this.state.dialogVisible}
+                    onSelfEvent={closeDialog}
+                    onNextEvent={openDialog}
+                >
+                    <CommonCheckbox checkedCount={this.state.checkedCount} value={id} onChange={this.handleChecked} />
+                    {this.buttonComponents(title, id, isPublic)}
+                </CommonCard>
             );
         });
-
         return components;
+    }
+
+    refershCustomerRequest = () => {
+        this.context.pageLoading();
+        const limit = this.state.limit;
+        const textSearch = this.state.textSearch;
+        this.setState({
+            checkedIdArray: [],
+            checkedCount: 0,
+        });
+        this.props.getCustomersRequest(limit, textSearch).then(() => {
+            if (this.props.statusMessage === 'FAILURE') {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+            this.context.pageLoading();
+        });
+    }
+
+    handleChecked = (e) => {
+        const checkedCount = this.state.checkedCount;
+        const checkedIdArray = this.state.checkedIdArray;
+        if (e.target.checked) {
+            checkedIdArray.push(e.target.value);
+            this.setState({
+                checkedCount: checkedCount + 1,
+                checkedIdArray,
+            });
+        } else {
+            const pos = this.state.checkedIdArray.indexOf(e.target.value);
+            checkedIdArray.splice(pos, 1);
+            this.setState({
+                checkedCount: checkedCount - 1,
+                checkedIdArray,
+            });
+        }
+    }
+
+    handleDeleteConfirm = (title, id) => {
+        const newTitle = i18n.t('customer.delete-customer-title', { customerTitle: title });
+        const newContent = i18n.t('customer.delete-customer-text');
+        const deleteEvent = this.handleDeleteCustomer.bind(this, id);
+        return Modal.confirm({
+            title: newTitle,
+            content: newContent,
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
+            onOk: deleteEvent,
+        });
+    }
+
+    handleMultipleDeleteConfirm = () => {
+        const checkedCount = this.state.checkedCount;
+        const newTitle = i18n.t('customer.delete-customers-title', { count: checkedCount });
+        const newContent = i18n.t('customer.delete-customers-text');
+        const deleteEvent = this.handleMultipleDeleteCustomer;
+        return Modal.confirm({
+            title: newTitle,
+            content: newContent,
+            okText: i18n.t('action.yes'),
+            cancelText: i18n.t('action.no'),
+            onOk: deleteEvent,
+        });
+    }
+
+    openAddCustomerModal = () => {
+        this.addModal.modal.onShow();
+    }
+
+    hideAddCustomerModal = () => {
+        this.addModal.form.resetFields();
+        this.addModal.modal.onHide();
+    }
+
+    handleDeleteCustomer = (customerId) => {
+        this.props.deleteCustomerRequest(customerId).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.refershCustomerRequest();
+                this.closeDetailDialog();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
+    }
+
+    handleMultipleDeleteCustomer = () => {
+        this.props.multipleDeleteCustomerRequest(this.state.checkedIdArray).then(() => {
+            if (this.props.statusMessage === 'SUCCESS') {
+                this.refershCustomerRequest();
+            } else {
+                notification.error({
+                    message: this.props.errorMessage,
+                });
+            }
+        });
+    }
+
+    handleSaveCustomer = (type) => {
+        const isDialog = type === 'dialog';
+        const form = isDialog ? this.detailDialog.form : this.addModal.form;
+        form.validateFields((err, values) => {
+            if (err) {
+                return false;
+            }
+            const additionalInfo = {
+                description: values.description,
+            };
+            delete values.description;
+            const retValue = {};
+            if (isDialog) {
+                Object.assign(retValue, this.state.selectedCustomer, values, { additionalInfo });
+                this.setState({
+                    selectedCustomer: retValue,
+                });
+            } else {
+                Object.assign(retValue, values, { additionalInfo });
+            }
+            this.props.saveCustomerRequest(retValue).then(() => {
+                if (this.props.statusMessage === 'SUCCESS') {
+                    this.refershCustomerRequest();
+                    if (isDialog) {
+                        this.openDetailDialog(this.state.selectedCustomer.id.id);
+                    } else {
+                        this.hideAddCustomerModal();
+                    }
+                } else {
+                    notification.error({
+                        message: this.props.errorMessage,
+                    });
+                }
+            });
+        });
+    }
+
+    openDetailDialog = (selectedCustomerId) => {
+        this.detailDialog.clearEdit();
+        const customerData = this.loadCustomerDetailData(selectedCustomerId);
+        this.detailDialog.initTitle(customerData.title);
+        let description;
+        if (customerData.additionalInfo) {
+            description = customerData.additionalInfo.description || null;
+        }
+        this.detailDialog.form.setFieldsValue({
+            title: customerData.title,
+            description,
+        });
+        this.setState({
+            dialogVisible: true,
+            selectedCustomer: customerData,
+        });
+    }
+
+    closeDetailDialog = () => {
+        this.detailDialog.form.resetFields();
+        this.setState({
+            dialogVisible: false,
+            selectedDevice: null,
+        });
+    }
+
+    loadCustomerDetailData = (selectedCustomerId) => {
+        const { data } = this.props;
+        const customerId = this.state.selectedCustomer ? this.state.selectedCustomer.id.id : null;
+        let findCustomer;
+        if (selectedCustomerId === customerId) {
+            findCustomer = this.state.selectedCustomer;
+            return findCustomer;
+        }
+        data.some((customer) => {
+            if (customer.id.id === selectedCustomerId) {
+                findCustomer = customer;
+                return true;
+            }
+            return false;
+        });
+        return findCustomer;
     }
 
     render() {
         return (
-            <div className="mdl-grid">
+            <Row>
+                <CreateCard onClick={this.openAddCustomerModal} type={'customer'} />
                 {this.components()}
-                <CardButton content="Customer Add" iconClassName="add" />
-            </div>
+                <div className="footer-buttons">
+                    <CommonButton
+                        visible={this.state.checkedCount !== 0}
+                        shape="circle"
+                        tooltipTitle={i18n.t('customer.delete-customers-action-title')}
+                        className={this.state.checkedCount !== 0 ? 'ts-action-button ts-action-button-fadeIn-1' : 'ts-action-button ts-action-button-fadeOut-1'}
+                        iconClassName="delete"
+                        onClick={this.handleMultipleDeleteConfirm}
+                        size="large"
+                    />
+                    <CommonButton
+                        tooltipTitle={i18n.t('customer.add')}
+                        className="ts-card-button"
+                        shape="circle"
+                        iconClassName="plus"
+                        onClick={this.openAddCustomerModal}
+                        size="large"
+                    />
+                </div>
+                <AddCustomerModal
+                    className="ts-modal"
+                    ref={(c) => { this.addModal = c; }}
+                    onSave={this.handleSaveCustomer}
+                    onCancel={this.hideAddCustomerModal}
+                />
+                <DetailCustomerDialog
+                    className="ts-modal"
+                    ref={(c) => { this.detailDialog = c; }}
+                    data={this.state.selectedCustomer}
+                    visible={this.state.dialogVisible}
+                    closeDialog={this.closeDetailDialog}
+                    onSave={this.handleSaveCustomer}
+                    buttonComponents={this.buttonComponents}
+                />
+            </Row>
         );
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.customers.statusMessage,
-        data: state.customers.data,
-    };
-};
+const mapStateToProps = (state) => ({
+    statusMessage: state.customers.statusMessage,
+    data: state.customers.data,
+    errorMessage: state.customers.errorMessage,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getCustomersRequest: (limit, textSearch) => {
-            return dispatch(actions.getCustomersRequest(limit, textSearch));
-        },
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    getCustomersRequest: actions.getCustomersRequest,
+    saveCustomerRequest: actions.saveCustomerRequest,
+    deleteCustomerRequest: actions.deleteCustomerRequest,
+    multipleDeleteCustomerRequest: actions.multipleDeleteCustomerRequest,
+    clearCustomersRequest: actions.clearCustomersRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Customers);

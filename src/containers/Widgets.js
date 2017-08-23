@@ -1,15 +1,29 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Row } from 'antd';
+import i18n from 'i18next';
 
-import Card from '../components/Card';
-import CardButton from '../components/CardButton';
+import CommonCard from '../components/common/CommonCard';
+import CommonButton from '../components/common/CommonButton';
 
-import * as actions from '../actions/widgets';
+import * as actions from '../actions/widget/widgets';
 
 class Widgets extends Component {
+    state = {
+        visible: false,
+    }
 
     componentDidMount() {
-        console.log('Widgets Render');
+        this.refreshWidgets();
+    }
+
+    componentWillUnmount() {
+        const { clearWidgetsRequest } = this.props;
+        clearWidgetsRequest();
+    }
+
+    refreshWidgets = () => {
         this.props.getWidgetsRequest();
     }
 
@@ -18,7 +32,7 @@ class Widgets extends Component {
             const title = data.title;
             const id = data.id.id;
             return (
-                <Card key={id} title={title} buttonTooltip="Widget Delete" />
+                <CommonCard key={id} style={{ cursor: 'pointer' }} title={title} tooltipTitle={i18n.t('widget.delete')} />
             );
         });
         return components;
@@ -26,25 +40,22 @@ class Widgets extends Component {
 
     render() {
         return (
-            <div className="mdl-grid">
+            <Row>
                 {this.components()}
-                <CardButton content="Widget Add" iconClassName="add" />
-            </div>
+                <CommonButton tooltipTitle="Widget Add" iconClassName="plus" />
+            </Row>
         );
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        statusMessage: state.widgets.statusMessage,
-        data: state.widgets.data,
-    };
-};
+const mapStateToProps = (state) => ({
+    statusMessage: state.widgets.statusMessage,
+    data: state.widgets.data,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getWidgetsRequest: () => dispatch(actions.getWidgetsRequest()),
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    getWidgetsRequest: actions.getWidgetsRequest,
+    clearWidgetsRequest: actions.clearWidgetsRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Widgets);

@@ -1,14 +1,18 @@
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 
 import {
     API_PLUGINS,
     API_PLUGINS_SUCCESS,
     API_PLUGINS_FAILURE,
-} from '../actions/ActionTypes';
+    CLEAR_PLUGINS,
+    API_PLUGIN_DELETE_SUCCESS,
+    API_PLUGIN_SUCCESS,
+} from '../actions/plugin/PluginsTypes';
 
 const initialState = {
     statusMessage: 'INIT',
     data: [],
+    errorMessage: 'NONE',
 };
 
 export default function plugins(state = initialState, action) {
@@ -33,7 +37,24 @@ export default function plugins(state = initialState, action) {
                 statusMessage: {
                     $set: 'FAILURE',
                 },
+                errorMessage: {
+                    $set: action.errorMessage,
+                },
             });
+        case API_PLUGIN_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case API_PLUGIN_DELETE_SUCCESS:
+            return update(state, {
+                statusMessage: {
+                    $set: 'SUCCESS',
+                },
+            });
+        case CLEAR_PLUGINS:
+            return initialState;
         default:
             return state;
     }

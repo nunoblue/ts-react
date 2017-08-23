@@ -1,59 +1,82 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import createBrowserHistory from 'history/createBrowserHistory';
+import { Layout } from 'antd';
 
-import asyncComponent from '../components/AsyncComponent';
-import NoMatch from '../components/NoMatch';
-import Home from '../components/Home';
-
-import Layout from './Layout';
+import Main from './Main';
 import Login from './Login';
-import Plugins from './Plugins';
-import Rules from './Rules';
-import Customers from './Customers';
-import Widgets from './Widgets';
-import Dashboards from './Dashboards';
-import Devices from './Devices';
-
-// const About = asyncComponent(() => import('../components/About').then(module => module.default), {name: 'About'});
-// const Dashboard = asyncComponent(() => import('../components/Dashboard').then(module => module.default), {name: 'Dashboard'});
-// const NoMatch = asyncComponent(() => import('../components/NoMatch').then(module => module.default), {name: 'NoMatch'});
-import * as actions from '../actions/authentication';
+import routes from '../routes';
+import '../../less/app.less';
+import * as actions from '../actions/authentication/authentication';
 
 const history = createBrowserHistory();
 
 class App extends Component {
 
+    static childContextTypes = {
+        currentUser: PropTypes.object,
+    }
+
+    getChildContext() {
+        return {
+            currentUser: this.props.currentUser,
+        };
+    }
+
     componentDidMount() {
         console.log('App Render');
-        this.props.validateJwtToken().then((text) => {
-            // console.log(text);
+        this.props.validateJwtToken(true).then(() => {
             this.props.refreshJwtRequest();
-        }).catch((error) => {
-            const $toastContent = $('<span style="color: #FFB4BA">Incorrect username or password</span>');
-            Materialize.toast($toastContent, 2000);
         });
+        this.props.getUserRequest();
+    }
+
+    routeWithSubRoutes = (route, i) => {
+        return <Route key={i} exact path={route.path} render={props => (<route.component {...props} routes={route.routes} />)} />;
+    }
+
+    mainRoute = (validation, authority) => {
+        if (validation) {
+            return (
+                <Main history={history}>
+                    {
+                        routes(authority).map((route, i) => (
+                            this.routeWithSubRoutes(route, i)
+                        ))
+                    }
+                </Main>
+            );
+        }
+        if (this.props.validate.statusMessage === 'FAILURE' && typeof this.props.currentUser.authority === 'undefined') {
+            return <Redirect to="/login" />;
+        }
+        return null;
     }
 
     render() {
-        const validate = this.props.status.validate && this.props.status.isLoggedIn;
-
+        const { validate, currentUser } = this.props;
+        const validation = validate.statusMessage === 'SUCCESS' && typeof currentUser.authority !== 'undefined';
         return (
             <Router>
-                <div id="container">
-                    <Route exact path="/" render={() => (!validate ? <Redirect to="/login" /> : <Redirect to="/home" />)} />
+                <div style={{height: '100vh'}}>
+                    <Route
+                        exact
+                        path="/"
+                        render={() => {
+                            if (validation) {
+                                return <Redirect to="/home" />;
+                            } else if (validate.statusMessage === 'FAILURE' && typeof currentUser.authority === 'undefined') {
+                                return <Redirect to="/login" />;
+                            }
+                            return null;
+                        }}
+                    />
                     <Switch>
                         <Route path="/login" component={Login} />
-                        <Layout history={history} validate={validate}>
-                            <Route path="/home" component={Home} />
-                            <Route path="/plugins" component={Plugins} />
-                            <Route path="/rules" component={Rules} />
-                            <Route path="/customers" component={Customers} />
-                            <Route path="/devices" component={Devices} />
-                            <Route path="/widgets" component={Widgets} />
-                            <Route path="/dashboards" component={Dashboards} />
-                        </Layout>
+                        {this.mainRoute(validation, currentUser.authority)}
                     </Switch>
                 </div>
             </Router>
@@ -61,17 +84,15 @@ class App extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        status: state.authentication.status,
-    };
-};
+const mapStateToProps = (state) => ({
+    validate: state.authentication.validate,
+    currentUser: state.authentication.currentUser,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        refreshJwtRequest: () => dispatch(actions.refreshJwtRequest()),
-        validateJwtToken: () => dispatch(actions.validateJwtToken(true)),
-    };
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    refreshJwtRequest: actions.refreshJwtRequest,
+    validateJwtToken: actions.validateJwtToken,
+    getUserRequest: actions.getUserRequest,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
