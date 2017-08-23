@@ -29,40 +29,16 @@ const extractArgs = (config) => {
 const createWebsocket = (payload) => {
     const args = extractArgs(payload);
     const websocket = (payload.websocket) ? payload.websocket : WebSocket;
-
     return new websocket(...args);
 };
 
 const telemetryMiddleware = () => {
     let websocket;
-    const RECONNECT_INTERVAL = 2000;
-    const WS_IDLE_TIMEOUT = 90000;
-    let timeoutId;
-
-    const keepAlive = (keepAliveTime) => {
-        let timeout = 10000;
-        if (typeof keepAliveTime !== 'undefined') {
-            timeout = keepAliveTime;
-        }
-        if (keepAliveTime > 60000) {
-            console.warn('KeepAlive timeout limited 60 sec!!, so default timeout 10 sec set.', keepAliveTime);
-        }
-        if (websocket.readyState === 1) {
-            websocket.send('');
-        }
-        timeoutId = setTimeout(keepAlive, timeout);
-    };
-
-    const cancelKeepAlive = () => {
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
-    };
 
     /**
      * A function to create the WebSocket object and attach the standard callbacks
      */
-    const initialize = ({ dispatch }, action) => new Promise((resolve, reject) => {
+    const initialize = ({ dispatch }, action) => new Promise((resolve) => {
         // Instantiate the websocket.
         websocket = createWebsocket(action.payload);
 
@@ -76,7 +52,7 @@ const telemetryMiddleware = () => {
             dispatch(closed(event));
             resolve(true);
         };
-        websocket.onmessage = (event) => dispatch(message(event));
+        websocket.onmessage = event => dispatch(message(event));
     });
 
     /**
@@ -87,8 +63,6 @@ const telemetryMiddleware = () => {
             console.warn(`Closing WebSocket connection to ${websocket.url} ...`);
             websocket.close();
             websocket = null;
-            clearTimeout(timeoutId);
-            timeoutId = null;
         }
     };
 
@@ -127,7 +101,7 @@ const telemetryMiddleware = () => {
      * The primary Redux middleware function.
      * Each of the actions handled are user-dispatched.
      */
-    return (store) => (next) => (action) => {
+    return store => next => (action) => {
         switch (action.type) {
             // User request to connect
             case WEBSOCKET_CONNECT:
@@ -137,7 +111,7 @@ const telemetryMiddleware = () => {
                         console.warn('WebSocket is closed, ignoring. Trigger a WEBSOCKET_CONNECT first');
                         break;
                     }
-                    return new Promise((resolve, reject) => {
+                    return new Promise((resolve) => {
                         resolve(true);
                     });
                 }
@@ -146,6 +120,7 @@ const telemetryMiddleware = () => {
                     next(action);
                     return promise;
                 }
+                break;
             // User request to disconnect
             case WEBSOCKET_DISCONNECT:
                 close();

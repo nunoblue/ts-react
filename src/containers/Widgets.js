@@ -25,7 +25,6 @@ class Widgets extends Component {
 
     refreshWidgets = () => {
         this.props.getWidgetsRequest();
-        console.log(this.props.statusMessage);
     }
 
     components = () => {

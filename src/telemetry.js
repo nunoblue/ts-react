@@ -1,4 +1,11 @@
 /**
+ * HTML5 WebSocket
+ * websocket connect => subscribe
+ * websocket send subscribe => topic subscribe
+ * websocket send unsubscribe => topic unsubscribe
+ */
+
+/**
  * Command template concept
  */
 const subscriptionCommand = {
@@ -102,3 +109,8 @@ const subscriptionCommands = [
         unsubscribe: true,
     },
 ];
+
+/**
+ * STOMP over WebSocket
+ * 
+ */
