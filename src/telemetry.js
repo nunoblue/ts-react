@@ -1,8 +1,9 @@
 /**
  * HTML5 WebSocket
- * websocket connect => subscribe
+ * websocket connect => server connect & subscribe (endpoint)
  * websocket send subscribe => topic subscribe
  * websocket send unsubscribe => topic unsubscribe
+ * websocket message subscribe => topic subscribe
  */
 
 /**
@@ -112,5 +113,10 @@ const subscriptionCommands = [
 
 /**
  * STOMP over WebSocket
- * 
+ * websocket connect => server connect (endpoint)
+ * websocket subscribe => stomp broker subscribe
+ * websocket unsubscribe => stomp broker unsubscribe
+ * websocket send => from client to server
+ * websocket message => from server to client
  */
+

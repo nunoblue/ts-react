@@ -1,35 +1,10 @@
 import { createAction } from 'redux-actions';
 import * as WidgetsTypes from './WidgetsTypes';
 import { widgetService } from '../../services/api';
+import { createRequestHelper, createAsyncRequestHelper, createActionsHelper } from '../actionHelper';
 
-function getWidgets() {
-    return {
-        type: WidgetsTypes.API_WIDGETS.REQUEST,
-    };
-}
+// export const getWidgetsRequest = createAsyncRequestHelper(WidgetsTypes.API_WIDGETS, widgetService.getWidgets);
 
-function getWidgetsSuccess(data) {
-    return {
-        type: WidgetsTypes.API_WIDGETS.SUCCESS,
-        data,
-    };
-}
-
-function getWidgetsFailure(message) {
-    return {
-        type: WidgetsTypes.API_WIDGETS.FAILURE,
-        errorMessage: message,
-    };
-}
-
-export const getWidgetsRequest = () => async (dispatch) => {
-    dispatch(getWidgets());
-    try {
-        const response = await widgetService.getWidgets();
-        dispatch(getWidgetsSuccess(response.data));
-    } catch (error) {
-        dispatch(getWidgetsFailure(error.message));
-    }
-};
+export const getWidgetsRequest = createRequestHelper(WidgetsTypes.API_WIDGETS, widgetService.getWidgets);
 
 export const clearWidgetsRequest = createAction(WidgetsTypes.CLEAR_WIDGETS.REQUEST);

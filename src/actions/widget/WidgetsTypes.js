@@ -1,4 +1,4 @@
-import createRequestTypes from '../actions';
+import { createRequestTypes } from '../actionHelper';
 
 /**
  * WIDGETS

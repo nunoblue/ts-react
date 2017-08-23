@@ -22,7 +22,7 @@ export default function widgets(state = initialState, action) {
                     $set: 'SUCCESS',
                 },
                 data: {
-                    $set: action.data,
+                    $set: action.payload,
                 },
             });
         case WidgetsTypes.API_WIDGETS.FAILURE:
@@ -31,16 +31,10 @@ export default function widgets(state = initialState, action) {
                     $set: 'FAILURE',
                 },
                 errorMessage: {
-                    $set: action.errorMessage,
+                    $set: action.payload,
                 },
             });
         case WidgetsTypes.CLEAR_WIDGETS.REQUEST:
-            return update(state, {
-                statusMessage: {
-                    $set: 'WAITING',
-                },
-            });
-        case WidgetsTypes.CLEAR_WIDGETS.SUCCESS:
             return initialState;
         default:
             return state;
